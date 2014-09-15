@@ -49,8 +49,8 @@ void debug_console_alloc(void)
 	//set default colors
 	assume_default_colors(COLOR_BLACK, COLOR_WHITE);
 	wbkgd(stdscr, COLOR_PAIR(5));
+	console_log("%s\n", "Debugger started");
 	refresh();
-	LOG("%s\n", "Debugger started");
 
 }
 
@@ -61,7 +61,7 @@ void debug_console_free(void)
 
 }
 
-void LOG(char *format, ...)
+void console_log(char *format, ...)
 {
 	(void)format;
 	char* string;
@@ -70,9 +70,7 @@ void LOG(char *format, ...)
 	va_start ( args, format );
 	if ( 0 > vasprintf ( &string, format, args ) ) string = NULL;
 	va_end ( args );
-	char timestamp[64]= {0};
-	snprintf ( timestamp, sizeof timestamp, "%zu", ( uint64_t ) time ( 0 ) );
-	printw("%s: %s\n",timestamp, string);	
+	printw("%s", string);	
 	free ( string );
 	refresh();
 }
