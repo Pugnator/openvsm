@@ -64,6 +64,15 @@ void debug_console_free(void)
 void LOG(char *format, ...)
 {
 	(void)format;
-	printw("dsdsds");
+	char* string;
+	va_list args;
+	
+	va_start ( args, format );
+	if ( 0 > vasprintf ( &string, format, args ) ) string = NULL;
+	va_end ( args );
+	char timestamp[64]= {0};
+	snprintf ( timestamp, sizeof timestamp, "%zu", ( uint64_t ) time ( 0 ) );
+	printw("%s: %s\n",timestamp, string);	
+	free ( string );
 	refresh();
 }
