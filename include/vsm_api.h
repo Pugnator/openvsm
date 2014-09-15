@@ -5,6 +5,11 @@
 #include <stdio.h>
 #include <stdint.h>
 #include <stdlib.h>
+#include <assert.h>
+
+#include <lua.h>
+#include <lauxlib.h>
+#include <lualib.h>
 
 #include <defines.h>
 #include <enums.h>
@@ -18,8 +23,8 @@
 #define VSM_API_VERSION  110
 #define model_key 0x00000000
 BOOL CONSOLE_ALLOCATED;
-
-const char *lua_execute_script (const char *command, const char *delimiter);
+extern lua_State *luactx;
+const char *lua_execute_script (const char *function);
 int32_t vasprintf( char **sptr, char *fmt, va_list argv );
 int32_t asprintf( char **sptr, char *fmt, ... );
 

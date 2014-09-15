@@ -1,5 +1,7 @@
 #include <vsm_api.h>
 
+lua_State *luactx = NULL;
+
 IDSIMMODEL_vtable VSM_DEVICE_vtable =
 {
 	.isdigital      = vsm_isdigital,
@@ -23,12 +25,18 @@ IDSIMMODEL * __cdecl createdsimmodel (CHAR *device, ILICENCESERVER *ils )
 	{
 		return NULL;
 	}
+	/* Init Lua */
+	luactx = luaL_newstate();
+	/* Open libraries */
+    luaL_openlibs(luactx);
 	return &VSM_DEVICE;
 }
 
 VOID __cdecl deletedsimmodel ( IDSIMMODEL *model)
 {
 	(void) model;
+	/* Close Lua */
+    lua_close(luactx);
 }
 
 INT __attribute__((fastcall)) vsm_isdigital ( IDSIMMODEL *this, DWORD edx, CHAR *pinname)
@@ -50,8 +58,6 @@ VOID __attribute__((fastcall)) vsm_setup ( IDSIMMODEL *this, DWORD edx, IINSTANC
 	{
 		device_pins[i].pin = get_pin(device_pins[i].name);
 	}
-
-	lua_execute_script("", "");
 
 	//set_callback(1000000000000, INC_PC);
 }
@@ -114,8 +120,8 @@ VOID __attribute__((fastcall)) vsm_simulate (  IDSIMMODEL *this, DWORD edx, ABST
 	(void) edx;
 	(void) time;
 	(void) mode;
+	lua_execute_script("foobar");
 	device_simulate();
-
 }
 
 VOID __attribute__((fastcall)) vsm_callback (  IDSIMMODEL *this, DWORD edx, ABSTIME time, EVENTID eventid)
