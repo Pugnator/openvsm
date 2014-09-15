@@ -15,7 +15,7 @@
 #include <enums.h>
 #include <vsm_classes.h>
 #include <device.h>
-#include <api_wrapper.h>
+#include <c_bind.h>
 
 #include <panel.h>
 #include <tui.h>
@@ -27,6 +27,7 @@ extern lua_State *luactx;
 const char *lua_execute_script (const char *function);
 int32_t vasprintf( char **sptr, char *fmt, va_list argv );
 int32_t asprintf( char **sptr, char *fmt, ... );
+void register_functions (lua_State *L);
 
 INT __attribute__((fastcall)) vsm_isdigital ( IDSIMMODEL *this, DWORD edx, CHAR *pinname);
 VOID __attribute__((fastcall)) vsm_setup ( IDSIMMODEL *this, DWORD edx, IINSTANCE *instance, IDSIMCKT *dsim);

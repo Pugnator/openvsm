@@ -29,6 +29,7 @@ IDSIMMODEL * __cdecl createdsimmodel (CHAR *device, ILICENCESERVER *ils )
 	luactx = luaL_newstate();
 	/* Open libraries */
     luaL_openlibs(luactx);
+    register_functions(luactx);
 	return &VSM_DEVICE;
 }
 
@@ -120,7 +121,7 @@ VOID __attribute__((fastcall)) vsm_simulate (  IDSIMMODEL *this, DWORD edx, ABST
 	(void) edx;
 	(void) time;
 	(void) mode;
-	lua_execute_script("foobar");
+	lua_execute_script("device_simulate");
 	device_simulate();
 }
 

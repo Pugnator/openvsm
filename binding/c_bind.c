@@ -63,22 +63,22 @@ void set_callback (ABSTIME picotime, EVENTID id)
 	model_dsim->vtable->setclockcallback(model_dsim, 0, picotime, 1000000000000, &VSM_DEVICE, vsm_callback, id);
 }
 
-void out_log (char *text)
+void out_log (const char *text)
 {
 	model_instance->vtable->log(model_instance,text);
 }
 
-void out_message (char *text)
+void out_message (const char *text)
 {
 	model_instance->vtable->message(model_instance,text);
 }
 
-void out_warning (char *text)
+void out_warning (const char *text)
 {
 	model_instance->vtable->warning(model_instance,text);
 }
 
-void out_error (char *text)
+void out_error (const char *text)
 {
 	model_instance->vtable->warning(model_instance,text);
 }
