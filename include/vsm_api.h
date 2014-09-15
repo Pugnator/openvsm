@@ -20,6 +20,8 @@
 BOOL CONSOLE_ALLOCATED;
 
 const char *lua_execute_script (const char *command, const char *delimiter);
+int32_t vasprintf( char **sptr, char *fmt, va_list argv );
+int32_t asprintf( char **sptr, char *fmt, ... );
 
 INT __attribute__((fastcall)) vsm_isdigital ( IDSIMMODEL *this, DWORD edx, CHAR *pinname);
 VOID __attribute__((fastcall)) vsm_setup ( IDSIMMODEL *this, DWORD edx, IINSTANCE *instance, IDSIMCKT *dsim);
