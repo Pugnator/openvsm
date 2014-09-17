@@ -15,5 +15,5 @@ VSM_PIN device_pins[]=
 
 void device_simulate (void)
 {
-
+	
 }

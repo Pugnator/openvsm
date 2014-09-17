@@ -40,28 +40,67 @@ IPOPUP *create_popup (CREATEPOPUPSTRUCT *cps)
 	return ((IPOPUP *)model_instance->vtable->createpopup(model_instance, 0, cps));
 }
 
-IMEMORYPOPUP *create_memory_popup (char *title)
+IMEMORYPOPUP *create_memory_popup (const char *title, const int32_t id)
 {
 	CREATEPOPUPSTRUCT *cps = malloc(sizeof *cps);
-	cps->caption = title;
+	cps->caption = (char *)title;
 	cps->flags = PWF_VISIBLE;
 	cps->type = PWT_MEMORY;
 	cps->height = 32;
 	cps->width = 16;
-	cps->id = popup_id++;
+	cps->id = id;
 	free(cps);
 	return (IMEMORYPOPUP *)create_popup(cps);
 }
 
-IDEBUGPOPUP *create_debug_popup (char *title)
+IDEBUGPOPUP *create_debug_popup (const char *title, const int32_t id)
 {
 	CREATEPOPUPSTRUCT *cps = malloc(sizeof *cps);
-	cps->caption = title;
+	cps->caption = (char *)title;
 	cps->flags = PWF_VISIBLE;
-	cps->type = PWT_MEMORY;
-	cps->height = 32;
-	cps->width = 16;
-	cps->id = popup_id++;
+	cps->type = PWT_DEBUG;
+	cps->height = 200;
+	cps->width = 200;
+	cps->id = id;
+	free(cps);
+	return (IDEBUGPOPUP *)create_popup(cps);
+}
+
+IDEBUGPOPUP *create_source_popup (const char *title, const int32_t id)
+{
+	CREATEPOPUPSTRUCT *cps = malloc(sizeof *cps);
+	cps->caption = (char *)title;
+	cps->flags = PWF_VISIBLE;
+	cps->type = PWT_SOURCE;
+	cps->height = 200;
+	cps->width = 200;
+	cps->id = id;
+	free(cps);
+	return (IDEBUGPOPUP *)create_popup(cps);
+}
+
+IDEBUGPOPUP *create_status_popup (const char *title, const int32_t id)
+{
+	CREATEPOPUPSTRUCT *cps = malloc(sizeof *cps);
+	cps->caption = (char *)title;
+	cps->flags = PWF_VISIBLE;
+	cps->type = PWT_STATUS;
+	cps->height = 200;
+	cps->width = 200;
+	cps->id = id;
+	free(cps);
+	return (IDEBUGPOPUP *)create_popup(cps);
+}
+
+IDEBUGPOPUP *create_var_popup (const char *title, const int32_t id)
+{
+	CREATEPOPUPSTRUCT *cps = malloc(sizeof *cps);
+	cps->caption = (char *)title;
+	cps->flags = PWF_VISIBLE;
+	cps->type = PWT_VAR;
+	cps->height = 200;
+	cps->width = 200;
+	cps->id = id;
 	free(cps);
 	return (IDEBUGPOPUP *)create_popup(cps);
 }
@@ -91,24 +130,24 @@ void set_callback (ABSTIME picotime, EVENTID id)
 	model_dsim->vtable->setclockcallback(model_dsim, 0, picotime, 1000000000000, &VSM_DEVICE, vsm_callback, id);
 }
 
-void out_log (char *text)
+void out_log (const char *text)
 {
-	model_instance->vtable->log(model_instance,text);
+	model_instance->vtable->log(model_instance,(char *)text);
 }
 
-void out_message (char *text)
+void out_message (const char *text)
 {
-	model_instance->vtable->message(model_instance,text);
+	model_instance->vtable->message(model_instance,(char *)text);
 }
 
-void out_warning (char *text)
+void out_warning (const char *text)
 {
-	model_instance->vtable->warning(model_instance,text);
+	model_instance->vtable->warning(model_instance, (char *)text);
 }
 
-void out_error (char *text)
+void out_error (const char *text)
 {
-	model_instance->vtable->warning(model_instance,text);
+	model_instance->vtable->warning(model_instance,(char *)text);
 }
 
 IDSIMPIN *get_pin (char *pin_name)

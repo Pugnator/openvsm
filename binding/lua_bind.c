@@ -12,7 +12,15 @@ static int32_t lua_out_warning(lua_State *L);
 static int32_t lua_out_error(lua_State *L);
 static int32_t lua_set_callback(lua_State *L);
 static int32_t lua_create_debug_popup (lua_State *L);
+static int32_t lua_create_memory_popup (lua_State *L);
+static int32_t lua_create_source_popup (lua_State *L);
+static int32_t lua_create_status_popup (lua_State *L);
+static int32_t lua_create_var_popup (lua_State *L);
+static int32_t lua_delete_popup (lua_State *L);
+static int32_t lua_print_popup (lua_State *L);
 
+//It is temp ugly function, should create function/name array
+//and loop through it in order to register functions
 void register_functions (lua_State *L)
 {
 	/* console_log Lua bind */
@@ -51,6 +59,24 @@ void register_functions (lua_State *L)
     /* Lua bind */
     lua_pushcfunction(L, lua_create_debug_popup);
     lua_setglobal(L, "create_debug_popup");
+    /* Lua bind */
+    lua_pushcfunction(L, lua_create_memory_popup);
+    lua_setglobal(L, "create_memory_popup");
+    /* Lua bind */
+    lua_pushcfunction(L, lua_create_source_popup);
+    lua_setglobal(L, "create_source_popup");
+    /* Lua bind */
+    lua_pushcfunction(L, lua_create_status_popup);
+    lua_setglobal(L, "create_status_popup");
+    /* Lua bind */
+    lua_pushcfunction(L, lua_create_var_popup);
+    lua_setglobal(L, "create_var_popup");
+    /* Lua bind */
+    lua_pushcfunction(L, lua_delete_popup);
+    lua_setglobal(L, "delete_popup");
+        /* Lua bind */
+    lua_pushcfunction(L, lua_print_popup);
+    lua_setglobal(L, "print_popup");
 
     lua_pushinteger(L, SHI);
 	lua_setglobal(L, "SHI");
@@ -70,6 +96,7 @@ void register_functions (lua_State *L)
 
 void lua_load_script (const char *function)
 {	
+	(void) function;
 	int32_t lua_err = 0;       
     char spath[512] = {0};
     if ( 0 == GetEnvironmentVariable("LUAVSM", spath, sizeof spath))
@@ -123,10 +150,47 @@ static int32_t lua_console_log (lua_State *L)
   return 0;  /* number of results */
 }
 
+static int32_t lua_delete_popup (lua_State *L) 
+{  
+  int id = lua_tonumber(L, -1);
+  delete_popup(id);
+  return 0;  /* number of results */
+}
+
 static int32_t lua_create_debug_popup (lua_State *L) 
 {
   const char *text = lua_tostring(L, -1);  /* get argument */  
-  IDEBUGPOPUP *popup = create_debug_popup (text);
+  IPOPUP *popup = create_debug_popup (text, popup_id++);
+  lua_pushlightuserdata(L, popup);
+  return 0;  /* number of results */
+}
+
+static int32_t lua_create_source_popup (lua_State *L) 
+{
+  const char *text = lua_tostring(L, -1);  /* get argument */  
+  IDEBUGPOPUP *popup = create_source_popup (text, popup_id++);
+  lua_pushlightuserdata(L, popup);
+  return 0;  /* number of results */
+}
+static int32_t lua_create_status_popup (lua_State *L) 
+{
+  const char *text = lua_tostring(L, -1);  /* get argument */  
+  IDEBUGPOPUP *popup = create_status_popup (text, popup_id++);
+  lua_pushlightuserdata(L, popup);
+  return 0;  /* number of results */
+}
+static int32_t lua_create_var_popup (lua_State *L) 
+{
+  const char *text = lua_tostring(L, -1);  /* get argument */  
+  IDEBUGPOPUP *popup = create_var_popup (text, popup_id++);
+  lua_pushlightuserdata(L, popup);
+  return 0;  /* number of results */
+}
+
+static int32_t lua_create_memory_popup (lua_State *L) 
+{
+  const char *text = lua_tostring(L, -1);  /* get argument */  
+  IMEMORYPOPUP *popup = create_memory_popup (text, popup_id++);
   lua_pushlightuserdata(L, popup);
   return 0;  /* number of results */
 }
@@ -141,7 +205,6 @@ static int32_t lua_set_pin_state (lua_State *L)
   }
   int32_t pin_num = lua_tonumber(L, 1);
   int32_t pin_state = lua_tonumber(L, -1);
-  //console_log("Pin %d, state: %d\n", pin_num, pin_state);
   set_pin_state(device_pins[pin_num], pin_state);
   return 0;  /* number of results */
 }
@@ -253,6 +316,20 @@ static int32_t lua_out_warning (lua_State *L)
   }
   const char *text = lua_tostring(L, -1); 
   out_warning(text); 
+  return 0;  
+}
+
+static int32_t lua_print_popup (lua_State *L) 
+{  
+  int32_t argnum = lua_gettop(L);
+  if (1 != argnum)
+  {
+  	console_log("Function %s expects 1 arguments got %d\n", __PRETTY_FUNCTION__, argnum);
+  	return 0;
+  }
+  IPOPUP *popup = lua_touserdata(L, -1); 
+  const char *text = lua_tostring(L, -1); 
+  //print_popup(popup, "%s", text); 
   return 0;  
 }
 
