@@ -62,8 +62,7 @@ void debug_console_free(void)
 }
 
 void console_log(char *format, ...)
-{
-	(void)format;
+{	
 	char* string;
 	va_list args;
 	

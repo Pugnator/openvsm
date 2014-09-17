@@ -18,14 +18,14 @@ else
 endif
 
 LIB?=vsm
-SRC=vsm_api.c binding/c_bind.c binding/lua_bind.c tui.c device.c win32.c
+SRC=vsm_api.c binding/c_bind.c binding/lua_bind.c device.c win32.c
 
 CFLAGS:=-O0 -gdwarf-2 -fgnu89-inline -std=gnu99 -g3 -W -Wall -Iinclude -Icurses \
 -Ilua52/include
 
 SHLIB_CFLAGS:=-Wl,--out-implib,$(LIB).lib,--export-all-symbols,--enable-auto-import
 
-LDFLAGS:=curses/libpdcurses.a lua52/liblua52.a
+LDFLAGS:=lua52/liblua52.a
 
 OBJ=$(SRC:%.c=%.o) my.res
 

@@ -18,7 +18,7 @@
 #include <c_bind.h>
 #include <lua_bind.h>
 #include <panel.h>
-#include <tui.h>
+//#include <tui.h>
 
 #define VSM_API_VERSION  110
 #define model_key 0x00000000
@@ -27,6 +27,11 @@ BOOL CONSOLE_ALLOCATED;
 int32_t vasprintf( char **sptr, char *fmt, va_list argv );
 int32_t asprintf( char **sptr, char *fmt, ... );
 
+extern IPOPUP *memory_popup;
+extern IPOPUP *debug_popup;
+extern IPOPUP *source_popup;
+extern IPOPUP *status_popup;
+extern IPOPUP *var_popup;
 
 INT __attribute__((fastcall)) vsm_isdigital ( IDSIMMODEL *this, DWORD edx, CHAR *pinname);
 VOID __attribute__((fastcall)) vsm_setup ( IDSIMMODEL *this, DWORD edx, IINSTANCE *instance, IDSIMCKT *dsim);

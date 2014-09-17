@@ -8,12 +8,12 @@ BOOL vsm_register (ILICENCESERVER *ils)
 
 	#ifdef _CURSES_ENABLED
 	CONSOLE_ALLOCATED = TRUE;
-	debug_console_alloc();
+	//debug_console_alloc();
 	#endif
 
 	if(FALSE ==  ils->vtable->authorize( ils, 0, model_key, VSM_API_VERSION ) )
 	{
-		out_log("Device failed to authorize\n");
+		out_log("Device failed to authorize");
 		return FALSE;
 	}
 	return TRUE;
@@ -130,24 +130,48 @@ void set_callback (ABSTIME picotime, EVENTID id)
 	model_dsim->vtable->setclockcallback(model_dsim, 0, picotime, 1000000000000, &VSM_DEVICE, vsm_callback, id);
 }
 
-void out_log (const char *text)
+void out_log (const char *format, ...)
 {
-	model_instance->vtable->log(model_instance,(char *)text);
+	char* string;
+	va_list args;	
+	va_start ( args, format );
+	if ( 0 > vasprintf ( &string, (char *)format, args ) ) string = NULL;
+	va_end ( args );
+	model_instance->vtable->log(model_instance, string);
+	free ( string );
 }
 
-void out_message (const char *text)
+void out_message (const char *format, ...)
 {
-	model_instance->vtable->message(model_instance,(char *)text);
+	char* string;
+	va_list args;	
+	va_start ( args, format );
+	if ( 0 > vasprintf ( &string, (char *)format, args ) ) string = NULL;
+	va_end ( args );
+	model_instance->vtable->message(model_instance, string);
+	free ( string );
 }
 
-void out_warning (const char *text)
+void out_warning (const char *format, ...)
 {
-	model_instance->vtable->warning(model_instance, (char *)text);
+	char* string;
+	va_list args;	
+	va_start ( args, format );
+	if ( 0 > vasprintf ( &string, (char *)format, args ) ) string = NULL;
+	va_end ( args );
+	model_instance->vtable->warning(model_instance, string);
+	free ( string );
 }
 
-void out_error (const char *text)
+void out_error (const char *format, ...)
 {
-	model_instance->vtable->warning(model_instance,(char *)text);
+	char* string;
+	va_list args;	
+	va_start ( args, format );
+	if ( 0 > vasprintf ( &string, (char *)format, args ) ) string = NULL;
+	va_end ( args );
+	model_instance->vtable->error(model_instance, string);
+	free ( string );	
 }
 
 IDSIMPIN *get_pin (char *pin_name)
