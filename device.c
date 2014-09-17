@@ -16,11 +16,4 @@ VSM_PIN device_pins[]=
 void device_simulate (void)
 {
 
-	if(FALSE == is_pin_floating(device_pins[A].pin) && FALSE == is_pin_floating(device_pins[B].pin))
-	{
-		if(TRUE == is_pin_high(device_pins[A].pin) && TRUE == is_pin_high(device_pins[B].pin))
-			set_pin_state(device_pins[C], SLO);
-		else
-			set_pin_state(device_pins[C], SHI);
-	}
 }
