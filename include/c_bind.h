@@ -4,6 +4,8 @@
 
 #define print_popup(popup,fmt,args ...) popup->vtable->print(popup,fmt, ## args)
 
+extern int32_t popup_id;
+
 void set_pin_state (VSM_PIN pin, STATE state);
 STATE get_pin_state (IDSIMPIN *pin);
 IDSIMPIN *get_pin (char *pin_name);
@@ -16,12 +18,14 @@ void set_callback (ABSTIME picotime, EVENTID id);
 BOOL vsm_register (ILICENCESERVER *ils);
 CHAR *get_image_filename (CHAR* field_name);
 void load_image (CHAR* filename, uint8_t *buffer, size_t buffer_size);
-void out_log (const char *text);
-void out_message (const char *text);
-void out_warning (const char *text);
-void out_error (const char *text);
+void out_log (char *text);
+void out_message (char *text);
+void out_warning (char *text);
+void out_error (char *text);
 void delete_popup (POPUPID id);
 void set_popup_memory (IMEMORYPOPUP *popup, size_t offset, void *buffer, size_t size);
+IMEMORYPOPUP *create_memory_popup (char *title);
+IDEBUGPOPUP *create_debug_popup (char *title);
 IPOPUP *create_popup (CREATEPOPUPSTRUCT *cps);
 
 inline BOOL islow (STATE s);

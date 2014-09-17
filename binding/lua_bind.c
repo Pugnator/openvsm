@@ -10,6 +10,8 @@ static int32_t lua_out_log(lua_State *L);
 static int32_t lua_out_message(lua_State *L);
 static int32_t lua_out_warning(lua_State *L);
 static int32_t lua_out_error(lua_State *L);
+static int32_t lua_set_callback(lua_State *L);
+static int32_t lua_create_debug_popup (lua_State *L);
 
 void register_functions (lua_State *L)
 {
@@ -43,7 +45,12 @@ void register_functions (lua_State *L)
     /* Lua bind */
     lua_pushcfunction(L, lua_out_error);
     lua_setglobal(L, "out_error");
-   
+   	/* Lua bind */
+    lua_pushcfunction(L, lua_set_callback);
+    lua_setglobal(L, "set_callback");
+    /* Lua bind */
+    lua_pushcfunction(L, lua_create_debug_popup);
+    lua_setglobal(L, "create_debug_popup");
 
     lua_pushinteger(L, SHI);
 	lua_setglobal(L, "SHI");
@@ -61,12 +68,9 @@ void register_functions (lua_State *L)
 	}
 }
 
-const char *lua_execute_script (const char *function)
+void lua_load_script (const char *function)
 {	
-	/* Main state of Lua */
-	
 	int32_t lua_err = 0;       
-    /* Load script but do not execute it */
     char spath[512] = {0};
     if ( 0 == GetEnvironmentVariable("LUAVSM", spath, sizeof spath))
     {
@@ -81,44 +85,49 @@ const char *lua_execute_script (const char *function)
     	switch(lua_err)
     	{
     		case LUA_ERRSYNTAX:
-    		console_log("Syntax error in Lua script\n");
-    		break;
+    		out_error("Syntax error in Lua script");
+    		return;
     		case LUA_ERRMEM:
-    		console_log("Not enough memory to load script\n");
-    		break;
+    		out_error("Not enough memory to load script");
+    		return;
     		case LUA_ERRFILE:
-    		console_log("Error loading script file\n");
-    		break;
+    		out_error("Error loading script file");
+    		return;
     		default:
-    		console_log("Unknown error, shouldn't happen\n");
-    		assert(0);
-    		break;
+    		out_error("Unknown error, shouldn't happen");
+    		assert(0);    		
     	}
     }
     /* Primer run, if not run it - nothing works, need for parse */
     if ( 0 != lua_pcall(luactx, 0, 0, 0))
     {
-    	console_log("Failed to load the script");
+    	out_error("Failed to load the script");
+    	return;
     }
-    /* Declare function to run */
-    lua_getglobal(luactx, function);
+      
+    out_log("Successfully loaded Lua script");
+}
+
+void lua_run_function (const char *func_name)
+{
+	 /* Declare function to run */
+    lua_getglobal(luactx, func_name);
     /* First argument */
-    //lua_pushstring(luactx, command);
-    /* Execute script */
     lua_pcall(luactx, 0, LUA_MULTRET, 0);
-    /* Return result */
-    //const char *res = lua_tostring(luactx, -1);
-    /* Print result if needed */
-    //console_log("Result: %s\n",res);
-    
-    /* Return result */
-    return "";
 }
 
 static int32_t lua_console_log (lua_State *L) 
 {
   const char *text = lua_tostring(L, -1);  /* get argument */  
   console_log("%s", text);
+  return 0;  /* number of results */
+}
+
+static int32_t lua_create_debug_popup (lua_State *L) 
+{
+  const char *text = lua_tostring(L, -1);  /* get argument */  
+  IDEBUGPOPUP *popup = create_debug_popup (text);
+  lua_pushlightuserdata(L, popup);
   return 0;  /* number of results */
 }
 
@@ -257,5 +266,20 @@ static int32_t lua_out_error(lua_State *L)
   }
   const char *text = lua_tostring(L, -1); 
   out_error(text); 
+  return 0;  
+}
+
+static int32_t lua_set_callback(lua_State *L) 
+{  
+  int32_t argnum = lua_gettop(L);
+  if (2 != argnum)
+  {
+  	console_log("Function %s expects 2 arguments got %d\n", __PRETTY_FUNCTION__, argnum);
+  	return 0;
+  }
+  ///TODO: Add check integer type
+  size_t picotime = lua_tonumber(L, 1); 
+  int32_t eventid = lua_tointeger(L, -1);
+  set_callback(picotime, eventid);
   return 0;  
 }

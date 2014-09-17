@@ -30,6 +30,7 @@ IDSIMMODEL * __cdecl createdsimmodel (CHAR *device, ILICENCESERVER *ils )
 	/* Open libraries */
     luaL_openlibs(luactx);
     register_functions(luactx);
+    
 	return &VSM_DEVICE;
 }
 
@@ -54,13 +55,30 @@ VOID __attribute__((fastcall)) vsm_setup ( IDSIMMODEL *this, DWORD edx, IINSTANC
 	(void) edx;
 	model_instance = instance;
 	model_dsim = dsimckt;
+	//Here I should decompose two possible scenarios:
+	//1) Device is inited in C
+	//Device is inited in Lua
 
 	for (int i=0; device_pins[i].name; i++)
 	{
 		device_pins[i].pin = get_pin(device_pins[i].name);
+	}	
+	lua_load_script("device_init");
+	lua_getglobal (luactx, "device_pins");
+	if (0 == lua_istable(luactx, -1))
+	{
+	    out_log("No device model found, it is fatal error");
+	    return;
 	}
-
-	//set_callback(1000000000000, INC_PC);
+	for (int i=1;;i++)
+	{    
+	    lua_rawgeti(luactx,-1, i);
+	    if (lua_isnil(luactx,-1)) 
+	    	break;
+	    lua_getfield(luactx,-1,"name");
+	    out_log((char *)lua_tostring(luactx,-1));   
+	    lua_pop(luactx, 2);
+	}
 }
 
 VOID __attribute__((fastcall)) vsm_runctrl (  IDSIMMODEL *this, DWORD edx, RUNMODES mode)
@@ -103,7 +121,6 @@ VOID __attribute__((fastcall)) vsm_actuate  (  IDSIMMODEL *this, DWORD edx, REAL
 	(void) edx;
 	(void) time;
 	(void) newstate;
-
 }
 
 BOOL __attribute__((fastcall)) vsm_indicate (  IDSIMMODEL *this, DWORD edx, REALTIME time, ACTIVEDATA *newstate)
@@ -121,8 +138,8 @@ VOID __attribute__((fastcall)) vsm_simulate (  IDSIMMODEL *this, DWORD edx, ABST
 	(void) edx;
 	(void) time;
 	(void) mode;
-	lua_execute_script("device_simulate");
-	device_simulate();
+	lua_run_function("device_simulate");
+	//device_simulate();
 }
 
 VOID __attribute__((fastcall)) vsm_callback (  IDSIMMODEL *this, DWORD edx, ABSTIME time, EVENTID eventid)
@@ -130,6 +147,8 @@ VOID __attribute__((fastcall)) vsm_callback (  IDSIMMODEL *this, DWORD edx, ABST
 	(void) this;
 	(void) edx;
 	(void) time;
+	lua_run_function("timer_callback");
+
 	switch(eventid)
 	{
 	// case INC_PC:
@@ -159,18 +178,18 @@ BOOL APIENTRY DllMain(HINSTANCE hInstDLL, DWORD fdwReason, LPVOID lpvReserved)
 	switch (fdwReason)
 	{
 	case DLL_PROCESS_ATTACH:
-		debug_console_alloc();
+		//debug_console_alloc();
 		break;
 	case DLL_THREAD_ATTACH:
-		debug_console_alloc();
+		//debug_console_alloc();
 		break;
 	case DLL_THREAD_DETACH:
-		debug_console_free();
+		//debug_console_free();
 		break;
 	case DLL_PROCESS_DETACH:
 		if(CONSOLE_ALLOCATED)
 		{
-			debug_console_free();
+			//debug_console_free();
 		}
 
 		break;

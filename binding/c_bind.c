@@ -1,5 +1,7 @@
 #include <vsm_api.h>
 
+int32_t popup_id = 0;
+
 BOOL vsm_register (ILICENCESERVER *ils)
 {
 	CONSOLE_ALLOCATED = FALSE;
@@ -38,6 +40,32 @@ IPOPUP *create_popup (CREATEPOPUPSTRUCT *cps)
 	return ((IPOPUP *)model_instance->vtable->createpopup(model_instance, 0, cps));
 }
 
+IMEMORYPOPUP *create_memory_popup (char *title)
+{
+	CREATEPOPUPSTRUCT *cps = malloc(sizeof *cps);
+	cps->caption = title;
+	cps->flags = PWF_VISIBLE;
+	cps->type = PWT_MEMORY;
+	cps->height = 32;
+	cps->width = 16;
+	cps->id = popup_id++;
+	free(cps);
+	return (IMEMORYPOPUP *)create_popup(cps);
+}
+
+IDEBUGPOPUP *create_debug_popup (char *title)
+{
+	CREATEPOPUPSTRUCT *cps = malloc(sizeof *cps);
+	cps->caption = title;
+	cps->flags = PWF_VISIBLE;
+	cps->type = PWT_MEMORY;
+	cps->height = 32;
+	cps->width = 16;
+	cps->id = popup_id++;
+	free(cps);
+	return (IDEBUGPOPUP *)create_popup(cps);
+}
+
 void delete_popup (POPUPID id)
 {
 	model_instance->vtable->deletepopup(model_instance, 0, id);
@@ -63,22 +91,22 @@ void set_callback (ABSTIME picotime, EVENTID id)
 	model_dsim->vtable->setclockcallback(model_dsim, 0, picotime, 1000000000000, &VSM_DEVICE, vsm_callback, id);
 }
 
-void out_log (const char *text)
+void out_log (char *text)
 {
 	model_instance->vtable->log(model_instance,text);
 }
 
-void out_message (const char *text)
+void out_message (char *text)
 {
 	model_instance->vtable->message(model_instance,text);
 }
 
-void out_warning (const char *text)
+void out_warning (char *text)
 {
 	model_instance->vtable->warning(model_instance,text);
 }
 
-void out_error (const char *text)
+void out_error (char *text)
 {
 	model_instance->vtable->warning(model_instance,text);
 }
