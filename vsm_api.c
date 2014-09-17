@@ -1,5 +1,9 @@
 #include <vsm_api.h>
-
+IPOPUP *memory_popup=NULL;
+IPOPUP *debug_popup=NULL;
+IPOPUP *source_popup=NULL;
+IPOPUP *status_popup=NULL;
+IPOPUP *var_popup=NULL;
 lua_State *luactx = NULL;
 
 IDSIMMODEL_vtable VSM_DEVICE_vtable =
@@ -58,11 +62,13 @@ VOID __attribute__((fastcall)) vsm_setup ( IDSIMMODEL *this, DWORD edx, IINSTANC
 	//Here I should decompose two possible scenarios:
 	//1) Device is inited in C
 	//Device is inited in Lua
-
+	/*
 	for (int i=0; device_pins[i].name; i++)
 	{
 		//device_pins[i].pin = get_pin(device_pins[i].name);
 	}	
+	*/
+
 	lua_load_script("device_init");
 	lua_getglobal (luactx, "device_pins");
 	if (0 == lua_istable(luactx, -1))
@@ -84,6 +90,7 @@ VOID __attribute__((fastcall)) vsm_setup ( IDSIMMODEL *this, DWORD edx, IINSTANC
 	    lua_setglobal(luactx, pin_name);
 	    lua_pop(luactx, 2);
 	}
+	out_log("OpenVSM model loaded, engine version 0.1a");
 }
 
 VOID __attribute__((fastcall)) vsm_runctrl (  IDSIMMODEL *this, DWORD edx, RUNMODES mode)
@@ -156,21 +163,7 @@ VOID __attribute__((fastcall)) vsm_callback (  IDSIMMODEL *this, DWORD edx, ABST
 
 	switch(eventid)
 	{
-	// case INC_PC:
-	// {
-	// 	if(CPU_RESET == zstate)
-	// 	{
-	// 		cpu_reset();
-	// 		return;
-	// 	}
-	// 	else
-	// 	{
-	// 		zstate = CPU_RUN;
-	// 	}
-
-	// 	address_bus.address++;
-	// 	set_address_bus();
-	// }
+	default:
 	break;
 	}
 }

@@ -18,6 +18,7 @@ static int32_t lua_create_status_popup (lua_State *L);
 static int32_t lua_create_var_popup (lua_State *L);
 static int32_t lua_delete_popup (lua_State *L);
 static int32_t lua_print_popup (lua_State *L);
+static int32_t lua_set_popup_memory (lua_State *L);
 
 //It is temp ugly function, should create function/name array
 //and loop through it in order to register functions
@@ -74,9 +75,12 @@ void register_functions (lua_State *L)
     /* Lua bind */
     lua_pushcfunction(L, lua_delete_popup);
     lua_setglobal(L, "delete_popup");
-        /* Lua bind */
+    /* Lua bind */
     lua_pushcfunction(L, lua_print_popup);
     lua_setglobal(L, "print_popup");
+    /* Lua bind */
+    lua_pushcfunction(L, lua_set_popup_memory);
+    lua_setglobal(L, "set_popup_memory");
 
     lua_pushinteger(L, SHI);
 	lua_setglobal(L, "SHI");
@@ -101,7 +105,7 @@ void lua_load_script (const char *function)
     char spath[512] = {0};
     if ( 0 == GetEnvironmentVariable("LUAVSM", spath, sizeof spath))
     {
-    	console_log("LUAVSM env variable was not set");
+    	out_error("LUAVSM env variable was not set");
     }
     char script[512]={0};
     sprintf(script, "%s\\test.lua", spath);
@@ -145,8 +149,8 @@ void lua_run_function (const char *func_name)
 
 static int32_t lua_console_log (lua_State *L) 
 {
-  const char *text = lua_tostring(L, -1);  /* get argument */  
-  console_log("%s", text);
+  //const char *text = lua_tostring(L, -1);  /* get argument */  
+  //out_error("%s", text);
   return 0;  /* number of results */
 }
 
@@ -190,8 +194,8 @@ static int32_t lua_create_var_popup (lua_State *L)
 static int32_t lua_create_memory_popup (lua_State *L) 
 {
   const char *text = lua_tostring(L, -1);  /* get argument */  
-  IMEMORYPOPUP *popup = create_memory_popup (text, popup_id++);
-  lua_pushlightuserdata(L, popup);
+  memory_popup = create_memory_popup (text, popup_id++);
+  lua_pushinteger(L, popup_id);
   return 0;  /* number of results */
 }
 
@@ -200,7 +204,7 @@ static int32_t lua_set_pin_state (lua_State *L)
   int32_t argnum = lua_gettop(L);
   if (2 != argnum)
   {
-  	console_log("Function %s expects 2 arguments got %d\n", __PRETTY_FUNCTION__, argnum);
+  	out_error("Function %s expects 2 arguments got %d\n", __PRETTY_FUNCTION__, argnum);
 	return 0;  
   }
   int32_t pin_num = lua_tonumber(L, 1);
@@ -214,7 +218,7 @@ static int32_t lua_get_pin_state (lua_State *L)
   int32_t argnum = lua_gettop(L);
   if (1 != argnum)
   {
-  	console_log("Function %s expects 1 arguments got %d\n", __PRETTY_FUNCTION__, argnum);
+  	out_error("Function %s expects 1 arguments got %d\n", __PRETTY_FUNCTION__, argnum);
   	return 0;
   }
   int32_t pin_num = lua_tonumber(L, -1);
@@ -246,7 +250,7 @@ static int32_t lua_is_pin_low (lua_State *L)
   int32_t argnum = lua_gettop(L);
   if (1 != argnum)
   {
-  	console_log("Function %s expects 1 arguments got %d\n", __PRETTY_FUNCTION__, argnum);
+  	out_error("Function %s expects 1 arguments got %d\n", __PRETTY_FUNCTION__, argnum);
   	return 0;
   }
   int32_t pin_num = lua_tonumber(L, -1);  
@@ -259,7 +263,7 @@ static int32_t lua_is_pin_high (lua_State *L)
   int32_t argnum = lua_gettop(L);
   if (1 != argnum)
   {
-  	console_log("Function %s expects 1 arguments got %d\n", __PRETTY_FUNCTION__, argnum);
+  	out_error("Function %s expects 1 arguments got %d\n", __PRETTY_FUNCTION__, argnum);
   	return 0;
   }
   int32_t pin_num = lua_tonumber(L, -1);  
@@ -272,7 +276,7 @@ static int32_t lua_is_pin_floating (lua_State *L)
   int32_t argnum = lua_gettop(L);
   if (1 != argnum)
   {
-  	console_log("Function %s expects 1 arguments got %d\n", __PRETTY_FUNCTION__, argnum);
+  	out_error("Function %s expects 1 arguments got %d\n", __PRETTY_FUNCTION__, argnum);
   	return 0;
   }
   int32_t pin_num = lua_tonumber(L, -1);  
@@ -285,11 +289,11 @@ static int32_t lua_out_log (lua_State *L)
   int32_t argnum = lua_gettop(L);
   if (1 != argnum)
   {
-  	console_log("Function %s expects 1 arguments got %d\n", __PRETTY_FUNCTION__, argnum);
+  	out_error("Function %s expects 1 arguments got %d\n", __PRETTY_FUNCTION__, argnum);
   	return 0;
   }
   const char *text = lua_tostring(L, -1); 
-  out_log(text); 
+  out_error(text); 
   return 0;  
 }
 
@@ -298,7 +302,7 @@ static int32_t lua_out_message (lua_State *L)
   int32_t argnum = lua_gettop(L);
   if (1 != argnum)
   {
-  	console_log("Function %s expects 1 arguments got %d\n", __PRETTY_FUNCTION__, argnum);
+  	out_error("Function %s expects 1 arguments got %d\n", __PRETTY_FUNCTION__, argnum);
   	return 0;
   }
   const char *text = lua_tostring(L, -1); 
@@ -311,7 +315,7 @@ static int32_t lua_out_warning (lua_State *L)
   int32_t argnum = lua_gettop(L);
   if (1 != argnum)
   {
-  	console_log("Function %s expects 1 arguments got %d\n", __PRETTY_FUNCTION__, argnum);
+  	out_error("Function %s expects 1 arguments got %d\n", __PRETTY_FUNCTION__, argnum);
   	return 0;
   }
   const char *text = lua_tostring(L, -1); 
@@ -324,12 +328,44 @@ static int32_t lua_print_popup (lua_State *L)
   int32_t argnum = lua_gettop(L);
   if (1 != argnum)
   {
-  	console_log("Function %s expects 1 arguments got %d\n", __PRETTY_FUNCTION__, argnum);
+  	out_error("Function %s expects 1 arguments got %d\n", __PRETTY_FUNCTION__, argnum);
   	return 0;
   }
-  IPOPUP *popup = lua_touserdata(L, -1); 
-  const char *text = lua_tostring(L, -1); 
+  //IPOPUP *popup = lua_touserdata(L, -1); 
+  //const char *text = lua_tostring(L, -1); 
   //print_popup(popup, "%s", text); 
+  return 0;  
+}
+
+static int32_t lua_set_popup_memory (lua_State *L) 
+{  
+  int32_t argnum = lua_gettop(L);
+  if (3 != argnum)
+  {
+  	out_error("Function %s expects 3 arguments got %d\n", __PRETTY_FUNCTION__, argnum);
+  	return 0;
+  }
+  
+  
+	if (0 == lua_istable(luactx, -1))
+	{
+	    out_error("No device model found, it is fatal error");
+	    return;
+	}
+	lua_gettable (luactx, -1);
+	for (int i=1;;i++)
+	{    
+	    lua_rawget(luactx, i);
+	    if (lua_isnil(luactx,-1)) 
+	    	break;	    
+	    out_log ("Iterate");
+	    lua_pop(luactx, 2);
+	}
+
+
+  int32_t offset = lua_tonumber(L, 2); 
+  int32_t size = lua_tonumber(L, 3);
+  //set_popup_memory(memory_popup, offset, buffer, size);
   return 0;  
 }
 
@@ -338,7 +374,7 @@ static int32_t lua_out_error(lua_State *L)
   int32_t argnum = lua_gettop(L);
   if (1 != argnum)
   {
-  	console_log("Function %s expects 1 arguments got %d\n", __PRETTY_FUNCTION__, argnum);
+  	out_error("Function %s expects 1 arguments got %d\n", __PRETTY_FUNCTION__, argnum);
   	return 0;
   }
   const char *text = lua_tostring(L, -1); 
@@ -351,7 +387,7 @@ static int32_t lua_set_callback(lua_State *L)
   int32_t argnum = lua_gettop(L);
   if (2 != argnum)
   {
-  	console_log("Function %s expects 2 arguments got %d\n", __PRETTY_FUNCTION__, argnum);
+  	out_error("Function %s expects 2 arguments got %d\n", __PRETTY_FUNCTION__, argnum);
   	return 0;
   }
   ///TODO: Add check integer type
@@ -360,3 +396,4 @@ static int32_t lua_set_callback(lua_State *L)
   set_callback(picotime, eventid);
   return 0;  
 }
+
