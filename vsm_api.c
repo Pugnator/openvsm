@@ -61,7 +61,7 @@ VOID __attribute__((fastcall)) vsm_setup ( IDSIMMODEL *this, DWORD edx, IINSTANC
 
 	for (int i=0; device_pins[i].name; i++)
 	{
-		device_pins[i].pin = get_pin(device_pins[i].name);
+		//device_pins[i].pin = get_pin(device_pins[i].name);
 	}	
 	lua_load_script("device_init");
 	lua_getglobal (luactx, "device_pins");
@@ -75,8 +75,9 @@ VOID __attribute__((fastcall)) vsm_setup ( IDSIMMODEL *this, DWORD edx, IINSTANC
 	    lua_rawgeti(luactx,-1, i);
 	    if (lua_isnil(luactx,-1)) 
 	    	break;
-	    lua_getfield(luactx,-1,"name");
-	    out_log((char *)lua_tostring(luactx,-1));   
+	    lua_getfield(luactx,-1, PIN_NAME);
+	    device_pins[i].pin = get_pin((char *)lua_tostring(luactx,-1));
+	    out_log("1");	    
 	    lua_pop(luactx, 2);
 	}
 }
@@ -139,7 +140,7 @@ VOID __attribute__((fastcall)) vsm_simulate (  IDSIMMODEL *this, DWORD edx, ABST
 	(void) time;
 	(void) mode;
 	lua_run_function("device_simulate");
-	//device_simulate();
+	device_simulate();
 }
 
 VOID __attribute__((fastcall)) vsm_callback (  IDSIMMODEL *this, DWORD edx, ABSTIME time, EVENTID eventid)
