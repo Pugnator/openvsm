@@ -70,14 +70,18 @@ VOID __attribute__((fastcall)) vsm_setup ( IDSIMMODEL *this, DWORD edx, IINSTANC
 	    out_log("No device model found, it is fatal error");
 	    return;
 	}
+
 	for (int i=1;;i++)
 	{    
 	    lua_rawgeti(luactx,-1, i);
 	    if (lua_isnil(luactx,-1)) 
 	    	break;
 	    lua_getfield(luactx,-1, PIN_NAME);
-	    device_pins[i].pin = get_pin((char *)lua_tostring(luactx,-1));
-	    out_log("1");	    
+	    const char *pin_name = lua_tostring(luactx,-1);
+	    device_pins[i].pin = get_pin((char *)pin_name);	       
+	    //Set global variable that holds pin name and its number
+	    lua_pushinteger(luactx, i);
+	    lua_setglobal(luactx, pin_name);
 	    lua_pop(luactx, 2);
 	}
 }
