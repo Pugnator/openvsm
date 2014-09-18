@@ -29,7 +29,6 @@ CHAR *get_image_filename (CHAR* field_name)
 	return model_instance->vtable->getstrval(model_instance, 0, field_name, "?");
 }
 
-
 void load_image (CHAR* filename, uint8_t *buffer, size_t buffer_size)
 {
 	model_instance->vtable->loadmemory(model_instance, 0, filename, buffer, buffer_size, 0, 0);	
@@ -113,6 +112,19 @@ void delete_popup (POPUPID id)
 void set_popup_memory (IMEMORYPOPUP *popup, size_t offset, void *buffer, size_t size)
 {
 	popup->vtable->setmemory(popup, 0, offset, buffer, size);
+}
+
+void toggle_pin_state (VSM_PIN pin)
+{
+	STATE s = get_pin_state(pin.pin);
+	if(SHI == s)
+	{
+		set_pin_state(pin, SLO);
+	}
+	else if (SLO == s)
+	{
+		set_pin_state(pin, SHI);
+	}
 }
 
 STATE get_pin_state (IDSIMPIN *pin)

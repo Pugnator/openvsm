@@ -6,6 +6,7 @@ static int32_t lua_get_pin_state (lua_State *L);
 static int32_t lua_is_pin_low (lua_State *L);
 static int32_t lua_is_pin_high (lua_State *L);
 static int32_t lua_is_pin_floating (lua_State *L);
+static int32_t lua_toggle_pin_state(lua_State *L);
 static int32_t lua_out_log(lua_State *L);
 static int32_t lua_out_message(lua_State *L);
 static int32_t lua_out_warning(lua_State *L);
@@ -19,88 +20,82 @@ static int32_t lua_create_var_popup (lua_State *L);
 static int32_t lua_delete_popup (lua_State *L);
 static int32_t lua_print_popup (lua_State *L);
 static int32_t lua_set_popup_memory (lua_State *L);
+static int32_t lua_get_array (lua_State *L);
 
 //It is temp ugly function, should create function/name array
 //and loop through it in order to register functions
+
+typedef struct lua_bind_func
+{
+	int32_t (*lua_c_api) (lua_State *);
+	const char *lua_func_name;
+}lua_bind_func;
+
+typedef struct lua_bind_var
+{
+	const char *var_name;
+	int32_t var_value;
+}lua_bind_var;
+
+const lua_bind_var lua_var_api_list[]=
+{
+	{.var_name="SHI", .var_value=SHI},
+	{.var_name="SLO", .var_value=SLO},
+	{.var_name="FLT", .var_value=FLT},
+	{.var_name="UNDEFINED", .var_value=UNDEFINED},
+	{.var_name=0},
+};
+
+const lua_bind_func lua_c_api_list[] = 
+{
+	{.lua_func_name="console_log", .lua_c_api=&lua_console_log},
+	{.lua_func_name="set_pin_state", .lua_c_api=&lua_set_pin_state},
+	{.lua_func_name="get_pin_state", .lua_c_api=&lua_get_pin_state},
+	{.lua_func_name="is_pin_low", .lua_c_api=&lua_is_pin_low},
+	{.lua_func_name="is_pin_high", .lua_c_api=&lua_is_pin_high},
+	{.lua_func_name="is_pin_floating", .lua_c_api=&lua_is_pin_floating},
+	{.lua_func_name="toggle_pin_state", .lua_c_api=&lua_toggle_pin_state},
+	{.lua_func_name="out_log", .lua_c_api=&lua_out_log},
+	{.lua_func_name="out_message", .lua_c_api=&lua_out_message},
+	{.lua_func_name="out_warning", .lua_c_api=&lua_out_warning},
+	{.lua_func_name="out_error", .lua_c_api=&lua_out_error},
+	{.lua_func_name="set_callback", .lua_c_api=&lua_set_callback},
+	{.lua_func_name="create_debug_popup", .lua_c_api=&lua_create_debug_popup},
+	{.lua_func_name="create_memory_popup", .lua_c_api=&lua_create_memory_popup},
+	{.lua_func_name="create_source_popup", .lua_c_api=&lua_create_source_popup},
+	{.lua_func_name="create_status_popup", .lua_c_api=&lua_create_status_popup},
+	{.lua_func_name="create_var_popup", .lua_c_api=&lua_create_var_popup},
+	{.lua_func_name="delete_popup", .lua_c_api=&lua_delete_popup},
+	{.lua_func_name="print_popup", .lua_c_api=&lua_print_popup},
+	{.lua_func_name="set_popup_memory", .lua_c_api=&lua_set_popup_memory},
+	{.lua_func_name="get_array", .lua_c_api=&lua_get_array},
+	{.lua_func_name=0},	
+};
+
 void register_functions (lua_State *L)
 {
-	/* console_log Lua bind */
-	lua_pushcfunction(L, lua_console_log);
-    lua_setglobal(L, "console_log");
-    /* Lua bind */
-    lua_pushcfunction(L, lua_set_pin_state);
-    lua_setglobal(L, "set_pin_state");
-    /* Lua bind */
-    lua_pushcfunction(L, lua_get_pin_state);
-    lua_setglobal(L, "get_pin_state");
-    /* Lua bind */
-    lua_pushcfunction(L, lua_is_pin_low);
-    lua_setglobal(L, "is_pin_low");
-    /* Lua bind */
-    lua_pushcfunction(L, lua_is_pin_high);
-    lua_setglobal(L, "is_pin_high");
-    /* Lua bind */
-    lua_pushcfunction(L, lua_is_pin_floating);
-    lua_setglobal(L, "is_pin_floating");
-    /* Lua bind */
-    lua_pushcfunction(L, lua_out_log);
-    lua_setglobal(L, "out_log");
-    /* Lua bind */
-    lua_pushcfunction(L, lua_out_message);
-    lua_setglobal(L, "out_message");
-    /* Lua bind */
-    lua_pushcfunction(L, lua_out_warning);
-    lua_setglobal(L, "out_warning");
-    /* Lua bind */
-    lua_pushcfunction(L, lua_out_error);
-    lua_setglobal(L, "out_error");
-   	/* Lua bind */
-    lua_pushcfunction(L, lua_set_callback);
-    lua_setglobal(L, "set_callback");
-    /* Lua bind */
-    lua_pushcfunction(L, lua_create_debug_popup);
-    lua_setglobal(L, "create_debug_popup");
-    /* Lua bind */
-    lua_pushcfunction(L, lua_create_memory_popup);
-    lua_setglobal(L, "create_memory_popup");
-    /* Lua bind */
-    lua_pushcfunction(L, lua_create_source_popup);
-    lua_setglobal(L, "create_source_popup");
-    /* Lua bind */
-    lua_pushcfunction(L, lua_create_status_popup);
-    lua_setglobal(L, "create_status_popup");
-    /* Lua bind */
-    lua_pushcfunction(L, lua_create_var_popup);
-    lua_setglobal(L, "create_var_popup");
-    /* Lua bind */
-    lua_pushcfunction(L, lua_delete_popup);
-    lua_setglobal(L, "delete_popup");
-    /* Lua bind */
-    lua_pushcfunction(L, lua_print_popup);
-    lua_setglobal(L, "print_popup");
-    /* Lua bind */
-    lua_pushcfunction(L, lua_set_popup_memory);
-    lua_setglobal(L, "set_popup_memory");
-
-    lua_pushinteger(L, SHI);
-	lua_setglobal(L, "SHI");
-	lua_pushinteger(L, SLO);
-	lua_setglobal(L, "SLO");
-	lua_pushinteger(L, FLT);
-	lua_setglobal(L, "FLT");
-	lua_pushinteger(L, UNDEFINED);
-	lua_setglobal(L, "UNDEFINED");
-
-	for (int i=0; device_pins[i].name; i++)
-	{
-		lua_pushinteger(L, i);
-		lua_setglobal(L, device_pins[i].name);		
-	}
+    /*  Declare functions */	   
+    for (int32_t i=0; lua_c_api_list[i].lua_func_name; i++)
+    {
+    	lua_pushcfunction(L, lua_c_api_list[i].lua_c_api);
+    	lua_setglobal(L, lua_c_api_list[i].lua_func_name);	
+    }   
+/* Declare variables */
+     for (int32_t i=0; lua_var_api_list[i].var_name ;i++)
+    {
+	lua_pushinteger(L, lua_var_api_list[i].var_value);
+    	lua_setglobal(L, lua_var_api_list[i].var_name);    
+    }  
+/* Declare pins */
+   for (int i=0; device_pins[i].name; i++)
+  {
+   lua_pushinteger(L, i);
+   lua_setglobal(L, device_pins[i].name);		
+  }
 }
 
-void lua_load_script (const char *function)
-{	
-	(void) function;
+void lua_load_script (const char *device_name)
+{		
 	int32_t lua_err = 0;       
     char spath[512] = {0};
     if ( 0 == GetEnvironmentVariable("LUAVSM", spath, sizeof spath))
@@ -108,7 +103,7 @@ void lua_load_script (const char *function)
     	out_error("LUAVSM env variable was not set");
     }
     char script[512]={0};
-    sprintf(script, "%s\\test.lua", spath);
+    sprintf(script, "%s\\%s.lua", spath, device_name);
     
     lua_err = luaL_loadfile ( luactx, script );
     if(0 != lua_err)
@@ -149,6 +144,7 @@ void lua_run_function (const char *func_name)
 
 static int32_t lua_console_log (lua_State *L) 
 {
+  (void) L;
   //const char *text = lua_tostring(L, -1);  /* get argument */  
   //out_error("%s", text);
   return 0;  /* number of results */
@@ -271,6 +267,19 @@ static int32_t lua_is_pin_high (lua_State *L)
   return 1;  
 }
 
+static int32_t lua_toggle_pin_state (lua_State *L) 
+{  
+  int32_t argnum = lua_gettop(L);
+  if (1 != argnum)
+  {
+  	out_error("Function %s expects 1 arguments got %d\n", __PRETTY_FUNCTION__, argnum);
+  	return 0;
+  }
+  int32_t pin_num = lua_tonumber(L, -1);  
+  toggle_pin_state(device_pins[pin_num]);
+  return 0;  
+}
+
 static int32_t lua_is_pin_floating (lua_State *L) 
 {  
   int32_t argnum = lua_gettop(L);
@@ -293,7 +302,7 @@ static int32_t lua_out_log (lua_State *L)
   	return 0;
   }
   const char *text = lua_tostring(L, -1); 
-  out_error(text); 
+  out_log(text); 
   return 0;  
 }
 
@@ -344,28 +353,7 @@ static int32_t lua_set_popup_memory (lua_State *L)
   {
   	out_error("Function %s expects 3 arguments got %d\n", __PRETTY_FUNCTION__, argnum);
   	return 0;
-  }
-  
-  
-	if (0 == lua_istable(luactx, -1))
-	{
-	    out_error("No device model found, it is fatal error");
-	    return;
-	}
-	lua_gettable (luactx, -1);
-	for (int i=1;;i++)
-	{    
-	    lua_rawget(luactx, i);
-	    if (lua_isnil(luactx,-1)) 
-	    	break;	    
-	    out_log ("Iterate");
-	    lua_pop(luactx, 2);
-	}
-
-
-  int32_t offset = lua_tonumber(L, 2); 
-  int32_t size = lua_tonumber(L, 3);
-  //set_popup_memory(memory_popup, offset, buffer, size);
+  }  
   return 0;  
 }
 
@@ -390,10 +378,30 @@ static int32_t lua_set_callback(lua_State *L)
   	out_error("Function %s expects 2 arguments got %d\n", __PRETTY_FUNCTION__, argnum);
   	return 0;
   }
-  ///TODO: Add check integer type
+  //TODO: Add check integer type
   size_t picotime = lua_tonumber(L, 1); 
   int32_t eventid = lua_tointeger(L, -1);
   set_callback(picotime, eventid);
   return 0;  
 }
 
+static int32_t lua_get_array (lua_State *L)
+{
+	lua_getglobal (L, "array");
+	if (0 == lua_istable(L, -1))
+	{
+	    out_log("No array found");
+	    return 0;
+	}
+
+	for (int i=1;;i++)
+	{    
+	    lua_rawgeti(L,-1, i);
+	    if (lua_isnil(L,-1)) 
+	    	break;
+	    int32_t num = lua_tonumber(L,-1);
+	    out_log("Count: %d, val = %d", i, num);
+	    lua_pop(luactx, 1);
+	}
+	return 0;
+}

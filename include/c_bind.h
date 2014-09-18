@@ -14,6 +14,7 @@ BOOL is_pin_high (IDSIMPIN *pin);
 BOOL is_pin_steady (IDSIMPIN *pin);
 BOOL is_pin_floating (IDSIMPIN *pin);
 BOOL is_pin_active (IDSIMPIN *pin);
+void toggle_pin_state (VSM_PIN pin);
 void set_callback (ABSTIME picotime, EVENTID id);
 BOOL vsm_register (ILICENCESERVER *ils);
 CHAR *get_image_filename (CHAR* field_name);
