@@ -69,7 +69,7 @@ VOID __attribute__((fastcall)) vsm_setup ( IDSIMMODEL *this, DWORD edx, IINSTANC
 	}	
 	*/
 
-	lua_load_script("device_init");
+	lua_load_script("test");
 	lua_getglobal (luactx, "device_pins");
 	if (0 == lua_istable(luactx, -1))
 	{
@@ -91,6 +91,7 @@ VOID __attribute__((fastcall)) vsm_setup ( IDSIMMODEL *this, DWORD edx, IINSTANC
 	    lua_pop(luactx, 2);
 	}
 	out_log("OpenVSM model loaded, engine version 0.1a");
+	lua_run_function("device_init");
 }
 
 VOID __attribute__((fastcall)) vsm_runctrl (  IDSIMMODEL *this, DWORD edx, RUNMODES mode)
