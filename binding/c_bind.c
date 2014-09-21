@@ -1,6 +1,7 @@
 #include <vsm_api.h>
 
 uint8_t *memory_popup_buf = NULL;
+uint8_t *debug_popup_buf = NULL;
 int32_t popup_id = 0;
 
 BOOL vsm_register (ILICENCESERVER *ils)

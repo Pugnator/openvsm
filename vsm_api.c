@@ -39,6 +39,7 @@ VOID __cdecl deletedsimmodel ( IDSIMMODEL* model )
 	/* Close Lua */
 	lua_close ( luactx );
 	free(memory_popup_buf);
+	free(debug_popup_buf);
 }
 
 INT __attribute__ ( ( fastcall ) ) vsm_isdigital ( IDSIMMODEL* this, DWORD edx, CHAR* pinname )
