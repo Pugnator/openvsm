@@ -22,10 +22,7 @@ static int32_t lua_create_var_popup (lua_State *L);
 static int32_t lua_delete_popup (lua_State *L);
 static int32_t lua_set_memory_popup (lua_State *L);
 static int32_t lua_repaint_memory_popup (lua_State *L);
-static int32_t lua_get_array (lua_State *L);
-
-//It is temp ugly function, should create function/name array
-//and loop through it in order to register functions
+static int32_t lua_get_model_param (lua_State *L);
 
 typedef struct lua_bind_func
 {
@@ -72,7 +69,7 @@ const lua_bind_func lua_c_api_list[] =
   {.lua_func_name="repaint_memory_popup", .lua_c_api=&lua_repaint_memory_popup},
   {.lua_func_name="print_to_debug_popup", .lua_c_api=&lua_print_to_debug_popup},
   {.lua_func_name="dump_to_debug_popup", .lua_c_api=&lua_dump_to_debug_popup},
-	{.lua_func_name="get_array", .lua_c_api=&lua_get_array},
+	{.lua_func_name="get_model_param", .lua_c_api=&lua_get_model_param},
 	{.lua_func_name=0},	
 };
 
@@ -152,6 +149,13 @@ static int32_t lua_console_log (lua_State *L)
   //const char *text = lua_tostring(L, -1);    
   //out_error("%s", text);
   return 0;  
+}
+
+static int32_t lua_get_model_param (lua_State *L) 
+{
+  char *text = (char *)lua_tostring(L, -1);      
+  lua_pushstring(L, get_model_param(text));
+  return 1;  
 }
 
 static int32_t lua_delete_popup (lua_State *L) 
