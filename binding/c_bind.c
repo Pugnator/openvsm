@@ -47,9 +47,10 @@ IMEMORYPOPUP *create_memory_popup (const char *title, const int32_t id)
 	cps->type = PWT_MEMORY;
 	cps->height = 32;
 	cps->width = 16;
-	cps->id = id;
+	cps->id = id;	
+	IMEMORYPOPUP *popup = (IMEMORYPOPUP *)create_popup(cps);
 	free(cps);
-	return (IMEMORYPOPUP *)create_popup(cps);
+	return popup;
 }
 
 IDEBUGPOPUP *create_debug_popup (const char *title, const int32_t id)
@@ -60,9 +61,10 @@ IDEBUGPOPUP *create_debug_popup (const char *title, const int32_t id)
 	cps->type = PWT_DEBUG;
 	cps->height = 200;
 	cps->width = 200;
-	cps->id = id;
-	free(cps);
-	return (IDEBUGPOPUP *)create_popup(cps);
+	cps->id = id;	
+	IDEBUGPOPUP *popup = create_popup(cps);	
+	free(cps);	
+	return popup;
 }
 
 IDEBUGPOPUP *create_source_popup (const char *title, const int32_t id)
@@ -74,8 +76,9 @@ IDEBUGPOPUP *create_source_popup (const char *title, const int32_t id)
 	cps->height = 200;
 	cps->width = 200;
 	cps->id = id;
+	IDEBUGPOPUP *popup = create_popup(cps);
 	free(cps);
-	return (IDEBUGPOPUP *)create_popup(cps);
+	return popup;
 }
 
 IDEBUGPOPUP *create_status_popup (const char *title, const int32_t id)
@@ -87,8 +90,9 @@ IDEBUGPOPUP *create_status_popup (const char *title, const int32_t id)
 	cps->height = 200;
 	cps->width = 200;
 	cps->id = id;
+	IDEBUGPOPUP *popup = create_popup(cps);
 	free(cps);
-	return (IDEBUGPOPUP *)create_popup(cps);
+	return popup;
 }
 
 IDEBUGPOPUP *create_var_popup (const char *title, const int32_t id)
@@ -99,9 +103,10 @@ IDEBUGPOPUP *create_var_popup (const char *title, const int32_t id)
 	cps->type = PWT_VAR;
 	cps->height = 200;
 	cps->width = 200;
-	cps->id = id;
+	cps->id = id;	
+	IDEBUGPOPUP *popup = create_popup(cps);
 	free(cps);
-	return (IDEBUGPOPUP *)create_popup(cps);
+	return popup;
 }
 
 void delete_popup (POPUPID id)
@@ -112,6 +117,16 @@ void delete_popup (POPUPID id)
 void set_popup_memory (IMEMORYPOPUP *popup, size_t offset, void *buffer, size_t size)
 {
 	popup->vtable->setmemory(popup, 0, offset, buffer, size);
+}
+
+void print_to_debug_popup (IDEBUGPOPUP *popup, const char *message)
+{
+	popup->vtable->print(popup, (char *)message);
+}
+
+void dump_to_debug_popup (IDEBUGPOPUP *popup, const uint8_t *buf, uint32_t size, int32_t base)
+{
+	popup->vtable->dump(popup, 0, buf, size, base);
 }
 
 void toggle_pin_state (VSM_PIN pin)

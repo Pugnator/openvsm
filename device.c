@@ -1,4 +1,4 @@
-#include <vsm_api.h>
+#include "vsm_api.h"
 
 enum
 {
@@ -13,7 +13,7 @@ VSM_PIN device_pins[]=
 	{.name = 0}
 };
 
-void device_simulate (void)
+void device_simulate ( void )
 {
-	
+
 }

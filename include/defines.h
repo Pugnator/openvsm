@@ -91,8 +91,8 @@ typedef DWORD ADDRESS;
 #define TXJ_MIDDLE 8
 
 // Handles for graphics and text styles
-typedef VOID *HGFXSTYLE;
-typedef VOID *HTEXTSTYLE;
+typedef VOID* HGFXSTYLE;
+typedef VOID* HTEXTSTYLE;
 
 // Pop-up window interfaces.
 // Handles, types, etc. for pop-up windows:
@@ -147,6 +147,6 @@ typedef long EVENTID;
 
 // Pin types:
 typedef INT SPICENODE;
-typedef VOID *DSIMNODE;
+typedef VOID* DSIMNODE;
 
 #endif

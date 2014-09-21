@@ -44,7 +44,7 @@ typedef unsigned int UINT;
 #endif
 
 #ifndef _WINDOWS_
-typedef VOID *HWND;
+typedef VOID* HWND;
 #endif
 
 #ifdef __SC__
@@ -112,10 +112,12 @@ typedef CHAR VDM_TARGETID[64];
 
 // VDM Protocol command strcuture:
 struct VDM_COMMAND
-{ BYTE command;
-  BYTE memspace;
-  DWORD address;
-  DWORD datalength; };
+{
+	BYTE command;
+	BYTE memspace;
+	DWORD address;
+	DWORD datalength;
+};
 
 
 #endif
@@ -143,25 +145,29 @@ struct VDM_COMMAND
 
 // API configuration structure:
 struct VDM_CONFIG
-{ CHAR address[64];
-  DWORD port;
-  DWORD timeout;
-  DWORD loglevel; };
+{
+	CHAR address[64];
+	DWORD port;
+	DWORD timeout;
+	DWORD loglevel;
+};
 
 // Target information structure (128 bytes)
 // Now includes 64 byte structure for target specific (derivitive) parameters
 struct VDM_TARGETINFO
-{ CHAR id[32];
-  DWORD regclass;
-  DWORD regsize;
-  DWORD apiver;
-  DWORD dllver;
-  FL64 clock;
-  DWORD unused[2];
-  BYTE specific[64]; };
+{
+	CHAR id[32];
+	DWORD regclass;
+	DWORD regsize;
+	DWORD apiver;
+	DWORD dllver;
+	FL64 clock;
+	DWORD unused[2];
+	BYTE specific[64];
+};
 
 typedef LONG VDM_HANDLE;
-typedef VOID __cdecl VDM_CALLBACK (VDM_HANDLE, VDM_RESULT);
+typedef VOID __cdecl VDM_CALLBACK ( VDM_HANDLE, VDM_RESULT );
 
 
 #ifdef __cplusplus
@@ -169,34 +175,34 @@ extern "C" {
 #endif
 
 
-VDM_HANDLE VDMAPI vdm_open (VDM_CALLBACK *func = NULL);
-VOID VDMAPI vdm_close (VDM_HANDLE h);
+VDM_HANDLE VDMAPI vdm_open ( VDM_CALLBACK* func = NULL );
+VOID VDMAPI vdm_close ( VDM_HANDLE h );
 
-VDM_RESULT VDMAPI vdm_init (VDM_HANDLE h, VDM_TARGETINFO *info, UINT size=sizeof(VDM_TARGETINFO));
-VDM_RESULT VDMAPI vdm_term (VDM_HANDLE h);
+VDM_RESULT VDMAPI vdm_init ( VDM_HANDLE h, VDM_TARGETINFO* info, UINT size=sizeof ( VDM_TARGETINFO ) );
+VDM_RESULT VDMAPI vdm_term ( VDM_HANDLE h );
 
-VDM_RESULT VDMAPI vdm_play (VDM_HANDLE h);
-VDM_RESULT VDMAPI vdm_step (VDM_HANDLE h);
-VDM_RESULT VDMAPI vdm_pause (VDM_HANDLE h);
-VDM_RESULT VDMAPI vdm_reset (VDM_HANDLE h);
+VDM_RESULT VDMAPI vdm_play ( VDM_HANDLE h );
+VDM_RESULT VDMAPI vdm_step ( VDM_HANDLE h );
+VDM_RESULT VDMAPI vdm_pause ( VDM_HANDLE h );
+VDM_RESULT VDMAPI vdm_reset ( VDM_HANDLE h );
 
-VDM_RESULT VDMAPI vdm_readdata (VDM_HANDLE h, VDM_MEMSPACE space, VDM_ADDRESS addr, VOID *buf, UINT numbytes);
-VDM_RESULT VDMAPI vdm_writedata (VDM_HANDLE h, VDM_MEMSPACE space, VDM_ADDRESS addr, VOID *buf, UINT numbytes);
-VDM_RESULT VDMAPI vdm_readregs (VDM_HANDLE h, VOID *regs, UINT size);
-VDM_RESULT VDMAPI vdm_writeregs (VDM_HANDLE h, VOID *regs, UINT size);
+VDM_RESULT VDMAPI vdm_readdata ( VDM_HANDLE h, VDM_MEMSPACE space, VDM_ADDRESS addr, VOID* buf, UINT numbytes );
+VDM_RESULT VDMAPI vdm_writedata ( VDM_HANDLE h, VDM_MEMSPACE space, VDM_ADDRESS addr, VOID* buf, UINT numbytes );
+VDM_RESULT VDMAPI vdm_readregs ( VDM_HANDLE h, VOID* regs, UINT size );
+VDM_RESULT VDMAPI vdm_writeregs ( VDM_HANDLE h, VOID* regs, UINT size );
 
-VDM_RESULT VDMAPI vdm_setbp (VDM_HANDLE h, VDM_ADDRESS addr);
-VDM_RESULT VDMAPI vdm_clrbp (VDM_HANDLE h, VDM_ADDRESS addr);
-VDM_RESULT VDMAPI vdm_getpc (VDM_HANDLE h, VDM_ADDRESS *npc);
-VDM_RESULT VDMAPI vdm_setpc (VDM_HANDLE h, VDM_ADDRESS npc);
+VDM_RESULT VDMAPI vdm_setbp ( VDM_HANDLE h, VDM_ADDRESS addr );
+VDM_RESULT VDMAPI vdm_clrbp ( VDM_HANDLE h, VDM_ADDRESS addr );
+VDM_RESULT VDMAPI vdm_getpc ( VDM_HANDLE h, VDM_ADDRESS* npc );
+VDM_RESULT VDMAPI vdm_setpc ( VDM_HANDLE h, VDM_ADDRESS npc );
 
-BOOL VDMAPI vdm_isalive (VDM_HANDLE h);
+BOOL VDMAPI vdm_isalive ( VDM_HANDLE h );
 
-BOOL VDMAPI vdm_editconfig (HWND phwnd);
-VOID VDMAPI vdm_getconfig (VDM_CONFIG *, UINT size=sizeof(VDM_CONFIG));
-VOID VDMAPI vdm_setconfig (VDM_CONFIG *, UINT size=sizeof(VDM_CONFIG));
+BOOL VDMAPI vdm_editconfig ( HWND phwnd );
+VOID VDMAPI vdm_getconfig ( VDM_CONFIG*, UINT size=sizeof ( VDM_CONFIG ) );
+VOID VDMAPI vdm_setconfig ( VDM_CONFIG*, UINT size=sizeof ( VDM_CONFIG ) );
 
-BOOL VDMAPI vdm_geterrmsg (VDM_RESULT result, CHAR *buf, INT size);
+BOOL VDMAPI vdm_geterrmsg ( VDM_RESULT result, CHAR* buf, INT size );
 
 #ifdef __cplusplus
 }
