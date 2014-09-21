@@ -1,4 +1,9 @@
 #include <vsm_api.h>
+static IMEMORYPOPUP* memory_popup=NULL;
+IPOPUP* debug_popup=NULL;
+IPOPUP* source_popup=NULL;
+IPOPUP* status_popup=NULL;
+IPOPUP* var_popup=NULL;
 
 static int32_t lua_console_log (lua_State *L);
 static int32_t lua_set_pin_state (lua_State *L);
@@ -13,13 +18,14 @@ static int32_t lua_out_warning(lua_State *L);
 static int32_t lua_out_error(lua_State *L);
 static int32_t lua_set_callback(lua_State *L);
 static int32_t lua_create_debug_popup (lua_State *L);
+static int32_t lua_print_to_debug_popup (lua_State *L);
+static int32_t lua_dump_to_debug_popup (lua_State *L);
 static int32_t lua_create_memory_popup (lua_State *L);
 static int32_t lua_create_source_popup (lua_State *L);
 static int32_t lua_create_status_popup (lua_State *L);
 static int32_t lua_create_var_popup (lua_State *L);
 static int32_t lua_delete_popup (lua_State *L);
-static int32_t lua_print_popup (lua_State *L);
-static int32_t lua_set_popup_memory (lua_State *L);
+static int32_t lua_set_memory_popup (lua_State *L);
 static int32_t lua_get_array (lua_State *L);
 
 //It is temp ugly function, should create function/name array
@@ -65,9 +71,10 @@ const lua_bind_func lua_c_api_list[] =
 	{.lua_func_name="create_source_popup", .lua_c_api=&lua_create_source_popup},
 	{.lua_func_name="create_status_popup", .lua_c_api=&lua_create_status_popup},
 	{.lua_func_name="create_var_popup", .lua_c_api=&lua_create_var_popup},
-	{.lua_func_name="delete_popup", .lua_c_api=&lua_delete_popup},
-	{.lua_func_name="print_popup", .lua_c_api=&lua_print_popup},
-	{.lua_func_name="set_popup_memory", .lua_c_api=&lua_set_popup_memory},
+	{.lua_func_name="delete_popup", .lua_c_api=&lua_delete_popup},	
+	{.lua_func_name="set_memory_popup", .lua_c_api=&lua_set_memory_popup},
+  {.lua_func_name="print_to_debug_popup", .lua_c_api=&lua_print_to_debug_popup},
+  {.lua_func_name="dump_to_debug_popup", .lua_c_api=&lua_dump_to_debug_popup},
 	{.lua_func_name="get_array", .lua_c_api=&lua_get_array},
 	{.lua_func_name=0},	
 };
@@ -145,74 +152,143 @@ void lua_run_function (const char *func_name)
 static int32_t lua_console_log (lua_State *L) 
 {
   (void) L;
-  //const char *text = lua_tostring(L, -1);  /* get argument */  
+  //const char *text = lua_tostring(L, -1);    
   //out_error("%s", text);
-  return 0;  /* number of results */
+  return 0;  
 }
 
 static int32_t lua_delete_popup (lua_State *L) 
 {  
   int id = lua_tonumber(L, -1);
   delete_popup(id);
-  return 0;  /* number of results */
+  return 0;  
 }
 
 static int32_t lua_create_debug_popup (lua_State *L) 
 {
-  const char *text = lua_tostring(L, -1);  /* get argument */  
-  IPOPUP *popup = create_debug_popup (text, popup_id++);
-  lua_pushlightuserdata(L, popup);
-  return 0;  /* number of results */
+  const char *text = lua_tostring(L, -1);      
+  lua_pushlightuserdata(L, create_debug_popup (text, ++popup_id));
+  lua_pushinteger(L, popup_id);  
+  return 2;  
+}
+
+/**
+* Prints a text string to debug popup
+* @param L Lua state
+* @return a pointer to popup and its ID
+*/
+static int32_t lua_print_to_debug_popup (lua_State *L) 
+{   
+  int32_t argnum = lua_gettop(L);
+  if (2 > argnum)
+  {
+    out_error("Function %s expects 2 arguments got %d\n", __PRETTY_FUNCTION__, argnum);
+  return 0;  
+  }
+  /**
+  * Popup pointer and text of the message are in the stack
+  */
+  print_to_debug_popup(lua_touserdata(L, -2), lua_tostring(L, -1));  
+  return 0;  
+}
+
+/**
+* Prints a text string to debug popup
+* @param L Lua state
+* @return a pointer to popup and its ID
+*/
+static int32_t lua_dump_to_debug_popup (lua_State *L) 
+{   
+  int32_t argnum = lua_gettop(L);
+  if (4 > argnum)
+  {
+    out_error("Function %s expects 4 arguments got %d\n", __PRETTY_FUNCTION__, argnum);
+  return 0;  
+  }
+  /**
+  * 
+  */
+  int32_t a_size = lua_rawlen(L, -3);
+  uint8_t *buf = calloc(1, a_size);
+  for (int i=1; i< a_size ;i++)
+  {    
+      lua_rawgeti(L,-3, i);   
+      buf[i] = (uint8_t)lua_tointeger(L,-3);
+      out_log("%d - %d", i, buf[i]);
+      lua_pop(L, 1);
+  }   
+  dump_to_debug_popup(lua_touserdata(L, -4), buf, lua_tointeger(L, -2), lua_tointeger(L, -1));  
+  return 0;  
 }
 
 static int32_t lua_create_source_popup (lua_State *L) 
 {
-  const char *text = lua_tostring(L, -1);  /* get argument */  
-  IDEBUGPOPUP *popup = create_source_popup (text, popup_id++);
-  lua_pushlightuserdata(L, popup);
-  return 0;  /* number of results */
+  const char *text = lua_tostring(L, -1);      
+  lua_pushlightuserdata(L, create_source_popup (text, popup_id++));  
+  lua_pushinteger(L, popup_id);
+  return 2;  
 }
 static int32_t lua_create_status_popup (lua_State *L) 
 {
-  const char *text = lua_tostring(L, -1);  /* get argument */  
-  IDEBUGPOPUP *popup = create_status_popup (text, popup_id++);
-  lua_pushlightuserdata(L, popup);
-  return 0;  /* number of results */
+  const char *text = lua_tostring(L, -1);      
+  lua_pushlightuserdata(L, create_status_popup (text, popup_id++));
+  lua_pushinteger(L, popup_id);
+  return 2;  
 }
 static int32_t lua_create_var_popup (lua_State *L) 
 {
-  const char *text = lua_tostring(L, -1);  /* get argument */  
-  IDEBUGPOPUP *popup = create_var_popup (text, popup_id++);
-  lua_pushlightuserdata(L, popup);
-  return 0;  /* number of results */
+  const char *text = lua_tostring(L, -1);      
+  lua_pushlightuserdata(L, create_var_popup (text, popup_id++));
+  lua_pushinteger(L, popup_id);
+  return 2;  
 }
 
 static int32_t lua_create_memory_popup (lua_State *L) 
 {
-  const char *text = lua_tostring(L, -1);  /* get argument */  
-  memory_popup = create_memory_popup (text, popup_id++);
-  lua_pushinteger(L, popup_id);
-  return 0;  /* number of results */
+  const char *text = lua_tostring(L, -1);      
+  lua_pushlightuserdata(L, create_memory_popup (text, popup_id++));
+  return 1;  
+}
+
+static int32_t lua_set_memory_popup (lua_State *L) 
+{  
+  if (0 == lua_istable(L, -1))
+  {
+      out_log("No array found");
+      return 0;
+  }
+  int32_t a_size = lua_rawlen(L, -1);
+  uint8_t *buf = calloc(1, a_size);
+  for (int i=1; i< a_size ;i++)
+  {    
+      lua_rawgeti(L,-1, i);   
+      buf[i] = (uint8_t)lua_tointeger(L,-1);
+      out_log("%d - %d", i, buf[i]);
+      lua_pop(L, 1);
+  }     
+  set_popup_memory(memory_popup, 0, buf, a_size); 
+  free(buf);
+  return 0;  
 }
 
 static int32_t lua_set_pin_state (lua_State *L) 
 {  
   int32_t argnum = lua_gettop(L);
-  if (2 != argnum)
+  if (2 > argnum)
   {
   	out_error("Function %s expects 2 arguments got %d\n", __PRETTY_FUNCTION__, argnum);
 	return 0;  
   }
-  int32_t pin_num = lua_tonumber(L, 1);
+  int32_t pin_num = lua_tonumber(L, -2);
   int32_t pin_state = lua_tonumber(L, -1);
   set_pin_state(device_pins[pin_num], pin_state);
-  return 0;  /* number of results */
+  return 0;  
 }
 
 static int32_t lua_get_pin_state (lua_State *L) 
 {  
   int32_t argnum = lua_gettop(L);
-  if (1 != argnum)
+  if (1 > argnum)
   {
   	out_error("Function %s expects 1 arguments got %d\n", __PRETTY_FUNCTION__, argnum);
   	return 0;
@@ -244,7 +320,7 @@ static int32_t lua_get_pin_state (lua_State *L)
 static int32_t lua_is_pin_low (lua_State *L) 
 {  
   int32_t argnum = lua_gettop(L);
-  if (1 != argnum)
+  if (1 > argnum)
   {
   	out_error("Function %s expects 1 arguments got %d\n", __PRETTY_FUNCTION__, argnum);
   	return 0;
@@ -257,7 +333,7 @@ static int32_t lua_is_pin_low (lua_State *L)
 static int32_t lua_is_pin_high (lua_State *L) 
 {  
   int32_t argnum = lua_gettop(L);
-  if (1 != argnum)
+  if (1 > argnum)
   {
   	out_error("Function %s expects 1 arguments got %d\n", __PRETTY_FUNCTION__, argnum);
   	return 0;
@@ -270,7 +346,7 @@ static int32_t lua_is_pin_high (lua_State *L)
 static int32_t lua_toggle_pin_state (lua_State *L) 
 {  
   int32_t argnum = lua_gettop(L);
-  if (1 != argnum)
+  if (1 > argnum)
   {
   	out_error("Function %s expects 1 arguments got %d\n", __PRETTY_FUNCTION__, argnum);
   	return 0;
@@ -283,7 +359,7 @@ static int32_t lua_toggle_pin_state (lua_State *L)
 static int32_t lua_is_pin_floating (lua_State *L) 
 {  
   int32_t argnum = lua_gettop(L);
-  if (1 != argnum)
+  if (1 > argnum)
   {
   	out_error("Function %s expects 1 arguments got %d\n", __PRETTY_FUNCTION__, argnum);
   	return 0;
@@ -296,7 +372,7 @@ static int32_t lua_is_pin_floating (lua_State *L)
 static int32_t lua_out_log (lua_State *L) 
 {  
   int32_t argnum = lua_gettop(L);
-  if (1 != argnum)
+  if (1 > argnum)
   {
   	out_error("Function %s expects 1 arguments got %d\n", __PRETTY_FUNCTION__, argnum);
   	return 0;
@@ -309,7 +385,7 @@ static int32_t lua_out_log (lua_State *L)
 static int32_t lua_out_message (lua_State *L) 
 {  
   int32_t argnum = lua_gettop(L);
-  if (1 != argnum)
+  if (1 > argnum)
   {
   	out_error("Function %s expects 1 arguments got %d\n", __PRETTY_FUNCTION__, argnum);
   	return 0;
@@ -322,7 +398,7 @@ static int32_t lua_out_message (lua_State *L)
 static int32_t lua_out_warning (lua_State *L) 
 {  
   int32_t argnum = lua_gettop(L);
-  if (1 != argnum)
+  if (1 > argnum)
   {
   	out_error("Function %s expects 1 arguments got %d\n", __PRETTY_FUNCTION__, argnum);
   	return 0;
@@ -332,35 +408,10 @@ static int32_t lua_out_warning (lua_State *L)
   return 0;  
 }
 
-static int32_t lua_print_popup (lua_State *L) 
-{  
-  int32_t argnum = lua_gettop(L);
-  if (1 != argnum)
-  {
-  	out_error("Function %s expects 1 arguments got %d\n", __PRETTY_FUNCTION__, argnum);
-  	return 0;
-  }
-  //IPOPUP *popup = lua_touserdata(L, -1); 
-  //const char *text = lua_tostring(L, -1); 
-  //print_popup(popup, "%s", text); 
-  return 0;  
-}
-
-static int32_t lua_set_popup_memory (lua_State *L) 
-{  
-  int32_t argnum = lua_gettop(L);
-  if (3 != argnum)
-  {
-  	out_error("Function %s expects 3 arguments got %d\n", __PRETTY_FUNCTION__, argnum);
-  	return 0;
-  }  
-  return 0;  
-}
-
 static int32_t lua_out_error(lua_State *L) 
 {  
   int32_t argnum = lua_gettop(L);
-  if (1 != argnum)
+  if (1 > argnum)
   {
   	out_error("Function %s expects 1 arguments got %d\n", __PRETTY_FUNCTION__, argnum);
   	return 0;
@@ -373,13 +424,13 @@ static int32_t lua_out_error(lua_State *L)
 static int32_t lua_set_callback(lua_State *L) 
 {  
   int32_t argnum = lua_gettop(L);
-  if (2 != argnum)
+  if (2 > argnum)
   {
   	out_error("Function %s expects 2 arguments got %d\n", __PRETTY_FUNCTION__, argnum);
   	return 0;
   }
   //TODO: Add check integer type
-  size_t picotime = lua_tonumber(L, 1); 
+  size_t picotime = lua_tonumber(L, -2); 
   int32_t eventid = lua_tointeger(L, -1);
   set_callback(picotime, eventid);
   return 0;  
@@ -387,7 +438,6 @@ static int32_t lua_set_callback(lua_State *L)
 
 static int32_t lua_get_array (lua_State *L)
 {
-	lua_getglobal (L, "array");
 	if (0 == lua_istable(L, -1))
 	{
 	    out_log("No array found");
