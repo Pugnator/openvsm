@@ -22,7 +22,11 @@ static int32_t lua_create_var_popup (lua_State *L);
 static int32_t lua_delete_popup (lua_State *L);
 static int32_t lua_set_memory_popup (lua_State *L);
 static int32_t lua_repaint_memory_popup (lua_State *L);
-static int32_t lua_get_model_param (lua_State *L);
+static int32_t lua_get_string_param (lua_State *L);
+static int32_t lua_get_bool_param (lua_State *L);
+static int32_t lua_get_num_param (lua_State *L);
+static int32_t lua_get_hex_param (lua_State *L);
+static int32_t lua_get_init_param (lua_State *L);
 
 typedef struct lua_bind_func
 {
@@ -69,7 +73,10 @@ const lua_bind_func lua_c_api_list[] =
   {.lua_func_name="repaint_memory_popup", .lua_c_api=&lua_repaint_memory_popup},
   {.lua_func_name="print_to_debug_popup", .lua_c_api=&lua_print_to_debug_popup},
   {.lua_func_name="dump_to_debug_popup", .lua_c_api=&lua_dump_to_debug_popup},
-	{.lua_func_name="get_model_param", .lua_c_api=&lua_get_model_param},
+	{.lua_func_name="get_string_param", .lua_c_api=&lua_get_string_param},
+  {.lua_func_name="get_num_param", .lua_c_api=&lua_get_num_param},
+  {.lua_func_name="get_bool_param", .lua_c_api=&lua_get_bool_param},
+  {.lua_func_name="get_init_param", .lua_c_api=&lua_get_init_param},
 	{.lua_func_name=0},	
 };
 
@@ -151,10 +158,33 @@ static int32_t lua_console_log (lua_State *L)
   return 0;  
 }
 
-static int32_t lua_get_model_param (lua_State *L) 
-{
-  char *text = (char *)lua_tostring(L, -1);      
-  lua_pushstring(L, get_model_param(text));
+static int32_t lua_get_string_param (lua_State *L) 
+{  
+  lua_pushstring(L, get_string_param((char *)lua_tostring(L, -1)));
+  return 1;  
+}
+
+static int32_t lua_get_bool_param (lua_State *L) 
+{  
+  lua_pushboolean(L, get_bool_param((char *)lua_tostring(L, -1)));
+  return 1;  
+}
+
+static int32_t lua_get_num_param (lua_State *L) 
+{  
+  lua_pushnumber(L, get_num_param((char *)lua_tostring(L, -1)));
+  return 1;  
+}
+
+static int32_t lua_get_hex_param (lua_State *L) 
+{  
+  lua_pushinteger(L, get_hex_param((char *)lua_tostring(L, -1)));
+  return 1;  
+}
+
+static int32_t lua_get_init_param (lua_State *L) 
+{  
+  lua_pushinteger(L, get_init_param((char *)lua_tostring(L, -1)));
   return 1;  
 }
 
@@ -464,24 +494,4 @@ static int32_t lua_set_callback(lua_State *L)
   int32_t eventid = lua_tointeger(L, -1);
   set_callback(picotime, eventid);
   return 0;  
-}
-
-static int32_t lua_get_array (lua_State *L)
-{
-	if (0 == lua_istable(L, -1))
-	{
-	    out_log("No array found");
-	    return 0;
-	}
-
-	for (int i=1;;i++)
-	{    
-	    lua_rawgeti(L,-1, i);
-	    if (lua_isnil(L,-1)) 
-	    	break;
-	    int32_t num = lua_tonumber(L,-1);
-	    out_log("Count: %d, val = %d", i, num);
-	    lua_pop(luactx, 1);
-	}
-	return 0;
 }

@@ -24,9 +24,31 @@ void set_pin_state (VSM_PIN pin, STATE state)
 	pin.pin->vtable->setstate2(pin.pin, 0, pin.on_time, pin.off_time, state);
 }
 
-CHAR *get_model_param (CHAR* field_name)
+CHAR *get_string_param (CHAR* field_name)
 {
 	return model_instance->vtable->getstrval(model_instance, 0, field_name, "?");
+}
+
+BOOL get_bool_param (CHAR* field_name)
+{	
+	return model_instance->vtable->getboolval(model_instance, 0, field_name, FALSE);
+}
+
+double get_num_param (CHAR* field_name)
+{
+	double result = 0;
+	model_instance->vtable->getnumval(model_instance, 0, &result, field_name, 0.0);
+	return result;
+}
+
+int32_t get_hex_param (CHAR* field_name)
+{
+	return (int32_t)model_instance->vtable->gethexval(model_instance, 0, field_name, 0);
+}
+
+int64_t get_init_param (CHAR* field_name)
+{
+	return (int64_t)model_instance->vtable->getinitval(model_instance, 0, field_name, 0);
 }
 
 void load_image (CHAR* filename, uint8_t *buffer, size_t buffer_size)
