@@ -1,15 +1,10 @@
 #include <vsm_api.h>
 
+uint8_t *memory_popup_buf = NULL;
 int32_t popup_id = 0;
 
 BOOL vsm_register (ILICENCESERVER *ils)
 {
-	CONSOLE_ALLOCATED = FALSE;
-
-	#ifdef _CURSES_ENABLED
-	CONSOLE_ALLOCATED = TRUE;
-	//debug_console_alloc();
-	#endif
 
 	if(FALSE ==  ils->vtable->authorize( ils, 0, model_key, VSM_API_VERSION ) )
 	{
@@ -24,6 +19,9 @@ void set_pin_state (VSM_PIN pin, STATE state)
 	pin.pin->vtable->setstate2(pin.pin, 0, pin.on_time, pin.off_time, state);
 }
 
+/**
+* Get model string parameter (case insensitive)
+*/
 CHAR *get_string_param (CHAR* field_name)
 {
 	return model_instance->vtable->getstrval(model_instance, 0, field_name, "?");

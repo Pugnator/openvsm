@@ -283,7 +283,13 @@ static int32_t lua_create_memory_popup (lua_State *L)
 
 static int32_t lua_set_memory_popup (lua_State *L) 
 {  
-   int32_t argnum = lua_gettop(L);
+  if(memory_popup_buf)
+  {
+    free(memory_popup_buf);
+    memory_popup_buf = NULL;
+  }
+
+  int32_t argnum = lua_gettop(L);  
   if (3 > argnum)
   {
     out_error("Function %s expects 3 arguments got %d\n", __PRETTY_FUNCTION__, argnum);
@@ -298,16 +304,16 @@ static int32_t lua_set_memory_popup (lua_State *L)
   int32_t a_size = lua_rawlen(L, -2);  
   if (lua_tointeger(L,-1) < a_size)
     a_size = lua_tointeger(L,-1);
-  uint8_t *buf = calloc(1, a_size);
+  memory_popup_buf = calloc(1, a_size);
   for (int i=1; i<= a_size ;i++)
   {    
       lua_rawgeti(L,-2, i);   
-      buf[i-1] = (uint8_t)lua_tointeger(L,-1);          
+      memory_popup_buf[i-1] = (uint8_t)lua_tointeger(L,-1);          
       lua_pop(L, 1);
   }       
 
-  set_memory_popup(lua_touserdata(L, -3), 0, buf, lua_tointeger(L,-1)); 
-  /* Do not free buffer passed to popup untill popup is destroyed 
+  set_memory_popup(lua_touserdata(L, -3), 0, memory_popup_buf, lua_tointeger(L,-1)); 
+  /* Do NOT free buffer passed to popup untill popup is destroyed 
   * or you will get garbage on screen
   */
   return 0;  
