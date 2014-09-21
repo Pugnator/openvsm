@@ -12,7 +12,12 @@ BOOL is_pin_high ( IDSIMPIN* pin );
 BOOL is_pin_low ( IDSIMPIN* pin );
 BOOL is_pin_steady ( IDSIMPIN* pin );
 BOOL vsm_register ( ILICENCESERVER* ils );
-CHAR* get_model_param ( CHAR* field_name );
+CHAR* get_string_param ( CHAR* field_name );
+BOOL get_bool_param ( CHAR* field_name );
+double get_num_param ( CHAR* field_name );
+int32_t get_hex_param ( CHAR* field_name );
+int64_t get_init_param ( CHAR* field_name );
+
 IDSIMPIN* get_pin ( char* pin_name );
 STATE get_pin_state ( IDSIMPIN* pin );
 void delete_popup ( POPUPID id );
