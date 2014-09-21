@@ -12,7 +12,7 @@ BOOL is_pin_high ( IDSIMPIN* pin );
 BOOL is_pin_low ( IDSIMPIN* pin );
 BOOL is_pin_steady ( IDSIMPIN* pin );
 BOOL vsm_register ( ILICENCESERVER* ils );
-CHAR* get_image_filename ( CHAR* field_name );
+CHAR* get_model_param ( CHAR* field_name );
 IDSIMPIN* get_pin ( char* pin_name );
 STATE get_pin_state ( IDSIMPIN* pin );
 void delete_popup ( POPUPID id );

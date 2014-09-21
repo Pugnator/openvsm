@@ -24,7 +24,7 @@ void set_pin_state (VSM_PIN pin, STATE state)
 	pin.pin->vtable->setstate2(pin.pin, 0, pin.on_time, pin.off_time, state);
 }
 
-CHAR *get_image_filename (CHAR* field_name)
+CHAR *get_model_param (CHAR* field_name)
 {
 	return model_instance->vtable->getstrval(model_instance, 0, field_name, "?");
 }
