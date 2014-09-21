@@ -60,7 +60,7 @@ IDEBUGPOPUP *create_debug_popup (const char *title, const int32_t id)
 	cps->flags = PWF_VISIBLE;
 	cps->type = PWT_DEBUG;
 	cps->height = 200;
-	cps->width = 200;
+	cps->width = 640;
 	cps->id = id;	
 	IDEBUGPOPUP *popup = create_popup(cps);	
 	free(cps);	
@@ -114,9 +114,14 @@ void delete_popup (POPUPID id)
 	model_instance->vtable->deletepopup(model_instance, 0, id);
 }
 
-void set_popup_memory (IMEMORYPOPUP *popup, size_t offset, void *buffer, size_t size)
+void set_memory_popup (IMEMORYPOPUP *popup, size_t offset, void *buffer, size_t size)
 {
 	popup->vtable->setmemory(popup, 0, offset, buffer, size);
+}
+
+void repaint_memory_popup (IMEMORYPOPUP *popup)
+{
+	popup->vtable->repaint(popup, 0);
 }
 
 void print_to_debug_popup (IDEBUGPOPUP *popup, const char *message)
