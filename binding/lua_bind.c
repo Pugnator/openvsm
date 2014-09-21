@@ -1,9 +1,4 @@
 #include <vsm_api.h>
-static IMEMORYPOPUP* memory_popup=NULL;
-IPOPUP* debug_popup=NULL;
-IPOPUP* source_popup=NULL;
-IPOPUP* status_popup=NULL;
-IPOPUP* var_popup=NULL;
 
 static int32_t lua_console_log (lua_State *L);
 static int32_t lua_set_pin_state (lua_State *L);
@@ -26,6 +21,7 @@ static int32_t lua_create_status_popup (lua_State *L);
 static int32_t lua_create_var_popup (lua_State *L);
 static int32_t lua_delete_popup (lua_State *L);
 static int32_t lua_set_memory_popup (lua_State *L);
+static int32_t lua_repaint_memory_popup (lua_State *L);
 static int32_t lua_get_array (lua_State *L);
 
 //It is temp ugly function, should create function/name array
@@ -73,6 +69,7 @@ const lua_bind_func lua_c_api_list[] =
 	{.lua_func_name="create_var_popup", .lua_c_api=&lua_create_var_popup},
 	{.lua_func_name="delete_popup", .lua_c_api=&lua_delete_popup},	
 	{.lua_func_name="set_memory_popup", .lua_c_api=&lua_set_memory_popup},
+  {.lua_func_name="repaint_memory_popup", .lua_c_api=&lua_repaint_memory_popup},
   {.lua_func_name="print_to_debug_popup", .lua_c_api=&lua_print_to_debug_popup},
   {.lua_func_name="dump_to_debug_popup", .lua_c_api=&lua_dump_to_debug_popup},
 	{.lua_func_name="get_array", .lua_c_api=&lua_get_array},
@@ -200,45 +197,44 @@ static int32_t lua_print_to_debug_popup (lua_State *L)
 static int32_t lua_dump_to_debug_popup (lua_State *L) 
 {   
   int32_t argnum = lua_gettop(L);
-  if (4 > argnum)
+  if (3 > argnum)
   {
-    out_error("Function %s expects 4 arguments got %d\n", __PRETTY_FUNCTION__, argnum);
+    out_error("Function %s expects 3 arguments got %d\n", __PRETTY_FUNCTION__, argnum);
   return 0;  
   }
   /**
   * 
   */
-  int32_t a_size = lua_rawlen(L, -3);
+  int32_t a_size = lua_rawlen(L, -2);
   uint8_t *buf = calloc(1, a_size);
-  for (int i=1; i< a_size ;i++)
+  for (int i=1; i<= a_size ;i++)
   {    
-      lua_rawgeti(L,-3, i);   
-      buf[i] = (uint8_t)lua_tointeger(L,-3);
-      out_log("%d - %d", i, buf[i]);
+      lua_rawgeti(L,-2, i);   
+      buf[i-1] = (uint8_t)lua_tointeger(L,-1);     
       lua_pop(L, 1);
   }   
-  dump_to_debug_popup(lua_touserdata(L, -4), buf, lua_tointeger(L, -2), lua_tointeger(L, -1));  
+  dump_to_debug_popup(lua_touserdata(L, -3), buf, a_size, lua_tointeger(L, -1));  
   return 0;  
 }
 
 static int32_t lua_create_source_popup (lua_State *L) 
 {
   const char *text = lua_tostring(L, -1);      
-  lua_pushlightuserdata(L, create_source_popup (text, popup_id++));  
+  lua_pushlightuserdata(L, create_source_popup (text, ++popup_id));  
   lua_pushinteger(L, popup_id);
   return 2;  
 }
 static int32_t lua_create_status_popup (lua_State *L) 
 {
   const char *text = lua_tostring(L, -1);      
-  lua_pushlightuserdata(L, create_status_popup (text, popup_id++));
+  lua_pushlightuserdata(L, create_status_popup (text, ++popup_id));
   lua_pushinteger(L, popup_id);
   return 2;  
 }
 static int32_t lua_create_var_popup (lua_State *L) 
 {
   const char *text = lua_tostring(L, -1);      
-  lua_pushlightuserdata(L, create_var_popup (text, popup_id++));
+  lua_pushlightuserdata(L, create_var_popup (text, ++popup_id));
   lua_pushinteger(L, popup_id);
   return 2;  
 }
@@ -246,28 +242,58 @@ static int32_t lua_create_var_popup (lua_State *L)
 static int32_t lua_create_memory_popup (lua_State *L) 
 {
   const char *text = lua_tostring(L, -1);      
-  lua_pushlightuserdata(L, create_memory_popup (text, popup_id++));
-  return 1;  
+  lua_pushlightuserdata(L, create_memory_popup (text, ++popup_id));
+  lua_pushinteger(L, popup_id);
+  return 2;  
 }
 
 static int32_t lua_set_memory_popup (lua_State *L) 
 {  
-  if (0 == lua_istable(L, -1))
+   int32_t argnum = lua_gettop(L);
+  if (3 > argnum)
   {
-      out_log("No array found");
+    out_error("Function %s expects 3 arguments got %d\n", __PRETTY_FUNCTION__, argnum);
+  return 0;  
+  }
+  if (0 == lua_isnumber(L, -1) || 0 == lua_istable(L, -2) || 0 == lua_isuserdata(L, -3))
+  {
+      out_error("Bad arguments or their order");
       return 0;
   }
-  int32_t a_size = lua_rawlen(L, -1);
+
+  int32_t a_size = lua_rawlen(L, -2);  
+  if (lua_tointeger(L,-1) < a_size)
+    a_size = lua_tointeger(L,-1);
   uint8_t *buf = calloc(1, a_size);
-  for (int i=1; i< a_size ;i++)
+  for (int i=1; i<= a_size ;i++)
   {    
-      lua_rawgeti(L,-1, i);   
-      buf[i] = (uint8_t)lua_tointeger(L,-1);
-      out_log("%d - %d", i, buf[i]);
+      lua_rawgeti(L,-2, i);   
+      buf[i-1] = (uint8_t)lua_tointeger(L,-1);          
       lua_pop(L, 1);
-  }     
-  set_popup_memory(memory_popup, 0, buf, a_size); 
-  free(buf);
+  }       
+
+  set_memory_popup(lua_touserdata(L, -3), 0, buf, lua_tointeger(L,-1)); 
+  /* Do not free buffer passed to popup untill popup is destroyed 
+  * or you will get garbage on screen
+  */
+  return 0;  
+}
+
+static int32_t lua_repaint_memory_popup (lua_State *L) 
+{  
+   int32_t argnum = lua_gettop(L);
+  if (1 > argnum)
+  {
+    out_error("Function %s expects 1 argument got %d\n", __PRETTY_FUNCTION__, argnum);
+  return 0;  
+  }
+  if (0 == lua_isuserdata(L, -1))
+  {
+      out_error("Bad argument");
+      return 0;
+  }
+  
+  repaint_memory_popup(lua_touserdata(L, -1));   
   return 0;  
 }
 
