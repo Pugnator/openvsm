@@ -24,6 +24,7 @@
 #define model_key 0x00000000
 
 extern uint8_t *memory_popup_buf;
+extern uint8_t *debug_popup_buf;
 
 int32_t vasprintf ( char** sptr, char* fmt, va_list argv );
 int32_t asprintf ( char** sptr, char* fmt, ... );

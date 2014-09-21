@@ -240,14 +240,15 @@ static int32_t lua_dump_to_debug_popup (lua_State *L)
   * 
   */
   int32_t a_size = lua_rawlen(L, -2);
-  uint8_t *buf = calloc(1, a_size);
+
+  debug_popup_buf = calloc(1, a_size);
   for (int i=1; i<= a_size ;i++)
   {    
       lua_rawgeti(L,-2, i);   
-      buf[i-1] = (uint8_t)lua_tointeger(L,-1);     
+      debug_popup_buf[i-1] = (uint8_t)lua_tointeger(L,-1);     
       lua_pop(L, 1);
   }   
-  dump_to_debug_popup(lua_touserdata(L, -3), buf, a_size, lua_tointeger(L, -1));  
+  dump_to_debug_popup(lua_touserdata(L, -3), debug_popup_buf, a_size, lua_tointeger(L, -1));  
   return 0;  
 }
 
