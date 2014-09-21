@@ -38,6 +38,7 @@ VOID __cdecl deletedsimmodel ( IDSIMMODEL* model )
 	( void ) model;
 	/* Close Lua */
 	lua_close ( luactx );
+	free(memory_popup_buf);
 }
 
 INT __attribute__ ( ( fastcall ) ) vsm_isdigital ( IDSIMMODEL* this, DWORD edx, CHAR* pinname )
@@ -190,11 +191,7 @@ BOOL APIENTRY DllMain ( HINSTANCE hInstDLL, DWORD fdwReason, LPVOID lpvReserved 
 		case DLL_THREAD_DETACH:
 			//debug_console_free();
 			break;
-		case DLL_PROCESS_DETACH:
-			if ( CONSOLE_ALLOCATED )
-			{
-				//debug_console_free();
-			}
+		case DLL_PROCESS_DETACH:			
 			
 			break;
 	}

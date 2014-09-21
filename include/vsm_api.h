@@ -22,7 +22,8 @@
 
 #define VSM_API_VERSION  110
 #define model_key 0x00000000
-BOOL CONSOLE_ALLOCATED;
+
+extern uint8_t *memory_popup_buf;
 
 int32_t vasprintf ( char** sptr, char* fmt, va_list argv );
 int32_t asprintf ( char** sptr, char* fmt, ... );
