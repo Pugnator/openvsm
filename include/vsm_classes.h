@@ -31,6 +31,7 @@ typedef struct IUSERPOPUP IUSERPOPUP;
 typedef struct IMEMORYPOPUP IMEMORYPOPUP;
 typedef struct IDEBUGPOPUP IDEBUGPOPUP;
 typedef struct ISTATUSPOPUP ISTATUSPOPUP;
+typedef struct ISOURCEPOPUP ISOURCEPOPUP;
 typedef struct IMSGHLR IMSGHLR;
 
 
@@ -48,6 +49,7 @@ typedef struct IDSIMCKT_vtable IDSIMCKT_vtable;
 typedef struct IMEMORYPOPUP_vtable IMEMORYPOPUP_vtable;
 typedef struct IDEBUGPOPUP_vtable IDEBUGPOPUP_vtable;
 typedef struct IUSERPOPUP_vtable IUSERPOPUP_vtable;
+typedef struct ISOURCEPOPUP_vtable ISOURCEPOPUP_vtable;
 typedef struct ISTATUSPOPUP_vtable ISTATUSPOPUP_vtable;
 typedef struct IMSGHLR_vtable IMSGHLR_vtable;
 
@@ -233,6 +235,30 @@ struct ISTATUSPOPUP_vtable
 	VOID __attribute__ ( ( fastcall ) ) ( *repaint ) ( ISTATUSPOPUP* this, EDX );
 };
 
+// Status display window:
+struct ISOURCEPOPUP_vtable
+{
+	BOOL __attribute__ ( ( fastcall ) ) ( *addsdifile ) ( ISOURCEPOPUP* this, EDX, CHAR* file );
+	BOOL __attribute__ ( ( fastcall ) ) ( *setpcaddress ) ( ISOURCEPOPUP* this, EDX, ADDRESS addr );
+	BOOL __attribute__ ( ( fastcall ) ) ( *isbreakpoint ) ( ISOURCEPOPUP* this, EDX, ADDRESS addr );
+	BOOL __attribute__ ( ( fastcall ) ) ( *iscurrentline ) ( ISOURCEPOPUP* this, EDX, ADDRESS addr );
+	BOOL __attribute__ ( ( fastcall ) ) ( *findfirstbpt ) ( ISOURCEPOPUP* this, EDX, ADDRESS addr );
+	BOOL __attribute__ ( ( fastcall ) ) ( *findnextbpt ) ( ISOURCEPOPUP* this, EDX, ADDRESS addr );	
+
+	BOOL __attribute__ ( ( fastcall ) ) ( *addsrcfile ) ( ISOURCEPOPUP* this, EDX, CHAR* file, BOOL lowlevel );
+	VOID __attribute__ ( ( fastcall ) ) ( *addcodeline ) ( ISOURCEPOPUP* this, EDX, INT srclinenum, ADDRESS address );
+	VOID __attribute__ ( ( fastcall ) ) ( *addcodelabel ) ( ISOURCEPOPUP* this, EDX, CHAR* label, ADDRESS address );
+	VOID __attribute__ ( ( fastcall ) ) ( *update ) ( ISOURCEPOPUP* this, EDX);
+
+	BOOL __attribute__ ( ( fastcall ) ) ( *getsteptoaddr ) ( ISOURCEPOPUP* this, EDX, ADDRESS* addr);
+	VOID __attribute__ ( ( fastcall ) ) ( *setinsertpos ) ( ISOURCEPOPUP* this, EDX, INT fileid, INT linenum, BOOL newblock);
+	VOID __attribute__ ( ( fastcall ) ) ( *insertline ) ( ISOURCEPOPUP* this, EDX, ADDRESS addr, CHAR* opcodes, CHAR* srctext);
+	BOOL __attribute__ ( ( fastcall ) ) ( *findfirstsrcline ) ( ISOURCEPOPUP* this, EDX, ADDRESS* addr);
+	BOOL __attribute__ ( ( fastcall ) ) ( *findnextsrcline ) ( ISOURCEPOPUP* this, EDX, ADDRESS* addr);
+	CHAR* __attribute__ ( ( fastcall ) ) ( *findlabel ) ( ISOURCEPOPUP* this, EDX, ADDRESS* addr);
+
+};
+
 /*************************************************************************/
 
 struct IMSGHLR_vtable
@@ -241,3 +267,4 @@ struct IMSGHLR_vtable
 };
 
 #endif
+
