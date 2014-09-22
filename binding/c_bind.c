@@ -95,7 +95,7 @@ IDEBUGPOPUP *create_source_popup (const char *title, const int32_t id)
 	cps->flags = PWF_VISIBLE;
 	cps->type = PWT_SOURCE;
 	cps->height = 200;
-	cps->width = 200;
+	cps->width = 640;
 	cps->id = id;
 	IDEBUGPOPUP *popup = create_popup(cps);
 	free(cps);
@@ -138,6 +138,11 @@ void delete_popup (POPUPID id)
 void set_memory_popup (IMEMORYPOPUP *popup, size_t offset, void *buffer, size_t size)
 {
 	popup->vtable->setmemory(popup, 0, offset, buffer, size);
+}
+
+bool add_source_file (ISOURCEPOPUP *popup, char *filename, bool lowlevel)
+{
+	return popup->vtable->addsrcfile(popup, 0, filename, lowlevel);
 }
 
 void repaint_memory_popup (IMEMORYPOPUP *popup)

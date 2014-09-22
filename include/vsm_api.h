@@ -3,6 +3,7 @@
 
 #include <windows.h>
 #include <stdio.h>
+#include <stdbool.h>
 #include <stdint.h>
 #include <stdlib.h>
 #include <assert.h>
@@ -17,14 +18,14 @@
 #include <device.h>
 #include <c_bind.h>
 #include <lua_bind.h>
-#include <panel.h>
+//#include <panel.h>
 //#include <tui.h>
 
 #define VSM_API_VERSION  110
 #define model_key 0x00000000
 
-extern uint8_t *memory_popup_buf;
-extern uint8_t *debug_popup_buf;
+extern uint8_t* memory_popup_buf;
+extern uint8_t* debug_popup_buf;
 
 int32_t vasprintf ( char** sptr, char* fmt, va_list argv );
 int32_t asprintf ( char** sptr, char* fmt, ... );
@@ -181,6 +182,13 @@ struct ISTATUSPOPUP
 {
 
 	ISTATUSPOPUP_vtable* vtable;
+	
+};
+
+struct ISOURCEPOPUP
+{
+
+	ISOURCEPOPUP_vtable* vtable;
 	
 };
 

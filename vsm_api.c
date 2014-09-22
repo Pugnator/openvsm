@@ -38,8 +38,8 @@ VOID __cdecl deletedsimmodel ( IDSIMMODEL* model )
 	( void ) model;
 	/* Close Lua */
 	lua_close ( luactx );
-	free(memory_popup_buf);
-	free(debug_popup_buf);
+	free ( memory_popup_buf );
+	free ( debug_popup_buf );
 }
 
 INT __attribute__ ( ( fastcall ) ) vsm_isdigital ( IDSIMMODEL* this, DWORD edx, CHAR* pinname )
@@ -83,15 +83,15 @@ VOID __attribute__ ( ( fastcall ) ) vsm_setup ( IDSIMMODEL* this, DWORD edx, IIN
 		lua_getfield ( luactx,-1, PIN_NAME );
 		const char* pin_name = lua_tostring ( luactx,-1 );
 		device_pins[i].pin = get_pin ( ( char* ) pin_name );
-		lua_pop ( luactx, 1);
+		lua_pop ( luactx, 1 );
 		//set pin on time
-		lua_getfield ( luactx,-1, PIN_ON_TIME );		
+		lua_getfield ( luactx,-1, PIN_ON_TIME );
 		device_pins[i].on_time = lua_tonumber ( luactx,-1 );
-		lua_pop ( luactx, 1);
+		lua_pop ( luactx, 1 );
 		//set pin off time
-		lua_getfield ( luactx,-1, PIN_OFF_TIME );		
+		lua_getfield ( luactx,-1, PIN_OFF_TIME );
 		device_pins[i].off_time = lua_tonumber ( luactx,-1 );
-		lua_pop ( luactx, 1);
+		lua_pop ( luactx, 1 );
 		//Set global variable that holds pin name and its number
 		lua_pushinteger ( luactx, i );
 		lua_setglobal ( luactx, pin_name );
@@ -192,8 +192,8 @@ BOOL APIENTRY DllMain ( HINSTANCE hInstDLL, DWORD fdwReason, LPVOID lpvReserved 
 		case DLL_THREAD_DETACH:
 			//debug_console_free();
 			break;
-		case DLL_PROCESS_DETACH:			
-			
+		case DLL_PROCESS_DETACH:
+		
 			break;
 	}
 	return TRUE;
