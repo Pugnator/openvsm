@@ -27,7 +27,9 @@ uint8_t *memory_popup_buf = NULL;
 uint8_t *debug_popup_buf = NULL;
 int32_t popup_id = 0;
 
-BOOL vsm_register (ILICENCESERVER *ils)
+
+BOOL 
+vsm_register (ILICENCESERVER *ils)
 {
 
 	if(FALSE ==  ils->vtable->authorize( ils, 0, model_key, VSM_API_VERSION ) )
@@ -38,7 +40,8 @@ BOOL vsm_register (ILICENCESERVER *ils)
 	return TRUE;
 }
 
-void set_pin_state (VSM_PIN pin, STATE state)
+void 
+set_pin_state (VSM_PIN pin, STATE state)
 {
 	pin.pin->vtable->setstate2(pin.pin, 0, pin.on_time, pin.off_time, state);
 }

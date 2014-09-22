@@ -38,10 +38,9 @@
 #include <defines.h>
 #include <enums.h>
 #include <vsm_classes.h>
+#include <device.h>
 #include <c_bind.h>
 #include <lua_bind.h>
-//#include <panel.h>
-//#include <tui.h>
 
 #define VSM_API_VERSION  110
 #define VDMAPI __declspec(dllimport)
@@ -50,8 +49,11 @@
 extern uint8_t* memory_popup_buf;
 extern uint8_t* debug_popup_buf;
 
+
+#ifdef __WIN32
 int32_t vasprintf ( char** sptr, char* fmt, va_list argv );
 int32_t asprintf ( char** sptr, char* fmt, ... );
+#endif
 
 INT __attribute__ ( ( fastcall ) ) vsm_isdigital ( IDSIMMODEL* this, DWORD edx, CHAR* pinname );
 VOID __attribute__ ( ( fastcall ) ) vsm_setup ( IDSIMMODEL* this, DWORD edx, IINSTANCE* instance, IDSIMCKT* dsim );

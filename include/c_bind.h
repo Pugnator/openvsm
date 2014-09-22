@@ -25,8 +25,6 @@
 #define API_WRAPPER_H
 #include <vsm_api.h>
 
-#define print_popup(popup,fmt,args ...) popup->vtable->print(popup,fmt, ## args)
-
 extern int32_t popup_id;
 
 BOOL is_pin_active ( IDSIMPIN* pin );
