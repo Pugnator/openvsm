@@ -140,9 +140,16 @@ void set_memory_popup (IMEMORYPOPUP *popup, size_t offset, void *buffer, size_t 
 	popup->vtable->setmemory(popup, 0, offset, buffer, size);
 }
 
-bool add_source_file (ISOURCEPOPUP *popup, char *filename, bool lowlevel)
+BOOL add_source_file (ISOURCEPOPUP *popup, char *filename, bool lowlevel)
 {
-	return popup->vtable->addsrcfile(popup, 0, filename, lowlevel);
+	BOOL result = popup->vtable->addsrcfile(popup, 0, filename, lowlevel);
+	popup->vtable->setpcaddress(popup, 0, 0);
+	return result;
+}
+
+void set_pc_address (ISOURCEPOPUP *popup, size_t address)
+{
+	//popup->vtable->addsrcfile(popup, 0, filename, lowlevel);
 }
 
 void repaint_memory_popup (IMEMORYPOPUP *popup)
