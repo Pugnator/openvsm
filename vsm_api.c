@@ -1,4 +1,5 @@
 #include "vsm_api.h"
+
 lua_State* luactx = NULL;
 
 IDSIMMODEL_vtable VSM_DEVICE_vtable =
@@ -15,6 +16,19 @@ IDSIMMODEL_vtable VSM_DEVICE_vtable =
 IDSIMMODEL VSM_DEVICE =
 {
 	.vtable = &VSM_DEVICE_vtable,
+};
+
+ICPU_vtable ICPU_DEVICE_vtable =
+{
+	.vdmhlr = NULL,
+	.loaddata = NULL,
+	.disassemble = NULL,
+	.getvardata = NULL,	
+};
+
+ICPU ICPU_DEVICE =
+{
+	.vtable = &ICPU_DEVICE_vtable,
 };
 
 IDSIMMODEL* __cdecl createdsimmodel ( CHAR* device, ILICENCESERVER* ils )
