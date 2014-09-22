@@ -22,6 +22,7 @@
 //#include <tui.h>
 
 #define VSM_API_VERSION  110
+#define VDMAPI __declspec(dllimport)
 #define model_key 0x00000000
 
 extern uint8_t* memory_popup_buf;
