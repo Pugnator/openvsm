@@ -18,7 +18,7 @@ BEGIN
     BEGIN
         BLOCK "080904b0"
         BEGIN
-            VALUE "Comments", "Open VSM model\0"
+            VALUE "Comments", "OpenVSM model\0"
             VALUE "CompanyName", "FreeSoftware"
             VALUE "FileDescription", "OpenVSM digital model"
             VALUE "FileVersion", STRFILEVER
