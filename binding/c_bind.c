@@ -155,7 +155,7 @@ BOOL set_vdm_handler (void)
 
 void set_pc_address (ISOURCEPOPUP *popup, size_t address)
 {
-	//popup->vtable->addsrcfile(popup, 0, filename, lowlevel);
+	popup->vtable->setpcaddress(popup, 0, address);
 }
 
 void repaint_memory_popup (IMEMORYPOPUP *popup)
