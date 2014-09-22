@@ -144,7 +144,13 @@ BOOL add_source_file (ISOURCEPOPUP *popup, char *filename, bool lowlevel)
 {
 	BOOL result = popup->vtable->addsrcfile(popup, 0, filename, lowlevel);
 	popup->vtable->setpcaddress(popup, 0, 0);
+	popup->vtable->update(popup, 0);
 	return result;
+}
+
+BOOL set_vdm_handler (void)
+{
+	return model_instance->vtable->setvdmhlr(model_instance, 0, &ICPU_DEVICE);
 }
 
 void set_pc_address (ISOURCEPOPUP *popup, size_t address)
