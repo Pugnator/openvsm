@@ -38,6 +38,8 @@ BOOL __attribute__ ( ( fastcall ) ) vsm_indicate (  IDSIMMODEL* this, DWORD edx,
 VOID __attribute__ ( ( fastcall ) ) vsm_simulate (  IDSIMMODEL* this, DWORD edx, ABSTIME time, DSIMMODES mode );
 VOID __attribute__ ( ( fastcall ) ) vsm_callback (  IDSIMMODEL* this, DWORD edx, ABSTIME time, EVENTID eventid );
 
+LRESULT __attribute__ ( ( fastcall ) ) icpu_vdmhlr (  ICPU* this, DWORD edx, VDM_COMMAND* cmd, BYTE* data );
+
 struct SPICEDATA
 {
 	DWORD numtimepoints;
@@ -199,6 +201,9 @@ struct IMSGHLR
 
 IDSIMMODEL_vtable VSM_DEVICE_vtable;
 IDSIMMODEL VSM_DEVICE;
+
+ICPU_vtable ICPU_DEVICE_vtable;
+ICPU ICPU_DEVICE;
 
 #endif
 

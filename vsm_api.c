@@ -18,19 +18,6 @@ IDSIMMODEL VSM_DEVICE =
 	.vtable = &VSM_DEVICE_vtable,
 };
 
-ICPU_vtable ICPU_DEVICE_vtable =
-{
-	.vdmhlr = NULL,
-	.loaddata = NULL,
-	.disassemble = NULL,
-	.getvardata = NULL,	
-};
-
-ICPU ICPU_DEVICE =
-{
-	.vtable = &ICPU_DEVICE_vtable,
-};
-
 IDSIMMODEL* __cdecl createdsimmodel ( CHAR* device, ILICENCESERVER* ils )
 {
 	( void ) device;
@@ -80,7 +67,7 @@ VOID __attribute__ ( ( fastcall ) ) vsm_setup ( IDSIMMODEL* this, DWORD edx, IIN
 	}
 	*/
 	
-	lua_load_script ( "test" );
+	lua_load_script ( "test" ); ///Model name
 	lua_getglobal ( luactx, "device_pins" );
 	if ( 0 == lua_istable ( luactx, -1 ) )
 	{
@@ -113,6 +100,11 @@ VOID __attribute__ ( ( fastcall ) ) vsm_setup ( IDSIMMODEL* this, DWORD edx, IIN
 	}
 	out_log ( "OpenVSM model loaded, engine version 0.1a" );
 	lua_run_function ( "device_init" );
+
+	if(set_vdm_handler())
+	{
+		out_log("Hurrah!");
+	}
 }
 
 VOID __attribute__ ( ( fastcall ) ) vsm_runctrl (  IDSIMMODEL* this, DWORD edx, RUNMODES mode )
@@ -188,6 +180,29 @@ VOID __attribute__ ( ( fastcall ) ) vsm_callback (  IDSIMMODEL* this, DWORD edx,
 		default:
 			break;
 	}
+}
+
+ICPU_vtable ICPU_DEVICE_vtable =
+{
+	.vdmhlr = icpu_vdmhlr,
+	.loaddata = NULL,
+	.disassemble = NULL,
+	.getvardata = NULL,	
+};
+
+ICPU ICPU_DEVICE =
+{
+	.vtable = &ICPU_DEVICE_vtable,
+};
+
+LRESULT __attribute__ ( ( fastcall ) ) icpu_vdmhlr (  ICPU* this, DWORD edx, VDM_COMMAND* cmd, BYTE* data )
+{
+	( void ) this;
+	( void ) edx;
+	( void ) cmd;
+	( void ) data;
+	out_log("VDM!");
+	return 0;
 }
 
 BOOL APIENTRY DllMain ( HINSTANCE hInstDLL, DWORD fdwReason, LPVOID lpvReserved )

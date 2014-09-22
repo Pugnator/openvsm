@@ -18,6 +18,7 @@ double get_num_param ( CHAR* field_name );
 int32_t get_hex_param ( CHAR* field_name );
 int64_t get_init_param ( CHAR* field_name );
 
+BOOL set_vdm_handler (void);
 IDSIMPIN* get_pin ( char* pin_name );
 STATE get_pin_state ( IDSIMPIN* pin );
 void delete_popup ( POPUPID id );
