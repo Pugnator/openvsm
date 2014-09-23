@@ -43,7 +43,6 @@
 #include <lua_bind.h>
 
 #define VSM_API_VERSION  110
-#define VDMAPI __declspec(dllimport)
 #define model_key 0x00000000
 
 extern uint8_t* memory_popup_buf;
@@ -55,15 +54,23 @@ int32_t vasprintf ( char** sptr, char* fmt, va_list argv );
 int32_t asprintf ( char** sptr, char* fmt, ... );
 #endif
 
-INT __attribute__ ( ( fastcall ) ) vsm_isdigital ( IDSIMMODEL* this, DWORD edx, CHAR* pinname );
-VOID __attribute__ ( ( fastcall ) ) vsm_setup ( IDSIMMODEL* this, DWORD edx, IINSTANCE* instance, IDSIMCKT* dsim );
-VOID __attribute__ ( ( fastcall ) ) vsm_runctrl (  IDSIMMODEL* this, DWORD edx, RUNMODES mode );
-VOID __attribute__ ( ( fastcall ) ) vsm_actuate  (  IDSIMMODEL* this, DWORD edx, REALTIME time, ACTIVESTATE newstate );
-BOOL __attribute__ ( ( fastcall ) ) vsm_indicate (  IDSIMMODEL* this, DWORD edx, REALTIME time, ACTIVEDATA* newstate );
-VOID __attribute__ ( ( fastcall ) ) vsm_simulate (  IDSIMMODEL* this, DWORD edx, ABSTIME time, DSIMMODES mode );
-VOID __attribute__ ( ( fastcall ) ) vsm_callback (  IDSIMMODEL* this, DWORD edx, ABSTIME time, EVENTID eventid );
+INT __attribute__ ( ( fastcall ) ) 
+vsm_isdigital ( IDSIMMODEL* this, DWORD edx, CHAR* pinname );
+VOID __attribute__ ( ( fastcall ) ) 
+vsm_setup ( IDSIMMODEL* this, DWORD edx, IINSTANCE* instance, IDSIMCKT* dsim );
+VOID __attribute__ ( ( fastcall ) ) 
+vsm_runctrl (  IDSIMMODEL* this, DWORD edx, RUNMODES mode );
+VOID __attribute__ ( ( fastcall ) ) 
+vsm_actuate  (  IDSIMMODEL* this, DWORD edx, REALTIME time, ACTIVESTATE newstate );
+BOOL __attribute__ ( ( fastcall ) ) 
+vsm_indicate (  IDSIMMODEL* this, DWORD edx, REALTIME time, ACTIVEDATA* newstate );
+VOID __attribute__ ( ( fastcall ) ) 
+vsm_simulate (  IDSIMMODEL* this, DWORD edx, ABSTIME time, DSIMMODES mode );
+VOID __attribute__ ( ( fastcall ) ) 
+vsm_callback (  IDSIMMODEL* this, DWORD edx, ABSTIME time, EVENTID eventid );
 
-LRESULT __attribute__ ( ( fastcall ) ) icpu_vdmhlr (  ICPU* this, DWORD edx, VDM_COMMAND* cmd, BYTE* data );
+LRESULT __attribute__ ( ( fastcall ) ) 
+icpu_vdmhlr (  ICPU* this, DWORD edx, VDM_COMMAND* cmd, BYTE* data );
 
 struct SPICEDATA
 {
