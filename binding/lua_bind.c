@@ -175,7 +175,7 @@ lua_run_function (const char *func_name)
 	 /* Declare function to run */
     lua_getglobal(luactx, func_name);
     /* First argument */
-    lua_pcall(luactx, 0, LUA_MULTRET, 0);
+    lua_pcall(luactx, 0, 0, 0);
 }
 
 static int 
@@ -569,14 +569,15 @@ static int
 lua_set_callback(lua_State *L) 
 {  
   int32_t argnum = lua_gettop(L);
-  if (2 > argnum)
+  if (3 > argnum)
   {
-  	out_error("Function %s expects 2 arguments got %d\n", __PRETTY_FUNCTION__, argnum);
+  	out_error("Function %s expects 3 arguments got %d\n", __PRETTY_FUNCTION__, argnum);
   	return 0;
   }
   //TODO: Add check integer type
+  size_t startfrom = lua_tonumber(L, -3); 
   size_t picotime = lua_tonumber(L, -2); 
   int32_t eventid = lua_tointeger(L, -1);
-  set_callback(picotime, eventid);
+  set_callback(startfrom, picotime, eventid);
   return 0;  
 }
