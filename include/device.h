@@ -17,6 +17,6 @@ IINSTANCE* model_instance;
 IDSIMCKT* model_dsim;
 extern VSM_PIN device_pins[16];
 
-void 
+void
 device_simulate ( void );
 #endif

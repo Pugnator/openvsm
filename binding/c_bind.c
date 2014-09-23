@@ -246,9 +246,9 @@ is_pin_active (IDSIMPIN *pin)
 }
 
 void 
-set_callback (ABSTIME picotime, EVENTID id)
+set_callback (ABSTIME startfrom, RELTIME picotime, EVENTID id)
 {
-	model_dsim->vtable->setclockcallback(model_dsim, 0, picotime, 1000000000000, &VSM_DEVICE, vsm_callback, id);
+	model_dsim->vtable->setclockcallback(model_dsim, 0, startfrom, picotime, &VSM_DEVICE, vsm_callback, id);
 }
 
 void 

@@ -48,7 +48,7 @@ void out_error ( const char* format, ... );
 void out_log ( const char* format, ... );
 void out_message ( const char* format, ... );
 void out_warning ( const char* format, ... );
-void set_callback ( ABSTIME picotime, EVENTID id );
+void set_callback (ABSTIME startfrom, RELTIME picotime, EVENTID id);
 void set_pin_state ( VSM_PIN pin, STATE state );
 BOOL add_source_file ( ISOURCEPOPUP* popup, char* filename, bool lowlevel );
 void set_pc_address ( ISOURCEPOPUP* popup, size_t address );
