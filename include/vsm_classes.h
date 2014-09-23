@@ -82,9 +82,9 @@ struct IDSIMPIN2_vtable
 
 	VOID __attribute__ ( ( fastcall ) ) ( *settiming ) ( IDSIMPIN2* this, EDX, RELTIME tlh, RELTIME thl, RELTIME tgq );
 	VOID __attribute__ ( ( fastcall ) ) ( *setstates ) ( IDSIMPIN2* this, EDX, STATE tstate, STATE fstate, STATE zstate );
-	EVENT* __attribute__ ( ( fastcall ) ) ( *drivebool ) ( IDSIMPIN2* this, EDX, ABSTIME time, BOOL flag );
-	EVENT* __attribute__ ( ( fastcall ) ) ( *drivestate ) ( IDSIMPIN2* this, EDX, ABSTIME time, STATE state );
-	EVENT* __attribute__ ( ( fastcall ) ) ( *drivetristate ) ( IDSIMPIN2* this, EDX, ABSTIME time );
+	EVENT* __attribute__ ( ( fastcall ) ) ( *drivebool ) ( IDSIMPIN2* this, EDX, ABSTIME atime, BOOL flag );
+	EVENT* __attribute__ ( ( fastcall ) ) ( *drivestate ) ( IDSIMPIN2* this, EDX, ABSTIME atime, STATE state );
+	EVENT* __attribute__ ( ( fastcall ) ) ( *drivetristate ) ( IDSIMPIN2* this, EDX, ABSTIME atime );
 	
 };
 /************************************************************************/
@@ -100,8 +100,8 @@ struct IDSIMPIN1_vtable
 	BOOL __attribute__ ( ( fastcall ) ) ( *isposedge ) ( IDSIMPIN1* this, EDX );
 	BOOL __attribute__ ( ( fastcall ) ) ( *isnegedge ) ( IDSIMPIN1* this, EDX );
 	BOOL __attribute__ ( ( fastcall ) ) ( *isedge ) ( IDSIMPIN1* this, EDX );
-	EVENT* __attribute__ ( ( fastcall ) ) ( *setstate1 ) ( IDSIMPIN1* this, EDX, ABSTIME time, RELTIME tlh, RELTIME thl, RELTIME tgq, STATE state );
-	EVENT* __attribute__ ( ( fastcall ) ) ( *setstate2 ) ( IDSIMPIN1* this, EDX, ABSTIME time, RELTIME tgq, STATE state );
+	EVENT* __attribute__ ( ( fastcall ) ) ( *setstate1 ) ( IDSIMPIN1* this, EDX, ABSTIME atime, RELTIME tlh, RELTIME thl, RELTIME tgq, STATE state );
+	EVENT* __attribute__ ( ( fastcall ) ) ( *setstate2 ) ( IDSIMPIN1* this, EDX, ABSTIME atime, RELTIME tgq, STATE state );
 	VOID __attribute__ ( ( fastcall ) ) ( *setstate3 ) ( IDSIMPIN1* this, EDX, STATE state );
 	VOID __attribute__ ( ( fastcall ) ) ( *sethandler ) ( IDSIMPIN1* this, EDX, IDSIMMODEL* model, PINHANDLERFN phf );
 	DSIMNODE __attribute__ ( ( fastcall ) ) ( *getnode ) ( IDSIMPIN1* this, EDX );
@@ -144,10 +144,10 @@ struct IDSIMMODEL_vtable
 	INT __attribute__ ( ( fastcall ) ) ( *isdigital ) ( IDSIMMODEL* this, EDX, CHAR* pinname );
 	VOID __attribute__ ( ( fastcall ) ) ( *setup ) ( IDSIMMODEL* this, EDX, IINSTANCE* inst, IDSIMCKT* dsim );
 	VOID __attribute__ ( ( fastcall ) ) ( *runctrl ) ( IDSIMMODEL* this, EDX, RUNMODES mode );
-	VOID __attribute__ ( ( fastcall ) ) ( *actuate ) ( IDSIMMODEL* this, EDX, REALTIME time, ACTIVESTATE newstate );
-	BOOL __attribute__ ( ( fastcall ) ) ( *indicate ) ( IDSIMMODEL* this, EDX, REALTIME time, ACTIVEDATA* data );
-	VOID __attribute__ ( ( fastcall ) ) ( *simulate ) ( IDSIMMODEL* this, EDX, ABSTIME time, DSIMMODES mode );
-	VOID __attribute__ ( ( fastcall ) ) ( *callback ) ( IDSIMMODEL* this, EDX, ABSTIME time, EVENTID eventid );
+	VOID __attribute__ ( ( fastcall ) ) ( *actuate ) ( IDSIMMODEL* this, EDX, REALTIME atime, ACTIVESTATE newstate );
+	BOOL __attribute__ ( ( fastcall ) ) ( *indicate ) ( IDSIMMODEL* this, EDX, REALTIME atime, ACTIVEDATA* data );
+	VOID __attribute__ ( ( fastcall ) ) ( *simulate ) ( IDSIMMODEL* this, EDX, ABSTIME atime, DSIMMODES mode );
+	VOID __attribute__ ( ( fastcall ) ) ( *callback ) ( IDSIMMODEL* this, EDX, ABSTIME atime, EVENTID eventid );
 };
 
 
@@ -158,9 +158,9 @@ struct IBUSPIN_vtable
 	VOID __attribute__ ( ( fastcall ) ) ( *settiming ) ( IBUSPIN* this, EDX, RELTIME tlh, RELTIME thl, RELTIME tz );
 	VOID __attribute__ ( ( fastcall ) ) ( *setstates ) ( IBUSPIN* this, EDX, STATE tstate, STATE fstate, STATE zstate );
 	VOID __attribute__ ( ( fastcall ) ) ( *sethandler ) ( IBUSPIN* this, EDX, IDSIMMODEL* model, PINHANDLERFN phf );
-	VOID __attribute__ ( ( fastcall ) ) ( *drivebusvalue ) ( IBUSPIN* this, EDX, ABSTIME time, DWORD value );
-	VOID __attribute__ ( ( fastcall ) ) ( *drivetristate ) ( IBUSPIN* this, EDX, ABSTIME time );
-	VOID __attribute__ ( ( fastcall ) ) ( *drivebitstate ) ( IBUSPIN* this, EDX, ABSTIME time, UINT bit, STATE state );
+	VOID __attribute__ ( ( fastcall ) ) ( *drivebusvalue ) ( IBUSPIN* this, EDX, ABSTIME atime, DWORD value );
+	VOID __attribute__ ( ( fastcall ) ) ( *drivetristate ) ( IBUSPIN* this, EDX, ABSTIME atime );
+	VOID __attribute__ ( ( fastcall ) ) ( *drivebitstate ) ( IBUSPIN* this, EDX, ABSTIME atime, UINT bit, STATE state );
 	DWORD __attribute__ ( ( fastcall ) ) ( *getbusvalue ) ( IBUSPIN* this, EDX );
 	DWORD __attribute__ ( ( fastcall ) ) ( *getbusdrive ) ( IBUSPIN* this, EDX );
 	STATE __attribute__ ( ( fastcall ) ) ( *getbitstate ) ( IBUSPIN* this, EDX, UINT bit );

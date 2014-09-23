@@ -44,6 +44,7 @@ void
 set_pin_state (VSM_PIN pin, STATE state)
 {
 	pin.pin->vtable->setstate2(pin.pin, 0, pin.on_time, pin.off_time, state);
+	//pin.pin->vtable->setstate3(pin.pin, 0, state);
 }
 
 /**
@@ -246,9 +247,9 @@ is_pin_active (IDSIMPIN *pin)
 }
 
 void 
-set_callback (ABSTIME startfrom, RELTIME picotime, EVENTID id)
-{
-	model_dsim->vtable->setclockcallback(model_dsim, 0, startfrom, picotime, &VSM_DEVICE, vsm_callback, id);
+set_callback (RELTIME picotime, EVENTID id)
+{	
+	model_dsim->vtable->setcallback(model_dsim, 0, picotime, &VSM_DEVICE, id);
 }
 
 void 

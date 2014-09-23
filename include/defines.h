@@ -45,6 +45,7 @@ typedef unsigned MESSAGE;
 #define PINHANDLERFN void*
 #define CALLBACKHANDLERFN void*
 #define IDSIMPIN IDSIMPIN1
+//#define IDSIMPIN IDSIMPIN2
 
 typedef DWORD ADDRESS;
 #define TRUE  1

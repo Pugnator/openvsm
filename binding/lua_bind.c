@@ -569,15 +569,16 @@ static int
 lua_set_callback(lua_State *L) 
 {  
   int32_t argnum = lua_gettop(L);
-  if (3 > argnum)
+  if (2 > argnum)
   {
-  	out_error("Function %s expects 3 arguments got %d\n", __PRETTY_FUNCTION__, argnum);
+  	out_error("Function %s expects 2 arguments got %d\n", __PRETTY_FUNCTION__, argnum);
   	return 0;
   }
-  //TODO: Add check integer type
-  size_t startfrom = lua_tonumber(L, -3); 
-  size_t picotime = lua_tonumber(L, -2); 
-  int32_t eventid = lua_tointeger(L, -1);
-  set_callback(startfrom, picotime, eventid);
+  //TODO: Add check integer type  
+  lua_Number picotime = lua_tonumber(L, -2); 
+  lua_Number eventid = lua_tonumber(L, -1);
+  out_log("Lua C: %f", picotime);
+
+  set_callback(picotime, eventid);
   return 0;  
 }
