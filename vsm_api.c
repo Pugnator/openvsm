@@ -117,11 +117,11 @@ vsm_setup ( IDSIMMODEL* this, DWORD edx, IINSTANCE* instance, IDSIMCKT* dsimckt 
 		const char* pin_name = lua_tostring ( luactx,-1 );
 		device_pins[i].pin = get_pin ( ( char* ) pin_name );
 		lua_pop ( luactx, 1 );
-		//set pin on time
+		//set pin on atime
 		lua_getfield ( luactx,-1, PIN_ON_TIME );
 		device_pins[i].on_time = lua_tonumber ( luactx,-1 );
 		lua_pop ( luactx, 1 );
-		//set pin off time
+		//set pin off atime
 		lua_getfield ( luactx,-1, PIN_OFF_TIME );
 		device_pins[i].off_time = lua_tonumber ( luactx,-1 );
 		lua_pop ( luactx, 1 );
@@ -140,7 +140,8 @@ vsm_runctrl (  IDSIMMODEL* this, DWORD edx, RUNMODES mode )
 {
 	( void ) this;
 	( void ) edx;
-	
+	( void ) mode;
+	/*
 	switch ( mode )
 	{
 		case RM_BATCH:
@@ -178,51 +179,55 @@ vsm_runctrl (  IDSIMMODEL* this, DWORD edx, RUNMODES mode )
 			break;
 		case RM_DUMP:
 			lua_run_function ( "RM_DUMP" );
-			break;
+			break;		
 	}
+	*/
 }
 
 VOID __attribute__ ( ( fastcall ) )
-vsm_actuate  (  IDSIMMODEL* this, DWORD edx, REALTIME time, ACTIVESTATE newstate )
+vsm_actuate  (  IDSIMMODEL* this, DWORD edx, REALTIME atime, ACTIVESTATE newstate )
 {
 	( void ) this;
 	( void ) edx;
-	( void ) time;
+	( void ) atime;
 	( void ) newstate;
 }
 
 BOOL __attribute__ ( ( fastcall ) )
-vsm_indicate (  IDSIMMODEL* this, DWORD edx, REALTIME time, ACTIVEDATA* newstate )
+vsm_indicate (  IDSIMMODEL* this, DWORD edx, REALTIME atime, ACTIVEDATA* newstate )
 {
 	( void ) this;
 	( void ) edx;
-	( void ) time;
+	( void ) atime;
 	( void ) newstate;
 	return FALSE;
 }
 
 VOID __attribute__ ( ( fastcall ) )
-vsm_simulate (  IDSIMMODEL* this, DWORD edx, ABSTIME time, DSIMMODES mode )
+vsm_simulate (  IDSIMMODEL* this, DWORD edx, ABSTIME atime, DSIMMODES mode )
 {
 	( void ) this;
 	( void ) edx;
-	( void ) time;
+	( void ) atime;
 	( void ) mode;
 	lua_run_function ( "device_simulate" );
-	device_simulate();
+	//device_simulate();
 }
 
 VOID __attribute__ ( ( fastcall ) )
-vsm_callback (  IDSIMMODEL* this, DWORD edx, ABSTIME time, EVENTID eventid )
+vsm_callback (  IDSIMMODEL* this, DWORD edx, ABSTIME atime, EVENTID eventid )
 {
 	( void ) this;
 	( void ) edx;
-	( void ) time;
-	/// Pass event id to lua
-	lua_getglobal ( luactx, "timer_callback" );
-	lua_pushinteger ( luactx, eventid );
-	lua_pcall ( luactx, 1, 0, 0 );
 	
+	set_callback(atime + 1000000000000L, eventid);
+	out_log("Callback: %llu", atime);
+	// Pass event id to lua	
+	lua_getglobal ( luactx, "timer_callback" );
+	lua_pushunsigned ( luactx, atime );
+	lua_pushunsigned ( luactx, eventid );
+	lua_pcall ( luactx, 2, 0, 0 );
+	//toggle_pin_state(device_pins[1]);
 	switch ( eventid )
 	{
 		default:
