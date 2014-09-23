@@ -24,6 +24,7 @@
 #include "vsm_api.h"
 
 lua_State* luactx = NULL;
+VSM_PIN device_pins[16];
 
 IDSIMMODEL_vtable VSM_DEVICE_vtable =
 {
@@ -41,7 +42,8 @@ IDSIMMODEL VSM_DEVICE =
 	.vtable = &VSM_DEVICE_vtable,
 };
 
-IDSIMMODEL* __cdecl createdsimmodel ( CHAR* device, ILICENCESERVER* ils )
+IDSIMMODEL* __cdecl 
+createdsimmodel ( CHAR* device, ILICENCESERVER* ils )
 {
 	( void ) device;
 	if ( 0 == vsm_register ( ils ) )
@@ -57,7 +59,8 @@ IDSIMMODEL* __cdecl createdsimmodel ( CHAR* device, ILICENCESERVER* ils )
 	return &VSM_DEVICE;
 }
 
-VOID __cdecl deletedsimmodel ( IDSIMMODEL* model )
+VOID __cdecl 
+deletedsimmodel ( IDSIMMODEL* model )
 {
 	( void ) model;
 	/* Close Lua */
@@ -66,7 +69,8 @@ VOID __cdecl deletedsimmodel ( IDSIMMODEL* model )
 	free ( debug_popup_buf );
 }
 
-INT __attribute__ ( ( fastcall ) ) vsm_isdigital ( IDSIMMODEL* this, DWORD edx, CHAR* pinname )
+INT __attribute__ ( ( fastcall ) ) 
+vsm_isdigital ( IDSIMMODEL* this, DWORD edx, CHAR* pinname )
 {
 	( void ) this;
 	( void ) edx;
@@ -74,7 +78,8 @@ INT __attribute__ ( ( fastcall ) ) vsm_isdigital ( IDSIMMODEL* this, DWORD edx, 
 	return 1;
 }
 
-VOID __attribute__ ( ( fastcall ) ) vsm_setup ( IDSIMMODEL* this, DWORD edx, IINSTANCE* instance, IDSIMCKT* dsimckt )
+VOID __attribute__ ( ( fastcall ) ) 
+vsm_setup ( IDSIMMODEL* this, DWORD edx, IINSTANCE* instance, IDSIMCKT* dsimckt )
 {
 	( void ) this;
 	( void ) edx;
@@ -89,7 +94,9 @@ VOID __attribute__ ( ( fastcall ) ) vsm_setup ( IDSIMMODEL* this, DWORD edx, IIN
 	    //device_pins[i].pin = get_pin(device_pins[i].name);
 	}
 	*/
-	
+	char *moddll = get_string_param("moddll");
+	free(moddll);
+
 	lua_load_script ( "gps" ); ///Model name
 	lua_getglobal ( luactx, "device_pins" );
 	if ( 0 == lua_istable ( luactx, -1 ) )
@@ -98,14 +105,16 @@ VOID __attribute__ ( ( fastcall ) ) vsm_setup ( IDSIMMODEL* this, DWORD edx, IIN
 		return;
 	}
 	
-	for ( int i=1;; i++ )
+	lua_len(luactx, -1);
+	int32_t pin_number = lua_tointeger(luactx, -1);	
+	lua_pop(luactx, 1);	
+
+	for ( int i=1; i<=pin_number; i++ )
 	{
-		lua_rawgeti ( luactx,-1, i );
-		if ( lua_isnil ( luactx,-1 ) )
-			break;
-		//set pin
+		lua_rawgeti ( luactx,-1, i );		
+		//set pin		
 		lua_getfield ( luactx,-1, PIN_NAME );
-		const char* pin_name = lua_tostring ( luactx,-1 );
+		const char* pin_name = lua_tostring ( luactx,-1 );		
 		device_pins[i].pin = get_pin ( ( char* ) pin_name );
 		lua_pop ( luactx, 1 );
 		//set pin on time
@@ -126,7 +135,8 @@ VOID __attribute__ ( ( fastcall ) ) vsm_setup ( IDSIMMODEL* this, DWORD edx, IIN
 	
 }
 
-VOID __attribute__ ( ( fastcall ) ) vsm_runctrl (  IDSIMMODEL* this, DWORD edx, RUNMODES mode )
+VOID __attribute__ ( ( fastcall ) ) 
+vsm_runctrl (  IDSIMMODEL* this, DWORD edx, RUNMODES mode )
 {
 	( void ) this;
 	( void ) edx;
@@ -160,7 +170,8 @@ VOID __attribute__ ( ( fastcall ) ) vsm_runctrl (  IDSIMMODEL* this, DWORD edx, 
 	}
 }
 
-VOID __attribute__ ( ( fastcall ) ) vsm_actuate  (  IDSIMMODEL* this, DWORD edx, REALTIME time, ACTIVESTATE newstate )
+VOID __attribute__ ( ( fastcall ) ) 
+vsm_actuate  (  IDSIMMODEL* this, DWORD edx, REALTIME time, ACTIVESTATE newstate )
 {
 	( void ) this;
 	( void ) edx;
@@ -168,7 +179,8 @@ VOID __attribute__ ( ( fastcall ) ) vsm_actuate  (  IDSIMMODEL* this, DWORD edx,
 	( void ) newstate;
 }
 
-BOOL __attribute__ ( ( fastcall ) ) vsm_indicate (  IDSIMMODEL* this, DWORD edx, REALTIME time, ACTIVEDATA* newstate )
+BOOL __attribute__ ( ( fastcall ) ) 
+vsm_indicate (  IDSIMMODEL* this, DWORD edx, REALTIME time, ACTIVEDATA* newstate )
 {
 	( void ) this;
 	( void ) edx;
@@ -177,7 +189,8 @@ BOOL __attribute__ ( ( fastcall ) ) vsm_indicate (  IDSIMMODEL* this, DWORD edx,
 	return FALSE;
 }
 
-VOID __attribute__ ( ( fastcall ) ) vsm_simulate (  IDSIMMODEL* this, DWORD edx, ABSTIME time, DSIMMODES mode )
+VOID __attribute__ ( ( fastcall ) ) 
+vsm_simulate (  IDSIMMODEL* this, DWORD edx, ABSTIME time, DSIMMODES mode )
 {
 	( void ) this;
 	( void ) edx;
@@ -187,14 +200,16 @@ VOID __attribute__ ( ( fastcall ) ) vsm_simulate (  IDSIMMODEL* this, DWORD edx,
 	device_simulate();
 }
 
-VOID __attribute__ ( ( fastcall ) ) vsm_callback (  IDSIMMODEL* this, DWORD edx, ABSTIME time, EVENTID eventid )
+VOID __attribute__ ( ( fastcall ) ) 
+vsm_callback (  IDSIMMODEL* this, DWORD edx, ABSTIME time, EVENTID eventid )
 {
 	( void ) this;
 	( void ) edx;
 	( void ) time;
-	/// Pass event id to lua
-	//lua_pushinteger(luactx, eventid);
-	//lua_run_function ( "timer_callback" );
+	/// Pass event id to lua	
+    lua_getglobal(luactx, "timer_callback");    
+    lua_pushinteger(luactx, eventid);
+    lua_pcall(luactx, 1, 0, 0);	
 	
 	switch ( eventid )
 	{
@@ -205,27 +220,28 @@ VOID __attribute__ ( ( fastcall ) ) vsm_callback (  IDSIMMODEL* this, DWORD edx,
 /*
 ICPU_vtable ICPU_DEVICE_vtable =
 {
-	.vdmhlr = icpu_vdmhlr,
-	.loaddata = NULL,
-	.disassemble = NULL,
-	.getvardata = NULL,	
+    .vdmhlr = icpu_vdmhlr,
+    .loaddata = NULL,
+    .disassemble = NULL,
+    .getvardata = NULL,
 };
 
 ICPU ICPU_DEVICE =
 {
-	.vtable = &ICPU_DEVICE_vtable,
+    .vtable = &ICPU_DEVICE_vtable,
 };
 
 LRESULT __attribute__ ( ( fastcall ) ) icpu_vdmhlr (  ICPU* this, DWORD edx, VDM_COMMAND* cmd, BYTE* data )
 {
-	( void ) this;
-	( void ) edx;
-	( void ) cmd;
-	( void ) data;	
-	return 0;
+    ( void ) this;
+    ( void ) edx;
+    ( void ) cmd;
+    ( void ) data;
+    return 0;
 }
 */
-BOOL APIENTRY DllMain ( HINSTANCE hInstDLL, DWORD fdwReason, LPVOID lpvReserved )
+BOOL APIENTRY 
+DllMain ( HINSTANCE hInstDLL, DWORD fdwReason, LPVOID lpvReserved )
 {
 	( void ) hInstDLL; /* Unused param */
 	( void ) lpvReserved; /* Unused param */

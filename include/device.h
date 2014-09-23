@@ -15,6 +15,8 @@ typedef struct VSM_PIN
 
 IINSTANCE* model_instance;
 IDSIMCKT* model_dsim;
-extern VSM_PIN device_pins[];
-void device_simulate ( void );
+extern VSM_PIN device_pins[16];
+
+void 
+device_simulate ( void );
 #endif

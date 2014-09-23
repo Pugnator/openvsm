@@ -39,7 +39,7 @@ double get_num_param ( CHAR* field_name );
 int32_t get_hex_param ( CHAR* field_name );
 int64_t get_init_param ( CHAR* field_name );
 
-BOOL set_vdm_handler (void);
+BOOL set_vdm_handler ( void );
 IDSIMPIN* get_pin ( char* pin_name );
 STATE get_pin_state ( IDSIMPIN* pin );
 void delete_popup ( POPUPID id );
@@ -51,7 +51,7 @@ void out_warning ( const char* format, ... );
 void set_callback ( ABSTIME picotime, EVENTID id );
 void set_pin_state ( VSM_PIN pin, STATE state );
 BOOL add_source_file ( ISOURCEPOPUP* popup, char* filename, bool lowlevel );
-void set_pc_address (ISOURCEPOPUP *popup, size_t address);
+void set_pc_address ( ISOURCEPOPUP* popup, size_t address );
 void set_memory_popup ( IMEMORYPOPUP* popup, size_t offset, void* buffer, size_t size );
 void repaint_memory_popup ( IMEMORYPOPUP* popup );
 void print_to_debug_popup ( IDEBUGPOPUP* popup, const char* message );

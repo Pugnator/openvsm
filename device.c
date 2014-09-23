@@ -1,5 +1,5 @@
 #include "vsm_api.h"
-
+/*
 enum
 {
 	A, B, C
@@ -12,8 +12,9 @@ VSM_PIN device_pins[]=
 	{.is_digital=TRUE, .name = "C", .number = 3, .on_time=15000000000, .off_time=22000000000},
 	{.name = 0}
 };
-
-void device_simulate ( void )
+*/
+void 
+device_simulate ( void )
 {
-	
+
 }

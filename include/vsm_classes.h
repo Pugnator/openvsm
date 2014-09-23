@@ -266,20 +266,20 @@ struct ISOURCEPOPUP_vtable
 	BOOL __attribute__ ( ( fastcall ) ) ( *isbreakpoint ) ( ISOURCEPOPUP* this, EDX, ADDRESS addr );
 	BOOL __attribute__ ( ( fastcall ) ) ( *iscurrentline ) ( ISOURCEPOPUP* this, EDX, ADDRESS addr );
 	BOOL __attribute__ ( ( fastcall ) ) ( *findfirstbpt ) ( ISOURCEPOPUP* this, EDX, ADDRESS addr );
-	BOOL __attribute__ ( ( fastcall ) ) ( *findnextbpt ) ( ISOURCEPOPUP* this, EDX, ADDRESS addr );	
-
+	BOOL __attribute__ ( ( fastcall ) ) ( *findnextbpt ) ( ISOURCEPOPUP* this, EDX, ADDRESS addr );
+	
 	BOOL __attribute__ ( ( fastcall ) ) ( *addsrcfile ) ( ISOURCEPOPUP* this, EDX, CHAR* file, BOOL lowlevel );
 	VOID __attribute__ ( ( fastcall ) ) ( *addcodeline ) ( ISOURCEPOPUP* this, EDX, INT srclinenum, ADDRESS address );
 	VOID __attribute__ ( ( fastcall ) ) ( *addcodelabel ) ( ISOURCEPOPUP* this, EDX, CHAR* label, ADDRESS address );
-	VOID __attribute__ ( ( fastcall ) ) ( *update ) ( ISOURCEPOPUP* this, EDX);
-
-	BOOL __attribute__ ( ( fastcall ) ) ( *getsteptoaddr ) ( ISOURCEPOPUP* this, EDX, ADDRESS* addr);
-	VOID __attribute__ ( ( fastcall ) ) ( *setinsertpos ) ( ISOURCEPOPUP* this, EDX, INT fileid, INT linenum, BOOL newblock);
-	VOID __attribute__ ( ( fastcall ) ) ( *insertline ) ( ISOURCEPOPUP* this, EDX, ADDRESS addr, CHAR* opcodes, CHAR* srctext);
-	BOOL __attribute__ ( ( fastcall ) ) ( *findfirstsrcline ) ( ISOURCEPOPUP* this, EDX, ADDRESS* addr);
-	BOOL __attribute__ ( ( fastcall ) ) ( *findnextsrcline ) ( ISOURCEPOPUP* this, EDX, ADDRESS* addr);
-	CHAR* __attribute__ ( ( fastcall ) ) ( *findlabel ) ( ISOURCEPOPUP* this, EDX, ADDRESS* addr);
-
+	VOID __attribute__ ( ( fastcall ) ) ( *update ) ( ISOURCEPOPUP* this, EDX );
+	
+	BOOL __attribute__ ( ( fastcall ) ) ( *getsteptoaddr ) ( ISOURCEPOPUP* this, EDX, ADDRESS* addr );
+	VOID __attribute__ ( ( fastcall ) ) ( *setinsertpos ) ( ISOURCEPOPUP* this, EDX, INT fileid, INT linenum, BOOL newblock );
+	VOID __attribute__ ( ( fastcall ) ) ( *insertline ) ( ISOURCEPOPUP* this, EDX, ADDRESS addr, CHAR* opcodes, CHAR* srctext );
+	BOOL __attribute__ ( ( fastcall ) ) ( *findfirstsrcline ) ( ISOURCEPOPUP* this, EDX, ADDRESS* addr );
+	BOOL __attribute__ ( ( fastcall ) ) ( *findnextsrcline ) ( ISOURCEPOPUP* this, EDX, ADDRESS* addr );
+	CHAR* __attribute__ ( ( fastcall ) ) ( *findlabel ) ( ISOURCEPOPUP* this, EDX, ADDRESS* addr );
+	
 };
 
 /*************************************************************************/
