@@ -105,7 +105,8 @@ const lua_bind_func lua_c_api_list[] =
 	{.lua_func_name=0},	
 };
 
-void register_functions (lua_State *L)
+void 
+register_functions (lua_State *L)
 {
     /*  Declare functions */	   
     for (int32_t i=0; lua_c_api_list[i].lua_func_name; i++)
@@ -127,7 +128,8 @@ void register_functions (lua_State *L)
   }
 }
 
-void lua_load_script (const char *device_name)
+void 
+lua_load_script (const char *device_name)
 {		
 	int32_t lua_err = 0;       
     char spath[512] = {0};
@@ -167,7 +169,8 @@ void lua_load_script (const char *device_name)
     out_log("Successfully loaded Lua script");
 }
 
-void lua_run_function (const char *func_name)
+void 
+lua_run_function (const char *func_name)
 {
 	 /* Declare function to run */
     lua_getglobal(luactx, func_name);
@@ -175,7 +178,8 @@ void lua_run_function (const char *func_name)
     lua_pcall(luactx, 0, LUA_MULTRET, 0);
 }
 
-static int lua_console_log (lua_State *L) 
+static int 
+lua_console_log (lua_State *L) 
 {
   (void) L;
   //const char *text = lua_tostring(L, -1);    
@@ -183,44 +187,51 @@ static int lua_console_log (lua_State *L)
   return 0;  
 }
 
-static int lua_get_string_param (lua_State *L) 
+static int 
+lua_get_string_param (lua_State *L) 
 {  
   lua_pushstring(L, get_string_param((char *)lua_tostring(L, -1)));
   return 1;  
 }
 
-static int lua_get_bool_param (lua_State *L) 
+static int 
+lua_get_bool_param (lua_State *L) 
 {  
   lua_pushboolean(L, get_bool_param((char *)lua_tostring(L, -1)));
   return 1;  
 }
 
-static int lua_get_num_param (lua_State *L) 
+static int 
+lua_get_num_param (lua_State *L) 
 {  
   lua_pushnumber(L, get_num_param((char *)lua_tostring(L, -1)));
   return 1;  
 }
 
-static int lua_get_hex_param (lua_State *L) 
+static int 
+lua_get_hex_param (lua_State *L) 
 {  
   lua_pushinteger(L, get_hex_param((char *)lua_tostring(L, -1)));
   return 1;  
 }
 
-static int lua_get_init_param (lua_State *L) 
+static int 
+lua_get_init_param (lua_State *L) 
 {  
   lua_pushinteger(L, get_init_param((char *)lua_tostring(L, -1)));
   return 1;  
 }
 
-static int lua_delete_popup (lua_State *L) 
+static int 
+lua_delete_popup (lua_State *L) 
 {  
   int id = lua_tonumber(L, -1);
   delete_popup(id);
   return 0;  
 }
 
-static int lua_create_debug_popup (lua_State *L) 
+static int 
+lua_create_debug_popup (lua_State *L) 
 {
   const char *text = lua_tostring(L, -1);      
   lua_pushlightuserdata(L, create_debug_popup (text, ++popup_id));
@@ -233,7 +244,8 @@ static int lua_create_debug_popup (lua_State *L)
 * @param L Lua state
 * @return a pointer to popup and its ID
 */
-static int lua_print_to_debug_popup (lua_State *L) 
+static int 
+lua_print_to_debug_popup (lua_State *L) 
 {   
   int32_t argnum = lua_gettop(L);
   if (2 > argnum)
@@ -253,7 +265,8 @@ static int lua_print_to_debug_popup (lua_State *L)
 * @param L Lua state
 * @return a pointer to popup and its ID
 */
-static int lua_dump_to_debug_popup (lua_State *L) 
+static int 
+lua_dump_to_debug_popup (lua_State *L) 
 {   
   int32_t argnum = lua_gettop(L);
   if (3 > argnum)
@@ -278,21 +291,24 @@ static int lua_dump_to_debug_popup (lua_State *L)
   return 0;  
 }
 
-static int lua_create_source_popup (lua_State *L) 
+static int 
+lua_create_source_popup (lua_State *L) 
 {
   const char *text = lua_tostring(L, -1);      
   lua_pushlightuserdata(L, create_source_popup (text, ++popup_id));  
   lua_pushinteger(L, popup_id);
   return 2;  
 }
-static int lua_create_status_popup (lua_State *L) 
+static int 
+lua_create_status_popup (lua_State *L) 
 {
   const char *text = lua_tostring(L, -1);      
   lua_pushlightuserdata(L, create_status_popup (text, ++popup_id));
   lua_pushinteger(L, popup_id);
   return 2;  
 }
-static int lua_create_var_popup (lua_State *L) 
+static int 
+lua_create_var_popup (lua_State *L) 
 {
   const char *text = lua_tostring(L, -1);      
   lua_pushlightuserdata(L, create_var_popup (text, ++popup_id));
@@ -300,7 +316,8 @@ static int lua_create_var_popup (lua_State *L)
   return 2;  
 }
 
-static int lua_create_memory_popup (lua_State *L) 
+static int 
+lua_create_memory_popup (lua_State *L) 
 {
   const char *text = lua_tostring(L, -1);      
   lua_pushlightuserdata(L, create_memory_popup (text, ++popup_id));
@@ -308,7 +325,8 @@ static int lua_create_memory_popup (lua_State *L)
   return 2;  
 }
 
-static int lua_set_memory_popup (lua_State *L) 
+static int 
+lua_set_memory_popup (lua_State *L) 
 {  
   if(memory_popup_buf)
   {
@@ -349,7 +367,8 @@ static int lua_set_memory_popup (lua_State *L)
   return 0;  
 }
 
-static int lua_add_source_file (lua_State *L) 
+static int 
+lua_add_source_file (lua_State *L) 
 {  
 
   int32_t argnum = lua_gettop(L);  
@@ -367,7 +386,8 @@ static int lua_add_source_file (lua_State *L)
   return 0;  
 }
 
-static int lua_repaint_memory_popup (lua_State *L) 
+static int 
+lua_repaint_memory_popup (lua_State *L) 
 {  
    int32_t argnum = lua_gettop(L);
   if (1 > argnum)
@@ -385,7 +405,8 @@ static int lua_repaint_memory_popup (lua_State *L)
   return 0;  
 }
 
-static int lua_set_pin_state (lua_State *L) 
+static int 
+lua_set_pin_state (lua_State *L) 
 {  
   int32_t argnum = lua_gettop(L);
   if (2 > argnum)
@@ -399,7 +420,8 @@ static int lua_set_pin_state (lua_State *L)
   return 0;  
 }
 
-static int lua_get_pin_state (lua_State *L) 
+static int 
+lua_get_pin_state (lua_State *L) 
 {  
   int32_t argnum = lua_gettop(L);
   if (1 > argnum)
@@ -431,7 +453,8 @@ static int lua_get_pin_state (lua_State *L)
   } 
 }
 
-static int lua_is_pin_low (lua_State *L) 
+static int 
+lua_is_pin_low (lua_State *L) 
 {  
   int32_t argnum = lua_gettop(L);
   if (1 > argnum)
@@ -444,7 +467,8 @@ static int lua_is_pin_low (lua_State *L)
   return 1;  
 }
 
-static int lua_is_pin_high (lua_State *L) 
+static int 
+lua_is_pin_high (lua_State *L) 
 {  
   int32_t argnum = lua_gettop(L);
   if (1 > argnum)
@@ -457,7 +481,8 @@ static int lua_is_pin_high (lua_State *L)
   return 1;  
 }
 
-static int lua_toggle_pin_state (lua_State *L) 
+static int 
+lua_toggle_pin_state (lua_State *L) 
 {  
   int32_t argnum = lua_gettop(L);
   if (1 > argnum)
@@ -470,7 +495,8 @@ static int lua_toggle_pin_state (lua_State *L)
   return 0;  
 }
 
-static int lua_is_pin_floating (lua_State *L) 
+static int 
+lua_is_pin_floating (lua_State *L) 
 {  
   int32_t argnum = lua_gettop(L);
   if (1 > argnum)
@@ -483,7 +509,8 @@ static int lua_is_pin_floating (lua_State *L)
   return 1;  
 }
 
-static int lua_out_log (lua_State *L) 
+static int 
+lua_out_log (lua_State *L) 
 {  
   int32_t argnum = lua_gettop(L);
   if (1 > argnum)
@@ -496,7 +523,8 @@ static int lua_out_log (lua_State *L)
   return 0;  
 }
 
-static int lua_out_message (lua_State *L) 
+static int 
+lua_out_message (lua_State *L) 
 {  
   int32_t argnum = lua_gettop(L);
   if (1 > argnum)
@@ -509,7 +537,8 @@ static int lua_out_message (lua_State *L)
   return 0;  
 }
 
-static int lua_out_warning (lua_State *L) 
+static int 
+lua_out_warning (lua_State *L) 
 {  
   int32_t argnum = lua_gettop(L);
   if (1 > argnum)
@@ -522,7 +551,8 @@ static int lua_out_warning (lua_State *L)
   return 0;  
 }
 
-static int lua_out_error(lua_State *L) 
+static int 
+lua_out_error(lua_State *L) 
 {  
   int32_t argnum = lua_gettop(L);
   if (1 > argnum)
@@ -535,7 +565,8 @@ static int lua_out_error(lua_State *L)
   return 0;  
 }
 
-static int lua_set_callback(lua_State *L) 
+static int 
+lua_set_callback(lua_State *L) 
 {  
   int32_t argnum = lua_gettop(L);
   if (2 > argnum)
