@@ -218,8 +218,7 @@ VOID __attribute__ ( ( fastcall ) )
 vsm_callback (  IDSIMMODEL* this, DWORD edx, ABSTIME atime, EVENTID eventid )
 {
 	( void ) this;
-	( void ) edx;
-		
+	( void ) edx;	
 	lua_getglobal ( luactx, "timer_callback" );
 	lua_pushunsigned ( luactx, atime );
 	lua_pushunsigned ( luactx, eventid );

@@ -39,6 +39,7 @@ double get_num_param ( CHAR* field_name );
 int32_t get_hex_param ( CHAR* field_name );
 int64_t get_init_param ( CHAR* field_name );
 
+void systime ( ABSTIME* at );
 BOOL set_vdm_handler ( void );
 void pin_drive_bool (VSM_PIN pin, BOOL state);
 IDSIMPIN* get_pin ( char* pin_name );
