@@ -52,6 +52,8 @@ static int lua_get_hex_param (lua_State *L);
 static int lua_get_init_param (lua_State *L);
 static int lua_add_source_file (lua_State *L);
 
+static int lua_extract_bit(lua_State *L);
+
 typedef struct lua_bind_func
 {
 	int32_t (*lua_c_api) (lua_State *);
@@ -102,6 +104,7 @@ const lua_bind_func lua_c_api_list[] =
   {.lua_func_name="get_bool_param", .lua_c_api=&lua_get_bool_param},
   {.lua_func_name="get_init_param", .lua_c_api=&lua_get_init_param},
   {.lua_func_name="add_source_file", .lua_c_api=&lua_add_source_file},
+  {.lua_func_name="get_bit", .lua_c_api=&lua_extract_bit},
 	{.lua_func_name=0},	
 };
 
@@ -576,9 +579,24 @@ lua_set_callback(lua_State *L)
   }
   //TODO: Add check integer type  
   lua_Number picotime = lua_tonumber(L, -2); 
-  lua_Number eventid = lua_tonumber(L, -1);
-  out_log("Lua C: %f", picotime);
+  lua_Number eventid = lua_tonumber(L, -1);  
 
   set_callback(picotime, eventid);
   return 0;  
+}
+
+static int 
+lua_extract_bit(lua_State *L) 
+{  
+  int32_t argnum = lua_gettop(L);
+  if (2 > argnum)
+  {
+    out_error("Function %s expects 2 arguments got %d\n", __PRETTY_FUNCTION__, argnum);
+    return 0;
+  }
+  //TODO: Add check integer type  
+  size_t byte = lua_tonumber(L, -2); 
+  size_t bit = lua_tonumber(L, -1);      
+  lua_pushnumber(L, (byte >> bit & 0x01));
+  return 1;  
 }

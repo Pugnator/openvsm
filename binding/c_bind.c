@@ -225,13 +225,13 @@ toggle_pin_state (VSM_PIN pin)
 {
 	STATE s = get_pin_state(pin.pin);
 	if(SHI == s)
-	{
+	{	
 		set_pin_state(pin, SLO);
 	}
 	else if (SLO == s)
-	{
+	{		
 		set_pin_state(pin, SHI);
-	}
+	}	
 }
 
 STATE 

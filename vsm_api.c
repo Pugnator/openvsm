@@ -219,20 +219,11 @@ vsm_callback (  IDSIMMODEL* this, DWORD edx, ABSTIME atime, EVENTID eventid )
 {
 	( void ) this;
 	( void ) edx;
-	
-	set_callback(atime + 1000000000000L, eventid);
-	out_log("Callback: %llu", atime);
-	// Pass event id to lua	
+		
 	lua_getglobal ( luactx, "timer_callback" );
 	lua_pushunsigned ( luactx, atime );
 	lua_pushunsigned ( luactx, eventid );
-	lua_pcall ( luactx, 2, 0, 0 );
-	//toggle_pin_state(device_pins[1]);
-	switch ( eventid )
-	{
-		default:
-			break;
-	}
+	lua_pcall ( luactx, 2, 0, 0 );	
 }
 /*
 ICPU_vtable ICPU_DEVICE_vtable =
