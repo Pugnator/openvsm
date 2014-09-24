@@ -43,9 +43,16 @@ vsm_register (ILICENCESERVER *ils)
 void 
 set_pin_state (VSM_PIN pin, STATE state)
 {
-	pin.pin->vtable->setstate2(pin.pin, 0, pin.on_time, pin.off_time, state);
-	//pin.pin->vtable->setstate3(pin.pin, 0, state);
+	ABSTIME curtime = 0;
+	systime(&curtime);
+	pin.pin->vtable->setstate2(pin.pin, 0, curtime, pin.on_time, state);	
 }
+
+void systime ( ABSTIME* at )
+{
+	model_dsim->vtable->sysvar(model_dsim, 0, ( DOUBLE* ) at, DSIMTIMENOW );		
+}
+
 
 /**
 * Get model string parameter (case insensitive)
