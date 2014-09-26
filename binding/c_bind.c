@@ -48,6 +48,14 @@ set_pin_state (VSM_PIN pin, STATE state)
 	pin.pin->vtable->setstate2(pin.pin, 0, curtime, pin.on_time, state);	
 }
 
+void 
+set_pin_bool (VSM_PIN pin, int32_t level)
+{
+	ABSTIME curtime = 0;
+	systime(&curtime);	
+	pin.pin->vtable->setstate2(pin.pin, 0, curtime, pin.on_time, level ? SHI : SLO);	
+}
+
 void systime ( ABSTIME* at )
 {
 	model_dsim->vtable->sysvar(model_dsim, 0, ( DOUBLE* ) at, DSIMTIMENOW );		
