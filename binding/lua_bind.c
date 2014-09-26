@@ -25,6 +25,7 @@
 
 static int lua_console_log (lua_State *L);
 static int lua_set_pin_state (lua_State *L);
+static int lua_set_pin_bool (lua_State *L);
 static int lua_get_pin_state (lua_State *L);
 static int lua_is_pin_low (lua_State *L);
 static int lua_is_pin_high (lua_State *L);
@@ -63,22 +64,27 @@ typedef struct lua_bind_func
 typedef struct lua_bind_var
 {
 	const char *var_name;
-	int32_t var_value;
+	int64_t var_value;
 }lua_bind_var;
 
-const lua_bind_var lua_var_api_list[]=
+static const lua_bind_var lua_var_api_list[]=
 {
 	{.var_name="SHI", .var_value=SHI},
 	{.var_name="SLO", .var_value=SLO},
 	{.var_name="FLT", .var_value=FLT},
 	{.var_name="UNDEFINED", .var_value=UNDEFINED},
+  {.var_name="MSEC", .var_value=1000000000L},
+  {.var_name="NSEC", .var_value=100000000L},
+  {.var_name="SEC", .var_value=1000000000000L},
+  {.var_name="NOW", .var_value=0L},
 	{.var_name=0},
 };
 
-const lua_bind_func lua_c_api_list[] = 
+static const lua_bind_func lua_c_api_list[] = 
 {
 	{.lua_func_name="console_log", .lua_c_api=&lua_console_log},
 	{.lua_func_name="set_pin_state", .lua_c_api=&lua_set_pin_state},
+  {.lua_func_name="set_pin_bool", .lua_c_api=&lua_set_pin_bool},
 	{.lua_func_name="get_pin_state", .lua_c_api=&lua_get_pin_state},
 	{.lua_func_name="is_pin_low", .lua_c_api=&lua_is_pin_low},
 	{.lua_func_name="is_pin_high", .lua_c_api=&lua_is_pin_high},
@@ -105,7 +111,7 @@ const lua_bind_func lua_c_api_list[] =
   {.lua_func_name="get_init_param", .lua_c_api=&lua_get_init_param},
   {.lua_func_name="add_source_file", .lua_c_api=&lua_add_source_file},
   {.lua_func_name="get_bit", .lua_c_api=&lua_extract_bit},
-	{.lua_func_name=0},	
+	{ NULL, NULL},	
 };
 
 void 
@@ -141,7 +147,7 @@ lua_load_script (const char *device_name)
     	out_error("LUAVSM env variable was not set");
     }
     char script[512]={0};
-    sprintf(script, "%s\\%s.lua", spath, device_name);
+    sprintf(script, "%s\\%s", spath, device_name);
     
     lua_err = luaL_loadfile ( luactx, script );
     if(0 != lua_err)
@@ -350,20 +356,19 @@ lua_set_memory_popup (lua_State *L)
   }
 
   lua_len(L, -2);
-  int32_t a_size = lua_tointeger(L,-1);
-  if (lua_tointeger(L,-1) < a_size)
-    a_size = lua_tointeger(L,-1);
-  memory_popup_buf = malloc(a_size);
+  lua_Number a_size = lua_tointeger(L,-1); 
+  lua_pop(L, 1);
+  memory_popup_buf = calloc(1, 5);
+  
   for (int i=1; i<= a_size ;i++)
   {    
-      lua_rawgeti(L,-2, i);   
+      lua_rawgeti(L,-2, i);               
       lua_Integer res = lua_tointeger(L,-1);
-      if (res < 0 || res > UINT8_MAX)
-      memory_popup_buf[i-1] =  res;         
+      memory_popup_buf[i-1] =  res;               
       lua_pop(L, 1);
   }       
-
-  set_memory_popup(lua_touserdata(L, -3), 0, memory_popup_buf, lua_tointeger(L,-1)); 
+  
+  set_memory_popup(lua_touserdata(L, -3), 0, memory_popup_buf, 5); 
   /* Do NOT free buffer passed to popup untill popup is destroyed 
   * or you will get garbage on screen
   */
@@ -420,6 +425,21 @@ lua_set_pin_state (lua_State *L)
   int32_t pin_num = lua_tonumber(L, -2);
   int32_t pin_state = lua_tonumber(L, -1);
   set_pin_state(device_pins[pin_num], pin_state);
+  return 0;  
+}
+
+static int 
+lua_set_pin_bool (lua_State *L) 
+{  
+  int32_t argnum = lua_gettop(L);
+  if (2 > argnum)
+  {
+    out_error("Function %s expects 2 arguments got %d\n", __PRETTY_FUNCTION__, argnum);
+  return 0;  
+  }
+  int32_t pin_num = lua_tonumber(L, -2);
+  int32_t pin_level = lua_tonumber(L, -1);  
+  set_pin_bool(device_pins[pin_num], pin_level);
   return 0;  
 }
 

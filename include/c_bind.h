@@ -41,7 +41,8 @@ int64_t get_init_param ( CHAR* field_name );
 
 void systime ( ABSTIME* at );
 BOOL set_vdm_handler ( void );
-void pin_drive_bool (VSM_PIN pin, BOOL state);
+void 
+set_pin_bool (VSM_PIN pin, int32_t level);
 IDSIMPIN* get_pin ( char* pin_name );
 STATE get_pin_state ( IDSIMPIN* pin );
 void delete_popup ( POPUPID id );

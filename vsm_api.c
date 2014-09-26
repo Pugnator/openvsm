@@ -85,19 +85,21 @@ vsm_setup ( IDSIMMODEL* this, DWORD edx, IINSTANCE* instance, IDSIMCKT* dsimckt 
 	( void ) edx;
 	model_instance = instance;
 	model_dsim = dsimckt;
-	//Here I should decompose two possible scenarios:
-	//1) Device is inited in C
-	//Device is inited in Lua
+
 	/*
 	for (int i=0; device_pins[i].name; i++)
 	{
 	    //device_pins[i].pin = get_pin(device_pins[i].name);
 	}
 	*/
-	char* moddll = get_string_param ( "moddll" );
-	free ( moddll );
+
+	char* moddll = get_string_param ( "moddll" );	
+	char luascript[MAX_PATH]={0};
+	snprintf(luascript, sizeof luascript, "%s.lua", moddll);	
+	lua_load_script ( luascript ); ///Model name
 	
-	lua_load_script ( "gps" ); ///Model name
+	free ( moddll );
+
 	lua_getglobal ( luactx, "device_pins" );
 	if ( 0 == lua_istable ( luactx, -1 ) )
 	{
@@ -130,7 +132,7 @@ vsm_setup ( IDSIMMODEL* this, DWORD edx, IINSTANCE* instance, IDSIMCKT* dsimckt 
 		lua_setglobal ( luactx, pin_name );
 		lua_pop ( luactx, 1 );
 	}
-	out_log ( "OpenVSM model loaded, engine version 0.1a" );
+	out_log ( "OpenVSM model loaded, library version 0.1a" );
 	lua_run_function ( "device_init" );
 	
 }
@@ -141,47 +143,47 @@ vsm_runctrl (  IDSIMMODEL* this, DWORD edx, RUNMODES mode )
 	( void ) this;
 	( void ) edx;
 	( void ) mode;
-	/*
+	
 	switch ( mode )
 	{
 		case RM_BATCH:
-			lua_run_function ( "RM_BATCH" );
+			
 			break;
 		case RM_START:
-			lua_run_function ( "RM_START" );
+			
 			break;
 		case RM_STOP:
-			lua_run_function ( "RM_STOP" );
+			lua_run_function ( "on_destroy" );
 			break;
 		case RM_SUSPEND:
-			lua_run_function ( "RM_SUSPEND" );
+			
 			break;
 		case RM_ANIMATE:
-			lua_run_function ( "RM_ANIMATE" );
+			
 			break;
 		case RM_STEPTIME:
-			lua_run_function ( "RM_STEPTIME" );
+			
 			break;
 		case RM_STEPOVER:
-			lua_run_function ( "RM_STEPOVER" );
+			
 			break;
 		case RM_STEPINTO:
-			lua_run_function ( "RM_STEPINTO" );
+			
 			break;
 		case RM_STEPOUT:
-			lua_run_function ( "RM_STEPOUT" );
+			
 			break;
 		case RM_STEPTO:
-			lua_run_function ( "RM_STEPTO" );
+			
 			break;
 		case RM_META:
-			lua_run_function ( "RM_META" );
+			
 			break;
 		case RM_DUMP:
-			lua_run_function ( "RM_DUMP" );
+			
 			break;		
 	}
-	*/
+	
 }
 
 VOID __attribute__ ( ( fastcall ) )
