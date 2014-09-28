@@ -41,8 +41,8 @@ int64_t get_init_param ( CHAR* field_name );
 
 void systime ( ABSTIME* at );
 BOOL set_vdm_handler ( void );
-void 
-set_pin_bool (VSM_PIN pin, int32_t level);
+void set_pin_bool (VSM_PIN pin, int32_t level);
+int32_t get_pin_bool (VSM_PIN pin);
 IDSIMPIN* get_pin ( char* pin_name );
 STATE get_pin_state ( IDSIMPIN* pin );
 void delete_popup ( POPUPID id );
@@ -58,7 +58,7 @@ void set_pc_address ( ISOURCEPOPUP* popup, size_t address );
 void set_memory_popup ( IMEMORYPOPUP* popup, size_t offset, void* buffer, size_t size );
 void repaint_memory_popup ( IMEMORYPOPUP* popup );
 void print_to_debug_popup ( IDEBUGPOPUP* popup, const char* message );
-void dump_to_debug_popup ( IDEBUGPOPUP* popup, const uint8_t* buf, uint32_t size, int32_t base );
+void dump_to_debug_popup (IDEBUGPOPUP *popup, const uint8_t *buf, uint32_t offset, uint32_t size);
 void toggle_pin_state ( VSM_PIN pin );
 IDEBUGPOPUP* create_debug_popup ( const char* title, const int32_t id );
 IDEBUGPOPUP* create_source_popup ( const char* title, const int32_t id );

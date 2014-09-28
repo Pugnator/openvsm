@@ -30,6 +30,7 @@
 #include <stdint.h>
 #include <stdlib.h>
 #include <assert.h>
+#include <time.h> 
 
 #include <lua.h>
 #include <lauxlib.h>
@@ -44,10 +45,6 @@
 
 #define VSM_API_VERSION  110
 #define model_key 0x00000000
-
-extern uint8_t* memory_popup_buf;
-extern uint8_t* debug_popup_buf;
-
 
 #ifdef __WIN32
 int32_t vasprintf ( char** sptr, char* fmt, va_list argv );
@@ -71,6 +68,10 @@ vsm_callback (  IDSIMMODEL* this, DWORD edx, ABSTIME atime, EVENTID eventid );
 
 LRESULT __attribute__ ( ( fastcall ) )
 icpu_vdmhlr (  ICPU* this, DWORD edx, VDM_COMMAND* cmd, BYTE* data );
+VOID __attribute__ ( ( fastcall ) ) 
+icpu_loaddata ( ICPU* this, EDX, INT format, INT seg, ADDRESS address, BYTE* data, INT numbytes );
+VOID __attribute__ ( ( fastcall ) ) icpu_disassemble ( ICPU* this, EDX, ADDRESS address, INT numbytes );
+BOOL __attribute__ ( ( fastcall ) ) icpu_getvardata ( ICPU* this, EDX, VARITEM* vip, VARDATA* vdp );
 
 struct SPICEDATA
 {
