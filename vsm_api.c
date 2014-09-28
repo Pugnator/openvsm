@@ -24,7 +24,7 @@
 #include "vsm_api.h"
 
 lua_State* luactx = NULL;
-VSM_PIN device_pins[16];
+VSM_PIN *device_pins;
 
 IDSIMMODEL_vtable VSM_DEVICE_vtable =
 {
@@ -40,6 +40,19 @@ IDSIMMODEL_vtable VSM_DEVICE_vtable =
 IDSIMMODEL VSM_DEVICE =
 {
 	.vtable = &VSM_DEVICE_vtable,
+};
+
+ICPU_vtable ICPU_DEVICE_vtable =
+{
+    .vdmhlr = icpu_vdmhlr,
+    .loaddata = icpu_loaddata,
+    .disassemble = icpu_disassemble,
+    .getvardata = icpu_getvardata,
+};
+ 
+ICPU ICPU_DEVICE =
+{
+    .vtable = &ICPU_DEVICE_vtable,
 };
 
 IDSIMMODEL* __cdecl
@@ -64,9 +77,7 @@ deletedsimmodel ( IDSIMMODEL* model )
 {
 	( void ) model;
 	/* Close Lua */
-	lua_close ( luactx );
-	free ( memory_popup_buf );
-	free ( debug_popup_buf );
+	lua_close ( luactx );	
 }
 
 INT __attribute__ ( ( fastcall ) )
@@ -84,15 +95,8 @@ vsm_setup ( IDSIMMODEL* this, DWORD edx, IINSTANCE* instance, IDSIMCKT* dsimckt 
 	( void ) this;
 	( void ) edx;
 	model_instance = instance;
-	model_dsim = dsimckt;
-
-	/*
-	for (int i=0; device_pins[i].name; i++)
-	{
-	    //device_pins[i].pin = get_pin(device_pins[i].name);
-	}
-	*/
-
+	model_dsim = dsimckt;		
+	
 	char* moddll = get_string_param ( "moddll" );	
 	char luascript[MAX_PATH]={0};
 	snprintf(luascript, sizeof luascript, "%s.lua", moddll);	
@@ -149,17 +153,16 @@ vsm_runctrl (  IDSIMMODEL* this, DWORD edx, RUNMODES mode )
 		case RM_BATCH:
 			
 			break;
-		case RM_START:
+		case RM_START:		
 			
 			break;
-		case RM_STOP:
-			lua_run_function ( "on_destroy" );
+		case RM_STOP:			
+			lua_run_function ( "on_stop" );
 			break;
-		case RM_SUSPEND:
-			
+		case RM_SUSPEND:			
+			lua_run_function ( "on_suspend" );
 			break;
-		case RM_ANIMATE:
-			
+		case RM_ANIMATE:			
 			break;
 		case RM_STEPTIME:
 			
@@ -212,8 +215,7 @@ vsm_simulate (  IDSIMMODEL* this, DWORD edx, ABSTIME atime, DSIMMODES mode )
 	( void ) edx;
 	( void ) atime;
 	( void ) mode;
-	lua_run_function ( "device_simulate" );
-	//device_simulate();
+	lua_run_function ( "device_simulate" );	
 }
 
 VOID __attribute__ ( ( fastcall ) )
@@ -226,19 +228,16 @@ vsm_callback (  IDSIMMODEL* this, DWORD edx, ABSTIME atime, EVENTID eventid )
 	lua_pushunsigned ( luactx, eventid );
 	lua_pcall ( luactx, 2, 0, 0 );	
 }
-/*
-ICPU_vtable ICPU_DEVICE_vtable =
-{
-    .vdmhlr = icpu_vdmhlr,
-    .loaddata = NULL,
-    .disassemble = NULL,
-    .getvardata = NULL,
-};
 
-ICPU ICPU_DEVICE =
+BOOL APIENTRY
+DllMain ( HINSTANCE hInstDLL, DWORD fdwReason, LPVOID lpvReserved )
 {
-    .vtable = &ICPU_DEVICE_vtable,
-};
+	( void ) hInstDLL;
+	( void ) fdwReason;
+	( void ) lpvReserved;
+	
+	return TRUE;
+}
 
 LRESULT __attribute__ ( ( fastcall ) ) icpu_vdmhlr (  ICPU* this, DWORD edx, VDM_COMMAND* cmd, BYTE* data )
 {
@@ -246,29 +245,37 @@ LRESULT __attribute__ ( ( fastcall ) ) icpu_vdmhlr (  ICPU* this, DWORD edx, VDM
     ( void ) edx;
     ( void ) cmd;
     ( void ) data;
+    out_log("1");
     return 0;
 }
-*/
-BOOL APIENTRY
-DllMain ( HINSTANCE hInstDLL, DWORD fdwReason, LPVOID lpvReserved )
+
+VOID __attribute__ ( ( fastcall ) ) icpu_loaddata ( ICPU* this, DWORD edx, INT format, INT seg, ADDRESS address, BYTE* data, INT numbytes )
 {
-	( void ) hInstDLL; /* Unused param */
-	( void ) lpvReserved; /* Unused param */
-	
-	switch ( fdwReason )
-	{
-		case DLL_PROCESS_ATTACH:
-			//debug_console_alloc();
-			break;
-		case DLL_THREAD_ATTACH:
-			//debug_console_alloc();
-			break;
-		case DLL_THREAD_DETACH:
-			//debug_console_free();
-			break;
-		case DLL_PROCESS_DETACH:
-		
-			break;
-	}
-	return TRUE;
+	( void ) this;
+    ( void ) edx;
+    ( void ) format;
+    ( void ) seg;
+    ( void ) address;
+    ( void ) data;
+    ( void ) numbytes;
+    out_log("1");
+}
+
+VOID __attribute__ ( ( fastcall ) ) icpu_disassemble ( ICPU* this, DWORD edx, ADDRESS address, INT numbytes )
+{
+	( void ) this;
+    ( void ) edx;
+    ( void ) address;
+    ( void ) numbytes;
+    out_log("1");
+}
+
+BOOL __attribute__ ( ( fastcall ) ) icpu_getvardata ( ICPU* this, DWORD edx, VARITEM* vip, VARDATA* vdp )
+{
+	( void ) this;
+    ( void ) edx;
+    ( void ) vip;
+    ( void ) vdp;
+    out_log("1");
+    return TRUE;
 }

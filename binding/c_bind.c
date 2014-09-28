@@ -23,10 +23,7 @@
 
 #include <vsm_api.h>
 
-uint8_t *memory_popup_buf = NULL;
-uint8_t *debug_popup_buf = NULL;
 int32_t popup_id = 0;
-
 
 BOOL 
 vsm_register (ILICENCESERVER *ils)
@@ -114,7 +111,7 @@ create_memory_popup (const char *title, const int32_t id)
 {
 	CREATEPOPUPSTRUCT *cps = malloc(sizeof *cps);
 	cps->caption = (char *)title;
-	cps->flags = PWF_VISIBLE;
+	cps->flags = PWF_VISIBLE | PWF_HIDEONANIMATE | PWF_SIZEABLE| PWF_AUTOREFRESH ;
 	cps->type = PWT_MEMORY;
 	cps->height = 32;
 	cps->width = 16;
@@ -129,7 +126,7 @@ create_debug_popup (const char *title, const int32_t id)
 {
 	CREATEPOPUPSTRUCT *cps = malloc(sizeof *cps);
 	cps->caption = (char *)title;
-	cps->flags = PWF_VISIBLE;
+	cps->flags = PWF_VISIBLE | PWF_HIDEONANIMATE | PWF_SIZEABLE| PWF_AUTOREFRESH ;
 	cps->type = PWT_DEBUG;
 	cps->height = 200;
 	cps->width = 640;
@@ -144,7 +141,7 @@ create_source_popup (const char *title, const int32_t id)
 {
 	CREATEPOPUPSTRUCT *cps = malloc(sizeof *cps);
 	cps->caption = (char *)title;
-	cps->flags = PWF_VISIBLE;
+	cps->flags = PWF_VISIBLE | PWF_HIDEONANIMATE | PWF_SIZEABLE| PWF_AUTOREFRESH ;
 	cps->type = PWT_SOURCE;
 	cps->height = 200;
 	cps->width = 640;
@@ -159,7 +156,7 @@ create_status_popup (const char *title, const int32_t id)
 {
 	CREATEPOPUPSTRUCT *cps = malloc(sizeof *cps);
 	cps->caption = (char *)title;
-	cps->flags = PWF_VISIBLE;
+	cps->flags = PWF_VISIBLE | PWF_HIDEONANIMATE | PWF_SIZEABLE | PWF_AUTOREFRESH ;
 	cps->type = PWT_STATUS;
 	cps->height = 200;
 	cps->width = 200;
@@ -174,7 +171,7 @@ create_var_popup (const char *title, const int32_t id)
 {
 	CREATEPOPUPSTRUCT *cps = malloc(sizeof *cps);
 	cps->caption = (char *)title;
-	cps->flags = PWF_VISIBLE;
+	cps->flags = PWF_VISIBLE | PWF_HIDEONANIMATE | PWF_SIZEABLE| PWF_AUTOREFRESH ;
 	cps->type = PWT_VAR;
 	cps->height = 200;
 	cps->width = 200;
@@ -200,8 +197,7 @@ BOOL
 add_source_file (ISOURCEPOPUP *popup, char *filename, bool lowlevel)
 {
 	BOOL result = popup->vtable->addsrcfile(popup, 0, filename, lowlevel);
-	popup->vtable->setpcaddress(popup, 0, 0);
-	popup->vtable->update(popup, 0);
+	popup->vtable->setpcaddress(popup, 0, 0);	
 	return result;
 }
 
@@ -230,9 +226,9 @@ print_to_debug_popup (IDEBUGPOPUP *popup, const char *message)
 }
 
 void 
-dump_to_debug_popup (IDEBUGPOPUP *popup, const uint8_t *buf, uint32_t size, int32_t base)
-{
-	popup->vtable->dump(popup, 0, buf, size, base);
+dump_to_debug_popup (IDEBUGPOPUP *popup, const uint8_t *buf, uint32_t offset, uint32_t size)
+{	
+	popup->vtable->dump(popup, 0, buf + offset, size, 16);
 }
 
 void 
@@ -253,6 +249,17 @@ STATE
 get_pin_state (IDSIMPIN *pin)
 {
 	return pin->vtable->istate(pin, 0);
+}
+
+int32_t 
+get_pin_bool (VSM_PIN pin)
+{
+	if (SLO == pin.pin->vtable->istate(pin.pin, 0))
+		return 0;
+	else if (SHI == pin.pin->vtable->istate(pin.pin, 0))
+		return 1;
+	srand ( time(NULL) );      
+    return rand() % 2;	
 }
 
 BOOL 
