@@ -24,7 +24,7 @@
 #include "vsm_api.h"
 
 lua_State* luactx = NULL;
-VSM_PIN *device_pins;
+VSM_PIN device_pins[16];
 
 IDSIMMODEL_vtable VSM_DEVICE_vtable =
 {
@@ -76,6 +76,7 @@ VOID __cdecl
 deletedsimmodel ( IDSIMMODEL* model )
 {
 	( void ) model;
+	FreeConsole();
 	/* Close Lua */
 	lua_close ( luactx );	
 }
@@ -107,12 +108,13 @@ vsm_setup ( IDSIMMODEL* this, DWORD edx, IINSTANCE* instance, IDSIMCKT* dsimckt 
 	lua_getglobal ( luactx, "device_pins" );
 	if ( 0 == lua_istable ( luactx, -1 ) )
 	{
-		out_log ( "No device model found, it is fatal error" );
+		out_error ( "No device model found, it is fatal error" );
 		return;
 	}
 	
 	lua_len ( luactx, -1 );
 	int32_t pin_number = lua_tointeger ( luactx, -1 );
+	//device_pins = calloc(pin_number + 1, sizeof *device_pins);
 	lua_pop ( luactx, 1 );
 	
 	for ( int i=1; i<=pin_number; i++ )
@@ -121,13 +123,14 @@ vsm_setup ( IDSIMMODEL* this, DWORD edx, IINSTANCE* instance, IDSIMCKT* dsimckt 
 		//set pin
 		lua_getfield ( luactx,-1, PIN_NAME );
 		const char* pin_name = lua_tostring ( luactx,-1 );
+		
 		device_pins[i].pin = get_pin ( ( char* ) pin_name );
 		lua_pop ( luactx, 1 );
-		//set pin on atime
+		//set pin on time
 		lua_getfield ( luactx,-1, PIN_ON_TIME );
 		device_pins[i].on_time = lua_tonumber ( luactx,-1 );
 		lua_pop ( luactx, 1 );
-		//set pin off atime
+		//set pin off time
 		lua_getfield ( luactx,-1, PIN_OFF_TIME );
 		device_pins[i].off_time = lua_tonumber ( luactx,-1 );
 		lua_pop ( luactx, 1 );
@@ -135,10 +138,8 @@ vsm_setup ( IDSIMMODEL* this, DWORD edx, IINSTANCE* instance, IDSIMCKT* dsimckt 
 		lua_pushinteger ( luactx, i );
 		lua_setglobal ( luactx, pin_name );
 		lua_pop ( luactx, 1 );
-	}
-	out_log ( "OpenVSM model loaded, library version 0.1a" );
-	lua_run_function ( "device_init" );
-	
+	}	
+	lua_run_function ( "device_init" );		
 }
 
 VOID __attribute__ ( ( fastcall ) )
@@ -244,8 +245,7 @@ LRESULT __attribute__ ( ( fastcall ) ) icpu_vdmhlr (  ICPU* this, DWORD edx, VDM
     ( void ) this;
     ( void ) edx;
     ( void ) cmd;
-    ( void ) data;
-    out_log("1");
+    ( void ) data;    
     return 0;
 }
 
@@ -257,8 +257,7 @@ VOID __attribute__ ( ( fastcall ) ) icpu_loaddata ( ICPU* this, DWORD edx, INT f
     ( void ) seg;
     ( void ) address;
     ( void ) data;
-    ( void ) numbytes;
-    out_log("1");
+    ( void ) numbytes;    
 }
 
 VOID __attribute__ ( ( fastcall ) ) icpu_disassemble ( ICPU* this, DWORD edx, ADDRESS address, INT numbytes )
@@ -266,8 +265,7 @@ VOID __attribute__ ( ( fastcall ) ) icpu_disassemble ( ICPU* this, DWORD edx, AD
 	( void ) this;
     ( void ) edx;
     ( void ) address;
-    ( void ) numbytes;
-    out_log("1");
+    ( void ) numbytes;    
 }
 
 BOOL __attribute__ ( ( fastcall ) ) icpu_getvardata ( ICPU* this, DWORD edx, VARITEM* vip, VARDATA* vdp )
@@ -275,7 +273,6 @@ BOOL __attribute__ ( ( fastcall ) ) icpu_getvardata ( ICPU* this, DWORD edx, VAR
 	( void ) this;
     ( void ) edx;
     ( void ) vip;
-    ( void ) vdp;
-    out_log("1");
+    ( void ) vdp;    
     return TRUE;
 }

@@ -5,15 +5,15 @@
 typedef struct VSM_PIN
 {
 	BOOL is_digital;
-	char* name;	
+	char* name;
 	ABSTIME on_time;
-	ABSTIME off_time;	
+	ABSTIME off_time;
 	IDSIMPIN* pin;
 } VSM_PIN;
 
 IINSTANCE* model_instance;
 IDSIMCKT* model_dsim;
-extern VSM_PIN *device_pins;
+extern VSM_PIN device_pins[16];
 
 void
 device_simulate ( void );

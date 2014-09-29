@@ -30,7 +30,7 @@
 #include <stdint.h>
 #include <stdlib.h>
 #include <assert.h>
-#include <time.h> 
+#include <time.h>
 
 #include <lua.h>
 #include <lauxlib.h>
@@ -68,7 +68,7 @@ vsm_callback (  IDSIMMODEL* this, DWORD edx, ABSTIME atime, EVENTID eventid );
 
 LRESULT __attribute__ ( ( fastcall ) )
 icpu_vdmhlr (  ICPU* this, DWORD edx, VDM_COMMAND* cmd, BYTE* data );
-VOID __attribute__ ( ( fastcall ) ) 
+VOID __attribute__ ( ( fastcall ) )
 icpu_loaddata ( ICPU* this, EDX, INT format, INT seg, ADDRESS address, BYTE* data, INT numbytes );
 VOID __attribute__ ( ( fastcall ) ) icpu_disassemble ( ICPU* this, EDX, ADDRESS address, INT numbytes );
 BOOL __attribute__ ( ( fastcall ) ) icpu_getvardata ( ICPU* this, EDX, VARITEM* vip, VARDATA* vdp );

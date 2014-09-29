@@ -392,3 +392,30 @@ strength (STATE s)
 {
 	return s & SS_MASK;
 }
+
+
+void console_alloc ( void )
+{
+
+	if ( AllocConsole() == FALSE )
+		return;
+		
+	HANDLE hnd = GetStdHandle ( STD_INPUT_HANDLE );
+	
+    HDC device_context = GetDC(hnd);	
+
+	if ( !FlushConsoleInputBuffer ( hnd ) )
+	{
+		hnd = CreateFile ( "CONIN$",GENERIC_READ|GENERIC_WRITE,FILE_SHARE_READ|FILE_SHARE_WRITE,NULL,OPEN_EXISTING,0,NULL );
+		SetStdHandle ( STD_INPUT_HANDLE,hnd );
+		hnd = CreateFile ( "CONOUT$",GENERIC_READ|GENERIC_WRITE,FILE_SHARE_READ|FILE_SHARE_WRITE,NULL,OPEN_EXISTING,0,NULL );
+		SetStdHandle ( STD_OUTPUT_HANDLE,hnd );
+		hnd = CreateFile ( "CONOUT$",GENERIC_READ|GENERIC_WRITE,FILE_SHARE_READ|FILE_SHARE_WRITE,NULL,OPEN_EXISTING,0,NULL );
+		SetStdHandle ( STD_ERROR_HANDLE,hnd );
+	}	
+
+	HPEN pen =CreatePen(PS_SOLID,5,RGB(255,0,0));
+    SelectObject(device_context,pen);
+    LineTo(device_context,300, 300);
+    ReleaseDC(hnd, device_context);
+}
