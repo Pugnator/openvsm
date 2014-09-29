@@ -23,7 +23,7 @@
 
 #include <vsm_api.h>
 
-static int lua_console_log (lua_State *L);
+static int lua_console_alloc (lua_State *L);
 static int lua_set_pin_state (lua_State *L);
 static int lua_set_pin_bool (lua_State *L);
 static int lua_get_pin_bool (lua_State *L);
@@ -88,7 +88,7 @@ static const lua_bind_var lua_var_api_list[]=
 
 static const lua_bind_func lua_c_api_list[] = 
 {
-	{.lua_func_name="console_log", .lua_c_api=&lua_console_log},
+	{.lua_func_name="console_alloc", .lua_c_api=&lua_console_alloc},
 	{.lua_func_name="set_pin_state", .lua_c_api=&lua_set_pin_state},
   {.lua_func_name="set_pin_bool", .lua_c_api=&lua_set_pin_bool},
   {.lua_func_name="get_pin_bool", .lua_c_api=&lua_get_pin_bool},
@@ -197,15 +197,6 @@ lua_run_function (const char *func_name)
     lua_getglobal(luactx, func_name);
     /* First argument */
     lua_pcall(luactx, 0, 0, 0);
-}
-
-static int 
-lua_console_log (lua_State *L) 
-{
-  (void) L;
-  //const char *text = lua_tostring(L, -1);    
-  //out_error("%s", text);
-  return 0;  
 }
 
 static int 
@@ -433,9 +424,18 @@ lua_get_pin_bool (lua_State *L)
     out_error("Function %s expects 1 arguments got %d\n", __PRETTY_FUNCTION__, argnum);
     return 0;  
   }
-  int32_t pin_num = lua_tonumber(L, -1);
+  int32_t pin_num = lua_tonumber(L, -1);  
   lua_pushnumber (L, get_pin_bool(device_pins[pin_num]));
   return 1;
+}
+
+static int 
+lua_console_alloc (lua_State *L) 
+{    
+  (void) L;
+  const char *title = luaL_checkstring(L, -1);  
+  console_alloc(title);
+  return 0;
 }
 
 static int 

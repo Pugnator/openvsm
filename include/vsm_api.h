@@ -43,6 +43,8 @@
 #include <c_bind.h>
 #include <lua_bind.h>
 
+#undef _WIN32_WINNT
+#define _WIN32_WINNT 0x0500
 #define VSM_API_VERSION  110
 #define model_key 0x00000000
 
