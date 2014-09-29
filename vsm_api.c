@@ -24,7 +24,7 @@
 #include "vsm_api.h"
 
 lua_State* luactx = NULL;
-VSM_PIN device_pins[16];
+VSM_PIN device_pins[32];
 
 IDSIMMODEL_vtable VSM_DEVICE_vtable =
 {
@@ -122,9 +122,8 @@ vsm_setup ( IDSIMMODEL* this, DWORD edx, IINSTANCE* instance, IDSIMCKT* dsimckt 
 		lua_rawgeti ( luactx,-1, i );
 		//set pin
 		lua_getfield ( luactx,-1, PIN_NAME );
-		const char* pin_name = lua_tostring ( luactx,-1 );
-		
-		device_pins[i].pin = get_pin ( ( char* ) pin_name );
+		const char* pin_name = lua_tostring ( luactx,-1 );		
+		device_pins[i].pin = get_pin ( ( char* ) pin_name );		
 		lua_pop ( luactx, 1 );
 		//set pin on time
 		lua_getfield ( luactx,-1, PIN_ON_TIME );

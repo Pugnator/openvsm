@@ -394,7 +394,7 @@ strength (STATE s)
 }
 
 
-void console_alloc ( void )
+void console_alloc ( const char *title )
 {
 
 	if ( AllocConsole() == FALSE )
@@ -402,9 +402,7 @@ void console_alloc ( void )
 		
 	HANDLE hnd = GetStdHandle ( STD_INPUT_HANDLE );
 	
-    HDC device_context = GetDC(hnd);	
-
-	if ( !FlushConsoleInputBuffer ( hnd ) )
+    if ( !FlushConsoleInputBuffer ( hnd ) )
 	{
 		hnd = CreateFile ( "CONIN$",GENERIC_READ|GENERIC_WRITE,FILE_SHARE_READ|FILE_SHARE_WRITE,NULL,OPEN_EXISTING,0,NULL );
 		SetStdHandle ( STD_INPUT_HANDLE,hnd );
@@ -413,9 +411,13 @@ void console_alloc ( void )
 		hnd = CreateFile ( "CONOUT$",GENERIC_READ|GENERIC_WRITE,FILE_SHARE_READ|FILE_SHARE_WRITE,NULL,OPEN_EXISTING,0,NULL );
 		SetStdHandle ( STD_ERROR_HANDLE,hnd );
 	}	
+	SetConsoleTitle( title );
 
+	HWND console_handle = GetConsoleWindow();
+	HDC device_context = GetDC(console_handle);	
 	HPEN pen =CreatePen(PS_SOLID,5,RGB(255,0,0));
     SelectObject(device_context,pen);
     LineTo(device_context,300, 300);
-    ReleaseDC(hnd, device_context);
+    ReleaseDC(console_handle, device_context);
 }
+
