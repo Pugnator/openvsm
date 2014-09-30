@@ -39,7 +39,7 @@ double get_num_param ( CHAR* field_name );
 int32_t get_hex_param ( CHAR* field_name );
 int64_t get_init_param ( CHAR* field_name );
 
-void console_alloc ( const char *title );
+void console_alloc ( const char* title );
 void systime ( ABSTIME* at );
 BOOL set_vdm_handler ( void );
 void set_pin_bool ( VSM_PIN pin, int32_t level );
