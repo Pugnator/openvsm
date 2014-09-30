@@ -393,10 +393,3 @@ strength ( STATE s )
 	return s & SS_MASK;
 }
 
-
-void console_alloc ( const char* title )
-{
-
-
-}
-
