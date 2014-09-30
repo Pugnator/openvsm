@@ -23,7 +23,6 @@
 
 #include <vsm_api.h>
 
-static int lua_console_alloc ( lua_State* L );
 static int lua_set_pin_state ( lua_State* L );
 static int lua_set_pin_bool ( lua_State* L );
 static int lua_get_pin_bool ( lua_State* L );
@@ -88,7 +87,6 @@ static const lua_bind_var lua_var_api_list[]=
 
 static const lua_bind_func lua_c_api_list[] =
 {
-	{.lua_func_name="console_alloc", .lua_c_api=&lua_console_alloc},
 	{.lua_func_name="set_pin_state", .lua_c_api=&lua_set_pin_state},
 	{.lua_func_name="set_pin_bool", .lua_c_api=&lua_set_pin_bool},
 	{.lua_func_name="get_pin_bool", .lua_c_api=&lua_get_pin_bool},
@@ -427,15 +425,6 @@ lua_get_pin_bool ( lua_State* L )
 	int32_t pin_num = lua_tonumber ( L, -1 );
 	lua_pushnumber ( L, get_pin_bool ( device_pins[pin_num] ) );
 	return 1;
-}
-
-static int
-lua_console_alloc ( lua_State* L )
-{
-	( void ) L;
-	const char* title = luaL_checkstring ( L, -1 );
-	console_alloc ( title );
-	return 0;
 }
 
 static int

@@ -48,6 +48,12 @@
 #define VSM_API_VERSION  110
 #define model_key 0x00000000
 
+extern bool private_device_init;
+extern bool private_device_simulate;
+extern bool private_timer_callback;
+extern bool private_on_stop;
+extern bool private_on_suspend;
+
 #ifdef __WIN32
 int32_t vasprintf ( char** sptr, char* fmt, va_list argv );
 int32_t asprintf ( char** sptr, char* fmt, ... );

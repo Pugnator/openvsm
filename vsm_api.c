@@ -55,6 +55,39 @@ ICPU ICPU_DEVICE =
 	.vtable = &ICPU_DEVICE_vtable,
 };
 
+typedef struct lua_private_func
+{
+	const char* func_name;
+	bool* exist;
+} lua_private_func;
+
+bool private_device_init = false;
+bool private_device_simulate = false;
+bool private_timer_callback = false;
+bool private_on_stop = false;
+bool private_on_suspend = false;
+
+
+static lua_private_func lua_private_func_list[] =
+{
+	{.func_name="device_init", .exist=&private_device_init},
+	{.func_name="device_simulate", .exist=&private_device_simulate},
+	{.func_name="timer_callback", .exist=&private_timer_callback},
+	{.func_name="on_stop", .exist=&private_on_stop},
+	{.func_name="on_suspend", .exist=&private_on_suspend},
+	{.func_name=0},
+};
+
+static void check_private_functions ( void )
+{
+	for ( int i=0; lua_private_func_list[i].func_name; i++ )
+	{
+		lua_getglobal ( luactx,lua_private_func_list[i].func_name );
+		if ( lua_isfunction ( luactx,lua_gettop ( luactx ) ) )
+			*lua_private_func_list[i].exist = true;
+	}
+}
+
 IDSIMMODEL* __cdecl
 createdsimmodel ( CHAR* device, ILICENCESERVER* ils )
 {
@@ -64,6 +97,7 @@ createdsimmodel ( CHAR* device, ILICENCESERVER* ils )
 		return NULL;
 	}
 	/* Init Lua */
+	check_private_functions();
 	luactx = luaL_newstate();
 	/* Open libraries */
 	luaL_openlibs ( luactx );
@@ -76,7 +110,6 @@ VOID __cdecl
 deletedsimmodel ( IDSIMMODEL* model )
 {
 	( void ) model;
-	FreeConsole();
 	/* Close Lua */
 	lua_close ( luactx );
 }
@@ -138,7 +171,9 @@ vsm_setup ( IDSIMMODEL* this, DWORD edx, IINSTANCE* instance, IDSIMCKT* dsimckt 
 		lua_setglobal ( luactx, pin_name );
 		lua_pop ( luactx, 1 );
 	}
-	lua_run_function ( "device_init" );
+	
+	if ( private_device_init )
+		lua_run_function ( "device_init" );
 }
 
 VOID __attribute__ ( ( fastcall ) )
@@ -157,10 +192,12 @@ vsm_runctrl (  IDSIMMODEL* this, DWORD edx, RUNMODES mode )
 		
 			break;
 		case RM_STOP:
-			lua_run_function ( "on_stop" );
+			if ( private_on_stop )
+				lua_run_function ( "on_stop" );
 			break;
 		case RM_SUSPEND:
-			lua_run_function ( "on_suspend" );
+			if ( private_on_suspend )
+				lua_run_function ( "on_suspend" );
 			break;
 		case RM_ANIMATE:
 			break;
@@ -215,7 +252,8 @@ vsm_simulate (  IDSIMMODEL* this, DWORD edx, ABSTIME atime, DSIMMODES mode )
 	( void ) edx;
 	( void ) atime;
 	( void ) mode;
-	lua_run_function ( "device_simulate" );
+	if ( private_device_simulate )
+		lua_run_function ( "device_simulate" );
 }
 
 VOID __attribute__ ( ( fastcall ) )
@@ -223,10 +261,14 @@ vsm_callback (  IDSIMMODEL* this, DWORD edx, ABSTIME atime, EVENTID eventid )
 {
 	( void ) this;
 	( void ) edx;
+	
+	if ( false == private_timer_callback )
+		return;
+
 	lua_getglobal ( luactx, "timer_callback" );
 	lua_pushunsigned ( luactx, atime );
 	lua_pushunsigned ( luactx, eventid );
-	lua_pcall ( luactx, 2, 0, 0 );
+	lua_pcall ( luactx, 2, 0, 0 );	
 }
 
 BOOL APIENTRY
