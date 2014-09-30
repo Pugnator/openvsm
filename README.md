@@ -43,4 +43,4 @@ License
 GPL v2
 
 
-**Free Software, Hell Yeah!**
+**Free Software!**

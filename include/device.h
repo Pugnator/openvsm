@@ -5,9 +5,9 @@
 typedef struct VSM_PIN
 {
 	BOOL is_digital;
-	char* name;	
+	char* name;
 	ABSTIME on_time;
-	ABSTIME off_time;	
+	ABSTIME off_time;
 	IDSIMPIN* pin;
 } VSM_PIN;
 

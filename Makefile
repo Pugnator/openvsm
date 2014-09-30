@@ -25,7 +25,7 @@ CFLAGS:=-O0 -gdwarf-2 -fgnu89-inline -std=gnu99 -g3 -W -Wall -Iinclude \
 
 SHLIB_CFLAGS:=-Wl,--export-all-symbols,--enable-auto-import
 
-LDFLAGS:=lua53/liblua.a -lgdi32
+LDFLAGS:=lua53/liblua.a
 
 OBJ=$(SRC:%.c=%.o) my.res
 
