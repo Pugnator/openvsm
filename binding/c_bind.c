@@ -1,41 +1,39 @@
 /**
- *
+ *  
  * @file   c_bind.c
- * @Author Lavrentiy Ivanov (ookami@mail.ru)
+ * @author Lavrentiy Ivanov (ookami@mail.ru)
  * @date   22.09.2014
- * @brief  Brief description of file.
- *
- * This file is part of OpenVSM.
- * OpenVSM is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * OpenVSM is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with OpenVSM.  If not, see <http://www.gnu.org/licenses/>.
- *
+ * @brief  A set of C-wrappers functions to make life easier
+ * @copyright GNU Public License.
  */
 
 #include <vsm_api.h>
 
-int32_t popup_id = 0;
+int32_t popup_id = 0; ///< global popup-id counter. Functions use it as unique ID
+
+
+/*! 
+ *  @brief     VSM model registration
+ *  @details   This function registers VSM model to license server
+ */
 
 BOOL
 vsm_register ( ILICENCESERVER* ils )
 {
 
 	if ( FALSE ==  ils->vtable->authorize ( ils, 0, model_key, VSM_API_VERSION ) )
-	{
-		out_log ( "Device failed to authorize" );
+	{		
 		return FALSE;
 	}
 	return TRUE;
 }
+
+/*! 
+ *  @brief     Set VSM_PIN to desired state
+ *  @see set_pin_bool
+ *  @param [in] pin pin itself
+ *  @details   This function registers VSM model to license server
+ */
 
 void
 set_pin_state ( VSM_PIN pin, STATE state )
@@ -45,6 +43,13 @@ set_pin_state ( VSM_PIN pin, STATE state )
 	pin.pin->vtable->setstate2 ( pin.pin, 0, curtime, pin.on_time, state );
 }
 
+/*! 
+ *  @brief     Set VSM_PIN to desired state
+ *  @see set_pin_state
+ *  @param [in] pin pin itself
+ *  @details   This function registers VSM model to license server
+ */
+ 
 void
 set_pin_bool ( VSM_PIN pin, int32_t level )
 {

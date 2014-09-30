@@ -22,6 +22,7 @@ BEGIN
             VALUE "FileVersion", STRFILEVER
             VALUE "InternalName", "openvsmdll"
             VALUE "LegalCopyright", "GPLv2"
+	    VALUE "ProductName", "OpenVSM"
             VALUE "ProductVersion", STRPRODUCTVER
         END
     END
