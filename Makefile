@@ -20,7 +20,7 @@ endif
 LIB?=vsm
 SRC=vsm_api.c binding/c_bind.c binding/lua_bind.c win32.c device.c
 
-CFLAGS:=-O0 -gdwarf-2 -fgnu89-inline -std=gnu99 -g3 -W -Wall -Iinclude \
+CFLAGS:=-O3 -gdwarf-2 -fgnu89-inline -std=gnu99 -g3 -W -Wall -Iinclude \
 -Ilua53/include
 
 SHLIB_CFLAGS:=-Wl,--export-all-symbols,--enable-auto-import
@@ -34,12 +34,11 @@ OBJ=$(SRC:%.c=%.o) my.res
 	@$(CC) -c -o $@ $< $(CFLAGS) 
 
 $(LIB).dll: $(OBJ)	
-#	$(AR) rcs $@ $^
 	$(CC) -shared -o $@ $^ $(LDFLAGS) $(SHLIB_CFLAGS) 
-#	@$(OBJCOPY) --only-keep-debug $(LIB).dll $(LIB).dwarf
-#	@$(STRIP) -s $(LIB).dll	
-#	@$(OBJCOPY) --add-gnu-debuglink=$(LIB).dwarf $(LIB).dll
-#	@upx -q9 $(LIB).dll	
+	@$(OBJCOPY) --only-keep-debug $(LIB).dll $(LIB).dwarf
+	@$(STRIP) -s $(LIB).dll	
+	@$(OBJCOPY) --add-gnu-debuglink=$(LIB).dwarf $(LIB).dll
+	@upx -q9 $(LIB).dll	
 
 clean:
 	@find -maxdepth 1 -type f -regex ".*/.*\.\(o\|res\|dll\|lib\|def\|dwarf\|unc-backup~\|md5~\\)" -delete
