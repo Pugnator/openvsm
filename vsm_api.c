@@ -55,36 +55,36 @@ ICPU ICPU_DEVICE =
 	.vtable = &ICPU_DEVICE_vtable,
 };
 
-typedef struct lua_private_func
+typedef struct lua_global_func
 {
-	const char* func_name;
+	char* func_name;
 	bool* exist;
-} lua_private_func;
+} lua_global_func;
 
-bool private_device_init = false;
-bool private_device_simulate = false;
-bool private_timer_callback = false;
-bool private_on_stop = false;
-bool private_on_suspend = false;
+bool global_device_init = false;
+bool global_device_simulate = false;
+bool global_timer_callback = false;
+bool global_on_stop = false;
+bool global_on_suspend = false;
 
 
-static lua_private_func lua_private_func_list[] =
+static lua_global_func lua_global_func_list[] =
 {
-	{.func_name="device_init", .exist=&private_device_init},
-	{.func_name="device_simulate", .exist=&private_device_simulate},
-	{.func_name="timer_callback", .exist=&private_timer_callback},
-	{.func_name="on_stop", .exist=&private_on_stop},
-	{.func_name="on_suspend", .exist=&private_on_suspend},
+	{.func_name="device_init", .exist=&global_device_init},
+	{.func_name="device_simulate", .exist=&global_device_simulate},
+	{.func_name="timer_callback", .exist=&global_timer_callback},
+	{.func_name="on_stop", .exist=&global_on_stop},
+	{.func_name="on_suspend", .exist=&global_on_suspend},
 	{.func_name=0},
 };
 
-static void check_private_functions ( void )
+static void check_global_functions ( void )
 {
-	for ( int i=0; lua_private_func_list[i].func_name; i++ )
+	for ( int i=0; lua_global_func_list[i].func_name; i++ )
 	{
-		lua_getglobal ( luactx,lua_private_func_list[i].func_name );
+		lua_getglobal ( luactx,lua_global_func_list[i].func_name );
 		if ( lua_isfunction ( luactx,lua_gettop ( luactx ) ) )
-			*lua_private_func_list[i].exist = true;
+			*lua_global_func_list[i].exist = true;
 	}
 }
 
@@ -96,12 +96,11 @@ createdsimmodel ( CHAR* device, ILICENCESERVER* ils )
 	{
 		return NULL;
 	}
-	/* Init Lua */
-	check_private_functions();
+	/* Init Lua */	
 	luactx = luaL_newstate();
 	/* Open libraries */
 	luaL_openlibs ( luactx );
-	register_functions ( luactx );
+	register_functions ( luactx );	
 	
 	return &VSM_DEVICE;
 }
@@ -172,7 +171,8 @@ vsm_setup ( IDSIMMODEL* this, DWORD edx, IINSTANCE* instance, IDSIMCKT* dsimckt 
 		lua_pop ( luactx, 1 );
 	}
 	
-	if ( private_device_init )
+	check_global_functions();
+	if ( global_device_init )
 		lua_run_function ( "device_init" );
 }
 
@@ -192,11 +192,11 @@ vsm_runctrl (  IDSIMMODEL* this, DWORD edx, RUNMODES mode )
 		
 			break;
 		case RM_STOP:
-			if ( private_on_stop )
+			if ( global_on_stop )
 				lua_run_function ( "on_stop" );
 			break;
 		case RM_SUSPEND:
-			if ( private_on_suspend )
+			if ( global_on_suspend )
 				lua_run_function ( "on_suspend" );
 			break;
 		case RM_ANIMATE:
@@ -252,7 +252,7 @@ vsm_simulate (  IDSIMMODEL* this, DWORD edx, ABSTIME atime, DSIMMODES mode )
 	( void ) edx;
 	( void ) atime;
 	( void ) mode;
-	if ( private_device_simulate )
+	if ( global_device_simulate )
 		lua_run_function ( "device_simulate" );
 }
 
@@ -262,7 +262,7 @@ vsm_callback (  IDSIMMODEL* this, DWORD edx, ABSTIME atime, EVENTID eventid )
 	( void ) this;
 	( void ) edx;
 	
-	if ( false == private_timer_callback )
+	if ( false == global_timer_callback )
 		return;
 
 	lua_getglobal ( luactx, "timer_callback" );
