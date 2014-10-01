@@ -2,6 +2,7 @@ OpenVSM
 =========
 
 OpenVSM is a sumulation model engine with C and Lua API
+
 It is created to be ready for build with gcc (mingw/cygwin) on Linux and Windows machines
 
   - You can create your model as standalone DLL or use DLL and Lua script
