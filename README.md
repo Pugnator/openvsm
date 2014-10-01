@@ -25,7 +25,6 @@ Used libraries
 * [Liblua53] - awesome and fast scripting language
 
 Build instructions
-
 --------------
 
 ```sh
