@@ -34,13 +34,19 @@ cd openvsm
 make #mingw32-make under win32
 ```
 Copy lua53/lua.dll to %windor%\system32
-Create environment variable with path to script directory:
+
+Create environment variable with path to script directory,
+by issuing the following command:
+
+```bat
 setx LUAVSM "C:\script\"
+```
 So you should put your model script to c:\script
 Note the trailing backslash
 Your script should be named after the name of model DLL, for example:
-model.dll
-model.dll.lua
+
+```model.dll
+model.dll.lua```
 
 License
 ----
