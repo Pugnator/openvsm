@@ -16,7 +16,6 @@ Visit 'example' directory for sample projects
 
 Version
 ----
-
 0.1
 
 Used libraries
@@ -26,6 +25,8 @@ Used libraries
 
 Build instructions
 --------------
+
+Install mingw32 for you platform
 
 ```sh
 git clone https://Pugnator@bitbucket.org/Pugnator/openvsm.git openvsm
