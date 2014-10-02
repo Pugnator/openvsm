@@ -23,6 +23,7 @@
 
 #include <vsm_api.h>
 
+static int lua_state_to_string ( lua_State* L );
 static int lua_set_pin_state ( lua_State* L );
 static int lua_set_pin_bool ( lua_State* L );
 static int lua_get_pin_bool ( lua_State* L );
@@ -69,6 +70,16 @@ static const lua_bind_var lua_var_api_list[]=
 	{.var_name="SHI", .var_value=SHI},
 	{.var_name="SLO", .var_value=SLO},
 	{.var_name="FLT", .var_value=FLT},
+	{.var_name="PLO", .var_value=PLO},
+	{.var_name="ILO", .var_value=ILO},	
+	{.var_name="WLO", .var_value=WLO},
+	{.var_name="WHI", .var_value=WHI},	
+	{.var_name="IHI", .var_value=IHI},
+	{.var_name="PHI", .var_value=PHI},
+	{.var_name="WUD", .var_value=WUD},
+	{.var_name="SUD", .var_value=SUD},
+	{.var_name="TSTATE", .var_value=TSTATE},
+	{.var_name="FSTATE", .var_value=FSTATE},	
 	{.var_name="UNDEFINED", .var_value=UNDEFINED},
 	{.var_name="MSEC", .var_value=1000000000L},
 	{.var_name="NSEC", .var_value=100000000L},
@@ -79,6 +90,7 @@ static const lua_bind_var lua_var_api_list[]=
 
 static const lua_bind_func lua_c_api_list[] =
 {
+	{.lua_func_name="state_to_string", .lua_c_api=&lua_state_to_string},
 	{.lua_func_name="is_pin_active", .lua_c_api=&lua_is_pin_active},
 	{.lua_func_name="is_pin_edge", .lua_c_api=&lua_is_pin_edge},
 	{.lua_func_name="is_pin_posedge", .lua_c_api=&lua_is_pin_posedge},
@@ -405,7 +417,7 @@ lua_set_pin_bool ( lua_State* L )
 		return 0;
 	}
 	int32_t pin_num = lua_tonumber ( L, -2 );
-	int32_t pin_level = lua_tonumber ( L, -1 );
+	bool pin_level = lua_toboolean ( L, -1 );
 	set_pin_bool ( device_pins[pin_num], pin_level );
 	return 0;
 }
@@ -420,7 +432,28 @@ lua_get_pin_bool ( lua_State* L )
 		return 0;
 	}
 	int32_t pin_num = lua_tonumber ( L, -1 );
-	lua_pushnumber ( L, get_pin_bool ( device_pins[pin_num] ) );
+	int32_t state = get_pin_bool ( device_pins[pin_num]);
+	if ( -1 == state )
+	{		
+		lua_pushnil(L);
+		return 1;
+	}	
+	lua_pushboolean ( L,  state);
+	return 1;
+}
+
+static int
+lua_state_to_string ( lua_State* L )
+{
+	lua_Number argnum = lua_gettop ( L );
+	if ( 1 > argnum )
+	{
+		out_error ( "Function %s expects 1 arguments got %d\n", __PRETTY_FUNCTION__, argnum );
+		return 0;
+	}
+	int32_t state = lua_tonumber ( L, -1 );
+	
+	lua_pushstring ( L,  state_to_string(state));
 	return 1;
 }
 
