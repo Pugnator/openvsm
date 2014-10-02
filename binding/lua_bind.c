@@ -60,18 +60,6 @@ static int lua_clear_bit ( lua_State* L );
 
 static int lua_get_systime ( lua_State* L );
 
-typedef struct lua_bind_func
-{
-	int32_t ( *lua_c_api ) ( lua_State* );
-	const char* lua_func_name;
-} lua_bind_func;
-
-typedef struct lua_bind_var
-{
-	const char* var_name;
-	int64_t var_value;
-} lua_bind_var;
-
 static const lua_bind_var lua_var_api_list[]=
 {
 	{.var_name="SHI", .var_value=SHI},

@@ -21,8 +21,8 @@
  *
  */
 
-#ifndef API_WRAPPER_H
-#define API_WRAPPER_H
+#ifndef C_BIND_H
+#define C_BIND_H
 #include <vsm_api.h>
 
 extern int32_t popup_id;

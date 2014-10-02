@@ -96,9 +96,9 @@ createdsimmodel ( CHAR* device, ILICENCESERVER* ils )
 	{
 		return NULL;
 	}
-	/** Init Lua */	
+	/* Init Lua */	
 	luactx = luaL_newstate();
-	/** Open libraries */
+	/* Open libraries */
 	luaL_openlibs ( luactx );
 	register_functions ( luactx );	
 	

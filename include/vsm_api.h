@@ -57,6 +57,11 @@ extern bool global_on_suspend;
 int32_t vasprintf ( char** sptr, char* fmt, va_list argv );
 int32_t asprintf ( char** sptr, char* fmt, ... );
 
+void
+register_functions ( lua_State* L );
+void
+lua_load_script ( const char* device_name );
+
 INT __attribute__ ( ( fastcall ) )
 vsm_isdigital ( IDSIMMODEL* this, DWORD edx, CHAR* pinname );
 VOID __attribute__ ( ( fastcall ) )
