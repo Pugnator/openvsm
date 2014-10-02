@@ -16,7 +16,6 @@ int32_t popup_id = 0; ///< global popup-id counter. Functions use it as unique I
  *  @brief     VSM model registration
  *  @details   This function registers VSM model to license server
  */
-
 BOOL
 vsm_register ( ILICENCESERVER* ils )
 {
@@ -29,12 +28,11 @@ vsm_register ( ILICENCESERVER* ils )
 }
 
 /*! 
- *  @brief     Set VSM_PIN to desired state
+ *  @brief Set VSM_PIN to desired state
  *  @see set_pin_bool
  *  @param [in] pin pin itself
- *  @details   This function registers VSM model to license server
+ *  @param [in] state the state needed to be set 
  */
-
 void
 set_pin_state ( VSM_PIN pin, STATE state )
 {
@@ -44,12 +42,11 @@ set_pin_state ( VSM_PIN pin, STATE state )
 }
 
 /*! 
- *  @brief     Set VSM_PIN to desired state
- *  @see set_pin_state
+ *  @brief Set VSM_PIN using boolean value
+ *  @see set_pin_bool
  *  @param [in] pin pin itself
- *  @details   This function registers VSM model to license server
- */
- 
+ *  @param [in] level the state needed to be set 
+ */ 
 void
 set_pin_bool ( VSM_PIN pin, int32_t level )
 {
@@ -58,6 +55,11 @@ set_pin_bool ( VSM_PIN pin, int32_t level )
 	pin.pin->vtable->setstate2 ( pin.pin, 0, curtime, pin.on_time, level ? SHI : SLO );
 }
 
+/*! 
+ *  @brief Get current system time
+ *  @see set_pin_bool
+ *  @param [out] absolute simulation time 
+ */
 void systime ( ABSTIME* at )
 {
 	model_dsim->vtable->sysvar ( model_dsim, 0, ( DOUBLE* ) at, DSIMTIMENOW );
