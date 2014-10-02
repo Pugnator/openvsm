@@ -28,7 +28,7 @@
 
 #include <vsm_api.h>
 
-#define VOID void
+#define void void
 typedef double DOUBLE;
 typedef char CHAR;
 typedef unsigned char BYTE;
@@ -120,7 +120,7 @@ typedef VOID* HTEXTSTYLE;
 
 // Pop-up window interfaces.
 // Handles, types, etc. for pop-up windows:
-typedef VOID IPOPUP;
+typedef void IPOPUP;
 typedef DWORD POPUPID;
 typedef DWORD INSTANCEID;
 

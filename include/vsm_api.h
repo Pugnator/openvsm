@@ -54,10 +54,8 @@ extern bool global_timer_callback;
 extern bool global_on_stop;
 extern bool global_on_suspend;
 
-#ifdef __WIN32
 int32_t vasprintf ( char** sptr, char* fmt, va_list argv );
 int32_t asprintf ( char** sptr, char* fmt, ... );
-#endif
 
 INT __attribute__ ( ( fastcall ) )
 vsm_isdigital ( IDSIMMODEL* this, DWORD edx, CHAR* pinname );
