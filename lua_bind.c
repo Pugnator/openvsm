@@ -696,7 +696,7 @@ lua_get_bit ( lua_State* L )
 	//TODO: Add check integer type
 	size_t byte = lua_tointeger ( L, -2 );
 	size_t bit = lua_tointeger ( L, -1 );
-	lua_pushnumber ( L, ( byte >> bit & 0x01 ) );
+	lua_pushboolean ( L, ( byte >> bit & 0x01 ) );
 	return 1;
 }
 

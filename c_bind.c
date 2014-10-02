@@ -295,7 +295,7 @@ get_pin_state ( IDSIMPIN* pin )
 	return pin->vtable->istate ( pin, 0 );
 }
 
-int32_t
+inline int32_t
 get_pin_bool ( VSM_PIN pin)
 {
 	STATE s = pin.pin->vtable->istate ( pin.pin, 0 );
