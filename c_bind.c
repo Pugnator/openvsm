@@ -16,7 +16,7 @@ int32_t popup_id = 0; ///< global popup-id counter. Functions use it as unique I
  *  @brief     VSM model registration
  *  @details   This function registers VSM model to license server
  */
-BOOL
+bool
 vsm_register ( ILICENCESERVER* ils )
 {
 
@@ -69,20 +69,20 @@ void systime ( ABSTIME* at )
 /**
 * Get model string parameter (case insensitive)
 */
-CHAR*
-get_string_param ( CHAR* field_name )
+char*
+get_string_param ( char* field_name )
 {
 	return model_instance->vtable->getstrval ( model_instance, 0, field_name, "?" );
 }
 
-BOOL
-get_bool_param ( CHAR* field_name )
+bool
+get_bool_param ( char* field_name )
 {
 	return model_instance->vtable->getboolval ( model_instance, 0, field_name, FALSE );
 }
 
 double
-get_num_param ( CHAR* field_name )
+get_num_param ( char* field_name )
 {
 	double result = 0;
 	model_instance->vtable->getnumval ( model_instance, 0, &result, field_name, 0.0 );
@@ -90,19 +90,19 @@ get_num_param ( CHAR* field_name )
 }
 
 int32_t
-get_hex_param ( CHAR* field_name )
+get_hex_param ( char* field_name )
 {
 	return ( int32_t ) model_instance->vtable->gethexval ( model_instance, 0, field_name, 0 );
 }
 
 int64_t
-get_init_param ( CHAR* field_name )
+get_init_param ( char* field_name )
 {
 	return ( int64_t ) model_instance->vtable->getinitval ( model_instance, 0, field_name, 0 );
 }
 
 void
-load_image ( CHAR* filename, uint8_t* buffer, size_t buffer_size )
+load_image ( char* filename, uint8_t* buffer, size_t buffer_size )
 {
 	model_instance->vtable->loadmemory ( model_instance, 0, filename, buffer, buffer_size, 0, 0 );
 }
@@ -200,15 +200,15 @@ set_memory_popup ( IMEMORYPOPUP* popup, size_t offset, void* buffer, size_t size
 	popup->vtable->setmemory ( popup, 0, offset, buffer, size );
 }
 
-BOOL
+bool
 add_source_file ( ISOURCEPOPUP* popup, char* filename, bool lowlevel )
 {
-	BOOL result = popup->vtable->addsrcfile ( popup, 0, filename, lowlevel );
+	bool result = popup->vtable->addsrcfile ( popup, 0, filename, lowlevel );
 	popup->vtable->setpcaddress ( popup, 0, 0 );
 	return result;
 }
 
-BOOL
+bool
 set_vdm_handler ( void )
 {
 	return model_instance->vtable->setvdmhlr ( model_instance, 0, &ICPU_DEVICE );
@@ -269,10 +269,28 @@ get_pin_bool ( VSM_PIN pin )
 	return rand() % 2;
 }
 
-BOOL
+bool
 is_pin_active ( IDSIMPIN* pin )
 {
 	return pin->vtable->isactive ( pin, 0 );
+}
+
+bool
+is_pin_posedge ( IDSIMPIN* pin )
+{
+	return pin->vtable->isposedge ( pin, 0 );
+}
+
+bool
+is_pin_negedge ( IDSIMPIN* pin )
+{
+	return pin->vtable->isnegedge ( pin, 0 );
+}
+
+bool
+is_pin_edge ( IDSIMPIN* pin )
+{
+	return pin->vtable->isedge ( pin, 0 );
 }
 
 void
@@ -335,56 +353,56 @@ get_pin ( char* pin_name )
 	return model_instance->vtable->getdsimpin ( model_instance, 0, pin_name, TRUE );
 }
 
-BOOL
+bool
 is_pin_low ( IDSIMPIN* pin )
 {
 	return islow ( pin->vtable->istate ( pin, 0 ) );
 }
 
-BOOL
+bool
 is_pin_high ( IDSIMPIN* pin )
 {
 	return ishigh ( pin->vtable->istate ( pin, 0 ) );
 }
 
-BOOL
+bool
 is_pin_floating ( IDSIMPIN* pin )
 {
 	return isfloating ( pin->vtable->istate ( pin, 0 ) );
 }
 
-BOOL
+bool
 is_pin_steady ( IDSIMPIN* pin )
 {
 	return pin->vtable->issteady ( pin, 0 );
 }
 
-inline BOOL
+inline bool
 islow ( STATE s )
 {
 	return ( s & SP_MASK ) == SP_LOW;
 }
-inline BOOL
+inline bool
 ishigh ( STATE s )
 {
 	return ( s & SP_MASK ) == SP_HIGH;
 }
-inline BOOL
+inline bool
 isfloating ( STATE s )
 {
 	return ( s & SP_MASK ) == SP_FLOAT;
 }
-inline BOOL
+inline bool
 iscontention ( STATE s )
 {
 	return s & SF_CONTENTION;
 }
-inline BOOL
+inline bool
 isdefined ( STATE s )
 {
 	return s != SP_UNDEFINED;
 }
-inline BOOL
+inline bool
 ishighlow ( STATE s )
 {
 	return s & 1;

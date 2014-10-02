@@ -27,6 +27,10 @@ static int lua_set_pin_state ( lua_State* L );
 static int lua_set_pin_bool ( lua_State* L );
 static int lua_get_pin_bool ( lua_State* L );
 static int lua_get_pin_state ( lua_State* L );
+static int lua_is_pin_active ( lua_State* L );
+static int lua_is_pin_edge ( lua_State* L );
+static int lua_is_pin_posedge ( lua_State* L );
+static int lua_is_pin_negedge ( lua_State* L );
 static int lua_is_pin_low ( lua_State* L );
 static int lua_is_pin_high ( lua_State* L );
 static int lua_is_pin_floating ( lua_State* L );
@@ -75,6 +79,10 @@ static const lua_bind_var lua_var_api_list[]=
 
 static const lua_bind_func lua_c_api_list[] =
 {
+	{.lua_func_name="is_pin_active", .lua_c_api=&lua_is_pin_active},
+	{.lua_func_name="is_pin_edge", .lua_c_api=&lua_is_pin_edge},
+	{.lua_func_name="is_pin_posedge", .lua_c_api=&lua_is_pin_posedge},
+	{.lua_func_name="is_pin_negedge", .lua_c_api=&lua_is_pin_negedge},	
 	{.lua_func_name="set_pin_state", .lua_c_api=&lua_set_pin_state},
 	{.lua_func_name="set_pin_bool", .lua_c_api=&lua_set_pin_bool},
 	{.lua_func_name="get_pin_bool", .lua_c_api=&lua_get_pin_bool},
@@ -137,8 +145,7 @@ register_functions ( lua_State* L )
 
 void
 lua_load_script ( const char* device_name )
-{
-	int32_t lua_err = 0;
+{	 
 	char spath[512] = {0};
 	if ( 0 == GetEnvironmentVariable ( "LUAVSM", spath, sizeof spath ) )
 	{
@@ -147,13 +154,15 @@ lua_load_script ( const char* device_name )
 	char script[512]= {0};
 	sprintf ( script, "%s\\%s", spath, device_name );
 	
-	lua_err = luaL_loadfile ( luactx, script );
+	int32_t lua_err = luaL_loadfile ( luactx, script );
 	if ( 0 != lua_err )
 	{
+		const char* mess = NULL;
 		switch ( lua_err )
 		{
 			case LUA_ERRSYNTAX:
-				out_error ( "Syntax error in Lua script" );
+				mess = lua_tostring(luactx, -1);
+				out_error ( "Syntax error in Lua script\n%s", mess );
 				return;
 			case LUA_ERRMEM:
 				out_error ( "Not enough memory to load script" );
@@ -473,6 +482,62 @@ lua_is_pin_high ( lua_State* L )
 	}
 	int32_t pin_num = lua_tonumber ( L, -1 );
 	lua_pushboolean ( L, is_pin_high ( device_pins[pin_num].pin ) );
+	return 1;
+}
+
+static int
+lua_is_pin_edge ( lua_State* L )
+{
+	lua_Number argnum = lua_gettop ( L );
+	if ( 1 > argnum )
+	{
+		out_error ( "Function %s expects 1 arguments got %d\n", __PRETTY_FUNCTION__, argnum );
+		return 0;
+	}
+	int32_t pin_num = lua_tonumber ( L, -1 );
+	lua_pushboolean ( L, is_pin_edge ( device_pins[pin_num].pin ) );
+	return 1;
+}
+
+static int
+lua_is_pin_posedge ( lua_State* L )
+{
+	lua_Number argnum = lua_gettop ( L );
+	if ( 1 > argnum )
+	{
+		out_error ( "Function %s expects 1 arguments got %d\n", __PRETTY_FUNCTION__, argnum );
+		return 0;
+	}
+	int32_t pin_num = lua_tonumber ( L, -1 );
+	lua_pushboolean ( L, is_pin_posedge ( device_pins[pin_num].pin ) );
+	return 1;
+}
+
+static int
+lua_is_pin_negedge ( lua_State* L )
+{
+	lua_Number argnum = lua_gettop ( L );
+	if ( 1 > argnum )
+	{
+		out_error ( "Function %s expects 1 arguments got %d\n", __PRETTY_FUNCTION__, argnum );
+		return 0;
+	}
+	int32_t pin_num = lua_tonumber ( L, -1 );
+	lua_pushboolean ( L, is_pin_negedge ( device_pins[pin_num].pin ) );
+	return 1;
+}
+
+static int
+lua_is_pin_active ( lua_State* L )
+{
+	lua_Number argnum = lua_gettop ( L );
+	if ( 1 > argnum )
+	{
+		out_error ( "Function %s expects 1 arguments got %d\n", __PRETTY_FUNCTION__, argnum );
+		return 0;
+	}
+	int32_t pin_num = lua_tonumber ( L, -1 );
+	lua_pushboolean ( L, is_pin_active ( device_pins[pin_num].pin ) );
 	return 1;
 }
 

@@ -26,7 +26,7 @@
 #include <vsm_api.h>
 #include <vdm_api.h>
 
-#define EDX uint32_t EDX
+#define EDX uint32_t __EDX
 
 #define IACTIVEMODEL void*
 //#define EVENT void*

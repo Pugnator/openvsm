@@ -17,7 +17,7 @@ else
 	exit 0
 endif
 
-OPENVSMLIB?=vsm
+OPENVSMLIB?=counter
 SRC=vsm_api.c c_bind.c lua_bind.c win32.c
 
 CFLAGS:=-O3 -gdwarf-2 -fgnu89-inline -std=gnu99 -g3 -W -Wall -Iinclude \
