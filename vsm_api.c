@@ -145,8 +145,7 @@ vsm_setup ( IDSIMMODEL* this, uint32_t edx, IINSTANCE* instance, IDSIMCKT* dsimc
 	}
 	
 	lua_len ( luactx, -1 );
-	int32_t pin_number = lua_tointeger ( luactx, -1 );
-	//device_pins = calloc(pin_number + 1, sizeof *device_pins);
+	int32_t pin_number = lua_tointeger ( luactx, -1 );	
 	lua_pop ( luactx, 1 );
 	
 	for ( int i=1; i<=pin_number; i++ )
@@ -252,6 +251,7 @@ vsm_simulate (  IDSIMMODEL* this, uint32_t edx, ABSTIME atime, DSIMMODES mode )
 	( void ) edx;
 	( void ) atime;
 	( void ) mode;
+	
 	if ( global_device_simulate )
 		lua_run_function ( "device_simulate" );
 }
