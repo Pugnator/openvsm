@@ -2,6 +2,7 @@ OpenVSM
 =========
 
 OpenVSM is a sumulation model engine with C and Lua API
+For Proteus 7/8
 
 It is created to be ready for build with gcc (mingw/cygwin) on Linux and Windows machines
 
