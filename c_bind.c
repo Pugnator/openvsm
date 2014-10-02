@@ -9,6 +9,43 @@
 
 #include <vsm_api.h>
 
+const char *state_to_string (STATE s)
+{
+	switch (s)
+	{
+		case UNDEFINED:
+		return "UNDEFINED";
+		case TSTATE:
+		return "TSTATE";
+		case FSTATE:
+		return "FSTATE";
+		case PLO:
+		return "PLO";
+		case ILO:
+		return "ILO";
+		case SLO:
+		return "SLO";
+		case WLO:
+		return "WLO";
+		case FLT:
+		return "FLT";
+		case WHI:
+		return "WHI";
+		case SHI:
+		return "SHI";
+		case IHI:
+		return "IHI";
+		case PHI:
+		return "PHI";
+		case WUD:
+		return "WUD";
+		case SUD:
+		return "SUD";		
+		default:
+		return "wrong state";
+	}
+}
+
 int32_t popup_id = 0; ///< global popup-id counter. Functions use it as unique ID
 
 
@@ -48,7 +85,7 @@ set_pin_state ( VSM_PIN pin, STATE state )
  *  @param [in] level the state needed to be set 
  */ 
 void
-set_pin_bool ( VSM_PIN pin, int32_t level )
+set_pin_bool ( VSM_PIN pin, bool level )
 {
 	ABSTIME curtime = 0;
 	systime ( &curtime );
@@ -259,14 +296,18 @@ get_pin_state ( IDSIMPIN* pin )
 }
 
 int32_t
-get_pin_bool ( VSM_PIN pin )
+get_pin_bool ( VSM_PIN pin)
 {
-	if ( SLO == pin.pin->vtable->istate ( pin.pin, 0 ) )
+	STATE s = pin.pin->vtable->istate ( pin.pin, 0 );
+	if ( SLO == s || WLO == s || ILO == s || PLO == s)
+	{		
 		return 0;
-	else if ( SHI == pin.pin->vtable->istate ( pin.pin, 0 ) )
-		return 1;
-	srand ( time ( NULL ) );
-	return rand() % 2;
+	}
+	else if ( SHI == s || WHI == s || IHI == s || PHI == s)
+	{		
+		return 1;	
+	}		
+	return -1;
 }
 
 bool

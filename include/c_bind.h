@@ -41,11 +41,11 @@ bool get_bool_param ( char* field_name );
 double get_num_param ( char* field_name );
 int32_t get_hex_param ( char* field_name );
 int64_t get_init_param ( char* field_name );
-
+const char *state_to_string (STATE s);
 void console_alloc ( const char* title );
 void systime ( ABSTIME* at );
 bool set_vdm_handler ( void );
-void set_pin_bool ( VSM_PIN pin, int32_t level );
+void set_pin_bool ( VSM_PIN pin, bool level );
 int32_t get_pin_bool ( VSM_PIN pin );
 IDSIMPIN* get_pin ( char* pin_name );
 STATE get_pin_state ( IDSIMPIN* pin );
