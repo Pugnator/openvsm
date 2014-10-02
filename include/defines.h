@@ -24,32 +24,15 @@
 #ifndef VSMAPI_DEFINES
 #define VSMAPI_DEFINES
 
-//Virtual System Modeling Interface Header
-
 #include <vsm_api.h>
 
-#define void void
-typedef double DOUBLE;
-typedef char CHAR;
-typedef unsigned char BYTE;
-typedef signed short SHORT;
-typedef signed int INT;
-typedef signed long LONG;
-typedef unsigned short WORD;
-typedef unsigned long DWORD;
-typedef signed int BOOL;
-typedef unsigned int UINT;
-typedef unsigned long COLOUR;
-typedef unsigned MESSAGE;
+typedef uint32_t COLOUR;
+typedef uint32_t MESSAGE;
 
-#define PINHANDLERFN void*
-#define CALLBACKHANDLERFN void*
 #define IDSIMPIN IDSIMPIN1
 //#define IDSIMPIN IDSIMPIN2
 
-typedef DWORD ADDRESS;
-#define TRUE  1
-#define FALSE 0
+typedef uint32_t ADDRESS;
 #define WATCHITEM_NAME_SIZE 128
 #define WATCHITEM_ADDR_SIZE 32
 
@@ -62,7 +45,7 @@ typedef DWORD ADDRESS;
 #define HIDE_NOMODIFY 4
 
 // Useful Colours:
-#define  MAKECOLOUR(r,g,b) ((COLOUR)(((BYTE)(r)|((WORD)((BYTE)(g))<<8))|(((DWORD)(BYTE)(b))<<16)))
+#define  MAKECOLOUR(r,g,b) ((COLOUR)(((uint8_t)(r)|((uint16_t)((uint8_t)(g))<<8))|(((uint32_t)(uint8_t)(b))<<16)))
 #define  BLACK           MAKECOLOUR(0x00,0x00,0x00)
 #define  BLUE            MAKECOLOUR(0x00,0x00,0xC0)
 #define  GREEN           MAKECOLOUR(0x00,0xC0,0x00)
@@ -115,16 +98,16 @@ typedef DWORD ADDRESS;
 #define TXJ_MIDDLE 8
 
 // Handles for graphics and text styles
-typedef VOID* HGFXSTYLE;
-typedef VOID* HTEXTSTYLE;
+typedef void* HGFXSTYLE;
+typedef void* HTEXTSTYLE;
 
 // Pop-up window interfaces.
 // Handles, types, etc. for pop-up windows:
 typedef void IPOPUP;
-typedef DWORD POPUPID;
-typedef DWORD INSTANCEID;
+typedef uint32_t POPUPID;
+typedef uint32_t INSTANCEID;
 
-typedef DOUBLE REALTIME;
+typedef double REALTIME;
 typedef LONGLONG ABSTIME;
 //typedef const ABSTIME &CREFABSTIME;
 typedef LONGLONG RELTIME;
@@ -136,9 +119,9 @@ typedef LONGLONG RELTIME;
 // Maximum bits in bus:
 #define MAXBUSBITS     32
 
-typedef DOUBLE SPICEFREQ;
+typedef double SPICEFREQ;
 
-typedef LONG ACTIVESTATE;
+typedef int64_t ACTIVESTATE;
 
 // Pin drive flags
 #define DPF_INPUT       0x01
@@ -170,7 +153,7 @@ typedef long EVENTID;
 #define EID_BREAKPOINT 0x8000000
 
 // Pin types:
-typedef INT SPICENODE;
-typedef VOID* DSIMNODE;
+typedef int32_t SPICENODE;
+typedef void* DSIMNODE;
 
 #endif

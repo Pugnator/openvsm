@@ -18,7 +18,7 @@ else
 endif
 
 OPENVSMLIB?=vsm
-SRC=vsm_api.c binding/c_bind.c binding/lua_bind.c win32.c device.c
+SRC=vsm_api.c c_bind.c lua_bind.c win32.c
 
 CFLAGS:=-O3 -gdwarf-2 -fgnu89-inline -std=gnu99 -g3 -W -Wall -Iinclude \
 -Ilua53/include

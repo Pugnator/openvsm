@@ -89,7 +89,7 @@ static void check_global_functions ( void )
 }
 
 IDSIMMODEL* __cdecl
-createdsimmodel ( CHAR* device, ILICENCESERVER* ils )
+createdsimmodel ( char* device, ILICENCESERVER* ils )
 {
 	( void ) device;
 	if ( 0 == vsm_register ( ils ) )
@@ -105,7 +105,7 @@ createdsimmodel ( CHAR* device, ILICENCESERVER* ils )
 	return &VSM_DEVICE;
 }
 
-VOID __cdecl
+void __cdecl
 deletedsimmodel ( IDSIMMODEL* model )
 {
 	( void ) model;
@@ -113,8 +113,8 @@ deletedsimmodel ( IDSIMMODEL* model )
 	lua_close ( luactx );
 }
 
-INT __attribute__ ( ( fastcall ) )
-vsm_isdigital ( IDSIMMODEL* this, DWORD edx, CHAR* pinname )
+int32_t __attribute__ ( ( fastcall ) )
+vsm_isdigital ( IDSIMMODEL* this, uint32_t edx, char* pinname )
 {
 	( void ) this;
 	( void ) edx;
@@ -122,8 +122,8 @@ vsm_isdigital ( IDSIMMODEL* this, DWORD edx, CHAR* pinname )
 	return 1;
 }
 
-VOID __attribute__ ( ( fastcall ) )
-vsm_setup ( IDSIMMODEL* this, DWORD edx, IINSTANCE* instance, IDSIMCKT* dsimckt )
+void __attribute__ ( ( fastcall ) )
+vsm_setup ( IDSIMMODEL* this, uint32_t edx, IINSTANCE* instance, IDSIMCKT* dsimckt )
 {
 	( void ) this;
 	( void ) edx;
@@ -176,8 +176,8 @@ vsm_setup ( IDSIMMODEL* this, DWORD edx, IINSTANCE* instance, IDSIMCKT* dsimckt 
 		lua_run_function ( "device_init" );
 }
 
-VOID __attribute__ ( ( fastcall ) )
-vsm_runctrl (  IDSIMMODEL* this, DWORD edx, RUNMODES mode )
+void __attribute__ ( ( fastcall ) )
+vsm_runctrl (  IDSIMMODEL* this, uint32_t edx, RUNMODES mode )
 {
 	( void ) this;
 	( void ) edx;
@@ -226,8 +226,8 @@ vsm_runctrl (  IDSIMMODEL* this, DWORD edx, RUNMODES mode )
 	
 }
 
-VOID __attribute__ ( ( fastcall ) )
-vsm_actuate  (  IDSIMMODEL* this, DWORD edx, REALTIME atime, ACTIVESTATE newstate )
+void __attribute__ ( ( fastcall ) )
+vsm_actuate  (  IDSIMMODEL* this, uint32_t edx, REALTIME atime, ACTIVESTATE newstate )
 {
 	( void ) this;
 	( void ) edx;
@@ -235,18 +235,18 @@ vsm_actuate  (  IDSIMMODEL* this, DWORD edx, REALTIME atime, ACTIVESTATE newstat
 	( void ) newstate;
 }
 
-BOOL __attribute__ ( ( fastcall ) )
-vsm_indicate (  IDSIMMODEL* this, DWORD edx, REALTIME atime, ACTIVEDATA* newstate )
+bool __attribute__ ( ( fastcall ) )
+vsm_indicate (  IDSIMMODEL* this, uint32_t edx, REALTIME atime, ACTIVEDATA* newstate )
 {
 	( void ) this;
 	( void ) edx;
 	( void ) atime;
 	( void ) newstate;
-	return FALSE;
+	return false;
 }
 
-VOID __attribute__ ( ( fastcall ) )
-vsm_simulate (  IDSIMMODEL* this, DWORD edx, ABSTIME atime, DSIMMODES mode )
+void __attribute__ ( ( fastcall ) )
+vsm_simulate (  IDSIMMODEL* this, uint32_t edx, ABSTIME atime, DSIMMODES mode )
 {
 	( void ) this;
 	( void ) edx;
@@ -256,8 +256,8 @@ vsm_simulate (  IDSIMMODEL* this, DWORD edx, ABSTIME atime, DSIMMODES mode )
 		lua_run_function ( "device_simulate" );
 }
 
-VOID __attribute__ ( ( fastcall ) )
-vsm_callback (  IDSIMMODEL* this, DWORD edx, ABSTIME atime, EVENTID eventid )
+void __attribute__ ( ( fastcall ) )
+vsm_callback (  IDSIMMODEL* this, uint32_t edx, ABSTIME atime, EVENTID eventid )
 {
 	( void ) this;
 	( void ) edx;
@@ -271,17 +271,17 @@ vsm_callback (  IDSIMMODEL* this, DWORD edx, ABSTIME atime, EVENTID eventid )
 	lua_pcall ( luactx, 2, 0, 0 );	
 }
 
-BOOL APIENTRY
-DllMain ( HINSTANCE hInstDLL, DWORD fdwReason, LPVOID lpvReserved )
+bool APIENTRY
+DllMain ( HINSTANCE hInstDLL, uint32_t fdwReason, LPVOID lpvReserved )
 {
 	( void ) hInstDLL;
 	( void ) fdwReason;
 	( void ) lpvReserved;
 	
-	return TRUE;
+	return true;
 }
 
-LRESULT __attribute__ ( ( fastcall ) ) icpu_vdmhlr (  ICPU* this, DWORD edx, VDM_COMMAND* cmd, BYTE* data )
+LRESULT __attribute__ ( ( fastcall ) ) icpu_vdmhlr (  ICPU* this, uint32_t edx, VDM_COMMAND* cmd, uint8_t* data )
 {
 	( void ) this;
 	( void ) edx;
@@ -290,7 +290,7 @@ LRESULT __attribute__ ( ( fastcall ) ) icpu_vdmhlr (  ICPU* this, DWORD edx, VDM
 	return 0;
 }
 
-VOID __attribute__ ( ( fastcall ) ) icpu_loaddata ( ICPU* this, DWORD edx, INT format, INT seg, ADDRESS address, BYTE* data, INT numbytes )
+void __attribute__ ( ( fastcall ) ) icpu_loaddata ( ICPU* this, uint32_t edx, int32_t format, int32_t seg, ADDRESS address, uint8_t* data, int32_t numbytes )
 {
 	( void ) this;
 	( void ) edx;
@@ -301,7 +301,7 @@ VOID __attribute__ ( ( fastcall ) ) icpu_loaddata ( ICPU* this, DWORD edx, INT f
 	( void ) numbytes;
 }
 
-VOID __attribute__ ( ( fastcall ) ) icpu_disassemble ( ICPU* this, DWORD edx, ADDRESS address, INT numbytes )
+void __attribute__ ( ( fastcall ) ) icpu_disassemble ( ICPU* this, uint32_t edx, ADDRESS address, int32_t numbytes )
 {
 	( void ) this;
 	( void ) edx;
@@ -309,11 +309,11 @@ VOID __attribute__ ( ( fastcall ) ) icpu_disassemble ( ICPU* this, DWORD edx, AD
 	( void ) numbytes;
 }
 
-BOOL __attribute__ ( ( fastcall ) ) icpu_getvardata ( ICPU* this, DWORD edx, VARITEM* vip, VARDATA* vdp )
+bool __attribute__ ( ( fastcall ) ) icpu_getvardata ( ICPU* this, uint32_t edx, VARITEM* vip, VARDATA* vdp )
 {
 	( void ) this;
 	( void ) edx;
 	( void ) vip;
 	( void ) vdp;
-	return TRUE;
+	return true;
 }

@@ -62,40 +62,40 @@ register_functions ( lua_State* L );
 void
 lua_load_script ( const char* device_name );
 
-INT __attribute__ ( ( fastcall ) )
-vsm_isdigital ( IDSIMMODEL* this, DWORD edx, CHAR* pinname );
-VOID __attribute__ ( ( fastcall ) )
-vsm_setup ( IDSIMMODEL* this, DWORD edx, IINSTANCE* instance, IDSIMCKT* dsim );
-VOID __attribute__ ( ( fastcall ) )
-vsm_runctrl (  IDSIMMODEL* this, DWORD edx, RUNMODES mode );
-VOID __attribute__ ( ( fastcall ) )
-vsm_actuate  (  IDSIMMODEL* this, DWORD edx, REALTIME atime, ACTIVESTATE newstate );
-BOOL __attribute__ ( ( fastcall ) )
-vsm_indicate (  IDSIMMODEL* this, DWORD edx, REALTIME atime, ACTIVEDATA* newstate );
-VOID __attribute__ ( ( fastcall ) )
-vsm_simulate (  IDSIMMODEL* this, DWORD edx, ABSTIME atime, DSIMMODES mode );
-VOID __attribute__ ( ( fastcall ) )
-vsm_callback (  IDSIMMODEL* this, DWORD edx, ABSTIME atime, EVENTID eventid );
+int32_t __attribute__ ( ( fastcall ) )
+vsm_isdigital ( IDSIMMODEL* this, uint32_t edx, char* pinname );
+void __attribute__ ( ( fastcall ) )
+vsm_setup ( IDSIMMODEL* this, uint32_t edx, IINSTANCE* instance, IDSIMCKT* dsim );
+void __attribute__ ( ( fastcall ) )
+vsm_runctrl (  IDSIMMODEL* this, uint32_t edx, RUNMODES mode );
+void __attribute__ ( ( fastcall ) )
+vsm_actuate  (  IDSIMMODEL* this, uint32_t edx, REALTIME atime, ACTIVESTATE newstate );
+bool __attribute__ ( ( fastcall ) )
+vsm_indicate (  IDSIMMODEL* this, uint32_t edx, REALTIME atime, ACTIVEDATA* newstate );
+void __attribute__ ( ( fastcall ) )
+vsm_simulate (  IDSIMMODEL* this, uint32_t edx, ABSTIME atime, DSIMMODES mode );
+void __attribute__ ( ( fastcall ) )
+vsm_callback (  IDSIMMODEL* this, uint32_t edx, ABSTIME atime, EVENTID eventid );
 
 LRESULT __attribute__ ( ( fastcall ) )
-icpu_vdmhlr (  ICPU* this, DWORD edx, VDM_COMMAND* cmd, BYTE* data );
-VOID __attribute__ ( ( fastcall ) )
-icpu_loaddata ( ICPU* this, EDX, INT format, INT seg, ADDRESS address, BYTE* data, INT numbytes );
-VOID __attribute__ ( ( fastcall ) ) icpu_disassemble ( ICPU* this, EDX, ADDRESS address, INT numbytes );
-BOOL __attribute__ ( ( fastcall ) ) icpu_getvardata ( ICPU* this, EDX, VARITEM* vip, VARDATA* vdp );
+icpu_vdmhlr (  ICPU* this, uint32_t edx, VDM_COMMAND* cmd, uint8_t* data );
+void __attribute__ ( ( fastcall ) )
+icpu_loaddata ( ICPU* this, EDX, int32_t format, int32_t seg, ADDRESS address, uint8_t* data, int32_t numbytes );
+void __attribute__ ( ( fastcall ) ) icpu_disassemble ( ICPU* this, EDX, ADDRESS address, int32_t numbytes );
+bool __attribute__ ( ( fastcall ) ) icpu_getvardata ( ICPU* this, EDX, VARITEM* vip, VARDATA* vdp );
 
 struct SPICEDATA
 {
-	DWORD numtimepoints;
-	DWORD numpins;
+	uint32_t numtimepoints;
+	uint32_t numpins;
 	REALTIME* timepoints;
-	DOUBLE* nodedata;
+	double* nodedata;
 };
 
 struct DSIMDATA
 {
-	DWORD numtimepoints;
-	DWORD numpins;
+	uint32_t numtimepoints;
+	uint32_t numpins;
 	ABSTIME* timepoints;
 	STATE* nodedata;
 };
@@ -104,9 +104,9 @@ struct CREATEPOPUPSTRUCT
 {
 	POPUPID id;
 	POPUPTYPES type;
-	CHAR* caption;
-	INT width, height;
-	DWORD flags;
+	char* caption;
+	int32_t width, height;
+	uint32_t flags;
 };
 
 struct ACTIVEDATA
@@ -114,24 +114,24 @@ struct ACTIVEDATA
 	ACTIVEDATATYPES type;
 	union
 	{
-		INT intval;
-		DOUBLE realval;
+		int32_t intval;
+		double realval;
 		STATE stateval;
-		DOUBLE wireinfo[2]; // Voltage and current
+		double wireinfo[2]; // Voltage and current
 		SPICEDATA spicedata;
 		DSIMDATA dsimdata;
-		VOID* userinfo; // Pointer to user data
+		void* userinfo; // Pointer to user data
 	};
 };
 
 struct VARITEM
 {
-	CHAR name[WATCHITEM_NAME_SIZE];
-	DWORD loader, seg;
+	char name[WATCHITEM_NAME_SIZE];
+	uint32_t loader, seg;
 	ADDRESS address;
 	DATATYPES type;
 	DISPFORMATS format;
-	DWORD size;
+	uint32_t size;
 	ADDRESS scope_begin;
 	ADDRESS scope_end;
 };
@@ -139,11 +139,11 @@ struct VARITEM
 // Variable Data structure
 struct VARDATA
 {
-	CHAR addr[WATCHITEM_ADDR_SIZE];
+	char addr[WATCHITEM_ADDR_SIZE];
 	DATATYPES type;
-	BYTE* memory;
-	DWORD memsize;
-	DWORD offset; // from start of memory block.
+	uint8_t* memory;
+	uint32_t memsize;
+	uint32_t offset; // from start of memory block.
 };
 
 struct ILICENCESERVER
