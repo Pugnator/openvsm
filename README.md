@@ -1,50 +1,38 @@
 OpenVSM
 =========
 
-OpenVSM is a sumulation model engine with C and Lua API
-For Proteus 7/8
+OpenVSM is a model sumulation engine with C and Lua API for Proteus 7/8 CAD
 
-It is created to be ready for build with gcc (mingw/cygwin) on Linux and Windows machines
+Written in C and gcc-ready (mingw/cygwin) for Linux and Windows
 
-  - You can create your model as standalone DLL or use DLL and Lua script
-  - You can freely mix up C language and Lua
+  - You can create your model as standalone DLL or use DLL and Lua script together  
   - Function prototypes have the same syntax in both API
-  - It is created with hope to make simulation as simple as possible even for people who
-  don't know C/C++
+  - Designed with hope to make simulation as simple as possible for electronics enthusiasts
 
-OpenVSM is written in C and use Lua 5.3.
-Visit 'example' directory for sample projects
+
+Visit 'example' directory for sample project files
 
 Version
 ----
 0.1
 
-Used libraries
------------
-
-* [Liblua53] - awesome and fast scripting language
-
-Build instructions
+How to
 --------------
 
-Install mingw32 for you platform
-
-```sh
-git clone https://Pugnator@bitbucket.org/Pugnator/openvsm.git openvsm
-cd openvsm
-make #mingw32-make under win32
-```
-Copy lua53/lua.dll to %windor%\system32
-
-Create environment variable with path to script directory,
-by issuing the following command:
+  - Install mingw32 for you platform
+  - Clone https://github.com/Pugnator/openvsm.git
+  - Change to the cloned directory
+  - Issue "make" command in Linux or "mingw32-make" under Windows
+  - Copy lua53/lua.dll to %windir%\system32 directory
+  - Create environment variable containing path to the script directory,
+issuing the following command:
 
 ```bat
 setx LUAVSM "C:\script\"
 ```
-So you should put your model script to c:\script
-Note the trailing backslash
-Your script should be named after the name of model DLL, for example:
+  - In this case you should place your model script to c:\script directory, 
+  note the trailing backslash
+  - Your script should be named after the name of model DLL, for example:
 
 ```model.dll
 model.dll.lua```
