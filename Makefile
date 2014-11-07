@@ -30,16 +30,16 @@ LDFLAGS:=lua53/liblua.a
 
 OBJ=$(SRC:%.c=%.o) my.res
 
-%.o: %.c 	
+%.o: %.c
 	@$(WINRES) my.rc -O coff -o my.res
-	@$(CC) -c -o $@ $< $(CFLAGS) 
+	@$(CC) -c -o $@ $< $(CFLAGS)
 
 .PHONY: $(OPENVSMLIB).dll
-$(OPENVSMLIB).dll: $(OBJ)	
-	$(CC) -shared -o $@ $^ $(LDFLAGS) $(SHOPENVSMLIB_CFLAGS) 
+$(OPENVSMLIB).dll: $(OBJ)
+	$(CC) -shared -o $@ $^ $(LDFLAGS) $(SHOPENVSMLIB_CFLAGS)
 	@$(OBJCOPY) --only-keep-debug $(OPENVSMLIB).dll $(OPENVSMLIB).dwarf
-	@$(STRIP) -s $(OPENVSMLIB).dll	
-	@$(OBJCOPY) --add-gnu-debuglink=$(OPENVSMLIB).dwarf $(OPENVSMLIB).dll	
+	@$(STRIP) -s $(OPENVSMLIB).dll
+	@$(OBJCOPY) --add-gnu-debuglink=$(OPENVSMLIB).dwarf $(OPENVSMLIB).dll
 
 .PHONY: install
 install:
