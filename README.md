@@ -5,7 +5,7 @@ OpenVSM is a model sumulation engine with C and Lua API for Proteus 7/8 CAD
 
 Written in C and gcc-ready (mingw/cygwin) for Linux and Windows
 
-  - You can create your model as standalone DLL or use DLL and Lua script together  
+  - You can create your model as standalone DLL or use DLL and Lua script together
   - Function prototypes have the same syntax in both API
   - Designed with hope to make simulation as simple as possible for electronics enthusiasts
 

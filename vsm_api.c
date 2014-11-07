@@ -67,7 +67,6 @@ bool global_timer_callback = false;
 bool global_on_stop = false;
 bool global_on_suspend = false;
 
-
 static lua_global_func lua_global_func_list[] =
 {
 	{.func_name="device_init", .exist=&global_device_init},
