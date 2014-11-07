@@ -8,9 +8,15 @@
 
 #include <vsm_api.h>
 
-const char *state_to_string (STATE s)
+/**
+ * @brief [Convert pin state to string]
+ *
+ * @param pinstate [pin state]
+ * @return [string representation of pin state]
+ */
+const char *state_to_string (STATE pinstate)
 {
-	switch (s)
+	switch (pinstate)
 	{
 		case UNDEFINED:
 		return "UNDEFINED";
@@ -39,13 +45,13 @@ const char *state_to_string (STATE s)
 		case WUD:
 		return "WUD";
 		case SUD:
-		return "SUD";		
+		return "SUD";
 		default:
 		return "wrong state";
 	}
 }
 
-int32_t popup_id = 0;
+int popup_id = 0; //!< Global pop identificator. Should be unique
 
 /**
  * [vsm_register  description]
@@ -56,7 +62,7 @@ bool vsm_register ( ILICENCESERVER* ils )
 {
 
 	if ( FALSE ==  ils->vtable->authorize ( ils, 0, model_key, VSM_API_VERSION ) )
-	{		
+	{
 		return FALSE;
 	}
 	return TRUE;
@@ -359,12 +365,12 @@ void dump_to_debug_popup ( IDEBUGPOPUP* popup, const uint8_t* buf, uint32_t offs
  */
 void toggle_pin_state ( VSM_PIN pin )
 {
-	STATE s = get_pin_state ( pin.pin );
-	if ( SHI == s )
+	STATE pinstate = get_pin_state ( pin.pin );
+	if ( SHI == pinstate )
 	{
 		set_pin_state ( pin, SLO );
 	}
-	else if ( SLO == s )
+	else if ( SLO == pinstate )
 	{
 		set_pin_state ( pin, SHI );
 	}
@@ -387,15 +393,15 @@ STATE get_pin_state ( IDSIMPIN* pin )
  */
 inline int32_t get_pin_bool ( VSM_PIN pin)
 {
-	STATE s = pin.pin->vtable->istate ( pin.pin, 0 );
-	if ( SLO == s || WLO == s || ILO == s || PLO == s)
-	{		
+	STATE pinstate = pin.pin->vtable->istate ( pin.pin, 0 );
+	if ( SLO == pinstate || WLO == pinstate || ILO == pinstate || PLO == pinstate)
+	{
 		return 0;
 	}
-	else if ( SHI == s || WHI == s || IHI == s || PHI == s)
-	{		
-		return 1;	
-	}		
+	else if ( SHI == pinstate || WHI == pinstate || IHI == pinstate || PHI == pinstate)
+	{
+		return 1;
+	}
 	return -1;
 }
 
@@ -561,46 +567,46 @@ bool is_pin_steady ( IDSIMPIN* pin )
 
 /**
  * [islow  description]
- * @param  s [description]
+ * @param  pinstate [description]
  * @return   [description]
  */
-inline bool islow ( STATE s )
+inline bool islow ( STATE pinstate )
 {
-	return ( s & SP_MASK ) == SP_LOW;
+	return ( pinstate & SP_MASK ) == SP_LOW;
 }
 inline bool
-ishigh ( STATE s )
+ishigh ( STATE pinstate )
 {
-	return ( s & SP_MASK ) == SP_HIGH;
+	return ( pinstate & SP_MASK ) == SP_HIGH;
 }
 inline bool
-isfloating ( STATE s )
+isfloating ( STATE pinstate )
 {
-	return ( s & SP_MASK ) == SP_FLOAT;
+	return ( pinstate & SP_MASK ) == SP_FLOAT;
 }
 inline bool
-iscontention ( STATE s )
+iscontention ( STATE pinstate )
 {
-	return s & SF_CONTENTION;
+	return pinstate & SF_CONTENTION;
 }
 inline bool
-isdefined ( STATE s )
+isdefined ( STATE pinstate )
 {
-	return s != SP_UNDEFINED;
+	return pinstate != SP_UNDEFINED;
 }
 inline bool
-ishighlow ( STATE s )
+ishighlow ( STATE pinstate )
 {
-	return s & 1;
+	return pinstate & 1;
 }
 inline INT
-polarity ( STATE s )
+polarity ( STATE pinstate )
 {
-	return s & SP_MASK;
+	return pinstate & SP_MASK;
 }
 inline INT
-strength ( STATE s )
+strength ( STATE pinstate )
 {
-	return s & SS_MASK;
+	return pinstate & SS_MASK;
 }
 

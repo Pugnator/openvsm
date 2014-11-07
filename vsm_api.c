@@ -1,9 +1,9 @@
 /**
  *
  * @file   vsm_api.c
- * @Author Lavrentiy Ivanov (ookami@mail.ru)
+ * @author Lavrentiy Ivanov (ookami@mail.ru)
  * @date   22.09.2014
- * @brief  Brief description of file.
+ * @brief  The main C wrapper of official API
  *
  * This file is part of OpenVSM.
  * OpenVSM is free software: you can redistribute it and/or modify
@@ -95,12 +95,12 @@ createdsimmodel ( char* device, ILICENCESERVER* ils )
 	{
 		return NULL;
 	}
-	/* Init Lua */	
+	/* Init Lua */
 	luactx = luaL_newstate();
 	/* Open libraries */
 	luaL_openlibs ( luactx );
-	register_functions ( luactx );	
-	
+	register_functions ( luactx );
+
 	return &VSM_DEVICE;
 }
 
@@ -128,47 +128,55 @@ vsm_setup ( IDSIMMODEL* this, uint32_t edx, IINSTANCE* instance, IDSIMCKT* dsimc
 	( void ) edx;
 	model_instance = instance;
 	model_dsim = dsimckt;
-	
+
 	char* moddll = get_string_param ( "moddll" );
 	char luascript[MAX_PATH]= {0};
 	snprintf ( luascript, sizeof luascript, "%s.lua", moddll );
 	lua_load_script ( luascript ); ///Model name
-	
+
 	free ( moddll );
-	
+
 	lua_getglobal ( luactx, "device_pins" );
 	if ( 0 == lua_istable ( luactx, -1 ) )
 	{
 		out_error ( "No device model found, it is fatal error" );
 		return;
 	}
-	
+
 	lua_len ( luactx, -1 );
-	int32_t pin_number = lua_tointeger ( luactx, -1 );	
+	int32_t pin_number = lua_tointeger ( luactx, -1 );
 	lua_pop ( luactx, 1 );
-	
+
 	for ( int i=1; i<=pin_number; i++ )
 	{
 		lua_rawgeti ( luactx,-1, i );
-		//set pin
+		//////////////
+		//set pin //
+		//////////////
 		lua_getfield ( luactx,-1, PIN_NAME );
 		const char* pin_name = lua_tostring ( luactx,-1 );
 		device_pins[i].pin = get_pin ( ( char* ) pin_name );
 		lua_pop ( luactx, 1 );
-		//set pin on time
+		//////////////////////
+		//set pin on time //
+		//////////////////////
 		lua_getfield ( luactx,-1, PIN_ON_TIME );
 		device_pins[i].on_time = lua_tonumber ( luactx,-1 );
 		lua_pop ( luactx, 1 );
-		//set pin off time
+		///////////////////////
+		//set pin off time //
+		///////////////////////
 		lua_getfield ( luactx,-1, PIN_OFF_TIME );
 		device_pins[i].off_time = lua_tonumber ( luactx,-1 );
 		lua_pop ( luactx, 1 );
-		//Set global variable that holds pin name and its number
+		/////////////////////////////////////////////////////////////
+		//Set global variable that holds pin name and its number //
+		/////////////////////////////////////////////////////////////
 		lua_pushinteger ( luactx, i );
 		lua_setglobal ( luactx, pin_name );
 		lua_pop ( luactx, 1 );
 	}
-	
+
 	check_global_functions();
 	if ( global_device_init )
 		lua_run_function ( "device_init" );
@@ -180,14 +188,14 @@ vsm_runctrl (  IDSIMMODEL* this, uint32_t edx, RUNMODES mode )
 	( void ) this;
 	( void ) edx;
 	( void ) mode;
-	
+
 	switch ( mode )
 	{
 		case RM_BATCH:
-		
+
 			break;
 		case RM_START:
-		
+
 			break;
 		case RM_STOP:
 			if ( global_on_stop )
@@ -200,28 +208,28 @@ vsm_runctrl (  IDSIMMODEL* this, uint32_t edx, RUNMODES mode )
 		case RM_ANIMATE:
 			break;
 		case RM_STEPTIME:
-		
+
 			break;
 		case RM_STEPOVER:
-		
+
 			break;
 		case RM_STEPINTO:
-		
+
 			break;
 		case RM_STEPOUT:
-		
+
 			break;
 		case RM_STEPTO:
-		
+
 			break;
 		case RM_META:
-		
+
 			break;
 		case RM_DUMP:
-		
+
 			break;
 	}
-	
+
 }
 
 void __attribute__ ( ( fastcall ) )
@@ -233,6 +241,16 @@ vsm_actuate  (  IDSIMMODEL* this, uint32_t edx, REALTIME atime, ACTIVESTATE news
 	( void ) newstate;
 }
 
+/**
+ * @brief [brief description]
+ * @details [long description]
+ * 
+ * @param l [description]
+ * @param edx [description]
+ * @param atime [description]
+ * @param newstate [description]
+ * @return [description]
+ */
 bool __attribute__ ( ( fastcall ) )
 vsm_indicate (  IDSIMMODEL* this, uint32_t edx, REALTIME atime, ACTIVEDATA* newstate )
 {
@@ -243,6 +261,15 @@ vsm_indicate (  IDSIMMODEL* this, uint32_t edx, REALTIME atime, ACTIVEDATA* news
 	return false;
 }
 
+/**
+ * @brief [brief description]
+ * @details [long description]
+ * 
+ * @param l [description]
+ * @param edx [description]
+ * @param atime [description]
+ * @param mode [description]
+ */
 void __attribute__ ( ( fastcall ) )
 vsm_simulate (  IDSIMMODEL* this, uint32_t edx, ABSTIME atime, DSIMMODES mode )
 {
@@ -250,33 +277,51 @@ vsm_simulate (  IDSIMMODEL* this, uint32_t edx, ABSTIME atime, DSIMMODES mode )
 	( void ) edx;
 	( void ) atime;
 	( void ) mode;
-	
+
 	if ( global_device_simulate )
 		lua_run_function ( "device_simulate" );
 }
 
+/**
+ * @brief [brief description]
+ * @details [long description]
+ * 
+ * @param l [description]
+ * @param edx [description]
+ * @param atime [description]
+ * @param eventid [description]
+ */
 void __attribute__ ( ( fastcall ) )
 vsm_callback (  IDSIMMODEL* this, uint32_t edx, ABSTIME atime, EVENTID eventid )
 {
 	( void ) this;
 	( void ) edx;
-	
+
 	if ( false == global_timer_callback )
 		return;
 
 	lua_getglobal ( luactx, "timer_callback" );
 	lua_pushunsigned ( luactx, atime );
 	lua_pushunsigned ( luactx, eventid );
-	lua_pcall ( luactx, 2, 0, 0 );	
+	lua_pcall ( luactx, 2, 0, 0 );
 }
 
+/**
+ * @brief [brief description]
+ * @details [long description]
+ * 
+ * @param hInstDLL [description]
+ * @param fdwReason [description]
+ * @param lpvReserved [description]
+ * @return [description]
+ */
 bool APIENTRY
 DllMain ( HINSTANCE hInstDLL, uint32_t fdwReason, LPVOID lpvReserved )
 {
 	( void ) hInstDLL;
 	( void ) fdwReason;
 	( void ) lpvReserved;
-	
+
 	return true;
 }
 

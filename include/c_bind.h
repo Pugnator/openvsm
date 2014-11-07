@@ -25,7 +25,7 @@
 #define C_BIND_H
 #include <vsm_api.h>
 
-extern int32_t popup_id;
+extern int popup_id;
 
 bool is_pin_active ( IDSIMPIN* pin );
 bool is_pin_posedge ( IDSIMPIN* pin );
