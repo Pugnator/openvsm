@@ -24,6 +24,7 @@
 #include "vsm_api.h"
 
 lua_State* luactx = NULL;
+/**\bug {Maximum number of pins is hardcoded}*/
 VSM_PIN device_pins[32];
 
 IDSIMMODEL_vtable VSM_DEVICE_vtable =

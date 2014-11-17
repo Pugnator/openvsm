@@ -54,11 +54,12 @@ const char *state_to_string (STATE pinstate)
 int popup_id = 0; //!< Global pop identificator. Should be unique
 
 /**
- * [vsm_register  description]
+ * [Register model to Proteus license server]
  * @param  ils [description]
- * @return     [description]
+ * @return     [true on success]
  */
-bool vsm_register ( ILICENCESERVER* ils )
+bool 
+vsm_register ( ILICENCESERVER* ils )
 {
 
 	if ( FALSE ==  ils->vtable->authorize ( ils, 0, model_key, VSM_API_VERSION ) )
