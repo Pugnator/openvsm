@@ -27,7 +27,7 @@ How to
   - Clone https://github.com/Pugnator/openvsm.git
   - Change to the cloned directory
   - Issue "make" command in Linux or "mingw32-make" under Windows
-  - Copy lua53/lua.dll to %windir%\system32 directory
+  - Copy lua53\lua.dll to %windir%\system32 directory
   - Create environment variable containing path to the script directory,
 issuing the following command:
 
