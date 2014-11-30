@@ -1,6 +1,8 @@
 OpenVSM
 =========
 
+![OpenVSM Logo](logo.png)
+
 OpenVSM is a model sumulation engine with C and Lua API for Proteus 7/8 CAD
 
 Documentation is here http://pugnator.github.io/openvsm

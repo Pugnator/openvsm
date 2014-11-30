@@ -1,5 +1,5 @@
 -- Device description
-device_pins = 
+device_pins =
 {
     {is_digital=true, name = "D0", on_time=1000, off_time=1000},
     {is_digital=true, name = "D1", on_time=1000, off_time=1000},
@@ -8,8 +8,8 @@ device_pins =
     {is_digital=true, name = "D4", on_time=1000, off_time=1000},
     {is_digital=true, name = "D5", on_time=1000, off_time=1000},
     {is_digital=true, name = "D6", on_time=1000, off_time=1000},
-    {is_digital=true, name = "D7", on_time=1000, off_time=1000},      
-    {is_digital=true, name = "TX", on_time=1000, off_time=1000},     
+    {is_digital=true, name = "D7", on_time=1000, off_time=1000},
+    {is_digital=true, name = "TX", on_time=1000, off_time=1000},
 }
 -- UART events
 UART_STOP = 0
@@ -26,51 +26,51 @@ function device_init()
     console_alloc("sdfsdsdfsfsf")
 end
 
-function device_simulate()             
-    
+function device_simulate()
+
 end
 
-function timer_callback(time, eventid)      
+function timer_callback(time, eventid)
     uart_callback(time, eventid)
 end
 
-function uart_send (string)    
+function uart_send (string)
     uart_text = string
-    char_count = 1    
+    char_count = 1
     set_pin_state(TX, SHI) -- set TX to 1 in order to have edge transition
     set_callback(BAUDCLK, UART_START) --schedule start
 end
 
 function uart_callback (time, event)
-    if event == UART_START then         
+    if event == UART_START then
         next_char = string.byte(uart_text, char_count)
-        
-        if next_char == nil then              
+
+        if next_char == nil then
             return
         end
         char_count = char_count +1
         set_pin_state(TX, SLO)
-        set_callback(time + BAUDCLK, UART_DATA)                 
-    end 
+        set_callback(time + BAUDCLK, UART_DATA)
+    end
 
-    if event == UART_STOP then          
-        set_pin_state(TX, SHI)  
-        set_callback(time + BAUDCLK, UART_START)                            
-    end     
+    if event == UART_STOP then
+        set_pin_state(TX, SHI)
+        set_callback(time + BAUDCLK, UART_START)
+    end
 
-    if event == UART_DATA then                  
+    if event == UART_DATA then
 
         if get_bit(next_char, BIT_COUNTER) == 1 then
-            set_pin_state(TX, SHI)                          
+            set_pin_state(TX, SHI)
         else
-            set_pin_state(TX, SLO)                          
+            set_pin_state(TX, SLO)
         end
-        if BIT_COUNTER == 7 then  
+        if BIT_COUNTER == 7 then
             BIT_COUNTER = 0
-            set_callback(time + BAUDCLK, UART_STOP)  
+            set_callback(time + BAUDCLK, UART_STOP)
             return
-        end     
-        BIT_COUNTER = BIT_COUNTER + 1               
+        end
+        BIT_COUNTER = BIT_COUNTER + 1
         set_callback(time + BAUDCLK, UART_DATA)
     end
 end

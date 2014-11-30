@@ -161,12 +161,13 @@ lua_load_script ( const char* device_name )
 	char spath[512] = {0};
 	if ( 0 == GetEnvironmentVariable ( "LUAVSM", spath, sizeof spath ) )
 	{
-		out_error ( "LUAVSM env variable was not set" );
+		out_error ( "LUAVSM environment variable is not set" );
 	}
-	char script[512]= {0};
-	sprintf ( script, "%s\\%s", spath, device_name );
+	char *script=NULL;
+	asprintf ( &script, "%s%s%s", spath, '\\' == spath[strlen(spath)-1]? "":"\\", device_name );
 	
 	int32_t lua_err = luaL_loadfile ( luactx, script );
+	free(script);
 	if ( 0 != lua_err )
 	{
 		const char* mess = NULL;
