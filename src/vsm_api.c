@@ -22,6 +22,7 @@
  */
 
 #include "vsm_api.h"
+#include <python.h>
 
 lua_State* luactx = NULL;
 /**\bug {Maximum number of pins is hardcoded}*/

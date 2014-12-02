@@ -1,7 +1,7 @@
 OpenVSM
 =========
 
-![OpenVSM Logo](logo.png)
+![Openvsm logo by 4eRt0vKa](logo.png)
 
 OpenVSM is a model sumulation engine with C and Lua API for Proteus 7/8 CAD
 
@@ -24,15 +24,15 @@ How to
 --------------
 
   - Install mingw32 for you platform
-  - Clone https://github.com/Pugnator/openvsm.git
-  - Change to the cloned directory
+  - Clone: https://github.com/Pugnator/openvsm.git openvsm
+  - Change to the openvsm/src
   - Issue "make" command in Linux or "mingw32-make" under Windows
   - Copy lua53\lua.dll to %windir%\system32 directory
   - Create environment variable containing path to the script directory,
 issuing the following command:
 
 ```bat
-setx LUAVSM "C:\script\"
+setx LUAVSM "C:\script"
 ```
   - In this case you should place your model script to c:\script directory, 
   note the trailing backslash
@@ -45,6 +45,3 @@ License
 ----
 
 GPL v2
-
-
-**Free Software**

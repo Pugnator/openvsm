@@ -1,4 +1,4 @@
-#include "include/version.h"
+#include "../include/version.h"
 #include "windows.h"
 1 VERSIONINFO
  FILEVERSION FILEVER

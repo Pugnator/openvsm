@@ -17,16 +17,18 @@ else
 	exit 0
 endif
 
-OPENVSMLIB?=openvsm
+LIBDIR=../library
+
+OPENVSMLIB?=$(LIBDIR)/openvsm
 
 SRC=vsm_api.c c_bind.c lua_bind.c win32.c
 
-CFLAGS:=-O2 -gdwarf-2 -fgnu89-inline -std=gnu99 -g3 -W -Wall -Iinclude \
--Ilua53/include
+CFLAGS:=-O2 -gdwarf-2 -fgnu89-inline -std=gnu99 -g3 -W -Wall -I../include \
+-I../lua53/include
 
 SHOPENVSMLIB_CFLAGS:=-Wl,--export-all-symbols,--enable-auto-import
 
-LDFLAGS:=lua53/liblua.a
+LDFLAGS:=../lua53/liblua.a
 
 OBJ=$(SRC:%.c=%.o) my.res
 
