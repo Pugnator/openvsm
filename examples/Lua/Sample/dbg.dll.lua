@@ -23,11 +23,18 @@ BIT_COUNTER = 0
 DATA_BUS = 0
 
 function device_init()
-    console_alloc("sdfsdsdfsfsf")
+    -- console_alloc("sdfsdsdfsfsf")
 end
 
 function device_simulate()
-
+    for i = 0, 7 do        
+        if 1 == get_pin_bool(_G["D"..i]) then            
+            DATA_BUS = set_bit(DATA_BUS, i)
+        else            
+            DATA_BUS = clear_bit(DATA_BUS, i)
+        end
+    end 
+    uart_send(string.format("[%d] Fetched opcode %.2X\r\n", systime(), DATA_BUS))  
 end
 
 function timer_callback(time, eventid)
