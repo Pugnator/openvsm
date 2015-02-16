@@ -21,17 +21,17 @@ device_pins =
 PC_EVENT = 0
 COUNTER = 0
 
-function device_init()   
-   for k, v in pairs(device_pins) do set_pin_state(_G[v.name], SLO) end     
-   set_callback(0, PC_EVENT)   
+function device_init(model)   
+   for k, v in pairs(device_pins) do set_pin_state(model, _G[v.name], SLO) end     
+   set_callback(model, 0, PC_EVENT)   
 end
 
-function timer_callback(time, eventid)    
+function timer_callback(model, time, eventid)    
     if eventid == PC_EVENT then        
         for k, v in pairs(device_pins) do 
-            set_pin_bool(_G[v.name], get_bit(COUNTER, k) )           
+            set_pin_bool(model, _G[v.name], get_bit(COUNTER, k) )           
         end
         COUNTER = COUNTER + 1
-        set_callback(time + 100 * MSEC, PC_EVENT)   
+        set_callback(model, time + 100 * MSEC, PC_EVENT)   
     end
 end
