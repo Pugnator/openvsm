@@ -19,9 +19,7 @@ typedef struct lua_bind_var
 #define PIN_OFF_TIME "off_time"
 #define PIN_ON_TIME "on_time"
 
-void lua_load_script ( const char* function );
-void lua_run_function ( const char* func_name );
-void register_functions ( lua_State* L );
+bool load_device_script ( IDSIMMODEL* model, const char* function );
+void register_functions ( IDSIMMODEL* model, lua_State* L );
 
-extern lua_State* luactx;
 #endif

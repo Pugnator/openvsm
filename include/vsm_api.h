@@ -57,11 +57,6 @@ extern bool global_on_suspend;
 int32_t vasprintf ( char** sptr, char* fmt, va_list argv );
 int32_t asprintf ( char** sptr, char* fmt, ... );
 
-void
-register_functions ( lua_State* L );
-void
-lua_load_script ( const char* device_name );
-
 int32_t __attribute__ ( ( fastcall ) )
 vsm_isdigital ( IDSIMMODEL* this, uint32_t edx, char* pinname );
 void __attribute__ ( ( fastcall ) )
@@ -180,6 +175,13 @@ struct IDSIMMODEL
 {
 
 	IDSIMMODEL_vtable* vtable;
+
+	/*========================*/
+	
+	IINSTANCE* model_instance;	
+	IDSIMCKT* model_dsim;
+	lua_State *luactx;
+	VSM_PIN device_pins[32];
 };
 
 struct IBUSPIN

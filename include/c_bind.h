@@ -21,55 +21,56 @@
  *
  */
 
+#pragma once
 #ifndef C_BIND_H
 #define C_BIND_H
 #include <vsm_api.h>
 
 extern int popup_id;
 
-bool is_pin_active ( IDSIMPIN* pin );
-bool is_pin_posedge ( IDSIMPIN* pin );
-bool is_pin_negedge ( IDSIMPIN* pin );
-bool is_pin_edge ( IDSIMPIN* pin );
-bool is_pin_floating ( IDSIMPIN* pin );
-bool is_pin_high ( IDSIMPIN* pin );
-bool is_pin_low ( IDSIMPIN* pin );
-bool is_pin_steady ( IDSIMPIN* pin );
-bool vsm_register ( ILICENCESERVER* ils );
-char* get_string_param ( char* field_name );
-bool get_bool_param ( char* field_name );
-double get_num_param ( char* field_name );
-int32_t get_hex_param ( char* field_name );
-int64_t get_init_param ( char* field_name );
-const char *state_to_string (STATE s);
-void console_alloc ( const char* title );
-void systime ( ABSTIME* at );
-bool set_vdm_handler ( void );
-void set_pin_bool ( VSM_PIN pin, bool level );
-int32_t get_pin_bool ( VSM_PIN pin );
-IDSIMPIN* get_pin ( char* pin_name );
-STATE get_pin_state ( IDSIMPIN* pin );
-void delete_popup ( POPUPID id );
-void load_image ( char* filename, uint8_t* buffer, size_t buffer_size );
-void out_error ( const char* format, ... );
-void out_log ( const char* format, ... );
-void out_message ( const char* format, ... );
-void out_warning ( const char* format, ... );
-void set_callback ( RELTIME picotime, EVENTID id );
-void set_pin_state ( VSM_PIN pin, STATE state );
-bool add_source_file ( ISOURCEPOPUP* popup, char* filename, bool lowlevel );
-void set_pc_address ( ISOURCEPOPUP* popup, size_t address );
-void set_memory_popup ( IMEMORYPOPUP* popup, size_t offset, void* buffer, size_t size );
-void repaint_memory_popup ( IMEMORYPOPUP* popup );
-void print_to_debug_popup ( IDEBUGPOPUP* popup, const char* message );
-void dump_to_debug_popup ( IDEBUGPOPUP* popup, const uint8_t* buf, uint32_t offset, uint32_t size );
-void toggle_pin_state ( VSM_PIN pin );
-IDEBUGPOPUP* create_debug_popup ( const char* title, const int32_t id );
-IDEBUGPOPUP* create_source_popup ( const char* title, const int32_t id );
-IDEBUGPOPUP* create_status_popup ( const char* title, const int32_t id );
-IDEBUGPOPUP* create_var_popup ( const char* title, const int32_t id );
-IMEMORYPOPUP* create_memory_popup ( const char* title, const int32_t id );
-IPOPUP* create_popup ( CREATEPOPUPSTRUCT* cps );
+/* DEBUG */
+
+void console_alloc ( const char *title );
+
+/* DEVICE */
+
+bool get_bool_param ( IDSIMMODEL *model, char *field_name );
+bool set_vdm_handler ( IDSIMMODEL *model );
+bool vsm_register ( ILICENCESERVER *ils );
+char *get_device_id ( IDSIMMODEL *model );
+char *get_string_param ( IDSIMMODEL *model, char *field_name );
+double get_num_param ( IDSIMMODEL *model, char *field_name );
+int32_t get_hex_param ( IDSIMMODEL *model, char *field_name );
+int64_t get_init_param ( IDSIMMODEL *model, char *field_name );
+void load_image ( IDSIMMODEL *model, char *filename, uint8_t *buffer, size_t buffer_size );
+void systime ( IDSIMMODEL *model, ABSTIME *at );
+
+/* LOGGING */
+
+void out_error ( IDSIMMODEL *model, const char *format, ... );
+void out_log ( IDSIMMODEL *model, const char *format, ... );
+void out_message ( IDSIMMODEL *model, const char *format, ... );
+void out_warning ( IDSIMMODEL *model, const char *format, ... );
+void set_callback ( IDSIMMODEL *model, RELTIME picotime, EVENTID id );
+void set_pin_state ( IDSIMMODEL *model, VSM_PIN pin, STATE state );
+
+/* POPUP */
+
+IDEBUGPOPUP *create_debug_popup ( IDSIMMODEL *model, const char *title, const int32_t id );
+IDEBUGPOPUP *create_source_popup ( IDSIMMODEL *model, const char *title, const int32_t id );
+IDEBUGPOPUP *create_status_popup ( IDSIMMODEL *model, const char *title, const int32_t id );
+IDEBUGPOPUP *create_var_popup ( IDSIMMODEL *model, const char *title, const int32_t id );
+IMEMORYPOPUP *create_memory_popup ( IDSIMMODEL *model, const char *title, const int32_t id );
+IPOPUP *create_popup ( IDSIMMODEL *model, CREATEPOPUPSTRUCT *cps );
+bool add_source_file ( ISOURCEPOPUP *popup, char *filename, bool lowlevel );
+void delete_popup ( IDSIMMODEL *model, POPUPID id );
+void dump_to_debug_popup ( IDEBUGPOPUP *popup, const uint8_t *buf, uint32_t offset, uint32_t size );
+void print_to_debug_popup ( IDEBUGPOPUP *popup, const char *message );
+void repaint_memory_popup ( IMEMORYPOPUP *popup );
+void set_memory_popup ( IMEMORYPOPUP *popup, size_t offset, void *buffer, size_t size );
+void set_pc_address ( ISOURCEPOPUP *popup, size_t address );
+
+/* PINS */
 
 inline bool iscontention ( STATE s );
 inline bool isdefined ( STATE s );
@@ -79,4 +80,21 @@ inline bool ishighlow ( STATE s );
 inline bool islow ( STATE s );
 inline INT  polarity ( STATE s );
 inline INT  strength ( STATE s );
+
+bool is_pin_active ( IDSIMPIN *pin );
+bool is_pin_posedge ( IDSIMPIN *pin );
+bool is_pin_negedge ( IDSIMPIN *pin );
+bool is_pin_edge ( IDSIMPIN *pin );
+bool is_pin_floating ( IDSIMPIN *pin );
+bool is_pin_high ( IDSIMPIN *pin );
+bool is_pin_low ( IDSIMPIN *pin );
+bool is_pin_steady ( IDSIMPIN *pin );
+
+IDSIMPIN *get_pin (IDSIMMODEL *model, char *pin_name );
+STATE get_pin_state ( IDSIMPIN *pin );
+const char *state_to_string (STATE s);
+int32_t get_pin_bool ( VSM_PIN pin );
+void set_pin_bool ( IDSIMMODEL *model, VSM_PIN pin, bool level );
+void toggle_pin_state ( IDSIMMODEL *model, VSM_PIN pin );
+
 #endif
