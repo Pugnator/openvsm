@@ -47,10 +47,10 @@ void systime ( IDSIMMODEL *model, ABSTIME *at );
 
 /* LOGGING */
 
-void out_error ( IDSIMMODEL *model, const char *format, ... );
-void out_log ( IDSIMMODEL *model, const char *format, ... );
-void out_message ( IDSIMMODEL *model, const char *format, ... );
-void out_warning ( IDSIMMODEL *model, const char *format, ... );
+void print_error ( IDSIMMODEL *model, const char *format, ... );
+void print_info ( IDSIMMODEL *model, const char *format, ... );
+void print_message ( IDSIMMODEL *model, const char *format, ... );
+void print_warning ( IDSIMMODEL *model, const char *format, ... );
 void set_callback ( IDSIMMODEL *model, RELTIME picotime, EVENTID id );
 void set_pin_state ( IDSIMMODEL *model, VSM_PIN pin, STATE state );
 

@@ -128,21 +128,15 @@ vsm_setup ( IDSIMMODEL* this, uint32_t edx, IINSTANCE* instance, IDSIMCKT* dsimc
 	this->model_instance = instance;
 	this->model_dsim = dsimckt;
 
-	char* moddll = get_string_param ( this, "moddll" );
-	char luascript[MAX_PATH]= {0};
-	/**FIXIT: Change it to have format DeviceDLL.lua without .dll.*/
-	snprintf ( luascript, sizeof luascript, "%s.lua", moddll );
-	if(load_device_script ( this, luascript )) ///Model name
-	{
-		out_log ( this, "%s started [OpenVSM %s]", get_device_id(this), __VERSION);		
-	}
-
-	free ( moddll );
+	char* device_script = get_string_param ( this, "lua" );
+	load_device_script ( this, device_script );	
+	print_info ( this, "%s started [OpenVSM %s, %s]      https://github.com/Pugnator/openvsm", get_device_id(this), __VERSION, device_script);		
+	free ( device_script );
 
 	lua_getglobal ( this->luactx, "device_pins" );
 	if ( 0 == lua_istable (this->luactx, -1 ) )
 	{
-		out_error ( this, "No device model found, it is fatal error" );
+		print_error ( this, "No device model found, it is fatal error" );
 		return;
 	}
 
@@ -307,15 +301,9 @@ vsm_simulate (  IDSIMMODEL* this, uint32_t edx, ABSTIME atime, DSIMMODES mode )
 void __attribute__ ( ( fastcall ) )
 vsm_callback (  IDSIMMODEL* this, uint32_t edx, ABSTIME atime, EVENTID eventid )
 {	
-	( void ) edx;	
-
-	if ( false == global_timer_callback )
-	{
-		return;	
-	}
+	( void ) edx;
 
 	lua_getglobal (this->luactx, "timer_callback" );
-	/* First argument - the model itself (this*) */
 	lua_pushlightuserdata ( this->luactx, this );
 	lua_pushunsigned (this->luactx, atime );
 	lua_pushunsigned (this->luactx, eventid );
