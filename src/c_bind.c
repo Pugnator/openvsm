@@ -89,7 +89,7 @@ void set_pin_state ( IDSIMMODEL* model, VSM_PIN pin, STATE state )
 void set_pin_bool ( IDSIMMODEL* model, VSM_PIN pin, bool level )
 {
 	ABSTIME curtime = 0;
-	systime ( model, &curtime );
+	systime ( model, &curtime );	
 	pin.pin->vtable->setstate2 ( pin.pin, 0, curtime, pin.on_time, level ? SHI : SLO );
 }
 
@@ -413,7 +413,7 @@ inline int32_t get_pin_bool ( VSM_PIN pin)
 	else if ( SHI == pinstate || WHI == pinstate || IHI == pinstate || PHI == pinstate)
 	{
 		return 1;
-	}
+	}	
 	return -1;
 }
 
@@ -471,7 +471,7 @@ void set_callback ( IDSIMMODEL* model, RELTIME picotime, EVENTID id )
  * [out_log  description]
  * @param format [description]
  */
-void out_log ( IDSIMMODEL* model, const char* format, ... )
+void print_info ( IDSIMMODEL* model, const char* format, ... )
 {
 	char* string;
 	va_list args;
@@ -486,7 +486,7 @@ void out_log ( IDSIMMODEL* model, const char* format, ... )
  * [out_message  description]
  * @param format [description]
  */
-void out_message ( IDSIMMODEL* model, const char* format, ... )
+void print_message ( IDSIMMODEL* model, const char* format, ... )
 {
 	char* string;
 	va_list args;
@@ -501,7 +501,7 @@ void out_message ( IDSIMMODEL* model, const char* format, ... )
  * [out_warning  description]
  * @param format [description]
  */
-void out_warning ( IDSIMMODEL* model, const char* format, ... )
+void print_warning ( IDSIMMODEL* model, const char* format, ... )
 {
 	char* string;
 	va_list args;
@@ -516,7 +516,7 @@ void out_warning ( IDSIMMODEL* model, const char* format, ... )
  * [out_error  description]
  * @param format [description]
  */
-void out_error ( IDSIMMODEL* model, const char* format, ... )
+void print_error ( IDSIMMODEL* model, const char* format, ... )
 {
 	char* string;
 	va_list args;
