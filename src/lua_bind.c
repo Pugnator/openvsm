@@ -133,27 +133,28 @@ static const lua_bind_func lua_c_api_list[] =
 	{ NULL, NULL},
 };
 
-#define STACK_CHECK(NUM) (lua_check_args(L, NUM, __FILE__, __PRETTY_FUNCTION__, __LINE__ - 2 ))
+#define STACK_CHECK(NUM) (lua_check_args(L, NUM))
 //
 static void
-lua_check_args ( lua_State* L, int expected, const char* filename, const char* function_name, int line )
+lua_check_args ( lua_State* L, int expected)
 {
 	int argnum = lua_gettop ( L );
-	if ( expected > argnum )
+	if ( expected != argnum )
 	{
+		lua_Debug ar;
+  		lua_getstack(L, 1, &ar);
+  		lua_getinfo(L, "nSl", &ar);
+  		int line = ar.currentline;
+  		const char *func = ar.what;
 		char *err_message = NULL;
-		asprintf(&err_message, "Too few arguments for function %s, %s:%d\r\nExpected %d, got %d", function_name, filename, line, expected, argnum );
-		MessageBox(NULL, err_message, "Script error", MB_OK);
+		asprintf(&err_message, \
+			"Error in %s function at line %d. %s arguments passed. \
+			Expected %d got %d", \
+			func, line, expected > argnum ? "Too few" : "Extra" ,expected, argnum );
+		IDSIMMODEL* model = ( IDSIMMODEL* ) lua_get_model_obj (L);
+		print_error(model, err_message);
 		free(err_message);				
-	}
-	if ( expected < argnum )
-	{
-		char *err_message = NULL;
-		asprintf(&err_message, "Extra arguments passed to function %s, %s:%d\r\nExpected %d, got %d", function_name, filename, line, expected, argnum );
-		MessageBox(NULL, err_message, "Script error", MB_OK);
-		free(err_message);				
-	}
-	
+	}	
 }
 
 void
