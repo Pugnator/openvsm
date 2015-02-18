@@ -77,10 +77,10 @@ typedef struct ISTATUSPOPUP_vtable ISTATUSPOPUP_vtable;
 typedef struct IMSGHLR_vtable IMSGHLR_vtable;
 
 
-typedef struct VSM_PIN 
+typedef struct VSM_PIN
 {
 	BOOL is_digital; ///< Pin is a digital one
-	char* name;	///< The name of the pin in graphical model
+	char* name; ///< The name of the pin in graphical model
 	ABSTIME on_time; ///< Pin switch on-time
 	ABSTIME off_time; ///< Pin switch off-time
 	IDSIMPIN* pin; ///< DSIM pin pointer itself
@@ -156,7 +156,7 @@ struct IDSIMMODEL_vtable
 	VOID __attribute__ ( ( fastcall ) ) ( *actuate ) ( IDSIMMODEL* this, EDX, REALTIME atime, ACTIVESTATE newstate );
 	bool __attribute__ ( ( fastcall ) ) ( *indicate ) ( IDSIMMODEL* this, EDX, REALTIME atime, ACTIVEDATA* data );
 	VOID __attribute__ ( ( fastcall ) ) ( *simulate ) ( IDSIMMODEL* this, EDX, ABSTIME atime, DSIMMODES mode );
-	VOID __attribute__ ( ( fastcall ) ) ( *callback ) ( IDSIMMODEL* this, EDX, ABSTIME atime, EVENTID eventid );	
+	VOID __attribute__ ( ( fastcall ) ) ( *callback ) ( IDSIMMODEL* this, EDX, ABSTIME atime, EVENTID eventid );
 };
 
 
@@ -210,7 +210,7 @@ struct IINSTANCE_vtable
 	bool __attribute__ ( ( fastcall ) ) ( *loadmemory ) ( IINSTANCE* this, EDX, CHAR* filename, VOID* buffer, uint32_t size, uint32_t base, uint32_t shift );
 	// Access to bus pins
 	IBUSPIN* __attribute__ ( ( fastcall ) ) ( *getbuspin1 ) ( IINSTANCE* this, EDX, CHAR* namestem, uint32_t base, uint32_t width, bool required );
-	IBUSPIN __attribute__ ( ( fastcall ) ) ( *getbuspin2 ) ( IINSTANCE* this, EDX, CHAR* name, IDSIMPIN** pins, uint32_t width );	
+	IBUSPIN __attribute__ ( ( fastcall ) ) ( *getbuspin2 ) ( IINSTANCE* this, EDX, CHAR* name, IDSIMPIN** pins, uint32_t width );
 };
 /*************************************************************************/
 struct IDSIMCKT_vtable

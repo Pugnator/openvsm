@@ -175,12 +175,12 @@ struct IDSIMMODEL
 {
 
 	IDSIMMODEL_vtable* vtable;
-
+	
 	/*========================*/
 	
-	IINSTANCE* model_instance;	
+	IINSTANCE* model_instance;
 	IDSIMCKT* model_dsim;
-	lua_State *luactx;
+	lua_State* luactx;
 	VSM_PIN device_pins[32];
 };
 

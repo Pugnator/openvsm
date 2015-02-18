@@ -14,40 +14,40 @@
  * @param pinstate [pin state]
  * @return [string representation of pin state]
  */
-const char *state_to_string (STATE pinstate)
+const char* state_to_string ( STATE pinstate )
 {
-	switch (pinstate)
+	switch ( pinstate )
 	{
 		case UNDEFINED:
-		return "UNDEFINED";
+			return "UNDEFINED";
 		case TSTATE:
-		return "TSTATE";
+			return "TSTATE";
 		case FSTATE:
-		return "FSTATE";
+			return "FSTATE";
 		case PLO:
-		return "PLO";
+			return "PLO";
 		case ILO:
-		return "ILO";
+			return "ILO";
 		case SLO:
-		return "SLO";
+			return "SLO";
 		case WLO:
-		return "WLO";
+			return "WLO";
 		case FLT:
-		return "FLT";
+			return "FLT";
 		case WHI:
-		return "WHI";
+			return "WHI";
 		case SHI:
-		return "SHI";
+			return "SHI";
 		case IHI:
-		return "IHI";
+			return "IHI";
 		case PHI:
-		return "PHI";
+			return "PHI";
 		case WUD:
-		return "WUD";
+			return "WUD";
 		case SUD:
-		return "SUD";
+			return "SUD";
 		default:
-		return "wrong state";
+			return "wrong state";
 	}
 }
 
@@ -58,7 +58,7 @@ int popup_id = 0; //!< Global pop identificator. Should be unique
  * @param  ils [description]
  * @return     [true on success]
  */
-bool 
+bool
 vsm_register ( ILICENCESERVER* ils )
 {
 
@@ -89,7 +89,7 @@ void set_pin_state ( IDSIMMODEL* model, VSM_PIN pin, STATE state )
 void set_pin_bool ( IDSIMMODEL* model, VSM_PIN pin, bool level )
 {
 	ABSTIME curtime = 0;
-	systime ( model, &curtime );	
+	systime ( model, &curtime );
 	pin.pin->vtable->setstate2 ( pin.pin, 0, curtime, pin.on_time, level ? SHI : SLO );
 }
 
@@ -99,7 +99,7 @@ void set_pin_bool ( IDSIMMODEL* model, VSM_PIN pin, bool level )
  */
 void systime ( IDSIMMODEL* model, ABSTIME* at )
 {
-	model->model_dsim->vtable->sysvar (model->model_dsim, 0, ( DOUBLE* ) at, DSIMTIMENOW );
+	model->model_dsim->vtable->sysvar ( model->model_dsim, 0, ( DOUBLE* ) at, DSIMTIMENOW );
 }
 
 
@@ -110,7 +110,7 @@ void systime ( IDSIMMODEL* model, ABSTIME* at )
  */
 char* get_device_id ( IDSIMMODEL* model )
 {
-	return model->model_instance->vtable->id ( model->model_instance, 0);
+	return model->model_instance->vtable->id ( model->model_instance, 0 );
 }
 
 /**
@@ -120,7 +120,7 @@ char* get_device_id ( IDSIMMODEL* model )
  */
 char* get_string_param ( IDSIMMODEL* model, char* field_name )
 {
-	return model->model_instance->vtable->getstrval (model->model_instance, 0, field_name, "?" );
+	return model->model_instance->vtable->getstrval ( model->model_instance, 0, field_name, "?" );
 }
 
 /**
@@ -130,7 +130,7 @@ char* get_string_param ( IDSIMMODEL* model, char* field_name )
  */
 bool get_bool_param ( IDSIMMODEL* model, char* field_name )
 {
-	return model->model_instance->vtable->getboolval (model->model_instance, 0, field_name, FALSE );
+	return model->model_instance->vtable->getboolval ( model->model_instance, 0, field_name, FALSE );
 }
 
 /**
@@ -141,7 +141,7 @@ bool get_bool_param ( IDSIMMODEL* model, char* field_name )
 double get_num_param ( IDSIMMODEL* model, char* field_name )
 {
 	double result = 0;
-	model->model_instance->vtable->getnumval (model->model_instance, 0, &result, field_name, 0.0 );
+	model->model_instance->vtable->getnumval ( model->model_instance, 0, &result, field_name, 0.0 );
 	return result;
 }
 
@@ -152,7 +152,7 @@ double get_num_param ( IDSIMMODEL* model, char* field_name )
  */
 int32_t get_hex_param ( IDSIMMODEL* model, char* field_name )
 {
-	return ( int32_t ) model->model_instance->vtable->gethexval (model->model_instance, 0, field_name, 0 );
+	return ( int32_t ) model->model_instance->vtable->gethexval ( model->model_instance, 0, field_name, 0 );
 }
 
 /**
@@ -162,7 +162,7 @@ int32_t get_hex_param ( IDSIMMODEL* model, char* field_name )
  */
 int64_t get_init_param ( IDSIMMODEL* model, char* field_name )
 {
-	return ( int64_t ) model->model_instance->vtable->getinitval (model->model_instance, 0, field_name, 0 );
+	return ( int64_t ) model->model_instance->vtable->getinitval ( model->model_instance, 0, field_name, 0 );
 }
 
 /**
@@ -173,7 +173,7 @@ int64_t get_init_param ( IDSIMMODEL* model, char* field_name )
  */
 void load_image ( IDSIMMODEL* model, char* filename, uint8_t* buffer, size_t buffer_size )
 {
-	model->model_instance->vtable->loadmemory (model->model_instance, 0, filename, buffer, buffer_size, 0, 0 );
+	model->model_instance->vtable->loadmemory ( model->model_instance, 0, filename, buffer, buffer_size, 0, 0 );
 }
 
 /**
@@ -183,7 +183,7 @@ void load_image ( IDSIMMODEL* model, char* filename, uint8_t* buffer, size_t buf
  */
 IPOPUP* create_popup ( IDSIMMODEL* model, CREATEPOPUPSTRUCT* cps )
 {
-	return ( ( IPOPUP* ) model->model_instance->vtable->createpopup (model->model_instance, 0, cps ) );
+	return ( ( IPOPUP* ) model->model_instance->vtable->createpopup ( model->model_instance, 0, cps ) );
 }
 
 /**
@@ -292,7 +292,7 @@ IDEBUGPOPUP* create_var_popup ( IDSIMMODEL* model, const char* title, const int3
  */
 void delete_popup ( IDSIMMODEL* model, POPUPID id )
 {
-	model->model_instance->vtable->deletepopup (model->model_instance, 0, id );
+	model->model_instance->vtable->deletepopup ( model->model_instance, 0, id );
 }
 
 /**
@@ -327,7 +327,7 @@ bool add_source_file ( ISOURCEPOPUP* popup, char* filename, bool lowlevel )
  */
 bool set_vdm_handler ( IDSIMMODEL* model )
 {
-	return model->model_instance->vtable->setvdmhlr (model->model_instance, 0, &ICPU_DEVICE );
+	return model->model_instance->vtable->setvdmhlr ( model->model_instance, 0, &ICPU_DEVICE );
 }
 
 /**
@@ -403,17 +403,17 @@ STATE get_pin_state ( IDSIMPIN* pin )
  * @param  pin [description]
  * @return     [description]
  */
-inline int32_t get_pin_bool ( VSM_PIN pin)
+inline int32_t get_pin_bool ( VSM_PIN pin )
 {
 	STATE pinstate = pin.pin->vtable->istate ( pin.pin, 0 );
-	if ( SLO == pinstate || WLO == pinstate || ILO == pinstate || PLO == pinstate)
+	if ( SLO == pinstate || WLO == pinstate || ILO == pinstate || PLO == pinstate )
 	{
 		return 0;
 	}
-	else if ( SHI == pinstate || WHI == pinstate || IHI == pinstate || PHI == pinstate)
+	else if ( SHI == pinstate || WHI == pinstate || IHI == pinstate || PHI == pinstate )
 	{
 		return 1;
-	}	
+	}
 	return -1;
 }
 
@@ -464,7 +464,7 @@ bool is_pin_edge ( IDSIMPIN* pin )
  */
 void set_callback ( IDSIMMODEL* model, RELTIME picotime, EVENTID id )
 {
-	model->model_dsim->vtable->setcallback (model->model_dsim, 0, picotime, model, id );
+	model->model_dsim->vtable->setcallback ( model->model_dsim, 0, picotime, model, id );
 }
 
 /**
@@ -478,7 +478,7 @@ void print_info ( IDSIMMODEL* model, const char* format, ... )
 	va_start ( args, format );
 	if ( 0 > vasprintf ( &string, ( char* ) format, args ) ) string = NULL;
 	va_end ( args );
-	model->model_instance->vtable->log (model->model_instance, string );
+	model->model_instance->vtable->log ( model->model_instance, string );
 	free ( string );
 }
 
@@ -493,7 +493,7 @@ void print_message ( IDSIMMODEL* model, const char* format, ... )
 	va_start ( args, format );
 	if ( 0 > vasprintf ( &string, ( char* ) format, args ) ) string = NULL;
 	va_end ( args );
-	model->model_instance->vtable->message (model->model_instance, string );
+	model->model_instance->vtable->message ( model->model_instance, string );
 	free ( string );
 }
 
@@ -508,7 +508,7 @@ void print_warning ( IDSIMMODEL* model, const char* format, ... )
 	va_start ( args, format );
 	if ( 0 > vasprintf ( &string, ( char* ) format, args ) ) string = NULL;
 	va_end ( args );
-	model->model_instance->vtable->warning (model->model_instance, string );
+	model->model_instance->vtable->warning ( model->model_instance, string );
 	free ( string );
 }
 
@@ -523,7 +523,7 @@ void print_error ( IDSIMMODEL* model, const char* format, ... )
 	va_start ( args, format );
 	if ( 0 > vasprintf ( &string, ( char* ) format, args ) ) string = NULL;
 	va_end ( args );
-	model->model_instance->vtable->error (model->model_instance, string );
+	model->model_instance->vtable->error ( model->model_instance, string );
 	free ( string );
 }
 
@@ -534,7 +534,7 @@ void print_error ( IDSIMMODEL* model, const char* format, ... )
  */
 IDSIMPIN* get_pin ( IDSIMMODEL* model, char* pin_name )
 {
-	return model->model_instance->vtable->getdsimpin (model->model_instance, 0, pin_name, TRUE );
+	return model->model_instance->vtable->getdsimpin ( model->model_instance, 0, pin_name, TRUE );
 }
 
 /**
