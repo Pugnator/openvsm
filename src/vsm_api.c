@@ -184,7 +184,11 @@ vsm_setup ( IDSIMMODEL* this, uint32_t edx, IINSTANCE* instance, IDSIMCKT* dsimc
 	if ( global_device_init )
 	{
 		lua_getglobal ( this->luactx, "device_init" );		
-		lua_pcall ( this->luactx, 0, 0, 0 );
+		if(lua_pcall ( this->luactx, 0, 0, 0 ))
+		{
+			const char* err = lua_tostring(this->luactx, -1);
+			print_info(this, err);
+		}
 	}
 }
 
@@ -287,7 +291,11 @@ vsm_simulate (  IDSIMMODEL* this, uint32_t edx, ABSTIME atime, DSIMMODES mode )
 	if ( global_device_simulate )
 	{
 		lua_getglobal ( this->luactx, "device_simulate" );		
-		lua_pcall ( this->luactx, 0, 0, 0 );
+		if(lua_pcall ( this->luactx, 0, 0, 0 ))
+		{
+			const char* err = lua_tostring(this->luactx, -1);
+			print_info(this, err);
+		}
 	}
 }
 
@@ -308,7 +316,11 @@ vsm_callback (  IDSIMMODEL* this, uint32_t edx, ABSTIME atime, EVENTID eventid )
 	lua_getglobal ( this->luactx, "timer_callback" );	
 	lua_pushunsigned ( this->luactx, atime );
 	lua_pushunsigned ( this->luactx, eventid );
-	lua_pcall ( this->luactx, 2, 0, 0 );
+	if(lua_pcall ( this->luactx, 2, 0, 0 ))
+	{
+		const char* err = lua_tostring(this->luactx, -1);
+		print_info(this, err);
+	}
 }
 
 /**
