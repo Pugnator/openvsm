@@ -88,6 +88,7 @@ void set_pin_state ( IDSIMMODEL* model, VSM_PIN pin, STATE state )
  */
 void set_pin_bool ( IDSIMMODEL* model, VSM_PIN pin, bool level )
 {
+	//print_info(model, "set_pin_bool: %S", level ? "1" : "0");
 	ABSTIME curtime = 0;
 	systime ( model, &curtime );
 	pin.pin->vtable->setstate2 ( pin.pin, 0, curtime, pin.on_time, level ? SHI : SLO );
@@ -386,6 +387,10 @@ void toggle_pin_state ( IDSIMMODEL* model, VSM_PIN pin )
 	{
 		set_pin_state ( model,pin, SHI );
 	}
+	else
+	{
+		set_pin_state ( model,pin, FLT );
+	}
 }
 
 /**
@@ -395,7 +400,7 @@ void toggle_pin_state ( IDSIMMODEL* model, VSM_PIN pin )
  */
 STATE get_pin_state ( IDSIMPIN* pin )
 {
-	return pin->vtable->istate ( pin, 0 );
+	return pin->vtable->getstate ( pin, 0 );
 }
 
 /**
@@ -405,7 +410,7 @@ STATE get_pin_state ( IDSIMPIN* pin )
  */
 inline int32_t get_pin_bool ( VSM_PIN pin )
 {
-	STATE pinstate = pin.pin->vtable->istate ( pin.pin, 0 );
+	STATE pinstate = get_pin_state ( pin.pin);
 	if ( SLO == pinstate || WLO == pinstate || ILO == pinstate || PLO == pinstate )
 	{
 		return 0;
