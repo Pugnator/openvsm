@@ -50,17 +50,11 @@
 #define VSM_API_VERSION  110
 #define model_key 0x00000000
 
-extern bool global_device_init;
-extern bool global_device_simulate;
-extern bool global_timer_callback;
-extern bool global_on_stop;
-extern bool global_on_suspend;
-
 typedef struct callback_events
 {
-    EVENTID id;
-    UT_hash_handle hh;
-}callback_events;
+	EVENTID id;
+	UT_hash_handle hh;
+} callback_events;
 
 int32_t vasprintf ( char** sptr, char* fmt, va_list argv );
 int32_t asprintf ( char** sptr, char* fmt, ... );
@@ -84,9 +78,9 @@ LRESULT __attribute__ ( ( fastcall ) )
 icpu_vdmhlr (  ICPU* this, uint32_t edx, VDM_COMMAND* cmd, uint8_t* data );
 void __attribute__ ( ( fastcall ) )
 icpu_loaddata ( ICPU* this, EDX, int32_t format, int32_t seg, ADDRESS address, uint8_t* data, int32_t numbytes );
-void __attribute__ ( ( fastcall ) ) 
+void __attribute__ ( ( fastcall ) )
 icpu_disassemble ( ICPU* this, EDX, ADDRESS address, int32_t numbytes );
-bool __attribute__ ( ( fastcall ) ) 
+bool __attribute__ ( ( fastcall ) )
 icpu_getvardata ( ICPU* this, EDX, VARITEM* vip, VARDATA* vdp );
 
 struct SPICEDATA
@@ -192,7 +186,13 @@ struct IDSIMMODEL
 	IDSIMCKT* model_dsim;
 	lua_State* luactx;
 	VSM_PIN device_pins[32];
-	callback_events *events;
+	callback_events* events;
+	bool global_safe_execute;
+	bool global_device_init;
+	bool global_device_simulate;
+	bool global_timer_callback;
+	bool global_on_stop;
+	bool global_on_suspend;
 };
 
 struct IBUSPIN
