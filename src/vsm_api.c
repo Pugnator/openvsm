@@ -66,7 +66,7 @@ static lua_global_func lua_global_func_list[] =
 	{.func_name="timer_callback", .exist=&global_timer_callback},
 	{.func_name="on_stop", .exist=&global_on_stop},
 	{.func_name="on_suspend", .exist=&global_on_suspend},
-	{.func_name=0},
+	{.func_name=NULL},
 };
 
 static void check_global_functions ( IDSIMMODEL* model )
@@ -94,6 +94,7 @@ createdsimmodel ( char* device, ILICENCESERVER* ils )
 	/* Init Lua */
 	vdev->luactx = luaL_newstate();
 	/* Open Lua libraries */
+	vdev->events = NULL;
 	luaL_openlibs ( vdev->luactx );
 	register_functions ( vdev, vdev->luactx );	
 	return vdev;
@@ -187,7 +188,7 @@ vsm_setup ( IDSIMMODEL* this, uint32_t edx, IINSTANCE* instance, IDSIMCKT* dsimc
 		if(lua_pcall ( this->luactx, 0, 0, 0 ))
 		{
 			const char* err = lua_tostring(this->luactx, -1);
-			print_info(this, err);
+			print_error(this, err);
 		}
 	}
 }
@@ -294,7 +295,7 @@ vsm_simulate (  IDSIMMODEL* this, uint32_t edx, ABSTIME atime, DSIMMODES mode )
 		if(lua_pcall ( this->luactx, 0, 0, 0 ))
 		{
 			const char* err = lua_tostring(this->luactx, -1);
-			print_info(this, err);
+			print_error(this, err);
 		}
 	}
 }
@@ -312,14 +313,18 @@ void __attribute__ ( ( fastcall ) )
 vsm_callback (  IDSIMMODEL* this, uint32_t edx, ABSTIME atime, EVENTID eventid )
 {
 	( void ) edx;
-	
-	lua_getglobal ( this->luactx, "timer_callback" );	
-	lua_pushunsigned ( this->luactx, atime );
-	lua_pushunsigned ( this->luactx, eventid );
-	if(lua_pcall ( this->luactx, 2, 0, 0 ))
+	callback_events *curevent = NULL;
+	HASH_FIND_INT ( this->events, &eventid, curevent );
+	if(curevent)
 	{
-		const char* err = lua_tostring(this->luactx, -1);
-		print_info(this, err);
+		lua_getglobal ( this->luactx, "timer_callback" );	
+		lua_pushunsigned ( this->luactx, atime );
+		lua_pushunsigned ( this->luactx, eventid );
+		if(lua_pcall ( this->luactx, 2, 0, 0 ))
+		{
+			const char* err = lua_tostring(this->luactx, -1);
+			print_error(this, err);
+		}
 	}
 }
 

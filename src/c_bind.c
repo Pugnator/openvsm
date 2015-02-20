@@ -463,12 +463,21 @@ bool is_pin_edge ( IDSIMPIN* pin )
 }
 
 /**
- * [set_callback  description]
- * @param picotime [description]
- * @param id       [description]
+ * [set_callback  Set the system callback]
+ * @param picotime [Time callback should be triggered on]
+ * @param id       [unique event id]
  */
 void set_callback ( IDSIMMODEL* model, RELTIME picotime, EVENTID id )
 {
+	/* Add event to the model's hash table in order to keep count of registered events */
+	callback_events *new = NULL;
+	HASH_FIND_INT ( model->events, &id, new );
+	if (!new)
+	{
+		new = malloc ( sizeof *new );
+		new->id = id;
+		HASH_ADD_INT ( model->events, id, new );
+	}
 	model->model_dsim->vtable->setcallback ( model->model_dsim, 0, picotime, model, id );
 }
 
