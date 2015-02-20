@@ -410,7 +410,7 @@ STATE get_pin_state ( IDSIMPIN* pin )
  */
 inline int32_t get_pin_bool ( VSM_PIN pin )
 {
-	STATE pinstate = get_pin_state ( pin.pin);
+	STATE pinstate = get_pin_state ( pin.pin );
 	if ( SLO == pinstate || WLO == pinstate || ILO == pinstate || PLO == pinstate )
 	{
 		return 0;
@@ -470,9 +470,9 @@ bool is_pin_edge ( IDSIMPIN* pin )
 void set_callback ( IDSIMMODEL* model, RELTIME picotime, EVENTID id )
 {
 	/* Add event to the model's hash table in order to keep count of registered events */
-	callback_events *new = NULL;
+	callback_events* new = NULL;
 	HASH_FIND_INT ( model->events, &id, new );
-	if (!new)
+	if ( !new )
 	{
 		new = malloc ( sizeof *new );
 		new->id = id;

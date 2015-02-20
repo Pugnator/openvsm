@@ -4,9 +4,9 @@
 
 typedef struct lua_bind_func
 {
-	int ( *lua_c_api ) ( lua_State* );	
+	int ( *lua_c_api ) ( lua_State* );
 	const char* lua_func_name;
-	int ( *args[16] ) ( lua_State*, int index);
+	int ( *args[16] ) ( lua_State*, int index );
 } lua_bind_func;
 
 typedef struct lua_bind_var

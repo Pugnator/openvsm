@@ -87,7 +87,7 @@ createdsimmodel ( char* device, ILICENCESERVER* ils )
 	{
 		return NULL;
 	}
-	
+
 	IDSIMMODEL* vdev = malloc ( sizeof *vdev );
 	/* Assign virtual table to the object */
 	vdev->vtable = &VSM_DEVICE_vtable;
@@ -96,7 +96,7 @@ createdsimmodel ( char* device, ILICENCESERVER* ils )
 	/* Open Lua libraries */
 	vdev->events = NULL;
 	luaL_openlibs ( vdev->luactx );
-	register_functions ( vdev, vdev->luactx );	
+	register_functions ( vdev, vdev->luactx );
 	return vdev;
 }
 
@@ -125,26 +125,26 @@ void __attribute__ ( ( fastcall ) )
 vsm_setup ( IDSIMMODEL* this, uint32_t edx, IINSTANCE* instance, IDSIMCKT* dsimckt )
 {
 	( void ) edx;
-	
+
 	this->model_instance = instance;
 	this->model_dsim = dsimckt;
-	
+
 	char* device_script = get_string_param ( this, "lua" );
 	load_device_script ( this, device_script );
 	print_info ( this, "%s started [OpenVSM %s, %s]      https://github.com/Pugnator/openvsm", get_device_id ( this ), __VERSION, device_script );
 	free ( device_script );
-	
+
 	lua_getglobal ( this->luactx, "device_pins" );
 	if ( 0 == lua_istable ( this->luactx, -1 ) )
 	{
 		print_error ( this, "No device model found, it is fatal error" );
 		return;
 	}
-	
+
 	lua_len ( this->luactx, -1 );
 	int32_t pin_number = lua_tointeger ( this->luactx, -1 );
 	lua_pop ( this->luactx, 1 );
-	
+
 	for ( int i=1; i<=pin_number; i++ )
 	{
 		lua_rawgeti ( this->luactx,-1, i );
@@ -174,7 +174,7 @@ vsm_setup ( IDSIMMODEL* this, uint32_t edx, IINSTANCE* instance, IDSIMCKT* dsimc
 		lua_setglobal ( this->luactx, pin_name );
 		lua_pop ( this->luactx, 1 );
 	}
-	
+
 	check_global_functions ( this );
 
 	/* Pass model object pointer to Lua - it is safer there ;) */
@@ -184,11 +184,11 @@ vsm_setup ( IDSIMMODEL* this, uint32_t edx, IINSTANCE* instance, IDSIMCKT* dsimc
 
 	if ( global_device_init )
 	{
-		lua_getglobal ( this->luactx, "device_init" );		
-		if(lua_pcall ( this->luactx, 0, 0, 0 ))
+		lua_getglobal ( this->luactx, "device_init" );
+		if ( lua_pcall ( this->luactx, 0, 0, 0 ) )
 		{
-			const char* err = lua_tostring(this->luactx, -1);
-			print_error(this, err);
+			const char* err = lua_tostring ( this->luactx, -1 );
+			print_error ( this, err );
 		}
 	}
 }
@@ -199,14 +199,14 @@ vsm_runctrl (  IDSIMMODEL* this, uint32_t edx, RUNMODES mode )
 	( void ) this;
 	( void ) edx;
 	( void ) mode;
-	
+
 	switch ( mode )
 	{
 		case RM_BATCH:
-		
+
 			break;
 		case RM_START:
-		
+
 			break;
 		case RM_STOP:
 			/*if ( global_on_stop )
@@ -219,28 +219,28 @@ vsm_runctrl (  IDSIMMODEL* this, uint32_t edx, RUNMODES mode )
 		case RM_ANIMATE:
 			break;
 		case RM_STEPTIME:
-		
+
 			break;
 		case RM_STEPOVER:
-		
+
 			break;
 		case RM_STEPINTO:
-		
+
 			break;
 		case RM_STEPOUT:
-		
+
 			break;
 		case RM_STEPTO:
-		
+
 			break;
 		case RM_META:
-		
+
 			break;
 		case RM_DUMP:
-		
+
 			break;
 	}
-	
+
 }
 
 void __attribute__ ( ( fastcall ) )
@@ -288,14 +288,14 @@ vsm_simulate (  IDSIMMODEL* this, uint32_t edx, ABSTIME atime, DSIMMODES mode )
 	( void ) edx;
 	( void ) atime;
 	( void ) mode;
-	
+
 	if ( global_device_simulate )
 	{
-		lua_getglobal ( this->luactx, "device_simulate" );		
-		if(lua_pcall ( this->luactx, 0, 0, 0 ))
+		lua_getglobal ( this->luactx, "device_simulate" );
+		if ( lua_pcall ( this->luactx, 0, 0, 0 ) )
 		{
-			const char* err = lua_tostring(this->luactx, -1);
-			print_error(this, err);
+			const char* err = lua_tostring ( this->luactx, -1 );
+			print_error ( this, err );
 		}
 	}
 }
@@ -313,17 +313,17 @@ void __attribute__ ( ( fastcall ) )
 vsm_callback (  IDSIMMODEL* this, uint32_t edx, ABSTIME atime, EVENTID eventid )
 {
 	( void ) edx;
-	callback_events *curevent = NULL;
+	callback_events* curevent = NULL;
 	HASH_FIND_INT ( this->events, &eventid, curevent );
-	if(curevent)
+	if ( curevent )
 	{
-		lua_getglobal ( this->luactx, "timer_callback" );	
+		lua_getglobal ( this->luactx, "timer_callback" );
 		lua_pushunsigned ( this->luactx, atime );
 		lua_pushunsigned ( this->luactx, eventid );
-		if(lua_pcall ( this->luactx, 2, 0, 0 ))
+		if ( lua_pcall ( this->luactx, 2, 0, 0 ) )
 		{
-			const char* err = lua_tostring(this->luactx, -1);
-			print_error(this, err);
+			const char* err = lua_tostring ( this->luactx, -1 );
+			print_error ( this, err );
 		}
 	}
 }
