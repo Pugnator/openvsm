@@ -23,11 +23,6 @@
 
 #include <vsm_api.h>
 
-
-#define STRING (&lua_isstring)
-#define INT (&lua_isnumber)
-#define USER (&lua_islightuserdata)
-
 static const lua_bind_var lua_var_api_list[]=
 {
 	{.var_name="SHI", .var_value=SHI},
@@ -53,30 +48,30 @@ static const lua_bind_var lua_var_api_list[]=
 
 static const lua_bind_func lua_c_api_list[] =
 {
-	{.lua_func_name="state_to_string", .lua_c_api=&lua_state_to_string, .args={STRING}},
-	{.lua_func_name="is_pin_active", .lua_c_api=&lua_is_pin_active, .args={INT}},
-	{.lua_func_name="is_pin_edge", .lua_c_api=&lua_is_pin_edge, .args={INT}},
-	{.lua_func_name="is_pin_posedge", .lua_c_api=&lua_is_pin_posedge, .args={INT}},
-	{.lua_func_name="is_pin_negedge", .lua_c_api=&lua_is_pin_negedge, .args={INT}},
-	{.lua_func_name="set_pin_state", .lua_c_api=&lua_set_pin_state, .args={INT}},
-	{.lua_func_name="set_pin_bool", .lua_c_api=&lua_set_pin_bool, .args={INT,INT}},
-	{.lua_func_name="get_pin_bool", .lua_c_api=&lua_get_pin_bool, .args={INT}},
-	{.lua_func_name="get_pin_state", .lua_c_api=&lua_get_pin_state, .args={INT}},
-	{.lua_func_name="is_pin_low", .lua_c_api=&lua_is_pin_low, .args={INT}},
-	{.lua_func_name="is_pin_high", .lua_c_api=&lua_is_pin_high, .args={INT}},
-	{.lua_func_name="is_pin_floating", .lua_c_api=&lua_is_pin_floating, .args={INT}},
-	{.lua_func_name="toggle_pin", .lua_c_api=&lua_toggle_pin_state, .args={INT}},
-	{.lua_func_name="info", .lua_c_api=&lua_print_info, .args={STRING}},
-	{.lua_func_name="message", .lua_c_api=&lua_print_message, .args={STRING}},
-	{.lua_func_name="warning", .lua_c_api=&lua_print_warning, .args={STRING}},
-	{.lua_func_name="error", .lua_c_api=&lua_print_error, .args={STRING}},
-	{.lua_func_name="set_callback", .lua_c_api=&lua_set_callback, .args={INT, INT}},
-	{.lua_func_name="create_debug_popup", .lua_c_api=&lua_create_debug_popup, .args={STRING}},
-	{.lua_func_name="create_memory_popup", .lua_c_api=&lua_create_memory_popup, .args={STRING}},
-	{.lua_func_name="create_source_popup", .lua_c_api=&lua_create_source_popup, .args={STRING}},
-	{.lua_func_name="create_status_popup", .lua_c_api=&lua_create_status_popup, .args={STRING}},
-	{.lua_func_name="create_var_popup", .lua_c_api=&lua_create_var_popup, .args={STRING}},
-	{.lua_func_name="delete_popup", .lua_c_api=&lua_delete_popup, .args={INT}},
+	{.lua_func_name="state_to_string", .lua_c_api=&lua_state_to_string, .args={LSTRING}},
+	{.lua_func_name="is_pin_active", .lua_c_api=&lua_is_pin_active, .args={LINT}},
+	{.lua_func_name="is_pin_edge", .lua_c_api=&lua_is_pin_edge, .args={LINT}},
+	{.lua_func_name="is_pin_posedge", .lua_c_api=&lua_is_pin_posedge, .args={LINT}},
+	{.lua_func_name="is_pin_negedge", .lua_c_api=&lua_is_pin_negedge, .args={LINT}},
+	{.lua_func_name="set_pin_state", .lua_c_api=&lua_set_pin_state, .args={LINT}},
+	{.lua_func_name="set_pin_bool", .lua_c_api=&lua_set_pin_bool, .args={LINT,LINT}},
+	{.lua_func_name="get_pin_bool", .lua_c_api=&lua_get_pin_bool, .args={LINT}},
+	{.lua_func_name="get_pin_state", .lua_c_api=&lua_get_pin_state, .args={LINT}},
+	{.lua_func_name="is_pin_low", .lua_c_api=&lua_is_pin_low, .args={LINT}},
+	{.lua_func_name="is_pin_high", .lua_c_api=&lua_is_pin_high, .args={LINT}},
+	{.lua_func_name="is_pin_floating", .lua_c_api=&lua_is_pin_floating, .args={LINT}},
+	{.lua_func_name="toggle_pin", .lua_c_api=&lua_toggle_pin_state, .args={LINT}},
+	{.lua_func_name="info", .lua_c_api=&lua_print_info, .args={LSTRING}},
+	{.lua_func_name="message", .lua_c_api=&lua_print_message, .args={LSTRING}},
+	{.lua_func_name="warning", .lua_c_api=&lua_print_warning, .args={LSTRING}},
+	{.lua_func_name="error", .lua_c_api=&lua_print_error, .args={LSTRING}},
+	{.lua_func_name="set_callback", .lua_c_api=&lua_set_callback, .args={LINT, LINT}},
+	{.lua_func_name="create_debug_popup", .lua_c_api=&lua_create_debug_popup, .args={LSTRING}},
+	{.lua_func_name="create_memory_popup", .lua_c_api=&lua_create_memory_popup, .args={LSTRING}},
+	{.lua_func_name="create_source_popup", .lua_c_api=&lua_create_source_popup, .args={LSTRING}},
+	{.lua_func_name="create_status_popup", .lua_c_api=&lua_create_status_popup, .args={LSTRING}},
+	{.lua_func_name="create_var_popup", .lua_c_api=&lua_create_var_popup, .args={LSTRING}},
+	{.lua_func_name="delete_popup", .lua_c_api=&lua_delete_popup, .args={LINT}},
 	{.lua_func_name="set_memory_popup", .lua_c_api=&lua_set_memory_popup, .args={}},
 	{.lua_func_name="repaint_memory_popup", .lua_c_api=&lua_repaint_memory_popup, .args={}},
 	{.lua_func_name="print_to_debug_popup", .lua_c_api=&lua_print_to_debug_popup, .args={}},
@@ -87,11 +82,13 @@ static const lua_bind_func lua_c_api_list[] =
 	{.lua_func_name="get_init_param", .lua_c_api=&lua_get_init_param, .args={}},
 	{.lua_func_name="get_hex_param", .lua_c_api=&lua_get_hex_param, .args={}},
 	{.lua_func_name="add_source_file", .lua_c_api=&lua_add_source_file, .args={}},
-	{.lua_func_name="get_bit", .lua_c_api=&lua_get_bit, .args={INT, INT}},
-	{.lua_func_name="set_bit", .lua_c_api=&lua_set_bit, .args={INT, INT}},
-	{.lua_func_name="clear_bit", .lua_c_api=&lua_clear_bit, .args={INT, INT}},
-	{.lua_func_name="toggle_bit", .lua_c_api=&lua_toggle_bit, .args={INT, INT}},
+	{.lua_func_name="get_bit", .lua_c_api=&lua_get_bit, .args={LINT, LINT}},
+	{.lua_func_name="set_bit", .lua_c_api=&lua_set_bit, .args={LINT, LINT}},
+	{.lua_func_name="clear_bit", .lua_c_api=&lua_clear_bit, .args={LINT, LINT}},
+	{.lua_func_name="toggle_bit", .lua_c_api=&lua_toggle_bit, .args={LINT, LINT}},
 	{.lua_func_name="systime", .lua_c_api=&lua_get_systime },
+	{.lua_func_name="set_bus", .lua_c_api=&lua_set_bus,  .args={}},
+	{.lua_func_name="get_bus", .lua_c_api=&lua_get_bus,  .args={} },
 	{ NULL, NULL},
 };
 
@@ -104,7 +101,8 @@ SAFE_EXECUTE ( lua_State* L, void* curfunc )
 	{
 		if ( curfunc == lua_c_api_list[i].lua_c_api )
 		{
-			for ( int argcount=0; lua_c_api_list[i].args[argcount]; argcount++ )
+			int argcount=0;
+			for ( argcount=0; lua_c_api_list[i].args[argcount]; argcount++ )
 			{
 				if ( argnum < argcount+1 )
 				{
@@ -125,7 +123,16 @@ SAFE_EXECUTE ( lua_State* L, void* curfunc )
 					int line = ar.currentline;				
 					print_error ( model, "Line %d: Argument %d of \"%s\" is of wrong type [%s]", line, argcount+1, lua_c_api_list[i].lua_func_name, lua_typename (L, argcount+1) );
 				}  
-			}			
+			}		
+			if(lua_c_api_list[i].args[argcount+1])	
+			{
+				IDSIMMODEL* model = ( IDSIMMODEL* ) lua_get_model_obj ( L );
+				lua_Debug ar;
+				lua_getstack(L, 1, &ar);
+				lua_getinfo(L, "nSl", &ar);
+				int line = ar.currentline;				
+				print_error ( model, "Line %d: extra arguments passed to \"%s\"", line, argcount+1, lua_c_api_list[i].lua_func_name );
+			}
 		}
 	}
 #endif
@@ -380,9 +387,9 @@ static int
 lua_set_pin_state ( lua_State* L )
 {
 	SAFE_EXECUTE ( L, &lua_set_pin_state );
-	int pin_num = lua_tointeger ( L, -2 );
-	int pin_state = lua_tointeger ( L, -1 );
 	IDSIMMODEL* model = ( IDSIMMODEL* ) lua_get_model_obj ( L );
+	int pin_num = lua_tointeger ( L, -2 );
+	int pin_state = lua_tointeger ( L, -1 );	
 	set_pin_state ( model, model->device_pins[pin_num], pin_state );
 	return 0;
 }
@@ -646,5 +653,28 @@ static void* lua_get_model_obj ( lua_State* L )
 {
 	lua_pushliteral ( L, "__this" );
 	lua_gettable ( L, LUA_REGISTRYINDEX );
-	return lua_touserdata ( L, -1 );
+	void *this = lua_touserdata ( L, -1 );
+	lua_pop(L, 1);
+	return this;
+}
+
+static int lua_set_bus ( lua_State* L )
+{		
+	if (0 == lua_istable(L, 1))
+	{
+		IDSIMMODEL* model = ( IDSIMMODEL* ) lua_get_model_obj ( L );
+	    print_info(model, "No bus specified");
+	}
+	/*lua_pushnil(luactx);
+	while (lua_next(luactx, 1) != 0) 
+	{    
+	print_info(lua_typename(luactx, lua_type(luactx, -1)));   
+	lua_pop(luactx, 1);
+	}*/
+	return 0;
+}
+
+static int lua_get_bus ( lua_State* L )
+{	
+	return 0;
 }

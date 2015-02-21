@@ -42,13 +42,17 @@
 #include <device.h>
 #include <c_bind.h>
 #include <lua_bind.h>
-
 #include <uthash.h>
 
 #undef _WIN32_WINNT
 #define _WIN32_WINNT 0x0500
 #define VSM_API_VERSION  110
 #define model_key 0x00000000
+
+#define LSTRING (&lua_isstring)
+#define LINT (&lua_isnumber)
+#define LUSER (&lua_islightuserdata)
+#define LTABLE (&lua_istable)
 
 typedef struct callback_events
 {
