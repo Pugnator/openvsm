@@ -660,21 +660,55 @@ static void* lua_get_model_obj ( lua_State* L )
 
 static int lua_set_bus ( lua_State* L )
 {	
+	///FIXME: add custom table-checking function, as Lua's lua_istable is a macro and can be used 
 	IDSIMMODEL* this = ( IDSIMMODEL* ) lua_get_model_obj ( L );	
+	int byte = lua_tointeger ( L, -1 );
+	print_info(this, "Byte is %X", byte);
 	if (0 == lua_istable(L, 1))
 	{		
 	    print_error(this, "No bus specified");
 	}
+	/* Iterate throug the bus table */
 	lua_pushnil(L);
-	while (lua_next(L, 1) != 0) 
-	{    
-	print_info(this, lua_typename(L, lua_type(L, -1)));   
-	lua_pop(L, 1);
+	/* Pins should be added to bus as big-endian one (MSB pin first) */
+	int bit_counter = 0;
+	while (0 != lua_next(L, 1)) 
+	{   
+		set_pin_bool ( this, this->device_pins[lua_tointeger(L, -1)], byte >> bit_counter & 0x1 ); 		
+		lua_pop(L, 1);
+		bit_counter++;
 	}
 	return 0;
 }
 
 static int lua_get_bus ( lua_State* L )
 {	
-	return 0;
+	///FIXME: add custom table-checking function, as Lua's lua_istable is a macro and can be used 
+	IDSIMMODEL* this = ( IDSIMMODEL* ) lua_get_model_obj ( L );		
+	if (0 == lua_istable(L, 1))
+	{		
+	    print_error(this, "No bus specified");
+	}
+	/* Iterate throug the bus table */
+	lua_pushnil(L);
+	/* Pins should be added to bus as big-endian one (MSB pin first) */
+	int bit_counter = 0;
+	/* Add bus size check here. 32 or 64bit bus max */
+	int data = 0;
+	while (0 != lua_next(L, 1)) 
+	{   
+		int bit = get_pin_bool ( this->device_pins[lua_tointeger(L, -1)]); 		
+		if(bit)
+		{
+			data |= ( 1 << bit_counter );
+		}
+		else
+		{
+			data &= ~ ( 1 << bit_counter );
+		}		
+		lua_pop(L, 1);
+		bit_counter++;
+	}
+	lua_pushnumber ( L, data );
+	return 1;
 }
