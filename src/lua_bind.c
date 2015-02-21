@@ -106,32 +106,32 @@ SAFE_EXECUTE ( lua_State* L, void* curfunc )
 			{
 				if ( argnum < argcount+1 )
 				{
-					IDSIMMODEL* model = ( IDSIMMODEL* ) lua_get_model_obj ( L );
+					IDSIMMODEL* this = ( IDSIMMODEL* ) lua_get_model_obj ( L );
 					lua_Debug ar;
 					lua_getstack(L, 1, &ar);
 					lua_getinfo(L, "nSl", &ar);
 					int line = ar.currentline;				
 					
-					print_error ( model, "Line %d: Too few arguments passed to the function \"%s\"", line, lua_c_api_list[i].lua_func_name );
+					print_error ( this, "Line %d: Too few arguments passed to the function \"%s\"", line, lua_c_api_list[i].lua_func_name );
 				}
 				else if ( !lua_c_api_list[i].args[argcount] ( L, argcount+1 ) )
 				{
-					IDSIMMODEL* model = ( IDSIMMODEL* ) lua_get_model_obj ( L );
+					IDSIMMODEL* this = ( IDSIMMODEL* ) lua_get_model_obj ( L );
 					lua_Debug ar;
 					lua_getstack(L, 1, &ar);
 					lua_getinfo(L, "nSl", &ar);
 					int line = ar.currentline;				
-					print_error ( model, "Line %d: Argument %d of \"%s\" is of wrong type [%s]", line, argcount+1, lua_c_api_list[i].lua_func_name, lua_typename (L, argcount+1) );
+					print_error ( this, "Line %d: Argument %d of \"%s\" is of wrong type [%s]", line, argcount+1, lua_c_api_list[i].lua_func_name, lua_typename (L, argcount+1) );
 				}  
 			}		
 			if(lua_c_api_list[i].args[argcount+1])	
 			{
-				IDSIMMODEL* model = ( IDSIMMODEL* ) lua_get_model_obj ( L );
+				IDSIMMODEL* this = ( IDSIMMODEL* ) lua_get_model_obj ( L );
 				lua_Debug ar;
 				lua_getstack(L, 1, &ar);
 				lua_getinfo(L, "nSl", &ar);
 				int line = ar.currentline;				
-				print_error ( model, "Line %d: extra arguments passed to \"%s\"", line, argcount+1, lua_c_api_list[i].lua_func_name );
+				print_error ( this, "Line %d: extra arguments passed to \"%s\"", line, argcount+1, lua_c_api_list[i].lua_func_name );
 			}
 		}
 	}
@@ -139,7 +139,7 @@ SAFE_EXECUTE ( lua_State* L, void* curfunc )
 }
 
 void
-register_functions ( IDSIMMODEL* model, lua_State* L )
+register_functions ( IDSIMMODEL* this, lua_State* L )
 {
 	/*  Declare functions */
 	for ( int i=0; lua_c_api_list[i].lua_func_name; i++ )
@@ -156,18 +156,18 @@ register_functions ( IDSIMMODEL* model, lua_State* L )
 }
 
 bool
-load_device_script ( IDSIMMODEL* model, const char* device_name )
+load_device_script ( IDSIMMODEL* this, const char* device_name )
 {
 	char spath[512] = {0};
 	if ( 0 == GetEnvironmentVariable ( "LUAVSM", spath, sizeof spath ) )
 	{
-		print_error ( model, "LUAVSM environment variable is not set" );
+		print_error ( this, "LUAVSM environment variable is not set" );
 		return false;
 	}
 	char* script=NULL;
 	asprintf ( &script, "%s%s%s", spath, '\\' == spath[strlen ( spath )-1]? "":"\\", device_name );
 
-	int lua_err = luaL_loadfile ( model->luactx, script );
+	int lua_err = luaL_loadfile ( this->luactx, script );
 
 	if ( 0 != lua_err )
 	{
@@ -176,24 +176,24 @@ load_device_script ( IDSIMMODEL* model, const char* device_name )
 		switch ( lua_err )
 		{
 			case LUA_ERRSYNTAX:
-				mess = lua_tostring ( model->luactx, -1 );
-				print_error ( model, "Syntax error in Lua script\n%s", mess );
+				mess = lua_tostring ( this->luactx, -1 );
+				print_error ( this, "Syntax error in Lua script\n%s", mess );
 				return false;
 			case LUA_ERRMEM:
-				print_error ( model, "Not enough memory to load script" );
+				print_error ( this, "Not enough memory to load script" );
 				return false;
 			case LUA_ERRFILE:
-				print_error ( model, "Error loading script file" );
+				print_error ( this, "Error loading script file" );
 				return false;
 			default:
-				print_error ( model, "Unknown error, shouldn't happen" );
+				print_error ( this, "Unknown error, shouldn't happen" );
 				assert ( 0 );
 		}
 	}
 	/* Primer run, if not run it - nothing works, need for parse */
-	if ( 0 != lua_pcall ( model->luactx, 0, 0, 0 ) )
+	if ( 0 != lua_pcall ( this->luactx, 0, 0, 0 ) )
 	{
-		print_error ( model, "Failed to load the script \"%s\"", script );
+		print_error ( this, "Failed to load the script \"%s\"", script );
 		free ( script );
 		return false;
 	}
@@ -206,8 +206,8 @@ lua_get_string_param ( lua_State* L )
 {
 	SAFE_EXECUTE ( L, &lua_get_string_param );
 	char* str = ( char* ) lua_tostring ( L, -1 );
-	IDSIMMODEL* model = ( IDSIMMODEL* ) lua_get_model_obj ( L );
-	lua_pushstring ( L, get_string_param ( model, str ) );
+	IDSIMMODEL* this = ( IDSIMMODEL* ) lua_get_model_obj ( L );
+	lua_pushstring ( L, get_string_param ( this, str ) );
 	return 1;
 }
 
@@ -216,8 +216,8 @@ lua_get_bool_param ( lua_State* L )
 {
 	SAFE_EXECUTE ( L, &lua_get_bool_param );
 	char* str = ( char* ) lua_tostring ( L, -1 );
-	IDSIMMODEL* model = ( IDSIMMODEL* ) lua_get_model_obj ( L );
-	lua_pushboolean ( L, get_bool_param ( model, str ) );
+	IDSIMMODEL* this = ( IDSIMMODEL* ) lua_get_model_obj ( L );
+	lua_pushboolean ( L, get_bool_param ( this, str ) );
 	return 1;
 }
 
@@ -226,8 +226,8 @@ lua_get_num_param ( lua_State* L )
 {
 	SAFE_EXECUTE ( L, &lua_get_num_param );
 	char* str = ( char* ) lua_tostring ( L, -1 );
-	IDSIMMODEL* model = ( IDSIMMODEL* ) lua_get_model_obj ( L );
-	lua_pushnumber ( L, get_num_param ( model, str )  );
+	IDSIMMODEL* this = ( IDSIMMODEL* ) lua_get_model_obj ( L );
+	lua_pushnumber ( L, get_num_param ( this, str )  );
 	return 1;
 }
 
@@ -236,8 +236,8 @@ lua_get_hex_param ( lua_State* L )
 {
 	SAFE_EXECUTE ( L, &lua_get_hex_param );
 	char* str = ( char* ) lua_tostring ( L, -1 );
-	IDSIMMODEL* model = ( IDSIMMODEL* ) lua_get_model_obj ( L );
-	lua_pushnumber ( L, get_hex_param ( model,str ) );
+	IDSIMMODEL* this = ( IDSIMMODEL* ) lua_get_model_obj ( L );
+	lua_pushnumber ( L, get_hex_param ( this,str ) );
 	return 1;
 }
 
@@ -246,8 +246,8 @@ lua_get_init_param ( lua_State* L )
 {
 	SAFE_EXECUTE ( L, &lua_get_init_param );
 	char* str = ( char* ) lua_tostring ( L, -1 );
-	IDSIMMODEL* model = ( IDSIMMODEL* ) lua_get_model_obj ( L );
-	lua_pushnumber ( L, get_init_param ( model, str ) );
+	IDSIMMODEL* this = ( IDSIMMODEL* ) lua_get_model_obj ( L );
+	lua_pushnumber ( L, get_init_param ( this, str ) );
 	return 1;
 }
 
@@ -256,8 +256,8 @@ lua_delete_popup ( lua_State* L )
 {
 	SAFE_EXECUTE ( L, &lua_delete_popup );
 	int id = lua_tointeger ( L, -1 );
-	IDSIMMODEL* model = ( IDSIMMODEL* ) lua_get_model_obj ( L );
-	delete_popup ( model, id );
+	IDSIMMODEL* this = ( IDSIMMODEL* ) lua_get_model_obj ( L );
+	delete_popup ( this, id );
 	return 0;
 }
 
@@ -266,8 +266,8 @@ lua_create_debug_popup ( lua_State* L )
 {
 	SAFE_EXECUTE ( L, &lua_create_debug_popup );
 	const char* text = lua_tostring ( L, -1 );
-	IDSIMMODEL* model = ( IDSIMMODEL* ) lua_get_model_obj ( L );
-	lua_pushlightuserdata ( L, create_debug_popup ( model, text, ++popup_id ) );
+	IDSIMMODEL* this = ( IDSIMMODEL* ) lua_get_model_obj ( L );
+	lua_pushlightuserdata ( L, create_debug_popup ( this, text, ++popup_id ) );
 	lua_pushnumber ( L, popup_id );
 	return 2;
 }
@@ -283,7 +283,7 @@ lua_print_to_debug_popup ( lua_State* L )
 	SAFE_EXECUTE ( L, &lua_print_to_debug_popup );
 	const char* str = lua_tostring ( L, -1 );
 	void* popup = lua_touserdata ( L, -2 );
-	IDSIMMODEL* model = ( IDSIMMODEL* ) lua_get_model_obj ( L );
+	IDSIMMODEL* this = ( IDSIMMODEL* ) lua_get_model_obj ( L );
 	print_to_debug_popup ( popup,  str );
 	return 0;
 }
@@ -301,7 +301,7 @@ lua_dump_to_debug_popup ( lua_State* L )
 	lua_Number size = luaL_checknumber ( L,-2 );
 	const char* buf = luaL_checkstring ( L,-3 );
 	void* popup = lua_touserdata ( L, -4 );
-	IDSIMMODEL* model = ( IDSIMMODEL* ) lua_get_model_obj ( L );
+	IDSIMMODEL* this = ( IDSIMMODEL* ) lua_get_model_obj ( L );
 	dump_to_debug_popup ( popup, ( BYTE* ) buf, offset, size );
 	return 0;
 }
@@ -311,8 +311,8 @@ lua_create_source_popup ( lua_State* L )
 {
 	SAFE_EXECUTE ( L, &lua_create_source_popup );
 	const char* text = lua_tostring ( L, -1 );
-	IDSIMMODEL* model = ( IDSIMMODEL* ) lua_get_model_obj ( L );
-	lua_pushlightuserdata ( L, create_source_popup ( model, text, ++popup_id ) );
+	IDSIMMODEL* this = ( IDSIMMODEL* ) lua_get_model_obj ( L );
+	lua_pushlightuserdata ( L, create_source_popup ( this, text, ++popup_id ) );
 	lua_pushnumber ( L, popup_id );
 	return 2;
 }
@@ -321,8 +321,8 @@ lua_create_status_popup ( lua_State* L )
 {
 	SAFE_EXECUTE ( L, &lua_create_status_popup );
 	const char* text = lua_tostring ( L, -1 );
-	IDSIMMODEL* model = ( IDSIMMODEL* ) lua_get_model_obj ( L );
-	lua_pushlightuserdata ( L, create_status_popup ( model, text, ++popup_id ) );
+	IDSIMMODEL* this = ( IDSIMMODEL* ) lua_get_model_obj ( L );
+	lua_pushlightuserdata ( L, create_status_popup ( this, text, ++popup_id ) );
 	lua_pushnumber ( L, popup_id );
 	return 2;
 }
@@ -331,8 +331,8 @@ lua_create_var_popup ( lua_State* L )
 {
 	SAFE_EXECUTE ( L, &lua_create_var_popup );
 	const char* text = lua_tostring ( L, -1 );
-	IDSIMMODEL* model = ( IDSIMMODEL* ) lua_get_model_obj ( L );
-	lua_pushlightuserdata ( L, create_var_popup ( model, text, ++popup_id ) );
+	IDSIMMODEL* this = ( IDSIMMODEL* ) lua_get_model_obj ( L );
+	lua_pushlightuserdata ( L, create_var_popup ( this, text, ++popup_id ) );
 	lua_pushnumber ( L, popup_id );
 	return 2;
 }
@@ -342,8 +342,8 @@ lua_create_memory_popup ( lua_State* L )
 {
 	SAFE_EXECUTE ( L, &lua_create_memory_popup );
 	const char* text = lua_tostring ( L, -1 );
-	IDSIMMODEL* model = ( IDSIMMODEL* ) lua_get_model_obj ( L );
-	lua_pushlightuserdata ( L, create_memory_popup ( model, text, ++popup_id ) );
+	IDSIMMODEL* this = ( IDSIMMODEL* ) lua_get_model_obj ( L );
+	lua_pushlightuserdata ( L, create_memory_popup ( this, text, ++popup_id ) );
 	lua_pushnumber ( L, popup_id );
 	return 2;
 }
@@ -355,7 +355,7 @@ lua_set_memory_popup ( lua_State* L )
 	lua_Number size = luaL_checknumber ( L,-1 );
 	const char* buf = luaL_checkstring ( L,-2 );
 	void* popup = lua_touserdata ( L, -3 );
-	IDSIMMODEL* model = ( IDSIMMODEL* ) lua_get_model_obj ( L );
+	IDSIMMODEL* this = ( IDSIMMODEL* ) lua_get_model_obj ( L );
 	set_memory_popup ( popup, 0, ( void* ) buf, size );
 
 	return 0;
@@ -367,8 +367,8 @@ lua_add_source_file ( lua_State* L )
 	SAFE_EXECUTE ( L, &lua_add_source_file );
 	if ( false == add_source_file ( lua_touserdata ( L, -3 ), ( char* ) lua_tostring ( L, -2 ), lua_tointeger ( L, -1 ) ) )
 	{
-		IDSIMMODEL* model = ( IDSIMMODEL* ) lua_get_model_obj ( L );
-		print_info ( model, "Fail to load source file" );
+		IDSIMMODEL* this = ( IDSIMMODEL* ) lua_get_model_obj ( L );
+		print_info ( this, "Fail to load source file" );
 	}
 
 	return 0;
@@ -387,10 +387,10 @@ static int
 lua_set_pin_state ( lua_State* L )
 {
 	SAFE_EXECUTE ( L, &lua_set_pin_state );
-	IDSIMMODEL* model = ( IDSIMMODEL* ) lua_get_model_obj ( L );
+	IDSIMMODEL* this = ( IDSIMMODEL* ) lua_get_model_obj ( L );
 	int pin_num = lua_tointeger ( L, -2 );
 	int pin_state = lua_tointeger ( L, -1 );	
-	set_pin_state ( model, model->device_pins[pin_num], pin_state );
+	set_pin_state ( this, this->device_pins[pin_num], pin_state );
 	return 0;
 }
 
@@ -399,19 +399,19 @@ lua_get_pin_state ( lua_State* L )
 {
 	SAFE_EXECUTE ( L, &lua_get_pin_state );
 	int pin_num = lua_tointeger ( L, -1 );
-	IDSIMMODEL* model = ( IDSIMMODEL* ) lua_get_model_obj ( L );
+	IDSIMMODEL* this = ( IDSIMMODEL* ) lua_get_model_obj ( L );
 
-	if ( TRUE == is_pin_high ( model->device_pins[pin_num].pin ) )
+	if ( TRUE == is_pin_high ( this->device_pins[pin_num].pin ) )
 	{
 		lua_pushnumber ( L, SHI );
 		return 1;
 	}
-	else if ( TRUE == is_pin_low ( model->device_pins[pin_num].pin ) )
+	else if ( TRUE == is_pin_low ( this->device_pins[pin_num].pin ) )
 	{
 		lua_pushnumber ( L, SLO );
 		return 1;
 	}
-	else if ( TRUE == is_pin_floating ( model->device_pins[pin_num].pin ) )
+	else if ( TRUE == is_pin_floating ( this->device_pins[pin_num].pin ) )
 	{
 		lua_pushnumber ( L, FLT );
 		return 1;
@@ -429,8 +429,8 @@ lua_set_pin_bool ( lua_State* L )
 	SAFE_EXECUTE ( L, &lua_set_pin_bool );
 	int pin_num = lua_tointeger ( L, -2 );
 	int pin_level = lua_tointeger ( L, -1 );
-	IDSIMMODEL* model = ( IDSIMMODEL* ) lua_get_model_obj ( L );
-	set_pin_bool ( model, model->device_pins[pin_num], pin_level );
+	IDSIMMODEL* this = ( IDSIMMODEL* ) lua_get_model_obj ( L );
+	set_pin_bool ( this, this->device_pins[pin_num], pin_level );
 	return 0;
 }
 
@@ -439,13 +439,13 @@ lua_get_pin_bool ( lua_State* L )
 {
 	SAFE_EXECUTE ( L, &lua_get_pin_bool );
 	int pin_num = lua_tointeger ( L, -1 );
-	IDSIMMODEL* model = ( IDSIMMODEL* ) lua_get_model_obj ( L );
-	if ( TRUE == is_pin_high ( model->device_pins[pin_num].pin ) )
+	IDSIMMODEL* this = ( IDSIMMODEL* ) lua_get_model_obj ( L );
+	if ( TRUE == is_pin_high ( this->device_pins[pin_num].pin ) )
 	{
 		lua_pushboolean ( L,  1 );
 		return 1;
 	}
-	else if ( TRUE == is_pin_low ( model->device_pins[pin_num].pin ) )
+	else if ( TRUE == is_pin_low ( this->device_pins[pin_num].pin ) )
 	{
 		lua_pushboolean ( L,  0 );
 		return 1;
@@ -459,7 +459,7 @@ lua_state_to_string ( lua_State* L )
 {
 	SAFE_EXECUTE ( L, &lua_state_to_string );
 	int state = lua_tointeger ( L, -1 );
-	IDSIMMODEL* model = ( IDSIMMODEL* ) lua_get_model_obj ( L );
+	IDSIMMODEL* this = ( IDSIMMODEL* ) lua_get_model_obj ( L );
 
 	lua_pushstring ( L,  state_to_string ( state ) );
 	return 1;
@@ -470,8 +470,8 @@ lua_is_pin_low ( lua_State* L )
 {
 	SAFE_EXECUTE ( L, &lua_is_pin_low );
 	int pin_num = lua_tointeger ( L, -1 );
-	IDSIMMODEL* model = ( IDSIMMODEL* ) lua_get_model_obj ( L );
-	lua_pushboolean ( L, is_pin_low ( model->device_pins[pin_num].pin ) );
+	IDSIMMODEL* this = ( IDSIMMODEL* ) lua_get_model_obj ( L );
+	lua_pushboolean ( L, is_pin_low ( this->device_pins[pin_num].pin ) );
 	return 1;
 }
 
@@ -480,8 +480,8 @@ lua_is_pin_high ( lua_State* L )
 {
 	SAFE_EXECUTE ( L, &lua_is_pin_high );
 	int pin_num = lua_tointeger ( L, -1 );
-	IDSIMMODEL* model = ( IDSIMMODEL* ) lua_get_model_obj ( L );
-	lua_pushboolean ( L, is_pin_high ( model->device_pins[pin_num].pin ) );
+	IDSIMMODEL* this = ( IDSIMMODEL* ) lua_get_model_obj ( L );
+	lua_pushboolean ( L, is_pin_high ( this->device_pins[pin_num].pin ) );
 	return 1;
 }
 
@@ -490,8 +490,8 @@ lua_is_pin_edge ( lua_State* L )
 {
 	SAFE_EXECUTE ( L, &lua_is_pin_edge );
 	int pin_num = lua_tointeger ( L, -1 );
-	IDSIMMODEL* model = ( IDSIMMODEL* ) lua_get_model_obj ( L );
-	lua_pushboolean ( L, is_pin_edge ( model->device_pins[pin_num].pin ) );
+	IDSIMMODEL* this = ( IDSIMMODEL* ) lua_get_model_obj ( L );
+	lua_pushboolean ( L, is_pin_edge ( this->device_pins[pin_num].pin ) );
 	return 1;
 }
 
@@ -500,8 +500,8 @@ lua_is_pin_posedge ( lua_State* L )
 {
 	SAFE_EXECUTE ( L, &lua_is_pin_posedge );
 	int pin_num = lua_tointeger ( L, -1 );
-	IDSIMMODEL* model = ( IDSIMMODEL* ) lua_get_model_obj ( L );
-	lua_pushboolean ( L, is_pin_posedge ( model->device_pins[pin_num].pin ) );
+	IDSIMMODEL* this = ( IDSIMMODEL* ) lua_get_model_obj ( L );
+	lua_pushboolean ( L, is_pin_posedge ( this->device_pins[pin_num].pin ) );
 	return 1;
 }
 
@@ -510,8 +510,8 @@ lua_is_pin_negedge ( lua_State* L )
 {
 	SAFE_EXECUTE ( L, &lua_is_pin_negedge );
 	int pin_num = lua_tointeger ( L, -1 );
-	IDSIMMODEL* model = ( IDSIMMODEL* ) lua_get_model_obj ( L );
-	lua_pushboolean ( L, is_pin_negedge ( model->device_pins[pin_num].pin ) );
+	IDSIMMODEL* this = ( IDSIMMODEL* ) lua_get_model_obj ( L );
+	lua_pushboolean ( L, is_pin_negedge ( this->device_pins[pin_num].pin ) );
 	return 1;
 }
 
@@ -520,8 +520,8 @@ lua_is_pin_active ( lua_State* L )
 {
 	SAFE_EXECUTE ( L, &lua_is_pin_active );
 	int pin_num = lua_tointeger ( L, -1 );
-	IDSIMMODEL* model = ( IDSIMMODEL* ) lua_get_model_obj ( L );
-	lua_pushboolean ( L, is_pin_active ( model->device_pins[pin_num].pin ) );
+	IDSIMMODEL* this = ( IDSIMMODEL* ) lua_get_model_obj ( L );
+	lua_pushboolean ( L, is_pin_active ( this->device_pins[pin_num].pin ) );
 	return 1;
 }
 
@@ -530,8 +530,8 @@ lua_toggle_pin_state ( lua_State* L )
 {
 	SAFE_EXECUTE ( L, &lua_toggle_pin_state );
 	int pin_num = lua_tointeger ( L, -1 );
-	IDSIMMODEL* model = ( IDSIMMODEL* ) lua_get_model_obj ( L );
-	toggle_pin_state ( model, model->device_pins[pin_num] );
+	IDSIMMODEL* this = ( IDSIMMODEL* ) lua_get_model_obj ( L );
+	toggle_pin_state ( this, this->device_pins[pin_num] );
 	return 0;
 }
 
@@ -540,8 +540,8 @@ lua_is_pin_floating ( lua_State* L )
 {
 	SAFE_EXECUTE ( L, &lua_is_pin_floating );
 	int pin_num = lua_tointeger ( L, -1 );
-	IDSIMMODEL* model = ( IDSIMMODEL* ) lua_get_model_obj ( L );
-	lua_pushboolean ( L, is_pin_floating ( model->device_pins[pin_num].pin ) );
+	IDSIMMODEL* this = ( IDSIMMODEL* ) lua_get_model_obj ( L );
+	lua_pushboolean ( L, is_pin_floating ( this->device_pins[pin_num].pin ) );
 	return 1;
 }
 
@@ -550,8 +550,8 @@ lua_print_info ( lua_State* L )
 {
 	SAFE_EXECUTE ( L, &lua_print_info );
 	const char* text = lua_tostring ( L, -1 );
-	IDSIMMODEL* model = ( IDSIMMODEL* ) lua_get_model_obj ( L );
-	print_info ( model, text );
+	IDSIMMODEL* this = ( IDSIMMODEL* ) lua_get_model_obj ( L );
+	print_info ( this, text );
 	return 0;
 }
 
@@ -560,8 +560,8 @@ lua_print_message ( lua_State* L )
 {
 	SAFE_EXECUTE ( L, &lua_print_message );
 	const char* text = lua_tostring ( L, -1 );
-	IDSIMMODEL* model = ( IDSIMMODEL* ) lua_get_model_obj ( L );
-	print_message ( model, text );
+	IDSIMMODEL* this = ( IDSIMMODEL* ) lua_get_model_obj ( L );
+	print_message ( this, text );
 	return 0;
 }
 
@@ -570,8 +570,8 @@ lua_print_warning ( lua_State* L )
 {
 	SAFE_EXECUTE ( L, &lua_print_warning );
 	const char* text = lua_tostring ( L, -1 );
-	IDSIMMODEL* model = ( IDSIMMODEL* ) lua_get_model_obj ( L );
-	print_warning ( model, text );
+	IDSIMMODEL* this = ( IDSIMMODEL* ) lua_get_model_obj ( L );
+	print_warning ( this, text );
 	return 0;
 }
 
@@ -580,8 +580,8 @@ lua_print_error ( lua_State* L )
 {
 	SAFE_EXECUTE ( L, &lua_print_error );
 	const char* text = lua_tostring ( L, -1 );
-	IDSIMMODEL* model = ( IDSIMMODEL* ) lua_get_model_obj ( L );
-	print_error ( model, text );
+	IDSIMMODEL* this = ( IDSIMMODEL* ) lua_get_model_obj ( L );
+	print_error ( this, text );
 	return 0;
 }
 
@@ -591,8 +591,8 @@ lua_set_callback ( lua_State* L )
 	SAFE_EXECUTE ( L, &lua_set_callback );
 	lua_Number picotime = lua_tointeger ( L, -2 );
 	lua_Number eventid = lua_tointeger ( L, -1 );
-	IDSIMMODEL* model = ( IDSIMMODEL* ) lua_get_model_obj ( L );
-	set_callback ( model, picotime, eventid );
+	IDSIMMODEL* this = ( IDSIMMODEL* ) lua_get_model_obj ( L );
+	set_callback ( this, picotime, eventid );
 	return 0;
 }
 
@@ -600,8 +600,8 @@ static int
 lua_get_systime ( lua_State* L )
 {
 	ABSTIME curtime = 0;
-	IDSIMMODEL* model = ( IDSIMMODEL* ) lua_get_model_obj ( L );
-	systime ( model, &curtime );
+	IDSIMMODEL* this = ( IDSIMMODEL* ) lua_get_model_obj ( L );
+	systime ( this, &curtime );
 	lua_pushnumber ( L, curtime );
 	return 1;
 }
@@ -659,18 +659,18 @@ static void* lua_get_model_obj ( lua_State* L )
 }
 
 static int lua_set_bus ( lua_State* L )
-{		
+{	
+	IDSIMMODEL* this = ( IDSIMMODEL* ) lua_get_model_obj ( L );	
 	if (0 == lua_istable(L, 1))
-	{
-		IDSIMMODEL* model = ( IDSIMMODEL* ) lua_get_model_obj ( L );
-	    print_info(model, "No bus specified");
+	{		
+	    print_error(this, "No bus specified");
 	}
-	/*lua_pushnil(luactx);
-	while (lua_next(luactx, 1) != 0) 
+	lua_pushnil(L);
+	while (lua_next(L, 1) != 0) 
 	{    
-	print_info(lua_typename(luactx, lua_type(luactx, -1)));   
-	lua_pop(luactx, 1);
-	}*/
+	print_info(this, lua_typename(L, lua_type(L, -1)));   
+	lua_pop(L, 1);
+	}
 	return 0;
 }
 
