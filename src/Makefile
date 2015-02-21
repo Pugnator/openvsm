@@ -25,7 +25,7 @@ OPENVSMLIB?=$(LIBDIR)/openvsm
 SRC=vsm_api.c c_bind.c lua_bind.c win32.c 
 
 CFLAGS:=-O0 -gdwarf-2 -fgnu89-inline -std=gnu99 -g3 -Wno-unused-variable -I../include \
--I../lua53/include -D__VERSION=\"$(shell ../relgen.sh)\"
+-I../lua53/include -D__DEBUG -D__VERSION=\"$(shell ../relgen.sh)\"
 
 SHOPENVSMLIB_CFLAGS:=-Wl,--export-all-symbols,--enable-auto-import
 
@@ -34,15 +34,15 @@ LDFLAGS:=../lua53/liblua.a
 OBJ=$(SRC:%.c=%.o) openvsm.res
 
 %.o: %.c
-	@$(WINRES) openvsm.rc -O coff -o openvsm.res
-	@$(CC) -c -o $@ $< $(CFLAGS)
+	$(WINRES) openvsm.rc -O coff -o openvsm.res
+	$(CC) -c -o $@ $< $(CFLAGS)
 
 .PHONY: $(OPENVSMLIB).dll
 $(OPENVSMLIB).dll: $(OBJ)
 	$(CC) -shared -o $@ $^ $(LDFLAGS) $(SHOPENVSMLIB_CFLAGS)
-	@#$(OBJCOPY) --only-keep-debug $(OPENVSMLIB).dll $(OPENVSMLIB).dwarf
-	@#$(STRIP) -s $(OPENVSMLIB).dll
-	@#$(OBJCOPY) --add-gnu-debuglink=$(OPENVSMLIB).dwarf $(OPENVSMLIB).dll
+	@$(OBJCOPY) --only-keep-debug $(OPENVSMLIB).dll $(OPENVSMLIB).dwarf
+	@$(STRIP) -s $(OPENVSMLIB).dll
+	@$(OBJCOPY) --add-gnu-debuglink=$(OPENVSMLIB).dwarf $(OPENVSMLIB).dll
 
 .PHONY: install
 install:
