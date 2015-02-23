@@ -131,7 +131,7 @@ vsm_setup ( IDSIMMODEL* this, uint32_t edx, IINSTANCE* instance, IDSIMCKT* dsimc
 
 	char* device_script = get_string_param ( this, "lua" );
 	load_device_script ( this, device_script );
-	print_info ( this, "%s started [OpenVSM %s, %s]      https://github.com/Pugnator/openvsm", get_device_id ( this ), __VERSION, device_script );
+	print_info ( this, "%s started [OpenVSM %s, %s] %s", get_device_id ( this ), __VERSION, device_script, LUA_RELEASE );
 	free ( device_script );
 
 	lua_getglobal ( this->luactx, "device_pins" );
@@ -188,7 +188,7 @@ vsm_setup ( IDSIMMODEL* this, uint32_t edx, IINSTANCE* instance, IDSIMCKT* dsimc
 		if ( lua_pcall ( this->luactx, 0, 0, 0 ) )
 		{
 			const char* err = lua_tostring ( this->luactx, -1 );
-			print_error ( this, err );
+			print_error ( this, "Error during device init: %s", err );
 		}
 	}
 }
