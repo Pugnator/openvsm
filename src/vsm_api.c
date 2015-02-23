@@ -137,7 +137,7 @@ vsm_setup ( IDSIMMODEL* this, uint32_t edx, IINSTANCE* instance, IDSIMCKT* dsimc
 	lua_getglobal ( this->luactx, "device_pins" );
 	if ( 0 == lua_istable ( this->luactx, -1 ) )
 	{
-		print_error ( this, "No device model found, it is fatal error" );
+		print_error ( this, "Fatal error, no pin assignments found in script" );
 		return;
 	}
 
