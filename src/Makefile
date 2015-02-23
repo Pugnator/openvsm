@@ -40,9 +40,9 @@ OBJ=$(SRC:%.c=%.o) openvsm.res
 .PHONY: $(OPENVSMLIB).dll
 $(OPENVSMLIB).dll: $(OBJ)
 	$(CC) -shared -o $@ $^ $(LDFLAGS) $(SHOPENVSMLIB_CFLAGS)
-	@$(OBJCOPY) --only-keep-debug $(OPENVSMLIB).dll $(OPENVSMLIB).dwarf
-	@$(STRIP) -s $(OPENVSMLIB).dll
-	@$(OBJCOPY) --add-gnu-debuglink=$(OPENVSMLIB).dwarf $(OPENVSMLIB).dll
+	@#$(OBJCOPY) --only-keep-debug $(OPENVSMLIB).dll $(OPENVSMLIB).dwarf
+	@#$(STRIP) -s $(OPENVSMLIB).dll
+	@#$(OBJCOPY) --add-gnu-debuglink=$(OPENVSMLIB).dwarf $(OPENVSMLIB).dll
 
 .PHONY: install
 install:

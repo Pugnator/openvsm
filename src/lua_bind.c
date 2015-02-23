@@ -150,7 +150,7 @@ register_functions ( IDSIMMODEL* this, lua_State* L )
 	/* Declare variables */
 	for ( int i=0; lua_var_api_list[i].var_name ; i++ )
 	{
-		lua_pushnumber ( L, lua_var_api_list[i].var_value );
+		lua_pushinteger ( L, lua_var_api_list[i].var_value );
 		lua_setglobal ( L, lua_var_api_list[i].var_name );
 	}
 }
@@ -227,7 +227,7 @@ lua_get_num_param ( lua_State* L )
 	SAFE_EXECUTE ( L, &lua_get_num_param );
 	char* str = ( char* ) lua_tostring ( L, -1 );
 	IDSIMMODEL* this = ( IDSIMMODEL* ) lua_get_model_obj ( L );
-	lua_pushnumber ( L, get_num_param ( this, str )  );
+	lua_pushinteger ( L, get_num_param ( this, str )  );
 	return 1;
 }
 
@@ -237,7 +237,7 @@ lua_get_hex_param ( lua_State* L )
 	SAFE_EXECUTE ( L, &lua_get_hex_param );
 	char* str = ( char* ) lua_tostring ( L, -1 );
 	IDSIMMODEL* this = ( IDSIMMODEL* ) lua_get_model_obj ( L );
-	lua_pushnumber ( L, get_hex_param ( this,str ) );
+	lua_pushinteger ( L, get_hex_param ( this,str ) );
 	return 1;
 }
 
@@ -247,7 +247,7 @@ lua_get_init_param ( lua_State* L )
 	SAFE_EXECUTE ( L, &lua_get_init_param );
 	char* str = ( char* ) lua_tostring ( L, -1 );
 	IDSIMMODEL* this = ( IDSIMMODEL* ) lua_get_model_obj ( L );
-	lua_pushnumber ( L, get_init_param ( this, str ) );
+	lua_pushinteger ( L, get_init_param ( this, str ) );
 	return 1;
 }
 
@@ -268,7 +268,7 @@ lua_create_debug_popup ( lua_State* L )
 	const char* text = lua_tostring ( L, -1 );
 	IDSIMMODEL* this = ( IDSIMMODEL* ) lua_get_model_obj ( L );
 	lua_pushlightuserdata ( L, create_debug_popup ( this, text, ++popup_id ) );
-	lua_pushnumber ( L, popup_id );
+	lua_pushinteger ( L, popup_id );
 	return 2;
 }
 
@@ -313,7 +313,7 @@ lua_create_source_popup ( lua_State* L )
 	const char* text = lua_tostring ( L, -1 );
 	IDSIMMODEL* this = ( IDSIMMODEL* ) lua_get_model_obj ( L );
 	lua_pushlightuserdata ( L, create_source_popup ( this, text, ++popup_id ) );
-	lua_pushnumber ( L, popup_id );
+	lua_pushinteger ( L, popup_id );
 	return 2;
 }
 static int
@@ -323,7 +323,7 @@ lua_create_status_popup ( lua_State* L )
 	const char* text = lua_tostring ( L, -1 );
 	IDSIMMODEL* this = ( IDSIMMODEL* ) lua_get_model_obj ( L );
 	lua_pushlightuserdata ( L, create_status_popup ( this, text, ++popup_id ) );
-	lua_pushnumber ( L, popup_id );
+	lua_pushinteger ( L, popup_id );
 	return 2;
 }
 static int
@@ -333,7 +333,7 @@ lua_create_var_popup ( lua_State* L )
 	const char* text = lua_tostring ( L, -1 );
 	IDSIMMODEL* this = ( IDSIMMODEL* ) lua_get_model_obj ( L );
 	lua_pushlightuserdata ( L, create_var_popup ( this, text, ++popup_id ) );
-	lua_pushnumber ( L, popup_id );
+	lua_pushinteger ( L, popup_id );
 	return 2;
 }
 
@@ -344,7 +344,7 @@ lua_create_memory_popup ( lua_State* L )
 	const char* text = lua_tostring ( L, -1 );
 	IDSIMMODEL* this = ( IDSIMMODEL* ) lua_get_model_obj ( L );
 	lua_pushlightuserdata ( L, create_memory_popup ( this, text, ++popup_id ) );
-	lua_pushnumber ( L, popup_id );
+	lua_pushinteger ( L, popup_id );
 	return 2;
 }
 
@@ -403,22 +403,22 @@ lua_get_pin_state ( lua_State* L )
 
 	if ( TRUE == is_pin_high ( this->device_pins[pin_num].pin ) )
 	{
-		lua_pushnumber ( L, SHI );
+		lua_pushinteger ( L, SHI );
 		return 1;
 	}
 	else if ( TRUE == is_pin_low ( this->device_pins[pin_num].pin ) )
 	{
-		lua_pushnumber ( L, SLO );
+		lua_pushinteger ( L, SLO );
 		return 1;
 	}
 	else if ( TRUE == is_pin_floating ( this->device_pins[pin_num].pin ) )
 	{
-		lua_pushnumber ( L, FLT );
+		lua_pushinteger ( L, FLT );
 		return 1;
 	}
 	else
 	{
-		lua_pushnumber ( L, UNDEFINED );
+		lua_pushinteger ( L, UNDEFINED );
 		return 1;
 	}
 }
@@ -602,7 +602,7 @@ lua_get_systime ( lua_State* L )
 	ABSTIME curtime = 0;
 	IDSIMMODEL* this = ( IDSIMMODEL* ) lua_get_model_obj ( L );
 	systime ( this, &curtime );
-	lua_pushnumber ( L, curtime );
+	lua_pushinteger ( L, curtime );
 	return 1;
 }
 
@@ -612,7 +612,7 @@ lua_get_bit ( lua_State* L )
 	SAFE_EXECUTE ( L, &lua_get_bit );
 	size_t byte = lua_tointeger ( L, -2 );
 	size_t bit = lua_tointeger ( L, -1 );
-	lua_pushnumber ( L, ( byte >> bit & 0x01 ) );
+	lua_pushinteger ( L, ( byte >> bit & 0x01 ) );
 	return 1;
 }
 
@@ -623,7 +623,7 @@ lua_clear_bit ( lua_State* L )
 	size_t byte = lua_tointeger ( L, -2 );
 	size_t bit = lua_tointeger ( L, -1 );
 	byte &= ~ ( 1 << bit );
-	lua_pushnumber ( L, byte );
+	lua_pushinteger ( L, byte );
 	return 1;
 }
 
@@ -634,7 +634,7 @@ lua_set_bit ( lua_State* L )
 	size_t byte = lua_tointeger ( L, -2 );
 	size_t bit = lua_tointeger ( L, -1 );
 	byte |= ( 1 << bit );
-	lua_pushnumber ( L, byte );
+	lua_pushinteger ( L, byte );
 	return 1;
 }
 
@@ -645,7 +645,7 @@ lua_toggle_bit ( lua_State* L )
 	size_t byte = lua_tointeger ( L, -2 );
 	size_t bit = lua_tointeger ( L, -1 );
 	byte ^= 1 << bit;
-	lua_pushnumber ( L, byte );
+	lua_pushinteger ( L, byte );
 	return 1;
 }
 
@@ -709,6 +709,6 @@ static int lua_get_bus ( lua_State* L )
 		lua_pop(L, 1);
 		bit_counter++;
 	}
-	lua_pushnumber ( L, data );
+	lua_pushinteger ( L, data );
 	return 1;
 }
