@@ -184,7 +184,7 @@ struct IDSIMMODEL
 
 	IDSIMMODEL_vtable* vtable;
 	
-	/*========================*/
+	/* Custom objects */
 	
 	IINSTANCE* model_instance;
 	IDSIMCKT* model_dsim;
@@ -260,10 +260,6 @@ struct IMSGHLR
 	IMSGHLR_vtable* vtable;
 };
 
-IDSIMMODEL_vtable VSM_DEVICE_vtable;
-IDSIMMODEL VSM_DEVICE;
-
-ICPU_vtable ICPU_DEVICE_vtable;
 ICPU ICPU_DEVICE;
 
 #endif

@@ -144,7 +144,7 @@ vsm_setup ( IDSIMMODEL* this, uint32_t edx, IINSTANCE* instance, IDSIMCKT* dsimc
 	lua_len ( this->luactx, -1 );
 	int32_t pin_number = lua_tointeger ( this->luactx, -1 );
 	lua_pop ( this->luactx, 1 );
-
+	/* Pins initialization */
 	for ( int i=1; i<=pin_number; i++ )
 	{
 		lua_rawgeti ( this->luactx,-1, i );
@@ -318,8 +318,8 @@ vsm_callback (  IDSIMMODEL* this, uint32_t edx, ABSTIME atime, EVENTID eventid )
 	if ( curevent )
 	{
 		lua_getglobal ( this->luactx, "timer_callback" );
-		lua_pushunsigned ( this->luactx, atime );
-		lua_pushunsigned ( this->luactx, eventid );
+		lua_pushinteger ( this->luactx, atime );
+		lua_pushinteger ( this->luactx, eventid );
 		if ( lua_pcall ( this->luactx, 2, 0, 0 ) )
 		{
 			const char* err = lua_tostring ( this->luactx, -1 );
