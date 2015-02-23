@@ -41,6 +41,7 @@ static const lua_bind_var lua_var_api_list[]=
 	{.var_name="UNDEFINED", .var_value=UNDEFINED},
 	{.var_name="MSEC", .var_value=1000000000L},
 	{.var_name="NSEC", .var_value=100000000L},
+	{.var_name="USEC", .var_value=1000000L},
 	{.var_name="SEC", .var_value=1000000000000L},
 	{.var_name="NOW", .var_value=0L},
 	{.var_name=NULL},
@@ -124,7 +125,7 @@ SAFE_EXECUTE ( lua_State* L, void* curfunc )
 					print_error ( this, "Line %d: Argument %d of \"%s\" is of wrong type [%s]", line, argcount+1, lua_c_api_list[i].lua_func_name, lua_typename (L, argcount+1) );
 				}  
 			}		
-			if(lua_c_api_list[i].args[argcount+1])	
+			if(lua_c_api_list[i].args[argcount+2])	
 			{
 				IDSIMMODEL* this = ( IDSIMMODEL* ) lua_get_model_obj ( L );
 				lua_Debug ar;
@@ -217,7 +218,7 @@ lua_get_bool_param ( lua_State* L )
 	SAFE_EXECUTE ( L, &lua_get_bool_param );
 	char* str = ( char* ) lua_tostring ( L, -1 );
 	IDSIMMODEL* this = ( IDSIMMODEL* ) lua_get_model_obj ( L );
-	lua_pushboolean ( L, get_bool_param ( this, str ) );
+	lua_pushinteger ( L, get_bool_param ( this, str ) );
 	return 1;
 }
 
@@ -442,12 +443,12 @@ lua_get_pin_bool ( lua_State* L )
 	IDSIMMODEL* this = ( IDSIMMODEL* ) lua_get_model_obj ( L );
 	if ( TRUE == is_pin_high ( this->device_pins[pin_num].pin ) )
 	{
-		lua_pushboolean ( L,  1 );
+		lua_pushinteger ( L,  1 );
 		return 1;
 	}
 	else if ( TRUE == is_pin_low ( this->device_pins[pin_num].pin ) )
 	{
-		lua_pushboolean ( L,  0 );
+		lua_pushinteger ( L,  0 );
 		return 1;
 	}
 	lua_pushnil ( L );
@@ -471,7 +472,7 @@ lua_is_pin_low ( lua_State* L )
 	SAFE_EXECUTE ( L, &lua_is_pin_low );
 	int pin_num = lua_tointeger ( L, -1 );
 	IDSIMMODEL* this = ( IDSIMMODEL* ) lua_get_model_obj ( L );
-	lua_pushboolean ( L, is_pin_low ( this->device_pins[pin_num].pin ) );
+	lua_pushinteger ( L, is_pin_low ( this->device_pins[pin_num].pin ) );
 	return 1;
 }
 
@@ -481,7 +482,7 @@ lua_is_pin_high ( lua_State* L )
 	SAFE_EXECUTE ( L, &lua_is_pin_high );
 	int pin_num = lua_tointeger ( L, -1 );
 	IDSIMMODEL* this = ( IDSIMMODEL* ) lua_get_model_obj ( L );
-	lua_pushboolean ( L, is_pin_high ( this->device_pins[pin_num].pin ) );
+	lua_pushinteger ( L, is_pin_high ( this->device_pins[pin_num].pin ) );
 	return 1;
 }
 
@@ -491,7 +492,7 @@ lua_is_pin_edge ( lua_State* L )
 	SAFE_EXECUTE ( L, &lua_is_pin_edge );
 	int pin_num = lua_tointeger ( L, -1 );
 	IDSIMMODEL* this = ( IDSIMMODEL* ) lua_get_model_obj ( L );
-	lua_pushboolean ( L, is_pin_edge ( this->device_pins[pin_num].pin ) );
+	lua_pushinteger ( L, is_pin_edge ( this->device_pins[pin_num].pin ) );
 	return 1;
 }
 
@@ -501,7 +502,7 @@ lua_is_pin_posedge ( lua_State* L )
 	SAFE_EXECUTE ( L, &lua_is_pin_posedge );
 	int pin_num = lua_tointeger ( L, -1 );
 	IDSIMMODEL* this = ( IDSIMMODEL* ) lua_get_model_obj ( L );
-	lua_pushboolean ( L, is_pin_posedge ( this->device_pins[pin_num].pin ) );
+	lua_pushinteger ( L, is_pin_posedge ( this->device_pins[pin_num].pin ) );
 	return 1;
 }
 
@@ -511,7 +512,7 @@ lua_is_pin_negedge ( lua_State* L )
 	SAFE_EXECUTE ( L, &lua_is_pin_negedge );
 	int pin_num = lua_tointeger ( L, -1 );
 	IDSIMMODEL* this = ( IDSIMMODEL* ) lua_get_model_obj ( L );
-	lua_pushboolean ( L, is_pin_negedge ( this->device_pins[pin_num].pin ) );
+	lua_pushinteger ( L, is_pin_negedge ( this->device_pins[pin_num].pin ) );
 	return 1;
 }
 
@@ -521,7 +522,7 @@ lua_is_pin_active ( lua_State* L )
 	SAFE_EXECUTE ( L, &lua_is_pin_active );
 	int pin_num = lua_tointeger ( L, -1 );
 	IDSIMMODEL* this = ( IDSIMMODEL* ) lua_get_model_obj ( L );
-	lua_pushboolean ( L, is_pin_active ( this->device_pins[pin_num].pin ) );
+	lua_pushinteger ( L, is_pin_active ( this->device_pins[pin_num].pin ) );
 	return 1;
 }
 
@@ -541,7 +542,7 @@ lua_is_pin_floating ( lua_State* L )
 	SAFE_EXECUTE ( L, &lua_is_pin_floating );
 	int pin_num = lua_tointeger ( L, -1 );
 	IDSIMMODEL* this = ( IDSIMMODEL* ) lua_get_model_obj ( L );
-	lua_pushboolean ( L, is_pin_floating ( this->device_pins[pin_num].pin ) );
+	lua_pushinteger ( L, is_pin_floating ( this->device_pins[pin_num].pin ) );
 	return 1;
 }
 
@@ -662,8 +663,7 @@ static int lua_set_bus ( lua_State* L )
 {	
 	///FIXME: add custom table-checking function, as Lua's lua_istable is a macro and can be used 
 	IDSIMMODEL* this = ( IDSIMMODEL* ) lua_get_model_obj ( L );	
-	int byte = lua_tointeger ( L, -1 );
-	print_info(this, "Byte is %X", byte);
+	int byte = lua_tointeger ( L, -1 );	
 	if (0 == lua_istable(L, 1))
 	{		
 	    print_error(this, "No bus specified");
@@ -712,3 +712,4 @@ static int lua_get_bus ( lua_State* L )
 	lua_pushinteger ( L, data );
 	return 1;
 }
+
