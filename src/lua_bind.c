@@ -698,6 +698,11 @@ static int lua_get_bus ( lua_State* L )
 	while (0 != lua_next(L, 1)) 
 	{   
 		int bit = get_pin_bool ( this->device_pins[lua_tointeger(L, -1)]); 		
+		if(0 > bit)
+		{
+			return 0;
+		}
+		
 		if(bit)
 		{
 			data |= ( 1 << bit_counter );
