@@ -53,32 +53,6 @@ typedef struct lua_global_func
 	bool* exist;
 } lua_global_func;
 
-bool global_device_init = false;
-bool global_device_simulate = false;
-bool global_timer_callback = false;
-bool global_on_stop = false;
-bool global_on_suspend = false;
-
-static lua_global_func lua_global_func_list[] =
-{
-	{.func_name="device_init", .exist=&global_device_init},
-	{.func_name="device_simulate", .exist=&global_device_simulate},
-	{.func_name="timer_callback", .exist=&global_timer_callback},
-	{.func_name="on_stop", .exist=&global_on_stop},
-	{.func_name="on_suspend", .exist=&global_on_suspend},
-	{.func_name=NULL},
-};
-
-static void check_global_functions ( IDSIMMODEL* model )
-{
-	for ( int i=0; lua_global_func_list[i].func_name; i++ )
-	{
-		lua_getglobal ( model->luactx,lua_global_func_list[i].func_name );
-		if ( lua_isfunction ( model->luactx,lua_gettop ( model->luactx ) ) )
-			*lua_global_func_list[i].exist = true;
-	}
-}
-
 IDSIMMODEL* __cdecl
 createdsimmodel ( char* device, ILICENCESERVER* ils )
 {
@@ -173,24 +147,21 @@ vsm_setup ( IDSIMMODEL* this, uint32_t edx, IINSTANCE* instance, IDSIMCKT* dsimc
 		lua_pushinteger ( this->luactx, i );
 		lua_setglobal ( this->luactx, pin_name );
 		lua_pop ( this->luactx, 1 );
-	}
-
-	check_global_functions ( this );
+	}	
 
 	/* Pass model object pointer to Lua - it is safer there ;) */
 	lua_pushliteral ( this->luactx, "__this" );
 	lua_pushlightuserdata ( this->luactx, this );
 	lua_settable ( this->luactx, LUA_REGISTRYINDEX );
 
-	if ( global_device_init )
+	
+	lua_getglobal ( this->luactx, "device_init" );
+	if ( lua_pcall ( this->luactx, 0, 0, 0 ) )
 	{
-		lua_getglobal ( this->luactx, "device_init" );
-		if ( lua_pcall ( this->luactx, 0, 0, 0 ) )
-		{
-			const char* err = lua_tostring ( this->luactx, -1 );
-			print_error ( this, "Error during device init: %s", err );
-		}
+		const char* err = lua_tostring ( this->luactx, -1 );
+		print_error ( this, "Error during device init: %s", err );
 	}
+	
 }
 
 void __attribute__ ( ( fastcall ) )
@@ -289,15 +260,13 @@ vsm_simulate (  IDSIMMODEL* this, uint32_t edx, ABSTIME atime, DSIMMODES mode )
 	( void ) atime;
 	( void ) mode;
 
-	if ( global_device_simulate )
+	lua_getglobal ( this->luactx, "device_simulate" );
+	if ( lua_pcall ( this->luactx, 0, 0, 0 ) )
 	{
-		lua_getglobal ( this->luactx, "device_simulate" );
-		if ( lua_pcall ( this->luactx, 0, 0, 0 ) )
-		{
-			const char* err = lua_tostring ( this->luactx, -1 );
-			print_error ( this, "Simulation failed with \"%s\"", err );
-		}
+		const char* err = lua_tostring ( this->luactx, -1 );
+		print_error ( this, "Simulation failed with \"%s\"", err );
 	}
+	
 }
 
 /**
