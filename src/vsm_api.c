@@ -295,7 +295,7 @@ vsm_simulate (  IDSIMMODEL* this, uint32_t edx, ABSTIME atime, DSIMMODES mode )
 		if ( lua_pcall ( this->luactx, 0, 0, 0 ) )
 		{
 			const char* err = lua_tostring ( this->luactx, -1 );
-			print_error ( this, err );
+			print_error ( this, "Simulation failed with \"%s\"", err );
 		}
 	}
 }
@@ -323,7 +323,7 @@ vsm_callback (  IDSIMMODEL* this, uint32_t edx, ABSTIME atime, EVENTID eventid )
 		if ( lua_pcall ( this->luactx, 2, 0, 0 ) )
 		{
 			const char* err = lua_tostring ( this->luactx, -1 );
-			print_error ( this, err );
+			print_error ( this, "Timer callback failed with \"%s\"", err );
 		}
 	}
 }
