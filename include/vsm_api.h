@@ -54,6 +54,15 @@
 #define LUSER (&lua_islightuserdata)
 #define LTABLE (&lua_istable)
 
+typedef enum openvsm_options
+{
+	FUNC_DEVICE_INIT,
+	FUNC_DEVICE_SIMULATE, 
+	FUNC_TIMER_CALLBACK, 
+	FUNC_ON_STOP, 
+	FUNC_ON_SUSPEND
+}openvsm_options;
+
 typedef struct callback_events
 {
 	EVENTID id;
@@ -190,13 +199,8 @@ struct IDSIMMODEL
 	IDSIMCKT* model_dsim;
 	lua_State* luactx;
 	VSM_PIN device_pins[32];
-	callback_events* events;
-	bool global_safe_execute;
-	bool global_device_init;
-	bool global_device_simulate;
-	bool global_timer_callback;
-	bool global_on_stop;
-	bool global_on_suspend;
+	callback_events* events;	
+	char func[16];
 };
 
 struct IBUSPIN
