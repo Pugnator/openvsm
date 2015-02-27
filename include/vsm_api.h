@@ -49,19 +49,14 @@
 #define VSM_API_VERSION  110
 #define model_key 0x00000000
 
+#ifndef MAX_PIN_NUMBER
+#define MAX_PIN_NUMBER 32
+#endif
+
 #define LSTRING (&lua_isstring)
 #define LINT (&lua_isnumber)
 #define LUSER (&lua_islightuserdata)
 #define LTABLE (&lua_istable)
-
-typedef enum openvsm_options
-{
-	FUNC_DEVICE_INIT,
-	FUNC_DEVICE_SIMULATE, 
-	FUNC_TIMER_CALLBACK, 
-	FUNC_ON_STOP, 
-	FUNC_ON_SUSPEND
-}openvsm_options;
 
 typedef struct callback_events
 {
@@ -198,9 +193,13 @@ struct IDSIMMODEL
 	IINSTANCE* model_instance;
 	IDSIMCKT* model_dsim;
 	lua_State* luactx;
-	VSM_PIN device_pins[32];
+	VSM_PIN device_pins[MAX_PIN_NUMBER];
 	callback_events* events;	
-	char func[16];
+	/* simulation flags */
+	bool timer_callback_declared;
+	bool device_init_declared;
+	bool device_simulate_declared;
+	
 };
 
 struct IBUSPIN
