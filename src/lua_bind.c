@@ -172,7 +172,6 @@ load_device_script ( IDSIMMODEL* this, const char* device_name )
 
 	if ( 0 != lua_err )
 	{
-		free ( script );
 		const char* mess = NULL;
 		switch ( lua_err )
 		{
@@ -181,10 +180,10 @@ load_device_script ( IDSIMMODEL* this, const char* device_name )
 				print_error ( this, "Syntax error in Lua script\n%s", mess );
 				return false;
 			case LUA_ERRMEM:
-				print_error ( this, "Not enough memory to load script" );
+				print_error ( this, "Not enough memory to load script \"%s\"", script );
 				return false;
 			case LUA_ERRFILE:
-				print_error ( this, "Error loading script file" );
+				print_error ( this, "Error loading script file \"%s\"", script );
 				return false;
 			default:
 				print_error ( this, "Unknown error, shouldn't happen" );

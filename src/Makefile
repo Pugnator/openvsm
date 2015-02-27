@@ -49,4 +49,5 @@ install:
 
 .PHONY: clean
 clean:
+	@rm -f $(OPENVSMLIB).*
 	@find -maxdepth 1 -type f -regex ".*/.*\.\(o\|res\|dll\|lib\|dwarf\\)" -delete
