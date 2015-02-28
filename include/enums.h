@@ -25,6 +25,13 @@
 #define VSMAPI_ENUMS
 #include <vsm_api.h>
 
+typedef enum LOGIC_TYPE
+{
+	TTL = 0,
+	CMOS,
+	I2L	
+}LOGIC_TYPE;
+
 typedef enum POPUPTYPES
 {
 	PWT_USER     = 0,
