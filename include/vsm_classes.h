@@ -80,11 +80,10 @@ typedef struct IMSGHLR_vtable IMSGHLR_vtable;
 typedef struct VSM_PIN
 {
 	BOOL is_digital; ///< Pin is a digital one
-	char* name; ///< The name of the pin in graphical model
+	char name[128]; ///< The name of the pin in graphical model
 	ABSTIME on_time; ///< Pin switch on-time
 	ABSTIME off_time; ///< Pin switch off-time
 	IDSIMPIN* pin; ///< DSIM pin pointer itself
-	char* handler_func; ///< Callback Lua function for this pin	
 } VSM_PIN; ///< OpenVSM pin structure
 
 struct IDSIMPIN2_vtable

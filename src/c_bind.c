@@ -3,7 +3,7 @@
  * @file   c_bind.c
  * @Author Lavrentiy Ivanov (ookami@mail.ru)
  * @date   22.09.2014
- * @brief  A set of C-wrappers functions to make life easier
+ * @brief  A set of VSM C++ to C wrapper functions
  *
  * This file is part of OpenVSM.
  * OpenVSM is free software: you can redistribute it and/or modify
