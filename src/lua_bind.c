@@ -105,7 +105,7 @@ SAFE_EXECUTE ( lua_State* L, void* curfunc )
 	IDSIMMODEL* this = ( IDSIMMODEL* ) lua_get_model_obj ( L );
 	if(!this->safe_mode)
 		return;
-	
+
 	int argnum = lua_gettop ( L );
 	for ( int i=0; lua_c_api_list[i].lua_func_name; i++ )
 	{
@@ -701,9 +701,14 @@ static int lua_get_bus ( lua_State* L )
 	int data = 0;
 	while ( 0 != lua_next ( L, 1 ) )
 	{
-		int bit = get_pin_bool ( this->device_pins[lua_tointeger ( L, -1 )] );
-		if ( 0 > bit )
+		int pin = lua_tointeger ( L, -1 );
+		int bit = get_pin_bool ( this->device_pins[pin] );
+		int state = get_pin_state(this->device_pins[pin].pin);
+		if ( -1 ==  bit )
 		{
+			#ifdef __DEBUG
+			print_warning(this, "Attempting to read floating bus pin %s: %d (%s)", this->device_pins[pin].name, bit_counter, state_to_string(state));
+			#endif
 			return 0;
 		}
 		

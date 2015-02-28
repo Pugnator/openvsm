@@ -461,7 +461,7 @@ STATE get_pin_state ( IDSIMPIN* pin )
  * @param  pin [description]
  * @return     [description]
  */
-inline int32_t get_pin_bool ( VSM_PIN pin )
+inline int get_pin_bool ( VSM_PIN pin )
 {
 	STATE pinstate = get_pin_state ( pin.pin );
 	if ( SLO == pinstate || WLO == pinstate || ILO == pinstate || PLO == pinstate )
@@ -471,7 +471,7 @@ inline int32_t get_pin_bool ( VSM_PIN pin )
 	else if ( SHI == pinstate || WHI == pinstate || IHI == pinstate || PHI == pinstate )
 	{
 		return 1;
-	}
+	}	
 	return -1;
 }
 
