@@ -60,7 +60,7 @@ createdsimmodel ( char* device, ILICENCESERVER* ils )
 	{
 		return NULL;
 	}
-	
+
 	IDSIMMODEL* vdev = malloc ( sizeof *vdev );
 	/* Assign virtual table to the object */
 	vdev->vtable = &VSM_DEVICE_vtable;
@@ -69,7 +69,7 @@ createdsimmodel ( char* device, ILICENCESERVER* ils )
 	/* Open Lua libraries */
 	vdev->events = NULL;
 	luaL_openlibs ( vdev->luactx );
-	register_functions ( vdev, vdev->luactx );	
+	register_functions ( vdev, vdev->luactx );
 	return vdev;
 }
 
@@ -96,33 +96,37 @@ vsm_isdigital ( IDSIMMODEL* this, uint32_t edx, char* pinname )
 
 /**
  * [Set up the IC]
- * @param this  [description] 
+ * @param this  [description]
  */
 void __attribute__ ( ( fastcall ) )
 vsm_setup ( IDSIMMODEL* this, uint32_t edx, IINSTANCE* instance, IDSIMCKT* dsimckt )
 {
 	( void ) edx;
-	
+
 	this->model_instance = instance;
 	this->model_dsim = dsimckt;
-	
+
 	char* device_script = get_string_param ( this, "lua" );
 	load_device_script ( this, device_script );
 	print_info ( this, "%s started [OpenVSM %s, %s] %s", get_device_id ( this ), __VERSION, device_script, LUA_RELEASE );
 	free ( device_script );
-	
+
+	#ifdef __DEBUG
+	print_warning ( this, "========ENGINE IS IN DEBUG MODE========");
+	#endif
+
 	lua_getglobal ( this->luactx,"device_init" );
 	if ( lua_isfunction ( this->luactx,lua_gettop ( this->luactx ) ) )
 	{
 		this->device_init_declared = true;
 	}
-	
+
 	lua_getglobal ( this->luactx,"timer_callback" );
 	if ( lua_isfunction ( this->luactx,lua_gettop ( this->luactx ) ) )
 	{
 		this->timer_callback_declared = true;
 	}
-	
+
 	lua_getglobal ( this->luactx,"device_simulate" );
 	if ( lua_isfunction ( this->luactx,lua_gettop ( this->luactx ) ) )
 	{
@@ -135,7 +139,7 @@ vsm_setup ( IDSIMMODEL* this, uint32_t edx, IINSTANCE* instance, IDSIMCKT* dsimc
 		print_error ( this, "Fatal error, no pin assignments found in script" );
 		return;
 	}
-	
+
 	lua_len ( this->luactx, -1 );
 	int32_t pin_number = lua_tointeger ( this->luactx, -1 );
 	lua_pop ( this->luactx, 1 );
@@ -148,8 +152,8 @@ vsm_setup ( IDSIMMODEL* this, uint32_t edx, IINSTANCE* instance, IDSIMCKT* dsimc
 		//////////////
 		lua_getfield ( this->luactx,-1, PIN_NAME );
 		const char* pin_name = lua_tostring ( this->luactx,-1 );
-		this->device_pins[i].pin = get_pin ( this, ( char* ) pin_name );	
-		asprintf(&this->device_pins[i].name, "%s", ( char* ) pin_name );		
+		this->device_pins[i].pin = get_pin ( this, ( char* ) pin_name );
+		asprintf(&this->device_pins[i].name, "%s", ( char* ) pin_name );
 		lua_pop ( this->luactx, 1 );
 		//////////////////////
 		//set pin on time   //
@@ -170,54 +174,54 @@ vsm_setup ( IDSIMMODEL* this, uint32_t edx, IINSTANCE* instance, IDSIMCKT* dsimc
 		lua_setglobal ( this->luactx, pin_name );
 		lua_pop ( this->luactx, 1 );
 	}
-	
+
 	check_global_functions ( this );
 
 	/* Check and set IC type (TTL/CMOS/I2L) */
 	lua_getglobal ( this->luactx, "LOGIC_TYPE" );
 	if ( 0 == lua_isinteger ( this->luactx, -1 ) )
 	{
-		print_warning ( this, "No or wrong IC type specified. TTL type will be set" );		
+		print_warning ( this, "No or wrong IC type specified. TTL type will be set" );
 		set_logic_type(this, TTL);
 	}
 	else
-	{		
+	{
 		int ltype = lua_tointeger ( this->luactx,-1 );
 		#ifdef __DEBUG
-		print_info ( this, "IC type was set to %s", logic_type_to_string(ltype));		
+		print_info ( this, "IC type was set to %s", logic_type_to_string(ltype));
 		#endif
-		set_logic_type(this, ltype);	
+		set_logic_type(this, ltype);
 	}
-	
+
 	/* Does safe mode should be enabled? */
 	lua_getglobal ( this->luactx, "SAFE_MODE" );
 	if ( lua_isboolean ( this->luactx, -1 ) )
 	{
 		this->safe_mode = lua_toboolean(this->luactx, -1);
 		#ifdef __DEBUG
-		print_info ( this, "Safe mode was %s", this->safe_mode ? "enabled" : "disabled");		
-		#endif				
+		print_info ( this, "Safe mode was %s", this->safe_mode ? "enabled" : "disabled");
+		#endif
 	}
 	else
 	{
 		this->safe_mode = false;
 		#ifdef __DEBUG
-		print_info ( this, "Safe mode was disabled or incorrectly set");		
-		#endif	
+		print_info ( this, "Safe mode was disabled or incorrectly set");
+		#endif
 	}
 
 	/* Pass model object pointer to Lua - it is safer there ;) */
 	lua_pushliteral ( this->luactx, "__this" );
 	lua_pushlightuserdata ( this->luactx, this );
 	lua_settable ( this->luactx, LUA_REGISTRYINDEX );
-	
+
 #ifdef __DEBUG
 	print_info ( this, "User defined functions: %s%s%s",
 				 this->device_init_declared ? "device_init() " : "",
 				 this->timer_callback_declared ? "timer_callback() " : "",
 				 this->device_simulate_declared ? "device_simulate()" : "" );
 #endif
-				 
+
 	if ( this->device_init_declared )
 	{
 		lua_getglobal ( this->luactx, "device_init" );
@@ -230,7 +234,7 @@ vsm_setup ( IDSIMMODEL* this, uint32_t edx, IINSTANCE* instance, IDSIMCKT* dsimc
 			}
 		}
 	}
-	
+
 }
 
 void __attribute__ ( ( fastcall ) )
@@ -239,14 +243,14 @@ vsm_runctrl (  IDSIMMODEL* this, uint32_t edx, RUNMODES mode )
 	( void ) this;
 	( void ) edx;
 	( void ) mode;
-	
+
 	switch ( mode )
 	{
 		case RM_BATCH:
-		
+
 			break;
 		case RM_START:
-		
+
 			break;
 		case RM_STOP:
 			/*if ( global_on_stop )
@@ -259,28 +263,28 @@ vsm_runctrl (  IDSIMMODEL* this, uint32_t edx, RUNMODES mode )
 		case RM_ANIMATE:
 			break;
 		case RM_STEPTIME:
-		
+
 			break;
 		case RM_STEPOVER:
-		
+
 			break;
 		case RM_STEPINTO:
-		
+
 			break;
 		case RM_STEPOUT:
-		
+
 			break;
 		case RM_STEPTO:
-		
+
 			break;
 		case RM_META:
-		
+
 			break;
 		case RM_DUMP:
-		
+
 			break;
 	}
-	
+
 }
 
 void __attribute__ ( ( fastcall ) )
@@ -327,7 +331,7 @@ vsm_simulate (  IDSIMMODEL* this, uint32_t edx, ABSTIME atime, DSIMMODES mode )
 	( void ) edx;
 	( void ) atime;
 	( void ) mode;
-	
+
 	if ( this->device_simulate_declared )
 	{
 		lua_getglobal ( this->luactx, "device_simulate" );
@@ -355,7 +359,7 @@ void __attribute__ ( ( fastcall ) )
 vsm_callback (  IDSIMMODEL* this, uint32_t edx, ABSTIME atime, EVENTID eventid )
 {
 	( void ) edx;
-	
+
 	if ( this->timer_callback_declared )
 	{
 		/*callback_events* curevent = NULL;
