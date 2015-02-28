@@ -102,11 +102,10 @@ void set_pin_state ( IDSIMMODEL* model, VSM_PIN pin, STATE state )
  * @param level [description]
  */
 void set_pin_bool ( IDSIMMODEL* model, VSM_PIN pin, bool level )
-{
-	//print_info(model, "set_pin_bool: %S", level ? "1" : "0");
+{	
 	ABSTIME curtime = 0;
 	systime ( model, &curtime );
-	pin.pin->vtable->setstate2 ( pin.pin, 0, curtime, pin.on_time, level ? SHI : SLO );
+	pin.pin->vtable->setstate2 ( pin.pin, 0, curtime, pin.on_time, level ? LOGIC_HI : LOGIC_LO );
 }
 
 /**
@@ -387,6 +386,45 @@ void dump_to_debug_popup ( IDEBUGPOPUP* popup, const uint8_t* buf, uint32_t offs
 	popup->vtable->dump ( popup, 0, buf + offset, size, 16 );
 }
 
+
+const char* logic_type_to_string (LOGIC_TYPE type)
+{
+	switch(type)
+	{
+		case TTL:
+		return "TTL";
+		case CMOS:
+		return "CMOS";
+		case I2L:
+		return "I2L";
+		default:
+		return "Unknown";
+	}
+}
+
+void set_logic_type ( IDSIMMODEL* model, LOGIC_TYPE type)
+{	
+	model->ltype = type;
+	switch(type)
+	{
+		case TTL:
+		model->logic_high = SHI;
+		model->logic_low = SLO;
+		break;
+		case CMOS:
+		model->logic_high = IHI;
+		model->logic_low = ILO;
+		break;
+		case I2L:
+		model->logic_high = WHI;
+		model->logic_low = WLO;
+		break;
+		default:			
+		print_error(model, "Wrong logic type specified: %d", type);
+		break;	
+	}
+}
+
 /**
  * [toggle_pin_state  description]
  * @param pin [description]
@@ -394,13 +432,13 @@ void dump_to_debug_popup ( IDEBUGPOPUP* popup, const uint8_t* buf, uint32_t offs
 void toggle_pin_state ( IDSIMMODEL* model, VSM_PIN pin )
 {
 	STATE pinstate = get_pin_state ( pin.pin );
-	if ( SHI == pinstate )
+	if ( LOGIC_HI == pinstate )
 	{
-		set_pin_state ( model, pin, SLO );
+		set_pin_state ( model, pin, LOGIC_LO );
 	}
-	else if ( SLO == pinstate )
+	else if ( LOGIC_LO == pinstate )
 	{
-		set_pin_state ( model,pin, SHI );
+		set_pin_state ( model,pin, LOGIC_HI );
 	}
 	else
 	{

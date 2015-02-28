@@ -53,6 +53,9 @@
 #define MAX_PIN_NUMBER 32
 #endif
 
+#define LOGIC_HI (model->logic_high)
+#define LOGIC_LO (model->logic_low)
+
 #define LSTRING (&lua_isstring)
 #define LINT (&lua_isnumber)
 #define LUSER (&lua_islightuserdata)
@@ -194,7 +197,11 @@ struct IDSIMMODEL
 	IDSIMCKT* model_dsim;
 	lua_State* luactx;
 	VSM_PIN device_pins[MAX_PIN_NUMBER];
-	callback_events* events;	
+	callback_events* events;
+	/* Emulated logic type */
+	LOGIC_TYPE ltype;
+	int logic_high;
+	int logic_low;
 	/* simulation flags */
 	bool timer_callback_declared;
 	bool device_init_declared;

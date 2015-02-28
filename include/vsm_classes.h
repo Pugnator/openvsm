@@ -84,7 +84,7 @@ typedef struct VSM_PIN
 	ABSTIME on_time; ///< Pin switch on-time
 	ABSTIME off_time; ///< Pin switch off-time
 	IDSIMPIN* pin; ///< DSIM pin pointer itself
-	char *handler_func; ///< Callback Lua function for this pin
+	char* handler_func; ///< Callback Lua function for this pin
 } VSM_PIN; ///< OpenVSM pin structure
 
 struct IDSIMPIN2_vtable

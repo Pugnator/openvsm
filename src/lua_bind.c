@@ -25,6 +25,7 @@
 
 static const lua_bind_var lua_var_api_list[]=
 {
+	/* Logic states */
 	{.var_name="SHI", .var_value=SHI},
 	{.var_name="SLO", .var_value=SLO},
 	{.var_name="FLT", .var_value=FLT},
@@ -39,11 +40,16 @@ static const lua_bind_var lua_var_api_list[]=
 	{.var_name="TSTATE", .var_value=TSTATE},
 	{.var_name="FSTATE", .var_value=FSTATE},
 	{.var_name="UNDEFINED", .var_value=UNDEFINED},
+	/* Time suffixes */
 	{.var_name="MSEC", .var_value=1000000000L},
 	{.var_name="NSEC", .var_value=100000000L},
 	{.var_name="USEC", .var_value=1000000L},
 	{.var_name="SEC", .var_value=1000000000000L},
 	{.var_name="NOW", .var_value=0L},
+	/* Logic types */
+	{.var_name="TTL", .var_value=TTL},
+	{.var_name="CMOS", .var_value=CMOS},
+	{.var_name="I2L", .var_value=I2L},	
 	{.var_name=NULL},
 };
 
@@ -109,9 +115,9 @@ SAFE_EXECUTE ( lua_State* L, void* curfunc )
 				{
 					IDSIMMODEL* this = ( IDSIMMODEL* ) lua_get_model_obj ( L );
 					lua_Debug ar;
-					lua_getstack(L, 1, &ar);
-					lua_getinfo(L, "nSl", &ar);
-					int line = ar.currentline;				
+					lua_getstack ( L, 1, &ar );
+					lua_getinfo ( L, "nSl", &ar );
+					int line = ar.currentline;
 					
 					print_error ( this, "Line %d: Too few arguments passed to the function \"%s\"", line, lua_c_api_list[i].lua_func_name );
 				}
@@ -119,19 +125,19 @@ SAFE_EXECUTE ( lua_State* L, void* curfunc )
 				{
 					IDSIMMODEL* this = ( IDSIMMODEL* ) lua_get_model_obj ( L );
 					lua_Debug ar;
-					lua_getstack(L, 1, &ar);
-					lua_getinfo(L, "nSl", &ar);
-					int line = ar.currentline;				
-					print_error ( this, "Line %d: Argument %d of \"%s\" is of wrong type [%s]", line, argcount+1, lua_c_api_list[i].lua_func_name, lua_typename (L, argcount+1) );
-				}  
-			}		
-			if(lua_c_api_list[i].args[argcount+2])	
+					lua_getstack ( L, 1, &ar );
+					lua_getinfo ( L, "nSl", &ar );
+					int line = ar.currentline;
+					print_error ( this, "Line %d: Argument %d of \"%s\" is of wrong type [%s]", line, argcount+1, lua_c_api_list[i].lua_func_name, lua_typename ( L, argcount+1 ) );
+				}
+			}
+			if ( lua_c_api_list[i].args[argcount+2] )
 			{
 				IDSIMMODEL* this = ( IDSIMMODEL* ) lua_get_model_obj ( L );
 				lua_Debug ar;
-				lua_getstack(L, 1, &ar);
-				lua_getinfo(L, "nSl", &ar);
-				int line = ar.currentline;				
+				lua_getstack ( L, 1, &ar );
+				lua_getinfo ( L, "nSl", &ar );
+				int line = ar.currentline;
 				print_error ( this, "Line %d: extra arguments passed to \"%s\"", line, argcount+1, lua_c_api_list[i].lua_func_name );
 			}
 		}
@@ -167,9 +173,9 @@ load_device_script ( IDSIMMODEL* this, const char* device_name )
 	}
 	char* script=NULL;
 	asprintf ( &script, "%s%s%s", spath, '\\' == spath[strlen ( spath )-1]? "":"\\", device_name );
-
+	
 	int lua_err = luaL_loadfile ( this->luactx, script );
-
+	
 	if ( 0 != lua_err )
 	{
 		const char* mess = NULL;
@@ -357,7 +363,7 @@ lua_set_memory_popup ( lua_State* L )
 	void* popup = lua_touserdata ( L, -3 );
 	IDSIMMODEL* this = ( IDSIMMODEL* ) lua_get_model_obj ( L );
 	set_memory_popup ( popup, 0, ( void* ) buf, size );
-
+	
 	return 0;
 }
 
@@ -370,7 +376,7 @@ lua_add_source_file ( lua_State* L )
 		IDSIMMODEL* this = ( IDSIMMODEL* ) lua_get_model_obj ( L );
 		print_info ( this, "Fail to load source file" );
 	}
-
+	
 	return 0;
 }
 
@@ -389,7 +395,7 @@ lua_set_pin_state ( lua_State* L )
 	SAFE_EXECUTE ( L, &lua_set_pin_state );
 	IDSIMMODEL* this = ( IDSIMMODEL* ) lua_get_model_obj ( L );
 	int pin_num = lua_tointeger ( L, -2 );
-	int pin_state = lua_tointeger ( L, -1 );	
+	int pin_state = lua_tointeger ( L, -1 );
 	set_pin_state ( this, this->device_pins[pin_num], pin_state );
 	return 0;
 }
@@ -400,7 +406,7 @@ lua_get_pin_state ( lua_State* L )
 	SAFE_EXECUTE ( L, &lua_get_pin_state );
 	int pin_num = lua_tointeger ( L, -1 );
 	IDSIMMODEL* this = ( IDSIMMODEL* ) lua_get_model_obj ( L );
-
+	
 	if ( TRUE == is_pin_high ( this->device_pins[pin_num].pin ) )
 	{
 		lua_pushinteger ( L, SHI );
@@ -460,7 +466,7 @@ lua_state_to_string ( lua_State* L )
 	SAFE_EXECUTE ( L, &lua_state_to_string );
 	int state = lua_tointeger ( L, -1 );
 	IDSIMMODEL* this = ( IDSIMMODEL* ) lua_get_model_obj ( L );
-
+	
 	lua_pushstring ( L,  state_to_string ( state ) );
 	return 1;
 }
@@ -653,64 +659,64 @@ static void* lua_get_model_obj ( lua_State* L )
 {
 	lua_pushliteral ( L, "__this" );
 	lua_gettable ( L, LUA_REGISTRYINDEX );
-	void *this = lua_touserdata ( L, -1 );
-	lua_pop(L, 1);
+	void* this = lua_touserdata ( L, -1 );
+	lua_pop ( L, 1 );
 	return this;
 }
 
 static int lua_set_bus ( lua_State* L )
-{	
-	///FIXME: add custom table-checking function, as Lua's lua_istable is a macro and can be used 
-	IDSIMMODEL* this = ( IDSIMMODEL* ) lua_get_model_obj ( L );	
-	int byte = lua_tointeger ( L, -1 );	
-	if (0 == lua_istable(L, 1))
-	{		
-	    print_error(this, "No bus specified");
+{
+	///FIXME: add custom table-checking function, as Lua's lua_istable is a macro and can be used
+	IDSIMMODEL* this = ( IDSIMMODEL* ) lua_get_model_obj ( L );
+	int byte = lua_tointeger ( L, -1 );
+	if ( 0 == lua_istable ( L, 1 ) )
+	{
+		print_error ( this, "No bus specified" );
 	}
 	/* Iterate throug the bus table */
-	lua_pushnil(L);
+	lua_pushnil ( L );
 	/* Pins should be added to bus as big-endian one (MSB pin first) */
 	int bit_counter = 0;
-	while (0 != lua_next(L, 1)) 
-	{   
-		set_pin_bool ( this, this->device_pins[lua_tointeger(L, -1)], byte >> bit_counter & 0x1 ); 		
-		lua_pop(L, 1);
+	while ( 0 != lua_next ( L, 1 ) )
+	{
+		set_pin_bool ( this, this->device_pins[lua_tointeger ( L, -1 )], byte >> bit_counter & 0x1 );
+		lua_pop ( L, 1 );
 		bit_counter++;
 	}
 	return 0;
 }
 
 static int lua_get_bus ( lua_State* L )
-{	
-	///FIXME: add custom table-checking function, as Lua's lua_istable is a macro and can be used 
-	IDSIMMODEL* this = ( IDSIMMODEL* ) lua_get_model_obj ( L );		
-	if (0 == lua_istable(L, 1))
-	{		
-	    print_error(this, "No bus specified");
+{
+	///FIXME: add custom table-checking function, as Lua's lua_istable is a macro and can be used
+	IDSIMMODEL* this = ( IDSIMMODEL* ) lua_get_model_obj ( L );
+	if ( 0 == lua_istable ( L, 1 ) )
+	{
+		print_error ( this, "No bus specified" );
 	}
 	/* Iterate throug the bus table */
-	lua_pushnil(L);
+	lua_pushnil ( L );
 	/* Pins should be added to bus as big-endian one (MSB pin first) */
 	int bit_counter = 0;
 	/* Add bus size check here. 32 or 64bit bus max */
 	int data = 0;
-	while (0 != lua_next(L, 1)) 
-	{   
-		int bit = get_pin_bool ( this->device_pins[lua_tointeger(L, -1)]); 		
-		if(0 > bit)
+	while ( 0 != lua_next ( L, 1 ) )
+	{
+		int bit = get_pin_bool ( this->device_pins[lua_tointeger ( L, -1 )] );
+		if ( 0 > bit )
 		{
 			return 0;
 		}
 		
-		if(bit)
+		if ( bit )
 		{
 			data |= ( 1 << bit_counter );
 		}
 		else
 		{
 			data &= ~ ( 1 << bit_counter );
-		}		
-		lua_pop(L, 1);
+		}
+		lua_pop ( L, 1 );
 		bit_counter++;
 	}
 	lua_pushinteger ( L, data );
