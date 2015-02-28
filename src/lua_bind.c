@@ -102,7 +102,10 @@ static const lua_bind_func lua_c_api_list[] =
 static void
 SAFE_EXECUTE ( lua_State* L, void* curfunc )
 {
-#ifdef __DEBUG
+	IDSIMMODEL* this = ( IDSIMMODEL* ) lua_get_model_obj ( L );
+	if(!this->safe_mode)
+		return;
+	
 	int argnum = lua_gettop ( L );
 	for ( int i=0; lua_c_api_list[i].lua_func_name; i++ )
 	{
@@ -112,8 +115,7 @@ SAFE_EXECUTE ( lua_State* L, void* curfunc )
 			for ( argcount=0; lua_c_api_list[i].args[argcount]; argcount++ )
 			{
 				if ( argnum < argcount+1 )
-				{
-					IDSIMMODEL* this = ( IDSIMMODEL* ) lua_get_model_obj ( L );
+				{					
 					lua_Debug ar;
 					lua_getstack ( L, 1, &ar );
 					lua_getinfo ( L, "nSl", &ar );
@@ -122,8 +124,7 @@ SAFE_EXECUTE ( lua_State* L, void* curfunc )
 					print_error ( this, "Line %d: Too few arguments passed to the function \"%s\"", line, lua_c_api_list[i].lua_func_name );
 				}
 				else if ( !lua_c_api_list[i].args[argcount] ( L, argcount+1 ) )
-				{
-					IDSIMMODEL* this = ( IDSIMMODEL* ) lua_get_model_obj ( L );
+				{					
 					lua_Debug ar;
 					lua_getstack ( L, 1, &ar );
 					lua_getinfo ( L, "nSl", &ar );
@@ -132,8 +133,7 @@ SAFE_EXECUTE ( lua_State* L, void* curfunc )
 				}
 			}
 			if ( lua_c_api_list[i].args[argcount+2] )
-			{
-				IDSIMMODEL* this = ( IDSIMMODEL* ) lua_get_model_obj ( L );
+			{				
 				lua_Debug ar;
 				lua_getstack ( L, 1, &ar );
 				lua_getinfo ( L, "nSl", &ar );
@@ -142,7 +142,6 @@ SAFE_EXECUTE ( lua_State* L, void* curfunc )
 			}
 		}
 	}
-#endif
 }
 
 void

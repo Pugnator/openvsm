@@ -188,6 +188,23 @@ vsm_setup ( IDSIMMODEL* this, uint32_t edx, IINSTANCE* instance, IDSIMCKT* dsimc
 		set_logic_type(this, ltype);	
 	}
 	
+	/* Does safe mode should be enabled? */
+	lua_getglobal ( this->luactx, "SAFE_MODE" );
+	if ( lua_isboolean ( this->luactx, -1 ) )
+	{
+		this->safe_mode = lua_toboolean(this->luactx, -1);
+		#ifdef __DEBUG
+		print_info ( this, "Safe mode was %s", this->safe_mode ? "enabled" : "disabled");		
+		#endif				
+	}
+	else
+	{
+		this->safe_mode = false;
+		#ifdef __DEBUG
+		print_info ( this, "Safe mode was disabled or incorrectly set");		
+		#endif	
+	}
+
 	/* Pass model object pointer to Lua - it is safer there ;) */
 	lua_pushliteral ( this->luactx, "__this" );
 	lua_pushlightuserdata ( this->luactx, this );

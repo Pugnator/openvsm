@@ -203,6 +203,7 @@ struct IDSIMMODEL
 	int logic_high;
 	int logic_low;
 	/* simulation flags */
+	bool safe_mode;
 	bool timer_callback_declared;
 	bool device_init_declared;
 	bool device_simulate_declared;
