@@ -420,7 +420,7 @@ void set_logic_type ( IDSIMMODEL* model, LOGIC_TYPE type)
 		model->logic_low = WLO;
 		break;
 		default:			
-		print_error(model, "Wrong logic type specified: %d", type);
+		print_error(model, "Unknown logic type specified: %d", type);
 		break;	
 	}
 }
