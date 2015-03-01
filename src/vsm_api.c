@@ -31,7 +31,7 @@ IDSIMMODEL_vtable VSM_DEVICE_vtable =
 	.actuate        = vsm_actuate,
 	.indicate       = vsm_indicate,
 	.simulate       = vsm_simulate,
-	.callback       = vsm_callback,
+	.callback       = vsm_timer_callback,
 };
 
 ICPU_vtable ICPU_DEVICE_vtable =
@@ -46,11 +46,6 @@ ICPU ICPU_DEVICE =
 {
 	.vtable = &ICPU_DEVICE_vtable,
 };
-
-static void check_global_functions ( IDSIMMODEL* model )
-{
-
-}
 
 IDSIMMODEL* __cdecl
 createdsimmodel ( char* device, ILICENCESERVER* ils )
@@ -159,13 +154,13 @@ vsm_setup ( IDSIMMODEL* this, uint32_t edx, IINSTANCE* instance, IDSIMCKT* dsimc
 		//set pin on time   //
 		//////////////////////
 		lua_getfield ( this->luactx,-1, PIN_ON_TIME );
-		this->device_pins[i].on_time = lua_tonumber ( this->luactx,-1 );
+		this->device_pins[i].on_time = lua_tointeger ( this->luactx,-1 );
 		lua_pop ( this->luactx, 1 );
 		///////////////////////
 		//set pin off time   //
 		///////////////////////
 		lua_getfield ( this->luactx,-1, PIN_OFF_TIME );
-		this->device_pins[i].off_time = lua_tonumber ( this->luactx,-1 );
+		this->device_pins[i].off_time = lua_tointeger ( this->luactx,-1 );
 		lua_pop ( this->luactx, 1 );
 		/////////////////////////////////////////////////////////////
 		//Set global variable that holds pin name and its number   //
@@ -174,8 +169,6 @@ vsm_setup ( IDSIMMODEL* this, uint32_t edx, IINSTANCE* instance, IDSIMCKT* dsimc
 		lua_setglobal ( this->luactx, pin_name );
 		lua_pop ( this->luactx, 1 );
 	}
-
-	check_global_functions ( this );
 
 	/* Check and set IC type (TTL/CMOS/I2L) */
 	lua_getglobal ( this->luactx, "LOGIC_TYPE" );
@@ -222,6 +215,8 @@ vsm_setup ( IDSIMMODEL* this, uint32_t edx, IINSTANCE* instance, IDSIMCKT* dsimc
 				 this->device_simulate_declared ? "device_simulate()" : "" );
 #endif
 
+	/* Call device_init() function in Lua if it's exists */
+
 	if ( this->device_init_declared )
 	{
 		lua_getglobal ( this->luactx, "device_init" );
@@ -244,6 +239,8 @@ vsm_runctrl (  IDSIMMODEL* this, uint32_t edx, RUNMODES mode )
 	( void ) edx;
 	( void ) mode;
 
+
+	///FIXIT: Create full set of flags for each simulator step
 	switch ( mode )
 	{
 		case RM_BATCH:
@@ -356,10 +353,11 @@ vsm_simulate (  IDSIMMODEL* this, uint32_t edx, ABSTIME atime, DSIMMODES mode )
  * @param eventid [description]
  */
 void __attribute__ ( ( fastcall ) )
-vsm_callback (  IDSIMMODEL* this, uint32_t edx, ABSTIME atime, EVENTID eventid )
+vsm_timer_callback (  IDSIMMODEL* this, uint32_t edx, ABSTIME atime, EVENTID eventid )
 {
 	( void ) edx;
 
+	/* Ignore Lua call if it not declared in the script */
 	if ( this->timer_callback_declared )
 	{
 		/*callback_events* curevent = NULL;
