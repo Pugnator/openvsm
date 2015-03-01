@@ -404,19 +404,19 @@ lua_get_pin_state ( lua_State* L )
 {
 	SAFE_EXECUTE ( L, &lua_get_pin_state );
 	int pin_num = lua_tointeger ( L, -1 );
-	IDSIMMODEL* this = ( IDSIMMODEL* ) lua_get_model_obj ( L );
+	IDSIMMODEL* model = ( IDSIMMODEL* ) lua_get_model_obj ( L );
 	
-	if ( TRUE == is_pin_high ( this->device_pins[pin_num].pin ) )
+	if ( TRUE == is_pin_high ( model->device_pins[pin_num].pin ) )
 	{
-		lua_pushinteger ( L, SHI );
+		lua_pushinteger ( L, LOGIC_HI );
 		return 1;
 	}
-	else if ( TRUE == is_pin_low ( this->device_pins[pin_num].pin ) )
+	else if ( TRUE == is_pin_low ( model->device_pins[pin_num].pin ) )
 	{
-		lua_pushinteger ( L, SLO );
+		lua_pushinteger ( L, LOGIC_LO );
 		return 1;
 	}
-	else if ( TRUE == is_pin_floating ( this->device_pins[pin_num].pin ) )
+	else if ( TRUE == is_pin_floating ( model->device_pins[pin_num].pin ) )
 	{
 		lua_pushinteger ( L, FLT );
 		return 1;
