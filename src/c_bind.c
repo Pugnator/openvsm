@@ -431,19 +431,16 @@ void set_logic_type ( IDSIMMODEL* model, LOGIC_TYPE type)
  */
 void toggle_pin_state ( IDSIMMODEL* model, VSM_PIN pin )
 {
-	STATE pinstate = get_pin_state ( pin.pin );
-	if ( LOGIC_HI == pinstate )
-	{
+	if ( TRUE == is_pin_high ( pin.pin ) )
+	{		
 		set_pin_state ( model, pin, LOGIC_LO );
+		return;
 	}
-	else if ( LOGIC_LO == pinstate )
-	{
-		set_pin_state ( model,pin, LOGIC_HI );
-	}
-	else
-	{
-		set_pin_state ( model,pin, FLT );
-	}
+	else if ( TRUE == is_pin_low ( pin.pin ) )
+	{	
+		set_pin_state ( model, pin, LOGIC_HI );
+		return;
+	}	
 }
 
 /**
@@ -462,16 +459,16 @@ STATE get_pin_state ( IDSIMPIN* pin )
  * @return     [description]
  */
 inline int get_pin_bool ( VSM_PIN pin )
-{
-	STATE pinstate = get_pin_state ( pin.pin );
-	if ( SLO == pinstate || WLO == pinstate || ILO == pinstate || PLO == pinstate )
-	{
+{	
+	if ( TRUE == is_pin_high ( pin.pin ) )
+	{		
+		return 1;
+	}
+	else if ( TRUE == is_pin_low ( pin.pin ) )
+	{	
 		return 0;
 	}
-	else if ( SHI == pinstate || WHI == pinstate || IHI == pinstate || PHI == pinstate )
-	{
-		return 1;
-	}	
+	/* return -1 if floating */	
 	return -1;
 }
 
