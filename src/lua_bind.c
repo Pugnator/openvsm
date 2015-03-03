@@ -707,7 +707,7 @@ static int lua_get_bus ( lua_State* L )
 		if ( -1 ==  bit )
 		{
 			#ifdef __DEBUG
-			print_warning(this, "Attempting to read floating bus pin %s: %d (%s)", this->device_pins[pin].name, bit_counter, state_to_string(state));
+			//print_warning(this, "Attempting to read floating bus pin %s: %d (%s)", this->device_pins[pin].name, bit_counter, state_to_string(state));
 			#endif
 			return 0;
 		}

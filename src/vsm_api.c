@@ -146,9 +146,15 @@ vsm_setup ( IDSIMMODEL* this, uint32_t edx, IINSTANCE* instance, IDSIMCKT* dsimc
 		//set pin   //
 		//////////////
 		lua_getfield ( this->luactx,-1, PIN_NAME );
-		const char* pin_name = lua_tostring ( this->luactx,-1 );
-		this->device_pins[i].pin = get_pin ( this, ( char* ) pin_name );
-		strncpy(this->device_pins[i].name, ( char* ) pin_name , sizeof this->device_pins[i].name);
+		char* pin_name = (char *)lua_tostring ( this->luactx,-1 );
+		if('_' == pin_name[0] || '_' == pin_name[strlen(pin_name)])
+		{
+			pin_name[0] = '$';
+			pin_name[strlen(pin_name)-1] = '$';
+		}
+		/* Replace leading AND trailing underscore with $ sign */
+		this->device_pins[i].pin = get_pin ( this, pin_name );
+		strncpy(this->device_pins[i].name, pin_name , sizeof this->device_pins[i].name);
 		lua_pop ( this->luactx, 1 );
 		//////////////////////
 		//set pin on time   //
