@@ -9,8 +9,9 @@ Documentation is here http://pugnator.github.io/openvsm
 
 Written in C and gcc-ready (mingw/cygwin) for Linux and Windows
 
-  - You can create your model as standalone DLL or use DLL and Lua script together
-  - Function prototypes have the same syntax in both API
+  - You don't need to compile anything - one DLL for all models in Lua
+  - You can create your model as a standalone DLL or use DLL and Lua script together
+  - Function prototypes have similar syntax in C and Lua API
   - Designed with hope to make simulation as simple as possible for electronics enthusiasts
 
 
@@ -33,14 +34,9 @@ issuing the following command:
 ```bat
 setx LUAVSM "C:\script"
 ```
-  - In this case you should place your model script to c:\script directory, 
-  note the trailing backslash
-  - Your script should be named after the name of model DLL, for example:
-
-```model.dll
-model.dll.lua```
+  - In this case you should place your model script to c:\script directory
 
 License
 ----
 
-GPL v2
+BSD
