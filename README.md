@@ -19,7 +19,7 @@ Visit 'example' directory for sample project files
 
 Version
 ----
-0.1
+0.2
 
 How to
 --------------
