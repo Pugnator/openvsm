@@ -49,7 +49,7 @@ createdsimmodel ( char* device, ILICENCESERVER* ils )
 	/* Init Lua */
 	vdev->luactx = luaL_newstate();
 	/* Open Lua libraries */
-	vdev->events = NULL;
+	vdev->trace = NULL;
 	luaL_openlibs ( vdev->luactx );
 	register_functions ( vdev, vdev->luactx );
 	return vdev;
@@ -58,11 +58,10 @@ createdsimmodel ( char* device, ILICENCESERVER* ils )
 void __cdecl
 deletedsimmodel ( IDSIMMODEL* model )
 {
-	( void ) model;
 	/* Close Lua */
-	//lua_close (model->luactx );
+	lua_close (model->luactx );
 	/* Remove device object */
-	//free(model);
+	free(model);
 }
 
 int32_t __attribute__ ( ( fastcall ) )
@@ -91,11 +90,7 @@ vsm_setup ( IDSIMMODEL* this, uint32_t edx, IINSTANCE* instance, IDSIMCKT* dsimc
 	char* device_script = get_string_param ( this, "lua" );
 	load_device_script ( this, device_script );
 	print_info ( this, "%s started [OpenVSM %s, %s] %s", get_device_id ( this ), __VERSION, device_script, LUA_RELEASE );
-	free ( device_script );
-
-	#ifdef __DEBUG
-	print_warning ( this, "========ENGINE IS IN DEBUG MODE========");
-	#endif
+	free ( device_script );	
 
 	lua_getglobal ( this->luactx,"device_init" );
 	if ( lua_isfunction ( this->luactx,lua_gettop ( this->luactx ) ) )
@@ -134,14 +129,18 @@ vsm_setup ( IDSIMMODEL* this, uint32_t edx, IINSTANCE* instance, IDSIMCKT* dsimc
 		//////////////
 		lua_getfield ( this->luactx,-1, PIN_NAME );
 		char* pin_name = (char *)lua_tostring ( this->luactx,-1 );
+		char name_orig[64] = {0};
+		strcpy(name_orig, pin_name);
+		/* Replace leading AND trailing underscore with $ sign */
 		if('_' == pin_name[0] || '_' == pin_name[strlen(pin_name)])
 		{
 			pin_name[0] = '$';
-			pin_name[strlen(pin_name)-1] = '$';
-		}
-		/* Replace leading AND trailing underscore with $ sign */
+			pin_name[strlen(pin_name)-1] = '$';		
+			memmove(name_orig, name_orig + 1, sizeof name_orig - 1);
+			name_orig[strlen(pin_name)-2]=0;
+		}		
 		this->device_pins[i].pin = get_pin ( this, pin_name );
-		strncpy(this->device_pins[i].name, pin_name , sizeof this->device_pins[i].name);
+		strncpy(this->device_pins[i].name, pin_name , sizeof this->device_pins[i].name);		
 		lua_pop ( this->luactx, 1 );
 		//////////////////////
 		//set pin on time   //
@@ -159,7 +158,7 @@ vsm_setup ( IDSIMMODEL* this, uint32_t edx, IINSTANCE* instance, IDSIMCKT* dsimc
 		//Set global variable that holds pin name and its number   //
 		/////////////////////////////////////////////////////////////
 		lua_pushinteger ( this->luactx, i );
-		lua_setglobal ( this->luactx, pin_name );
+		lua_setglobal ( this->luactx, name_orig );
 		lua_pop ( this->luactx, 1 );
 	}
 
@@ -232,7 +231,6 @@ vsm_runctrl (  IDSIMMODEL* this, uint32_t edx, RUNMODES mode )
 	( void ) edx;
 	( void ) mode;
 
-
 	///FIXIT: Create full set of flags for each simulator step
 	switch ( mode )
 	{
@@ -243,12 +241,8 @@ vsm_runctrl (  IDSIMMODEL* this, uint32_t edx, RUNMODES mode )
 
 			break;
 		case RM_STOP:
-			/*if ( global_on_stop )
-			    lua_run_function ( this, "on_stop" );*/
 			break;
 		case RM_SUSPEND:
-			/*if ( global_on_suspend )
-			    lua_run_function ( this, "on_suspend" );*/
 			break;
 		case RM_ANIMATE:
 			break;
@@ -290,7 +284,7 @@ vsm_actuate  (  IDSIMMODEL* this, uint32_t edx, REALTIME atime, ACTIVESTATE news
  * @brief [brief description]
  * @details [long description]
  *
- * @param l [description]
+ * @param this [description]
  * @param edx [description]
  * @param atime [description]
  * @param newstate [description]
@@ -310,7 +304,7 @@ vsm_indicate (  IDSIMMODEL* this, uint32_t edx, REALTIME atime, ACTIVEDATA* news
  * @brief [brief description]
  * @details [long description]
  *
- * @param l [description]
+ * @param this [description]
  * @param edx [description]
  * @param atime [description]
  * @param mode [description]
@@ -340,7 +334,7 @@ vsm_simulate (  IDSIMMODEL* this, uint32_t edx, ABSTIME atime, DSIMMODES mode )
  * @brief [brief description]
  * @details [long description]
  *
- * @param l [description]
+ * @param this [description]
  * @param edx [description]
  * @param atime [description]
  * @param eventid [description]
@@ -378,7 +372,7 @@ vsm_timer_callback (  IDSIMMODEL* this, uint32_t edx, ABSTIME atime, EVENTID eve
  *
  * @param hInstDLL [description]
  * @param fdwReason [description]
- * @param lpvReserved [description]
+ * @param thispvReserved [description]
  * @return [description]
  */
 bool APIENTRY
