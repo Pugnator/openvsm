@@ -132,10 +132,8 @@ vsm_setup ( IDSIMMODEL* this, uint32_t edx, IINSTANCE* instance, IDSIMCKT* dsimc
 		char name_orig[64] = {0};
 		strcpy(name_orig, pin_name);
 		/* Replace leading AND trailing underscore with $ sign */
-		if('_' == pin_name[0] || '_' == pin_name[strlen(pin_name)])
-		{
-			pin_name[0] = '$';
-			pin_name[strlen(pin_name)-1] = '$';		
+		if('$' == pin_name[0] || '$' == pin_name[strlen(pin_name)])
+		{			
 			memmove(name_orig, name_orig + 1, sizeof name_orig - 1);
 			name_orig[strlen(pin_name)-2]=0;
 		}		
