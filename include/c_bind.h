@@ -14,8 +14,6 @@
 #define C_BIND_H
 #include <vsm_api.h>
 
-extern int popup_id;
-
 /* DEBUG */
 
 void console_alloc ( const char* title );

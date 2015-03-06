@@ -269,8 +269,8 @@ lua_create_debug_popup ( lua_State* L )
 	safe_execute ( L, &lua_create_debug_popup );
 	const char* text = lua_tostring ( L, -1 );
 	IDSIMMODEL* this = ( IDSIMMODEL* ) lua_get_model_obj ( L );
-	lua_pushlightuserdata ( L, create_debug_popup ( this, text, ++popup_id ) );
-	lua_pushinteger ( L, popup_id );
+	lua_pushlightuserdata ( L, create_debug_popup ( this, text, ++this->popup_id ) );
+	lua_pushinteger ( L, this->popup_id );
 	return 2;
 }
 
@@ -308,14 +308,15 @@ lua_dump_to_debug_popup ( lua_State* L )
 	return 0;
 }
 
+
 static int
 lua_create_source_popup ( lua_State* L )
 {
 	safe_execute ( L, &lua_create_source_popup );
 	const char* text = lua_tostring ( L, -1 );
 	IDSIMMODEL* this = ( IDSIMMODEL* ) lua_get_model_obj ( L );
-	lua_pushlightuserdata ( L, create_source_popup ( this, text, ++popup_id ) );
-	lua_pushinteger ( L, popup_id );
+	lua_pushlightuserdata ( L, create_source_popup ( this, text, ++this->popup_id ) );
+	lua_pushinteger ( L, this->popup_id );
 	return 2;
 }
 static int
@@ -324,8 +325,8 @@ lua_create_status_popup ( lua_State* L )
 	safe_execute ( L, &lua_create_status_popup );
 	const char* text = lua_tostring ( L, -1 );
 	IDSIMMODEL* this = ( IDSIMMODEL* ) lua_get_model_obj ( L );
-	lua_pushlightuserdata ( L, create_status_popup ( this, text, ++popup_id ) );
-	lua_pushinteger ( L, popup_id );
+	lua_pushlightuserdata ( L, create_status_popup ( this, text, ++this->popup_id ) );
+	lua_pushinteger ( L, this->popup_id );
 	return 2;
 }
 static int
@@ -334,8 +335,8 @@ lua_create_var_popup ( lua_State* L )
 	safe_execute ( L, &lua_create_var_popup );
 	const char* text = lua_tostring ( L, -1 );
 	IDSIMMODEL* this = ( IDSIMMODEL* ) lua_get_model_obj ( L );
-	lua_pushlightuserdata ( L, create_var_popup ( this, text, ++popup_id ) );
-	lua_pushinteger ( L, popup_id );
+	lua_pushlightuserdata ( L, create_var_popup ( this, text, ++this->popup_id ) );
+	lua_pushinteger ( L, this->popup_id );
 	return 2;
 }
 
@@ -345,8 +346,8 @@ lua_create_memory_popup ( lua_State* L )
 	safe_execute ( L, &lua_create_memory_popup );
 	const char* text = lua_tostring ( L, -1 );
 	IDSIMMODEL* this = ( IDSIMMODEL* ) lua_get_model_obj ( L );
-	lua_pushlightuserdata ( L, create_memory_popup ( this, text, ++popup_id ) );
-	lua_pushinteger ( L, popup_id );
+	lua_pushlightuserdata ( L, create_memory_popup ( this, text, ++this->popup_id ) );
+	lua_pushinteger ( L, this->popup_id );
 	return 2;
 }
 

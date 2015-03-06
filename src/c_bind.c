@@ -53,8 +53,6 @@ const char* state_to_string ( STATE pinstate )
 	}
 }
 
-int popup_id = 0; //!< Global pop identificator. Should be unique
-
 /**
  * [Register model to Proteus license server]
  * @param  ils [description]
