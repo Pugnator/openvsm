@@ -194,6 +194,8 @@ struct IDSIMMODEL
 	bool timer_callback_declared;
 	bool device_init_declared;
 	bool device_simulate_declared;
+	/**/
+	int popup_id; ///< Global pop identificator. Should be unique
 	
 };
 

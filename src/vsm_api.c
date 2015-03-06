@@ -50,6 +50,7 @@ createdsimmodel ( char* device, ILICENCESERVER* ils )
 	vdev->luactx = luaL_newstate();
 	/* Open Lua libraries */
 	vdev->trace = NULL;
+	vdev->popup_id = 0;
 	luaL_openlibs ( vdev->luactx );
 	register_functions ( vdev, vdev->luactx );
 	return vdev;
