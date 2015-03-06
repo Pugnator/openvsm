@@ -48,11 +48,11 @@
 #define LUSER (&lua_islightuserdata)
 #define LTABLE (&lua_istable)
 
-typedef struct callback_events
+typedef struct calltrace
 {
-	EVENTID id;
+	void *func_addr;
 	UT_hash_handle hh;
-} callback_events;
+} calltrace;
 
 int32_t vasprintf ( char** sptr, char* fmt, va_list argv );
 int32_t asprintf ( char** sptr, char* fmt, ... );
@@ -184,7 +184,7 @@ struct IDSIMMODEL
 	IDSIMCKT* model_dsim;
 	lua_State* luactx;
 	VSM_PIN device_pins[MAX_PIN_NUMBER];
-	callback_events* events;
+	calltrace *trace;
 	/* Emulated logic type */
 	LOGIC_TYPE ltype;
 	int logic_high;

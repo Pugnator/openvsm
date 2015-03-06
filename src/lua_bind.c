@@ -87,8 +87,18 @@ static const lua_bind_func lua_c_api_list[] =
 };
 
 static void
-SAFE_EXECUTE ( lua_State* L, void* curfunc )
+safe_execute ( lua_State* L, void* curfunc )
 {
+	/* Call trace */
+	/*calltrace* new = NULL;
+	HASH_FIND_INT ( this->trace, &curfunc, new );
+	if ( !new )
+	{
+		new = malloc ( sizeof *new );
+		new->func_addr = curfunc;
+		HASH_ADD_INT ( this->trace, func_addr, new );
+	}*/
+	/*=============*/
 	IDSIMMODEL* this = ( IDSIMMODEL* ) lua_get_model_obj ( L );
 	if(!this->safe_mode)
 		return;
@@ -196,7 +206,7 @@ load_device_script ( IDSIMMODEL* this, const char* device_name )
 static int
 lua_get_string_param ( lua_State* L )
 {
-	SAFE_EXECUTE ( L, &lua_get_string_param );
+	safe_execute ( L, &lua_get_string_param );
 	char* str = ( char* ) lua_tostring ( L, -1 );
 	IDSIMMODEL* this = ( IDSIMMODEL* ) lua_get_model_obj ( L );
 	lua_pushstring ( L, get_string_param ( this, str ) );
@@ -206,7 +216,7 @@ lua_get_string_param ( lua_State* L )
 static int
 lua_get_bool_param ( lua_State* L )
 {
-	SAFE_EXECUTE ( L, &lua_get_bool_param );
+	safe_execute ( L, &lua_get_bool_param );
 	char* str = ( char* ) lua_tostring ( L, -1 );
 	IDSIMMODEL* this = ( IDSIMMODEL* ) lua_get_model_obj ( L );
 	lua_pushinteger ( L, get_bool_param ( this, str ) );
@@ -216,7 +226,7 @@ lua_get_bool_param ( lua_State* L )
 static int
 lua_get_num_param ( lua_State* L )
 {
-	SAFE_EXECUTE ( L, &lua_get_num_param );
+	safe_execute ( L, &lua_get_num_param );
 	char* str = ( char* ) lua_tostring ( L, -1 );
 	IDSIMMODEL* this = ( IDSIMMODEL* ) lua_get_model_obj ( L );
 	lua_pushinteger ( L, get_num_param ( this, str )  );
@@ -226,7 +236,7 @@ lua_get_num_param ( lua_State* L )
 static int
 lua_get_hex_param ( lua_State* L )
 {
-	SAFE_EXECUTE ( L, &lua_get_hex_param );
+	safe_execute ( L, &lua_get_hex_param );
 	char* str = ( char* ) lua_tostring ( L, -1 );
 	IDSIMMODEL* this = ( IDSIMMODEL* ) lua_get_model_obj ( L );
 	lua_pushinteger ( L, get_hex_param ( this,str ) );
@@ -236,7 +246,7 @@ lua_get_hex_param ( lua_State* L )
 static int
 lua_get_init_param ( lua_State* L )
 {
-	SAFE_EXECUTE ( L, &lua_get_init_param );
+	safe_execute ( L, &lua_get_init_param );
 	char* str = ( char* ) lua_tostring ( L, -1 );
 	IDSIMMODEL* this = ( IDSIMMODEL* ) lua_get_model_obj ( L );
 	lua_pushinteger ( L, get_init_param ( this, str ) );
@@ -246,7 +256,7 @@ lua_get_init_param ( lua_State* L )
 static int
 lua_delete_popup ( lua_State* L )
 {
-	SAFE_EXECUTE ( L, &lua_delete_popup );
+	safe_execute ( L, &lua_delete_popup );
 	int id = lua_tointeger ( L, -1 );
 	IDSIMMODEL* this = ( IDSIMMODEL* ) lua_get_model_obj ( L );
 	delete_popup ( this, id );
@@ -256,7 +266,7 @@ lua_delete_popup ( lua_State* L )
 static int
 lua_create_debug_popup ( lua_State* L )
 {
-	SAFE_EXECUTE ( L, &lua_create_debug_popup );
+	safe_execute ( L, &lua_create_debug_popup );
 	const char* text = lua_tostring ( L, -1 );
 	IDSIMMODEL* this = ( IDSIMMODEL* ) lua_get_model_obj ( L );
 	lua_pushlightuserdata ( L, create_debug_popup ( this, text, ++popup_id ) );
@@ -272,7 +282,7 @@ lua_create_debug_popup ( lua_State* L )
 static int
 lua_print_to_debug_popup ( lua_State* L )
 {
-	SAFE_EXECUTE ( L, &lua_print_to_debug_popup );
+	safe_execute ( L, &lua_print_to_debug_popup );
 	const char* str = lua_tostring ( L, -1 );
 	void* popup = lua_touserdata ( L, -2 );
 	IDSIMMODEL* this = ( IDSIMMODEL* ) lua_get_model_obj ( L );
@@ -288,7 +298,7 @@ lua_print_to_debug_popup ( lua_State* L )
 static int
 lua_dump_to_debug_popup ( lua_State* L )
 {
-	SAFE_EXECUTE ( L, &lua_dump_to_debug_popup );
+	safe_execute ( L, &lua_dump_to_debug_popup );
 	lua_Number offset = luaL_checknumber ( L,-1 );
 	lua_Number size = luaL_checknumber ( L,-2 );
 	const char* buf = luaL_checkstring ( L,-3 );
@@ -301,7 +311,7 @@ lua_dump_to_debug_popup ( lua_State* L )
 static int
 lua_create_source_popup ( lua_State* L )
 {
-	SAFE_EXECUTE ( L, &lua_create_source_popup );
+	safe_execute ( L, &lua_create_source_popup );
 	const char* text = lua_tostring ( L, -1 );
 	IDSIMMODEL* this = ( IDSIMMODEL* ) lua_get_model_obj ( L );
 	lua_pushlightuserdata ( L, create_source_popup ( this, text, ++popup_id ) );
@@ -311,7 +321,7 @@ lua_create_source_popup ( lua_State* L )
 static int
 lua_create_status_popup ( lua_State* L )
 {
-	SAFE_EXECUTE ( L, &lua_create_status_popup );
+	safe_execute ( L, &lua_create_status_popup );
 	const char* text = lua_tostring ( L, -1 );
 	IDSIMMODEL* this = ( IDSIMMODEL* ) lua_get_model_obj ( L );
 	lua_pushlightuserdata ( L, create_status_popup ( this, text, ++popup_id ) );
@@ -321,7 +331,7 @@ lua_create_status_popup ( lua_State* L )
 static int
 lua_create_var_popup ( lua_State* L )
 {
-	SAFE_EXECUTE ( L, &lua_create_var_popup );
+	safe_execute ( L, &lua_create_var_popup );
 	const char* text = lua_tostring ( L, -1 );
 	IDSIMMODEL* this = ( IDSIMMODEL* ) lua_get_model_obj ( L );
 	lua_pushlightuserdata ( L, create_var_popup ( this, text, ++popup_id ) );
@@ -332,7 +342,7 @@ lua_create_var_popup ( lua_State* L )
 static int
 lua_create_memory_popup ( lua_State* L )
 {
-	SAFE_EXECUTE ( L, &lua_create_memory_popup );
+	safe_execute ( L, &lua_create_memory_popup );
 	const char* text = lua_tostring ( L, -1 );
 	IDSIMMODEL* this = ( IDSIMMODEL* ) lua_get_model_obj ( L );
 	lua_pushlightuserdata ( L, create_memory_popup ( this, text, ++popup_id ) );
@@ -343,7 +353,7 @@ lua_create_memory_popup ( lua_State* L )
 static int
 lua_set_memory_popup ( lua_State* L )
 {
-	SAFE_EXECUTE ( L, &lua_set_memory_popup );
+	safe_execute ( L, &lua_set_memory_popup );
 	lua_Number size = luaL_checknumber ( L,-1 );
 	const char* buf = luaL_checkstring ( L,-2 );
 	void* popup = lua_touserdata ( L, -3 );
@@ -356,7 +366,7 @@ lua_set_memory_popup ( lua_State* L )
 static int
 lua_add_source_file ( lua_State* L )
 {
-	SAFE_EXECUTE ( L, &lua_add_source_file );
+	safe_execute ( L, &lua_add_source_file );
 	if ( false == add_source_file ( lua_touserdata ( L, -3 ), ( char* ) lua_tostring ( L, -2 ), lua_tointeger ( L, -1 ) ) )
 	{
 		IDSIMMODEL* this = ( IDSIMMODEL* ) lua_get_model_obj ( L );
@@ -369,7 +379,7 @@ lua_add_source_file ( lua_State* L )
 static int
 lua_repaint_memory_popup ( lua_State* L )
 {
-	SAFE_EXECUTE ( L, &lua_repaint_memory_popup );
+	safe_execute ( L, &lua_repaint_memory_popup );
 	void* popup = lua_touserdata ( L, -1 ) ;
 	repaint_memory_popup ( popup );
 	return 0;
@@ -378,7 +388,7 @@ lua_repaint_memory_popup ( lua_State* L )
 static int
 lua_set_pin_state ( lua_State* L )
 {
-	SAFE_EXECUTE ( L, &lua_set_pin_state );
+	safe_execute ( L, &lua_set_pin_state );
 	IDSIMMODEL* this = ( IDSIMMODEL* ) lua_get_model_obj ( L );
 	int pin_num = lua_tointeger ( L, -2 );
 	int pin_state = lua_tointeger ( L, -1 );
@@ -389,7 +399,7 @@ lua_set_pin_state ( lua_State* L )
 static int
 lua_get_pin_state ( lua_State* L )
 {
-	SAFE_EXECUTE ( L, &lua_get_pin_state );
+	safe_execute ( L, &lua_get_pin_state );
 	int pin_num = lua_tointeger ( L, -1 );
 	IDSIMMODEL* model = ( IDSIMMODEL* ) lua_get_model_obj ( L );
 	
@@ -418,7 +428,7 @@ lua_get_pin_state ( lua_State* L )
 static int
 lua_set_pin_bool ( lua_State* L )
 {
-	SAFE_EXECUTE ( L, &lua_set_pin_bool );
+	safe_execute ( L, &lua_set_pin_bool );
 	int pin_num = lua_tointeger ( L, -2 );
 	int pin_level = lua_tointeger ( L, -1 );
 	IDSIMMODEL* this = ( IDSIMMODEL* ) lua_get_model_obj ( L );
@@ -429,7 +439,7 @@ lua_set_pin_bool ( lua_State* L )
 static int
 lua_get_pin_bool ( lua_State* L )
 {
-	SAFE_EXECUTE ( L, &lua_get_pin_bool );
+	safe_execute ( L, &lua_get_pin_bool );
 	int pin_num = lua_tointeger ( L, -1 );
 	IDSIMMODEL* this = ( IDSIMMODEL* ) lua_get_model_obj ( L );
 	if ( TRUE == is_pin_high ( this->device_pins[pin_num].pin ) )
@@ -449,7 +459,7 @@ lua_get_pin_bool ( lua_State* L )
 static int
 lua_state_to_string ( lua_State* L )
 {
-	SAFE_EXECUTE ( L, &lua_state_to_string );
+	safe_execute ( L, &lua_state_to_string );
 	int state = lua_tointeger ( L, -1 );
 	IDSIMMODEL* this = ( IDSIMMODEL* ) lua_get_model_obj ( L );
 	
@@ -460,7 +470,7 @@ lua_state_to_string ( lua_State* L )
 static int
 lua_is_pin_low ( lua_State* L )
 {
-	SAFE_EXECUTE ( L, &lua_is_pin_low );
+	safe_execute ( L, &lua_is_pin_low );
 	int pin_num = lua_tointeger ( L, -1 );
 	IDSIMMODEL* this = ( IDSIMMODEL* ) lua_get_model_obj ( L );
 	lua_pushinteger ( L, is_pin_low ( this->device_pins[pin_num].pin ) );
@@ -470,7 +480,7 @@ lua_is_pin_low ( lua_State* L )
 static int
 lua_is_pin_high ( lua_State* L )
 {
-	SAFE_EXECUTE ( L, &lua_is_pin_high );
+	safe_execute ( L, &lua_is_pin_high );
 	int pin_num = lua_tointeger ( L, -1 );
 	IDSIMMODEL* this = ( IDSIMMODEL* ) lua_get_model_obj ( L );
 	lua_pushinteger ( L, is_pin_high ( this->device_pins[pin_num].pin ) );
@@ -480,7 +490,7 @@ lua_is_pin_high ( lua_State* L )
 static int
 lua_is_pin_edge ( lua_State* L )
 {
-	SAFE_EXECUTE ( L, &lua_is_pin_edge );
+	safe_execute ( L, &lua_is_pin_edge );
 	int pin_num = lua_tointeger ( L, -1 );
 	IDSIMMODEL* this = ( IDSIMMODEL* ) lua_get_model_obj ( L );
 	lua_pushinteger ( L, is_pin_edge ( this->device_pins[pin_num].pin ) );
@@ -490,7 +500,7 @@ lua_is_pin_edge ( lua_State* L )
 static int
 lua_is_pin_posedge ( lua_State* L )
 {
-	SAFE_EXECUTE ( L, &lua_is_pin_posedge );
+	safe_execute ( L, &lua_is_pin_posedge );
 	int pin_num = lua_tointeger ( L, -1 );
 	IDSIMMODEL* this = ( IDSIMMODEL* ) lua_get_model_obj ( L );
 	lua_pushinteger ( L, is_pin_posedge ( this->device_pins[pin_num].pin ) );
@@ -500,7 +510,7 @@ lua_is_pin_posedge ( lua_State* L )
 static int
 lua_is_pin_negedge ( lua_State* L )
 {
-	SAFE_EXECUTE ( L, &lua_is_pin_negedge );
+	safe_execute ( L, &lua_is_pin_negedge );
 	int pin_num = lua_tointeger ( L, -1 );
 	IDSIMMODEL* this = ( IDSIMMODEL* ) lua_get_model_obj ( L );
 	lua_pushinteger ( L, is_pin_negedge ( this->device_pins[pin_num].pin ) );
@@ -510,7 +520,7 @@ lua_is_pin_negedge ( lua_State* L )
 static int
 lua_is_pin_active ( lua_State* L )
 {
-	SAFE_EXECUTE ( L, &lua_is_pin_active );
+	safe_execute ( L, &lua_is_pin_active );
 	int pin_num = lua_tointeger ( L, -1 );
 	IDSIMMODEL* this = ( IDSIMMODEL* ) lua_get_model_obj ( L );
 	lua_pushinteger ( L, is_pin_active ( this->device_pins[pin_num].pin ) );
@@ -520,7 +530,7 @@ lua_is_pin_active ( lua_State* L )
 static int
 lua_toggle_pin_state ( lua_State* L )
 {
-	SAFE_EXECUTE ( L, &lua_toggle_pin_state );
+	safe_execute ( L, &lua_toggle_pin_state );
 	int pin_num = lua_tointeger ( L, -1 );
 	IDSIMMODEL* this = ( IDSIMMODEL* ) lua_get_model_obj ( L );
 	toggle_pin_state ( this, this->device_pins[pin_num] );
@@ -530,7 +540,7 @@ lua_toggle_pin_state ( lua_State* L )
 static int
 lua_is_pin_floating ( lua_State* L )
 {
-	SAFE_EXECUTE ( L, &lua_is_pin_floating );
+	safe_execute ( L, &lua_is_pin_floating );
 	int pin_num = lua_tointeger ( L, -1 );
 	IDSIMMODEL* this = ( IDSIMMODEL* ) lua_get_model_obj ( L );
 	lua_pushinteger ( L, is_pin_floating ( this->device_pins[pin_num].pin ) );
@@ -540,7 +550,7 @@ lua_is_pin_floating ( lua_State* L )
 static int
 lua_print_info ( lua_State* L )
 {
-	SAFE_EXECUTE ( L, &lua_print_info );
+	safe_execute ( L, &lua_print_info );
 	const char* text = lua_tostring ( L, -1 );
 	IDSIMMODEL* this = ( IDSIMMODEL* ) lua_get_model_obj ( L );
 	print_info ( this, text );
@@ -550,7 +560,7 @@ lua_print_info ( lua_State* L )
 static int
 lua_print_message ( lua_State* L )
 {
-	SAFE_EXECUTE ( L, &lua_print_message );
+	safe_execute ( L, &lua_print_message );
 	const char* text = lua_tostring ( L, -1 );
 	IDSIMMODEL* this = ( IDSIMMODEL* ) lua_get_model_obj ( L );
 	print_message ( this, text );
@@ -560,7 +570,7 @@ lua_print_message ( lua_State* L )
 static int
 lua_print_warning ( lua_State* L )
 {
-	SAFE_EXECUTE ( L, &lua_print_warning );
+	safe_execute ( L, &lua_print_warning );
 	const char* text = lua_tostring ( L, -1 );
 	IDSIMMODEL* this = ( IDSIMMODEL* ) lua_get_model_obj ( L );
 	print_warning ( this, text );
@@ -570,7 +580,7 @@ lua_print_warning ( lua_State* L )
 static int
 lua_print_error ( lua_State* L )
 {
-	SAFE_EXECUTE ( L, &lua_print_error );
+	safe_execute ( L, &lua_print_error );
 	const char* text = lua_tostring ( L, -1 );
 	IDSIMMODEL* this = ( IDSIMMODEL* ) lua_get_model_obj ( L );
 	print_error ( this, text );
@@ -580,7 +590,7 @@ lua_print_error ( lua_State* L )
 static int
 lua_set_callback ( lua_State* L )
 {
-	SAFE_EXECUTE ( L, &lua_set_callback );
+	safe_execute ( L, &lua_set_callback );
 	lua_Number picotime = lua_tointeger ( L, -2 );
 	lua_Number eventid = lua_tointeger ( L, -1 );
 	IDSIMMODEL* this = ( IDSIMMODEL* ) lua_get_model_obj ( L );
@@ -601,7 +611,7 @@ lua_get_systime ( lua_State* L )
 static int
 lua_get_bit ( lua_State* L )
 {
-	SAFE_EXECUTE ( L, &lua_get_bit );
+	safe_execute ( L, &lua_get_bit );
 	size_t byte = lua_tointeger ( L, -2 );
 	size_t bit = lua_tointeger ( L, -1 );
 	lua_pushinteger ( L, ( byte >> bit & 0x01 ) );
@@ -611,7 +621,7 @@ lua_get_bit ( lua_State* L )
 static int
 lua_clear_bit ( lua_State* L )
 {
-	SAFE_EXECUTE ( L, &lua_clear_bit );
+	safe_execute ( L, &lua_clear_bit );
 	size_t byte = lua_tointeger ( L, -2 );
 	size_t bit = lua_tointeger ( L, -1 );
 	byte &= ~ ( 1 << bit );
@@ -622,7 +632,7 @@ lua_clear_bit ( lua_State* L )
 static int
 lua_set_bit ( lua_State* L )
 {
-	SAFE_EXECUTE ( L, &lua_set_bit );
+	safe_execute ( L, &lua_set_bit );
 	size_t byte = lua_tointeger ( L, -2 );
 	size_t bit = lua_tointeger ( L, -1 );
 	byte |= ( 1 << bit );
@@ -633,7 +643,7 @@ lua_set_bit ( lua_State* L )
 static int
 lua_toggle_bit ( lua_State* L )
 {
-	SAFE_EXECUTE ( L, &lua_toggle_bit );
+	safe_execute ( L, &lua_toggle_bit );
 	size_t byte = lua_tointeger ( L, -2 );
 	size_t bit = lua_tointeger ( L, -1 );
 	byte ^= 1 << bit;
