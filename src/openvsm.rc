@@ -18,7 +18,7 @@ BEGIN
         BLOCK "080904b0"
         BEGIN
             VALUE "Comments", "OpenVSM\0"
-            VALUE "FileDescription", "OpenVSM Lua model engine"
+            VALUE "FileDescription", "OpenVSM Lua engine"
             VALUE "FileVersion", STRFILEVER
             VALUE "InternalName", "openvsm.dll"
             VALUE "LegalCopyright", "GPLv2"
