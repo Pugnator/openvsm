@@ -45,6 +45,8 @@ static int lua_is_pin_negedge ( lua_State* L );
 static int lua_is_pin_low ( lua_State* L );
 static int lua_is_pin_high ( lua_State* L );
 static int lua_is_pin_floating ( lua_State* L );
+static int lua_is_pin_steady ( lua_State* L );
+static int lua_is_pin_inverted ( lua_State* L );
 static int lua_toggle_pin_state ( lua_State* L );
 static int lua_print_info ( lua_State* L );
 static int lua_print_message ( lua_State* L );

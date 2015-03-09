@@ -47,6 +47,8 @@ static const lua_bind_func lua_c_api_list[] =
 	{.lua_func_name="is_pin_edge", .lua_c_api=&lua_is_pin_edge, .args={LINT}},
 	{.lua_func_name="is_pin_posedge", .lua_c_api=&lua_is_pin_posedge, .args={LINT}},
 	{.lua_func_name="is_pin_negedge", .lua_c_api=&lua_is_pin_negedge, .args={LINT}},
+	{.lua_func_name="is_pin_steady", .lua_c_api=&lua_is_pin_steady, .args={LINT}},
+	{.lua_func_name="is_pin_inverted", .lua_c_api=&lua_is_pin_inverted, .args={LINT}},
 	{.lua_func_name="set_pin_state", .lua_c_api=&lua_set_pin_state, .args={LINT}},
 	{.lua_func_name="set_pin_bool", .lua_c_api=&lua_set_pin_bool, .args={LINT,LINT}},
 	{.lua_func_name="get_pin_bool", .lua_c_api=&lua_get_pin_bool, .args={LINT}},
@@ -525,6 +527,26 @@ lua_is_pin_active ( lua_State* L )
 	int pin_num = lua_tointeger ( L, -1 );
 	IDSIMMODEL* this = ( IDSIMMODEL* ) lua_get_model_obj ( L );
 	lua_pushinteger ( L, is_pin_active ( this->device_pins[pin_num].pin ) );
+	return 1;
+}
+
+static int
+lua_is_pin_steady ( lua_State* L )
+{
+	safe_execute ( L, &lua_is_pin_steady );
+	int pin_num = lua_tointeger ( L, -1 );
+	IDSIMMODEL* this = ( IDSIMMODEL* ) lua_get_model_obj ( L );
+	lua_pushinteger ( L, is_pin_steady ( this->device_pins[pin_num].pin ) );
+	return 1;
+}
+
+static int
+lua_is_pin_inverted ( lua_State* L )
+{
+	safe_execute ( L, &lua_is_pin_inverted );
+	int pin_num = lua_tointeger ( L, -1 );
+	IDSIMMODEL* this = ( IDSIMMODEL* ) lua_get_model_obj ( L );
+	lua_pushinteger ( L, is_pin_inverted ( this->device_pins[pin_num].pin ) );
 	return 1;
 }
 

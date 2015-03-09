@@ -619,6 +619,16 @@ bool is_pin_steady ( IDSIMPIN* pin )
 }
 
 /**
+ * [is_pin_steady  description]
+ * @param  pin [description]
+ * @return     [description]
+ */
+bool is_pin_inverted ( IDSIMPIN* pin )
+{
+	return pin->vtable->invert ( pin, 0 );
+}
+
+/**
  * [islow  description]
  * @param  pinstate [description]
  * @return   [description]
