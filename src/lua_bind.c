@@ -51,7 +51,9 @@ static const lua_bind_func lua_c_api_list[] =
 	{.lua_func_name="is_pin_inverted", .lua_c_api=&lua_is_pin_inverted, .args={LINT}},
 	{.lua_func_name="set_pin_state", .lua_c_api=&lua_set_pin_state, .args={LINT}},
 	{.lua_func_name="set_pin_bool", .lua_c_api=&lua_set_pin_bool, .args={LINT,LINT}},
+	{.lua_func_name="set_pin", .lua_c_api=&lua_set_pin_bool, .args={LINT,LINT}},
 	{.lua_func_name="get_pin_bool", .lua_c_api=&lua_get_pin_bool, .args={LINT}},
+	{.lua_func_name="get_pin", .lua_c_api=&lua_get_pin_bool, .args={LINT}},
 	{.lua_func_name="get_pin_state", .lua_c_api=&lua_get_pin_state, .args={LINT}},
 	{.lua_func_name="is_pin_low", .lua_c_api=&lua_is_pin_low, .args={LINT}},
 	{.lua_func_name="is_pin_high", .lua_c_api=&lua_is_pin_high, .args={LINT}},
@@ -687,7 +689,7 @@ static int lua_set_bus ( lua_State* L )
 {
 	///FIXME: add custom table-checking function, as Lua's lua_istable is a macro and can be used
 	IDSIMMODEL* this = ( IDSIMMODEL* ) lua_get_model_obj ( L );
-	int byte = lua_tointeger ( L, -1 );
+	int byte = lua_tointeger ( L, -1 );	
 	if ( 0 == lua_istable ( L, 1 ) )
 	{
 		print_error ( this, "No bus specified" );
@@ -697,11 +699,11 @@ static int lua_set_bus ( lua_State* L )
 	/* Pins should be added to bus as big-endian one (MSB pin first) */
 	int bit_counter = 0;
 	while ( 0 != lua_next ( L, 1 ) )
-	{
+	{		
 		set_pin_bool ( this, this->device_pins[lua_tointeger ( L, -1 )], byte >> bit_counter & 0x1 );
 		lua_pop ( L, 1 );
 		bit_counter++;
-	}
+	}	
 	return 0;
 }
 
