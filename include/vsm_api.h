@@ -195,7 +195,7 @@ struct IDSIMMODEL
 	bool device_init_declared;
 	bool device_simulate_declared;
 	/**/
-	int popup_id; ///< Global pop identificator. Should be unique
+	int popup_id; ///< Popup identificator. Should be unique per model
 	
 };
 
