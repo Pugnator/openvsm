@@ -468,6 +468,16 @@ bool is_pin_active ( IDSIMPIN* pin )
 }
 
 /**
+ * [is_pin_active  description]
+ * @param  pin [description]
+ * @return     [description]
+ */
+bool is_pin_inactive ( IDSIMPIN* pin )
+{
+	return pin->vtable->isinactive ( pin, 0 );
+}
+
+/**
  * [is_pin_posedge  description]
  * @param  pin [description]
  * @return     [description]
@@ -619,7 +629,7 @@ bool is_pin_steady ( IDSIMPIN* pin )
 }
 
 /**
- * [is_pin_steady  description]
+ * [is_pin_inverted  description]
  * @param  pin [description]
  * @return     [description]
  */
