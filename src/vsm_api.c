@@ -157,11 +157,17 @@ vsm_setup ( IDSIMMODEL* this, uint32_t edx, IINSTANCE* instance, IDSIMCKT* dsimc
 		that will contain pin index in device table and several methods
 		 */
 		lua_newtable(this->luactx);
-		lua_pushstring(this->luactx, "pin");
+		lua_pushstring(this->luactx, TEXT_PIN_FIELD);
 		lua_pushinteger(this->luactx, i);
 		lua_rawset(this->luactx, -3);
-		lua_pushstring(this->luactx, "hi");
+		lua_pushstring(this->luactx, TEXT_HI_FIELD);
 		lua_pushcfunction(this->luactx, pin_set_hi);
+		lua_rawset(this->luactx, -3);
+		lua_pushstring(this->luactx, TEXT_LO_FIELD);
+		lua_pushcfunction(this->luactx, pin_set_lo);
+		lua_rawset(this->luactx, -3);
+		lua_pushstring(this->luactx, TEXT_FL_FIELD);
+		lua_pushcfunction(this->luactx, pin_set_fl);
 		lua_rawset(this->luactx, -3);
 		lua_setglobal ( this->luactx, name_orig );
 
