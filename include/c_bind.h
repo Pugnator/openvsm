@@ -70,6 +70,8 @@ inline INT  polarity ( STATE s );
 inline INT  strength ( STATE s );
 
 bool is_pin_active ( IDSIMPIN* pin );
+bool is_pin_inactive ( IDSIMPIN* pin );
+bool is_pin_inverted ( IDSIMPIN* pin );
 bool is_pin_posedge ( IDSIMPIN* pin );
 bool is_pin_negedge ( IDSIMPIN* pin );
 bool is_pin_edge ( IDSIMPIN* pin );

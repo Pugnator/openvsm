@@ -44,6 +44,7 @@ static const lua_bind_func lua_c_api_list[] =
 {
 	{.lua_func_name="state_to_string", .lua_c_api=&lua_state_to_string, .args={LSTRING}},
 	{.lua_func_name="is_pin_active", .lua_c_api=&lua_is_pin_active, .args={LINT}},
+	{.lua_func_name="is_pin_inactive", .lua_c_api=&lua_is_pin_inactive, .args={LINT}},
 	{.lua_func_name="is_pin_edge", .lua_c_api=&lua_is_pin_edge, .args={LINT}},
 	{.lua_func_name="is_pin_posedge", .lua_c_api=&lua_is_pin_posedge, .args={LINT}},
 	{.lua_func_name="is_pin_negedge", .lua_c_api=&lua_is_pin_negedge, .args={LINT}},
@@ -533,6 +534,16 @@ lua_is_pin_active ( lua_State* L )
 }
 
 static int
+lua_is_pin_inactive ( lua_State* L )
+{
+	safe_execute ( L, &lua_is_pin_active );
+	int pin_num = lua_tointeger ( L, -1 );
+	IDSIMMODEL* this = ( IDSIMMODEL* ) lua_get_model_obj ( L );
+	lua_pushinteger ( L, is_pin_inactive ( this->device_pins[pin_num].pin ) );
+	return 1;
+}
+
+static int
 lua_is_pin_steady ( lua_State* L )
 {
 	safe_execute ( L, &lua_is_pin_steady );
@@ -704,6 +715,10 @@ static int lua_set_bus ( lua_State* L )
 		lua_pop ( L, 1 );
 		bit_counter++;
 	}	
+	if(0 == bit_counter)
+	{
+		print_warning(this, "Bus specified contains no pins");
+	}
 	return 0;
 }
 
@@ -746,6 +761,10 @@ static int lua_get_bus ( lua_State* L )
 		bit_counter++;
 	}
 	lua_pushinteger ( L, data );
+	if(0 == bit_counter)
+	{
+		print_warning(this, "Bus specified contains no pins");
+	}
 	return 1;
 }
 
