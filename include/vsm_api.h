@@ -30,6 +30,7 @@
 #include <c_bind.h>
 #include <lua_bind.h>
 #include <pin.h>
+#include <bus.h>
 #include <vsmobj.h>
 #include <text.h>
 #include <uthash.h>
