@@ -29,6 +29,8 @@
 #include <device.h>
 #include <c_bind.h>
 #include <lua_bind.h>
+#include <pin.h>
+ #include <vsmobj.h>
 #include <uthash.h>
 
 #undef _WIN32_WINNT

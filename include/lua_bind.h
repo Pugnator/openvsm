@@ -70,7 +70,6 @@ static int lua_get_num_param ( lua_State* L );
 static int lua_get_hex_param ( lua_State* L );
 static int lua_get_init_param ( lua_State* L );
 static int lua_add_source_file ( lua_State* L );
-static void* lua_get_model_obj ( lua_State* L );
 
 /* Stdlib */
 static int lua_set_bus ( lua_State* L );

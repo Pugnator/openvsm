@@ -687,15 +687,6 @@ lua_toggle_bit ( lua_State* L )
 	return 1;
 }
 
-static void* lua_get_model_obj ( lua_State* L )
-{
-	lua_pushliteral ( L, "__this" );
-	lua_gettable ( L, LUA_REGISTRYINDEX );
-	void* this = lua_touserdata ( L, -1 );
-	lua_pop ( L, 1 );
-	return this;
-}
-
 static int lua_set_bus ( lua_State* L )
 {
 	///FIXME: add custom table-checking function, as Lua's lua_istable is a macro and can be used
