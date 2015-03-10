@@ -71,10 +71,6 @@ static int lua_get_hex_param ( lua_State* L );
 static int lua_get_init_param ( lua_State* L );
 static int lua_add_source_file ( lua_State* L );
 
-/* Stdlib */
-static int lua_set_bus ( lua_State* L );
-static int lua_get_bus ( lua_State* L );
-
 /* Bit twiddling */
 static int lua_get_bit ( lua_State* L );
 static int lua_set_bit ( lua_State* L );
