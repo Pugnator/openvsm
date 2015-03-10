@@ -153,12 +153,24 @@ vsm_setup ( IDSIMMODEL* this, uint32_t edx, IINSTANCE* instance, IDSIMCKT* dsimc
 		lua_getfield ( this->luactx,-1, PIN_OFF_TIME );
 		this->device_pins[i].off_time = lua_tointeger ( this->luactx,-1 );
 		lua_pop ( this->luactx, 1 );
-		/////////////////////////////////////////////////////////////
-		//Set global variable that holds pin name and its number   //
-		/////////////////////////////////////////////////////////////
-		lua_pushinteger ( this->luactx, i );
+		/* At this point we will create table, named after the pin name
+		that will contain pin index in device table and several methods
+		 */
+		lua_newtable(this->luactx);
+		lua_pushstring(this->luactx, "pin");
+		lua_pushinteger(this->luactx, i);
+		lua_rawset(this->luactx, -3);
+		lua_pushstring(this->luactx, "hi");
+		lua_pushcfunction(this->luactx, pin_set_hi);
+		lua_rawset(this->luactx, -3);
 		lua_setglobal ( this->luactx, name_orig );
-		lua_pop ( this->luactx, 1 );
+
+		//lua_setglobal ( this->luactx, "PIN" );
+		//lua_pop ( this->luactx, 1 );
+
+		//lua_pushinteger ( this->luactx, i );
+		//lua_setglobal ( this->luactx, name_orig );
+		//lua_pop ( this->luactx, 1 );
 	}
 
 	/* Check and set IC type (TTL/CMOS/I2L) */
