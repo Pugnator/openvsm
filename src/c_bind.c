@@ -395,14 +395,17 @@ void set_logic_type ( IDSIMMODEL* model, LOGIC_TYPE type)
 		case TTL:
 		model->logic_high = SHI;
 		model->logic_low = SLO;
+		model->logic_flt = FLT;
 		break;
 		case CMOS:
 		model->logic_high = IHI;
 		model->logic_low = ILO;
+		model->logic_flt = FLT;
 		break;
 		case I2L:
 		model->logic_high = WHI;
 		model->logic_low = WLO;
+		model->logic_flt = FLT;
 		break;
 		default:			
 		print_error(model, "Unknown logic type specified: %d", type);

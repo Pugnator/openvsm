@@ -30,7 +30,8 @@
 #include <c_bind.h>
 #include <lua_bind.h>
 #include <pin.h>
- #include <vsmobj.h>
+#include <vsmobj.h>
+#include <text.h>
 #include <uthash.h>
 
 #undef _WIN32_WINNT
@@ -44,6 +45,7 @@
 
 #define LOGIC_HI (model->logic_high)
 #define LOGIC_LO (model->logic_low)
+#define LOGIC_FLT (model->logic_flt)
 
 #define LSTRING (&lua_isstring)
 #define LINT (&lua_isnumber)
@@ -191,6 +193,7 @@ struct IDSIMMODEL
 	LOGIC_TYPE ltype;
 	int logic_high;
 	int logic_low;
+	int logic_flt;
 	/* simulation flags */
 	bool safe_mode;
 	bool timer_callback_declared;
