@@ -26,7 +26,7 @@ int lua_set_bus ( lua_State* L )
 	int bit_counter = 0;
 	while ( 0 != lua_next ( L, 1 ) )
 	{
-		set_pin_bool ( this, this->device_pins[lua_tointeger ( L, -1 )], byte >> bit_counter & 0x1 );
+		set_pin_bool ( this, this->device_pins[get_pin_self(L)], byte >> bit_counter & 0x1 );
 		lua_pop ( L, 1 );
 		bit_counter++;
 	}
@@ -53,7 +53,7 @@ int lua_get_bus ( lua_State* L )
 	int data = 0;
 	while ( 0 != lua_next ( L, 1 ) )
 	{
-		int pin = lua_tointeger ( L, -1 );
+		int pin = get_pin_self(L);
 		int bit = get_pin_bool ( this->device_pins[pin] );
 		int state = get_pin_state ( this->device_pins[pin].pin );
 		if ( -1 ==  bit )
