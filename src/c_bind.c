@@ -87,7 +87,7 @@ void set_pin_state ( IDSIMMODEL* model, VSM_PIN pin, STATE state )
  * @param level [description]
  */
 void set_pin_bool ( IDSIMMODEL* model, VSM_PIN pin, bool level )
-{	
+{
 	ABSTIME curtime = 0;
 	systime ( model, &curtime );
 	pin.pin->vtable->setstate2 ( pin.pin, 0, curtime, pin.on_time, level ? LOGIC_HI : LOGIC_LO );
@@ -372,44 +372,44 @@ void dump_to_debug_popup ( IDEBUGPOPUP* popup, const uint8_t* buf, uint32_t offs
 }
 
 
-const char* logic_type_to_string (LOGIC_TYPE type)
+const char* logic_type_to_string ( LOGIC_TYPE type )
 {
-	switch(type)
+	switch ( type )
 	{
 		case TTL:
-		return "TTL";
+			return "TTL";
 		case CMOS:
-		return "CMOS";
+			return "CMOS";
 		case I2L:
-		return "I2L";
+			return "I2L";
 		default:
-		return "Unknown";
+			return "Unknown";
 	}
 }
 
-void set_logic_type ( IDSIMMODEL* model, LOGIC_TYPE type)
-{	
+void set_logic_type ( IDSIMMODEL* model, LOGIC_TYPE type )
+{
 	model->ltype = type;
-	switch(type)
+	switch ( type )
 	{
 		case TTL:
-		model->logic_high = SHI;
-		model->logic_low = SLO;
-		model->logic_flt = FLT;
-		break;
+			model->logic_high = SHI;
+			model->logic_low = SLO;
+			model->logic_flt = FLT;
+			break;
 		case CMOS:
-		model->logic_high = IHI;
-		model->logic_low = ILO;
-		model->logic_flt = FLT;
-		break;
+			model->logic_high = IHI;
+			model->logic_low = ILO;
+			model->logic_flt = FLT;
+			break;
 		case I2L:
-		model->logic_high = WHI;
-		model->logic_low = WLO;
-		model->logic_flt = FLT;
-		break;
-		default:			
-		print_error(model, "Unknown logic type specified: %d", type);
-		break;	
+			model->logic_high = WHI;
+			model->logic_low = WLO;
+			model->logic_flt = FLT;
+			break;
+		default:
+			print_error ( model, "Unknown logic type specified: %d", type );
+			break;
 	}
 }
 
@@ -420,15 +420,15 @@ void set_logic_type ( IDSIMMODEL* model, LOGIC_TYPE type)
 void toggle_pin_state ( IDSIMMODEL* model, VSM_PIN pin )
 {
 	if ( TRUE == is_pin_high ( pin.pin ) )
-	{		
+	{
 		set_pin_state ( model, pin, LOGIC_LO );
 		return;
 	}
 	else if ( TRUE == is_pin_low ( pin.pin ) )
-	{	
+	{
 		set_pin_state ( model, pin, LOGIC_HI );
 		return;
-	}	
+	}
 }
 
 /**
@@ -447,16 +447,16 @@ STATE get_pin_state ( IDSIMPIN* pin )
  * @return     [description]
  */
 inline int get_pin_bool ( VSM_PIN pin )
-{	
+{
 	if ( TRUE == is_pin_high ( pin.pin ) )
-	{		
+	{
 		return 1;
 	}
 	else if ( TRUE == is_pin_low ( pin.pin ) )
-	{	
+	{
 		return 0;
 	}
-	/* return -1 if floating */	
+	/* return -1 if floating */
 	return -1;
 }
 

@@ -42,7 +42,7 @@ createdsimmodel ( char* device, ILICENCESERVER* ils )
 	{
 		return NULL;
 	}
-
+	
 	IDSIMMODEL* vdev = malloc ( sizeof *vdev );
 	/* Assign virtual table to the object */
 	vdev->vtable = &VSM_DEVICE_vtable;
@@ -60,9 +60,9 @@ void __cdecl
 deletedsimmodel ( IDSIMMODEL* model )
 {
 	/* Close Lua */
-	lua_close (model->luactx );
+	lua_close ( model->luactx );
 	/* Remove device object */
-	free(model);
+	free ( model );
 }
 
 int32_t __attribute__ ( ( fastcall ) )
@@ -84,40 +84,40 @@ void __attribute__ ( ( fastcall ) )
 vsm_setup ( IDSIMMODEL* this, uint32_t edx, IINSTANCE* instance, IDSIMCKT* dsimckt )
 {
 	( void ) edx;
-
+	
 	this->model_instance = instance;
 	this->model_dsim = dsimckt;
-
+	
 	char* device_script = get_string_param ( this, "lua" );
 	load_device_script ( this, device_script );
 	print_info ( this, "%s started [OpenVSM %s, %s] %s", get_device_id ( this ), __VERSION, device_script, LUA_RELEASE );
-	free ( device_script );	
-
+	free ( device_script );
+	
 	lua_getglobal ( this->luactx,"device_init" );
 	if ( lua_isfunction ( this->luactx,lua_gettop ( this->luactx ) ) )
 	{
 		this->device_init_declared = true;
 	}
-
+	
 	lua_getglobal ( this->luactx,"timer_callback" );
 	if ( lua_isfunction ( this->luactx,lua_gettop ( this->luactx ) ) )
 	{
 		this->timer_callback_declared = true;
 	}
-
+	
 	lua_getglobal ( this->luactx,"device_simulate" );
 	if ( lua_isfunction ( this->luactx,lua_gettop ( this->luactx ) ) )
 	{
 		this->device_simulate_declared = true;
 	}
-
+	
 	lua_getglobal ( this->luactx, "device_pins" );
 	if ( 0 == lua_istable ( this->luactx, -1 ) )
 	{
 		print_error ( this, "Fatal error, no pin assignments found in script" );
 		return;
 	}
-
+	
 	lua_len ( this->luactx, -1 );
 	int32_t pin_number = lua_tointeger ( this->luactx, -1 );
 	lua_pop ( this->luactx, 1 );
@@ -129,17 +129,17 @@ vsm_setup ( IDSIMMODEL* this, uint32_t edx, IINSTANCE* instance, IDSIMCKT* dsimc
 		//set pin   //
 		//////////////
 		lua_getfield ( this->luactx,-1, PIN_NAME );
-		char* pin_name = (char *)lua_tostring ( this->luactx,-1 );
+		char* pin_name = ( char* ) lua_tostring ( this->luactx,-1 );
 		char name_orig[64] = {0};
-		strcpy(name_orig, pin_name);
+		strcpy ( name_orig, pin_name );
 		/* Replace leading AND trailing underscore with $ sign */
-		if('$' == pin_name[0] || '$' == pin_name[strlen(pin_name)])
-		{			
-			memmove(name_orig, name_orig + 1, sizeof name_orig - 1);
-			name_orig[strlen(pin_name)-2]=0;
-		}		
+		if ( '$' == pin_name[0] || '$' == pin_name[strlen ( pin_name )] )
+		{
+			memmove ( name_orig, name_orig + 1, sizeof name_orig - 1 );
+			name_orig[strlen ( pin_name )-2]=0;
+		}
 		this->device_pins[i].pin = get_pin ( this, pin_name );
-		strncpy(this->device_pins[i].name, pin_name , sizeof this->device_pins[i].name);		
+		strncpy ( this->device_pins[i].name, pin_name , sizeof this->device_pins[i].name );
 		lua_pop ( this->luactx, 1 );
 		//////////////////////
 		//set pin on time   //
@@ -156,76 +156,82 @@ vsm_setup ( IDSIMMODEL* this, uint32_t edx, IINSTANCE* instance, IDSIMCKT* dsimc
 		/* At this point we will create table, named after the pin name
 		that will contain pin index in device table and several methods
 		 */
-		lua_newtable(this->luactx);
-		lua_pushstring(this->luactx, TEXT_PIN_FIELD);
-		lua_pushinteger(this->luactx, i);
-		lua_rawset(this->luactx, -3);
-		lua_pushstring(this->luactx, TEXT_HI_FIELD);
-		lua_pushcfunction(this->luactx, pin_set_hi);
-		lua_rawset(this->luactx, -3);
-		lua_pushstring(this->luactx, TEXT_LO_FIELD);
-		lua_pushcfunction(this->luactx, pin_set_lo);
-		lua_rawset(this->luactx, -3);
-		lua_pushstring(this->luactx, TEXT_FL_FIELD);
-		lua_pushcfunction(this->luactx, pin_set_fl);
-		lua_rawset(this->luactx, -3);
+		lua_newtable ( this->luactx );
+		lua_pushstring ( this->luactx, TEXT_PIN_FIELD );
+		lua_pushinteger ( this->luactx, i );
+		lua_rawset ( this->luactx, -3 );
+		lua_pushstring ( this->luactx, TEXT_HI_FIELD );
+		lua_pushcfunction ( this->luactx, pin_set_hi );
+		lua_rawset ( this->luactx, -3 );
+		lua_pushstring ( this->luactx, TEXT_LO_FIELD );
+		lua_pushcfunction ( this->luactx, pin_set_lo );
+		lua_rawset ( this->luactx, -3 );
+		lua_pushstring ( this->luactx, TEXT_FL_FIELD );
+		lua_pushcfunction ( this->luactx, pin_set_fl );
+		lua_rawset ( this->luactx, -3 );
+		lua_pushstring ( this->luactx, TEXT_SET_FIELD );
+		lua_pushcfunction ( this->luactx, pin_set );
+		lua_rawset ( this->luactx, -3 );
+		lua_pushstring ( this->luactx, TEXT_GET_FIELD );
+		lua_pushcfunction ( this->luactx, pin_get );
+		lua_rawset ( this->luactx, -3 );
 		lua_setglobal ( this->luactx, name_orig );
-
+		lua_pop ( this->luactx, 1 );
 		//lua_setglobal ( this->luactx, "PIN" );
 		//lua_pop ( this->luactx, 1 );
-
+		
 		//lua_pushinteger ( this->luactx, i );
 		//lua_setglobal ( this->luactx, name_orig );
 		//lua_pop ( this->luactx, 1 );
 	}
-
+	
 	/* Check and set IC type (TTL/CMOS/I2L) */
 	lua_getglobal ( this->luactx, "LOGIC_TYPE" );
 	if ( 0 == lua_isinteger ( this->luactx, -1 ) )
 	{
 		print_warning ( this, "No or wrong IC type specified. TTL type will be set" );
-		set_logic_type(this, TTL);
+		set_logic_type ( this, TTL );
 	}
 	else
 	{
 		int ltype = lua_tointeger ( this->luactx,-1 );
-		#ifdef __DEBUG
-		print_info ( this, "IC type was set to %s", logic_type_to_string(ltype));
-		#endif
-		set_logic_type(this, ltype);
+#ifdef __DEBUG
+		print_info ( this, "IC type was set to %s", logic_type_to_string ( ltype ) );
+#endif
+		set_logic_type ( this, ltype );
 	}
-
+	
 	/* Does safe mode should be enabled? */
 	lua_getglobal ( this->luactx, "SAFE_MODE" );
 	if ( lua_isboolean ( this->luactx, -1 ) )
 	{
-		this->safe_mode = lua_toboolean(this->luactx, -1);
-		#ifdef __DEBUG
-		print_info ( this, "Safe mode was %s", this->safe_mode ? "enabled" : "disabled");
-		#endif
+		this->safe_mode = lua_toboolean ( this->luactx, -1 );
+#ifdef __DEBUG
+		print_info ( this, "Safe mode was %s", this->safe_mode ? "enabled" : "disabled" );
+#endif
 	}
 	else
 	{
 		this->safe_mode = false;
-		#ifdef __DEBUG
-		print_info ( this, "Safe mode was disabled or incorrectly set");
-		#endif
+#ifdef __DEBUG
+		print_info ( this, "Safe mode was disabled or incorrectly set" );
+#endif
 	}
-
+	
 	/* Pass model object pointer to Lua - it is safer there ;) */
 	lua_pushliteral ( this->luactx, "__this" );
 	lua_pushlightuserdata ( this->luactx, this );
 	lua_settable ( this->luactx, LUA_REGISTRYINDEX );
-
+	
 #ifdef __DEBUG
 	print_info ( this, "User defined functions: %s%s%s",
 				 this->device_init_declared ? "device_init() " : "",
 				 this->timer_callback_declared ? "timer_callback() " : "",
 				 this->device_simulate_declared ? "device_simulate()" : "" );
 #endif
-
+				 
 	/* Call device_init() function in Lua if it's exists */
-
+	
 	if ( this->device_init_declared )
 	{
 		lua_getglobal ( this->luactx, "device_init" );
@@ -238,7 +244,7 @@ vsm_setup ( IDSIMMODEL* this, uint32_t edx, IINSTANCE* instance, IDSIMCKT* dsimc
 			}
 		}
 	}
-
+	
 }
 
 void __attribute__ ( ( fastcall ) )
@@ -247,15 +253,15 @@ vsm_runctrl (  IDSIMMODEL* this, uint32_t edx, RUNMODES mode )
 	( void ) this;
 	( void ) edx;
 	( void ) mode;
-
+	
 	///FIXIT: Create full set of flags for each simulator step
 	switch ( mode )
 	{
 		case RM_BATCH:
-
+		
 			break;
 		case RM_START:
-
+		
 			break;
 		case RM_STOP:
 			break;
@@ -264,28 +270,28 @@ vsm_runctrl (  IDSIMMODEL* this, uint32_t edx, RUNMODES mode )
 		case RM_ANIMATE:
 			break;
 		case RM_STEPTIME:
-
+		
 			break;
 		case RM_STEPOVER:
-
+		
 			break;
 		case RM_STEPINTO:
-
+		
 			break;
 		case RM_STEPOUT:
-
+		
 			break;
 		case RM_STEPTO:
-
+		
 			break;
 		case RM_META:
-
+		
 			break;
 		case RM_DUMP:
-
+		
 			break;
 	}
-
+	
 }
 
 void __attribute__ ( ( fastcall ) )
@@ -332,7 +338,7 @@ vsm_simulate (  IDSIMMODEL* this, uint32_t edx, ABSTIME atime, DSIMMODES mode )
 	( void ) edx;
 	( void ) atime;
 	( void ) mode;
-
+	
 	if ( this->device_simulate_declared )
 	{
 		lua_getglobal ( this->luactx, "device_simulate" );
@@ -360,7 +366,7 @@ void __attribute__ ( ( fastcall ) )
 vsm_timer_callback (  IDSIMMODEL* this, uint32_t edx, ABSTIME atime, EVENTID eventid )
 {
 	( void ) edx;
-
+	
 	/* Ignore Lua call if it not declared in the script */
 	if ( this->timer_callback_declared )
 	{

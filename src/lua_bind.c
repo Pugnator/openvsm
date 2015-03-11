@@ -36,7 +36,7 @@ static const lua_bind_var lua_var_api_list[]=
 	/* Logic types */
 	{.var_name="TTL", .var_value=TTL},
 	{.var_name="CMOS", .var_value=CMOS},
-	{.var_name="I2L", .var_value=I2L},	
+	{.var_name="I2L", .var_value=I2L},
 	{.var_name=NULL},
 };
 
@@ -99,15 +99,15 @@ safe_execute ( lua_State* L, void* curfunc )
 	HASH_FIND_INT ( this->trace, &curfunc, new );
 	if ( !new )
 	{
-		new = malloc ( sizeof *new );
-		new->func_addr = curfunc;
-		HASH_ADD_INT ( this->trace, func_addr, new );
+	    new = malloc ( sizeof *new );
+	    new->func_addr = curfunc;
+	    HASH_ADD_INT ( this->trace, func_addr, new );
 	}*/
 	/*=============*/
 	IDSIMMODEL* this = ( IDSIMMODEL* ) lua_get_model_obj ( L );
-	if(!this->safe_mode)
+	if ( !this->safe_mode )
 		return;
-
+		
 	int argnum = lua_gettop ( L );
 	for ( int i=0; lua_c_api_list[i].lua_func_name; i++ )
 	{
@@ -117,7 +117,7 @@ safe_execute ( lua_State* L, void* curfunc )
 			for ( argcount=0; lua_c_api_list[i].args[argcount]; argcount++ )
 			{
 				if ( argnum < argcount+1 )
-				{					
+				{
 					lua_Debug ar;
 					lua_getstack ( L, 1, &ar );
 					lua_getinfo ( L, "nSl", &ar );
@@ -126,7 +126,7 @@ safe_execute ( lua_State* L, void* curfunc )
 					print_error ( this, "Line %d: Too few arguments passed to the function \"%s\"", line, lua_c_api_list[i].lua_func_name );
 				}
 				else if ( !lua_c_api_list[i].args[argcount] ( L, argcount+1 ) )
-				{					
+				{
 					lua_Debug ar;
 					lua_getstack ( L, 1, &ar );
 					lua_getinfo ( L, "nSl", &ar );
@@ -135,7 +135,7 @@ safe_execute ( lua_State* L, void* curfunc )
 				}
 			}
 			if ( lua_c_api_list[i].args[argcount+2] )
-			{				
+			{
 				lua_Debug ar;
 				lua_getstack ( L, 1, &ar );
 				lua_getinfo ( L, "nSl", &ar );
@@ -434,8 +434,8 @@ lua_get_pin_state ( lua_State* L )
 static int
 lua_set_pin_bool ( lua_State* L )
 {
-	safe_execute ( L, &lua_set_pin_bool );
-	int pin_num = lua_tointeger ( L, -2 );
+	//safe_execute ( L, &lua_set_pin_bool );
+	int pin_num = lua_istable(L, - lua_gettop(L)) ? get_pin_self ( L ) :  lua_tointeger ( L, - lua_gettop(L) );	
 	int pin_level = lua_tointeger ( L, -1 );
 	IDSIMMODEL* this = ( IDSIMMODEL* ) lua_get_model_obj ( L );
 	set_pin_bool ( this, this->device_pins[pin_num], pin_level );
@@ -445,9 +445,10 @@ lua_set_pin_bool ( lua_State* L )
 static int
 lua_get_pin_bool ( lua_State* L )
 {
-	safe_execute ( L, &lua_get_pin_bool );
-	int pin_num = lua_tointeger ( L, -1 );
+	//safe_execute ( L, &lua_get_pin_bool );
 	IDSIMMODEL* this = ( IDSIMMODEL* ) lua_get_model_obj ( L );
+	int pin_num = lua_istable(L, - lua_gettop(L)) ? get_pin_self ( L ) :  lua_tointeger ( L, - lua_gettop(L) );				
+	print_info(this, "Pin %s", this->device_pins[pin_num].name);
 	if ( TRUE == is_pin_high ( this->device_pins[pin_num].pin ) )
 	{
 		lua_pushinteger ( L,  1 );

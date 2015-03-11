@@ -16,5 +16,7 @@
 #define TEXT_HI_FIELD "hi"
 #define TEXT_LO_FIELD "lo"
 #define TEXT_FL_FIELD "fl"
+#define TEXT_SET_FIELD "set"
+#define TEXT_GET_FIELD "get"
 
 
