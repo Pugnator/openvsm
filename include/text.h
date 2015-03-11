@@ -20,3 +20,16 @@
 #define TEXT_GET_FIELD "get"
 
 
+#define TEXT_IS_HI_FIELD ""
+#define TEXT_IS_LO_FIELD ""
+#define TEXT_IS_FL_FIELD ""
+#define TEXT_IS_EDGE_FIELD ""
+#define TEXT_IS_PEDGE_FIELD ""
+#define TEXT_IS_NEDGE_FIELD ""
+#define TEXT_IS_STEADY_FIELD ""
+#define TEXT_IS_ACTIVE_FIELD ""
+#define TEXT_IS_INACTIVE_FIELD ""
+#define TEXT_IS_INVERTED_FIELD ""
+#define TEXT_SET_STATE_FIELD ""
+#define TEXT_GET_STATE_FIELD ""
+
