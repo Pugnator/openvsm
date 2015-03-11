@@ -63,8 +63,7 @@ pin_get ( lua_State* L )
 {
 	IDSIMMODEL* model = ( IDSIMMODEL* ) lua_get_model_obj ( L );
 	int pin_num = get_pin_self ( L );
-	int result = get_pin_bool ( model->device_pins[pin_num] );
-	print_info(model, "%s state %d", model->device_pins[pin_num].name, result);
+	int result = get_pin_bool ( model->device_pins[pin_num] );	
 	lua_pushinteger(L, result);
 	return 1;
 }
@@ -77,4 +76,88 @@ pin_set ( lua_State* L )
 	int value = lua_tointeger ( L, -1);
 	set_pin_bool ( model, model->device_pins[pin_num], value );
 	return 0;
+}
+
+int
+pin_is_edge ( lua_State* L )
+{
+	IDSIMMODEL* model = ( IDSIMMODEL* ) lua_get_model_obj ( L );	
+	return 1;
+}
+
+int
+pin_is_pedge ( lua_State* L )
+{
+	IDSIMMODEL* model = ( IDSIMMODEL* ) lua_get_model_obj ( L );	
+	return 1;
+}
+
+int
+pin_is_nedge ( lua_State* L )
+{
+	IDSIMMODEL* model = ( IDSIMMODEL* ) lua_get_model_obj ( L );	
+	return 1;
+}
+
+int
+pin_is_inverted ( lua_State* L )
+{
+	IDSIMMODEL* model = ( IDSIMMODEL* ) lua_get_model_obj ( L );	
+	return 1;
+}
+
+int
+pin_is_steady ( lua_State* L )
+{
+	IDSIMMODEL* model = ( IDSIMMODEL* ) lua_get_model_obj ( L );	
+	return 1;
+}
+
+int
+pin_is_active ( lua_State* L )
+{
+	IDSIMMODEL* model = ( IDSIMMODEL* ) lua_get_model_obj ( L );	
+	return 1;
+}
+
+int
+pin_is_inactive ( lua_State* L )
+{
+	IDSIMMODEL* model = ( IDSIMMODEL* ) lua_get_model_obj ( L );	
+	return 1;
+}
+
+int
+pin_set_state ( lua_State* L )
+{
+	IDSIMMODEL* model = ( IDSIMMODEL* ) lua_get_model_obj ( L );	
+	return 1;
+}
+
+int
+pin_get_state ( lua_State* L )
+{
+	IDSIMMODEL* model = ( IDSIMMODEL* ) lua_get_model_obj ( L );	
+	return 1;
+}
+
+int
+pin_is_hi ( lua_State* L )
+{
+	IDSIMMODEL* model = ( IDSIMMODEL* ) lua_get_model_obj ( L );	
+	return 1;
+}
+
+int
+pin_is_lo ( lua_State* L )
+{
+	IDSIMMODEL* model = ( IDSIMMODEL* ) lua_get_model_obj ( L );	
+	return 1;
+}
+
+int
+pin_is_fl ( lua_State* L )
+{
+	IDSIMMODEL* model = ( IDSIMMODEL* ) lua_get_model_obj ( L );	
+	return 1;
 }
