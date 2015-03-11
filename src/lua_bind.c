@@ -80,11 +80,7 @@ static const lua_bind_func lua_c_api_list[] =
 	{.lua_func_name="get_bool_param", .lua_c_api=&lua_get_bool_param, .args={}},
 	{.lua_func_name="get_init_param", .lua_c_api=&lua_get_init_param, .args={}},
 	{.lua_func_name="get_hex_param", .lua_c_api=&lua_get_hex_param, .args={}},
-	{.lua_func_name="add_source_file", .lua_c_api=&lua_add_source_file, .args={}},
-	{.lua_func_name="get_bit", .lua_c_api=&lua_get_bit, .args={LINT, LINT}},
-	{.lua_func_name="set_bit", .lua_c_api=&lua_set_bit, .args={LINT, LINT}},
-	{.lua_func_name="clear_bit", .lua_c_api=&lua_clear_bit, .args={LINT, LINT}},
-	{.lua_func_name="toggle_bit", .lua_c_api=&lua_toggle_bit, .args={LINT, LINT}},
+	{.lua_func_name="add_source_file", .lua_c_api=&lua_add_source_file, .args={}},	
 	{.lua_func_name="systime", .lua_c_api=&lua_get_systime },
 	{.lua_func_name="set_bus", .lua_c_api=&lua_set_bus,  .args={}},
 	{.lua_func_name="get_bus", .lua_c_api=&lua_get_bus,  .args={} },
@@ -642,49 +638,6 @@ lua_get_systime ( lua_State* L )
 	IDSIMMODEL* this = ( IDSIMMODEL* ) lua_get_model_obj ( L );
 	systime ( this, &curtime );
 	lua_pushinteger ( L, curtime );
-	return 1;
-}
-
-static int
-lua_get_bit ( lua_State* L )
-{
-	safe_execute ( L, &lua_get_bit );
-	size_t byte = lua_tointeger ( L, -2 );
-	size_t bit = lua_tointeger ( L, -1 );
-	lua_pushinteger ( L, ( byte >> bit & 0x01 ) );
-	return 1;
-}
-
-static int
-lua_clear_bit ( lua_State* L )
-{
-	safe_execute ( L, &lua_clear_bit );
-	size_t byte = lua_tointeger ( L, -2 );
-	size_t bit = lua_tointeger ( L, -1 );
-	byte &= ~ ( 1 << bit );
-	lua_pushinteger ( L, byte );
-	return 1;
-}
-
-static int
-lua_set_bit ( lua_State* L )
-{
-	safe_execute ( L, &lua_set_bit );
-	size_t byte = lua_tointeger ( L, -2 );
-	size_t bit = lua_tointeger ( L, -1 );
-	byte |= ( 1 << bit );
-	lua_pushinteger ( L, byte );
-	return 1;
-}
-
-static int
-lua_toggle_bit ( lua_State* L )
-{
-	safe_execute ( L, &lua_toggle_bit );
-	size_t byte = lua_tointeger ( L, -2 );
-	size_t bit = lua_tointeger ( L, -1 );
-	byte ^= 1 << bit;
-	lua_pushinteger ( L, byte );
 	return 1;
 }
 
