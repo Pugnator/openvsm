@@ -20,8 +20,8 @@ void console_alloc ( const char* title );
 
 /* DEVICE */
 
-void set_logic_type ( IDSIMMODEL* model, LOGIC_TYPE type);
-const char* logic_type_to_string (LOGIC_TYPE type);
+void set_logic_type ( IDSIMMODEL* model, LOGIC_TYPE type );
+const char* logic_type_to_string ( LOGIC_TYPE type );
 bool get_bool_param ( IDSIMMODEL* model, char* field_name );
 bool set_vdm_handler ( IDSIMMODEL* model );
 bool vsm_register ( ILICENCESERVER* ils );

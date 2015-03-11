@@ -28,9 +28,9 @@
 #include <vsm_classes.h>
 #include <device.h>
 #include <c_bind.h>
-#include <lua_bind.h>
 #include <pin.h>
 #include <bus.h>
+#include <lua_bind.h>
 #include <vsmobj.h>
 #include <text.h>
 #include <uthash.h>
@@ -55,7 +55,7 @@
 
 typedef struct calltrace
 {
-	void *func_addr;
+	void* func_addr;
 	UT_hash_handle hh;
 } calltrace;
 
@@ -189,7 +189,7 @@ struct IDSIMMODEL
 	IDSIMCKT* model_dsim;
 	lua_State* luactx;
 	VSM_PIN device_pins[MAX_PIN_NUMBER];
-	calltrace *trace;
+	calltrace* trace;
 	/* Emulated logic type */
 	LOGIC_TYPE ltype;
 	int logic_high;

@@ -1,19 +1,16 @@
 /**
  *
- * @file   pin.h
+ * @file   bus.h
  * @author Lavrentiy Ivanov (ookami@mail.ru)
  * @date   22.09.2014
  * @copyright Copyright 2014 Lavrentiy Ivanov. All rights reserved
  * @license This project is released under the BSD 2-Clause license.
+ * @brief Set of PIN object methods
  *
  */
 
 #pragma once
-#include <vsm_api.h>
 
-int get_pin_self ( lua_State* L );
-int pin_set_hi ( lua_State* L );
-int pin_set_lo ( lua_State* L );
-int pin_set_fl ( lua_State* L );
-int pin_set ( lua_State* L );
-int pin_get ( lua_State* L );
+
+int lua_set_bus ( lua_State* L );
+int lua_get_bus ( lua_State* L );
