@@ -18,7 +18,8 @@
  * @param L [Lua state]
  * @return [pin number index in device_pins array]
  */
-int get_pin_self ( lua_State* L )
+int 
+get_pin_self ( lua_State* L )
 {
 	IDSIMMODEL* model = ( IDSIMMODEL* ) lua_get_model_obj ( L );
 	if ( 0 == lua_istable ( L, - lua_gettop(L) ) ) //take the first element
