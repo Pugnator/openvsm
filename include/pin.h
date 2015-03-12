@@ -11,6 +11,7 @@
 #pragma once
 #include <vsm_api.h>
 
+void register_pin_obj ( lua_State* L, int num, char* name );
 int get_pin_self ( lua_State* L );
 int pin_set_hi ( lua_State* L );
 int pin_set_lo ( lua_State* L );
