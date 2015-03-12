@@ -18,7 +18,7 @@ else
 	exit 0
 endif
 
-LIBDIR=../library
+LIBDIR=../dll
 
 OPENVSMLIB?=$(LIBDIR)/openvsm
 

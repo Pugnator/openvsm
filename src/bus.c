@@ -16,7 +16,7 @@ int lua_set_bus ( lua_State* L )
 	///FIXME: add custom table-checking function, as Lua's lua_istable is a macro and can be used
 	IDSIMMODEL* this = ( IDSIMMODEL* ) lua_get_model_obj ( L );
 	int byte = lua_tointeger ( L, -1 );
-	if ( 0 == lua_istable ( L, 1 ) )
+	if ( 0 == lua_istable ( L, -2 ) )
 	{
 		print_error ( this, "No bus specified" );
 	}
@@ -25,9 +25,9 @@ int lua_set_bus ( lua_State* L )
 	/* Pins should be added to bus as big-endian one (MSB pin first) */
 	int bit_counter = 0;
 	while ( 0 != lua_next ( L, 1 ) )
-	{
-		set_pin_bool ( this, this->device_pins[get_pin_self(L)], byte >> bit_counter & 0x1 );
-		lua_pop ( L, 1 );
+	{		
+		print_info(this, "%s", lua_typename(L, 1));
+		lua_pop(L, -1);
 		bit_counter++;
 	}
 	if ( 0 == bit_counter )
@@ -58,9 +58,6 @@ int lua_get_bus ( lua_State* L )
 		int state = get_pin_state ( this->device_pins[pin].pin );
 		if ( -1 ==  bit )
 		{
-#ifdef __DEBUG
-			//print_warning(this, "Attempting to read floating bus pin %s: %d (%s)", this->device_pins[pin].name, bit_counter, state_to_string(state));
-#endif
 			return 0;
 		}
 		
