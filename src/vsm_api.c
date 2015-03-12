@@ -153,68 +153,11 @@ vsm_setup ( IDSIMMODEL* this, uint32_t edx, IINSTANCE* instance, IDSIMCKT* dsimc
 		lua_getfield ( this->luactx,-1, PIN_OFF_TIME );
 		this->device_pins[i].off_time = lua_tointeger ( this->luactx,-1 );
 		lua_pop ( this->luactx, 1 );
-		/* 
-		 *	At this point we will create table, named after the pin name
-		 * 	that will contain pin index in device table and several methods
+		/*
+		 *  At this point we will create table, named after the pin name
+		 *  that will contain pin index in device table and several methods
 		 */
-		lua_newtable ( this->luactx );
-		lua_pushstring ( this->luactx, TEXT_PIN_FIELD );
-		lua_pushinteger ( this->luactx, i );
-		lua_rawset ( this->luactx, -3 );
-		lua_pushstring ( this->luactx, TEXT_HI_FIELD );
-		lua_pushcfunction ( this->luactx, pin_set_hi );
-		lua_rawset ( this->luactx, -3 );
-		lua_pushstring ( this->luactx, TEXT_LO_FIELD );
-		lua_pushcfunction ( this->luactx, pin_set_lo );
-		lua_rawset ( this->luactx, -3 );
-		lua_pushstring ( this->luactx, TEXT_FL_FIELD );
-		lua_pushcfunction ( this->luactx, pin_set_fl );
-		lua_rawset ( this->luactx, -3 );
-		lua_pushstring ( this->luactx, TEXT_SET_FIELD );
-		lua_pushcfunction ( this->luactx, pin_set );
-		lua_rawset ( this->luactx, -3 );
-		lua_pushstring ( this->luactx, TEXT_GET_FIELD );
-		lua_pushcfunction ( this->luactx, pin_get );
-		lua_rawset ( this->luactx, -3 );
-		lua_pushstring ( this->luactx, TEXT_IS_HI_FIELD );
-		lua_pushcfunction ( this->luactx, pin_get );
-		lua_rawset ( this->luactx, -3 );
-		lua_pushstring ( this->luactx, TEXT_IS_LO_FIELD );
-		lua_pushcfunction ( this->luactx, pin_get );
-		lua_rawset ( this->luactx, -3 );
-		lua_pushstring ( this->luactx, TEXT_IS_FL_FIELD );
-		lua_pushcfunction ( this->luactx, pin_get );
-		lua_rawset ( this->luactx, -3 );
-		lua_pushstring ( this->luactx, TEXT_IS_EDGE_FIELD );
-		lua_pushcfunction ( this->luactx, pin_get );
-		lua_rawset ( this->luactx, -3 );
-		lua_pushstring ( this->luactx, TEXT_IS_PEDGE_FIELD );
-		lua_pushcfunction ( this->luactx, pin_get );
-		lua_rawset ( this->luactx, -3 );
-		lua_pushstring ( this->luactx, TEXT_IS_NEDGE_FIELD );
-		lua_pushcfunction ( this->luactx, pin_get );
-		lua_rawset ( this->luactx, -3 );
-		lua_pushstring ( this->luactx, TEXT_IS_STEADY_FIELD );
-		lua_pushcfunction ( this->luactx, pin_get );
-		lua_rawset ( this->luactx, -3 );
-		lua_pushstring ( this->luactx, TEXT_IS_ACTIVE_FIELD );
-		lua_pushcfunction ( this->luactx, pin_get );
-		lua_rawset ( this->luactx, -3 );
-		lua_pushstring ( this->luactx, TEXT_IS_INACTIVE_FIELD );
-		lua_pushcfunction ( this->luactx, pin_get );
-		lua_rawset ( this->luactx, -3 );
-		lua_pushstring ( this->luactx, TEXT_IS_INVERTED_FIELD );
-		lua_pushcfunction ( this->luactx, pin_get );
-		lua_rawset ( this->luactx, -3 );
-		lua_pushstring ( this->luactx, TEXT_SET_STATE_FIELD );
-		lua_pushcfunction ( this->luactx, pin_get );
-		lua_rawset ( this->luactx, -3 );
-		lua_pushstring ( this->luactx, TEXT_GET_STATE_FIELD );
-		lua_pushcfunction ( this->luactx, pin_get );
-		lua_rawset ( this->luactx, -3 );
-
-		lua_setglobal ( this->luactx, name_orig );
-		lua_pop ( this->luactx, 1 );		
+		register_pin_obj ( this->luactx, i, name_orig );
 	}
 	
 	/* Check and set IC type (TTL/CMOS/I2L) */

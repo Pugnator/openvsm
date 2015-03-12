@@ -42,7 +42,7 @@ static const lua_bind_var lua_var_api_list[]=
 
 static const lua_bind_func lua_c_api_list[] =
 {
-	{.lua_func_name="state_to_string", .lua_c_api=&lua_state_to_string, .args={LSTRING}},	
+	{.lua_func_name="state_to_string", .lua_c_api=&lua_state_to_string, .args={LSTRING}},
 	{.lua_func_name="info", .lua_c_api=&lua_print_info, .args={LSTRING}},
 	{.lua_func_name="message", .lua_c_api=&lua_print_message, .args={LSTRING}},
 	{.lua_func_name="warning", .lua_c_api=&lua_print_warning, .args={LSTRING}},
@@ -63,7 +63,7 @@ static const lua_bind_func lua_c_api_list[] =
 	{.lua_func_name="get_bool_param", .lua_c_api=&lua_get_bool_param, .args={}},
 	{.lua_func_name="get_init_param", .lua_c_api=&lua_get_init_param, .args={}},
 	{.lua_func_name="get_hex_param", .lua_c_api=&lua_get_hex_param, .args={}},
-	{.lua_func_name="add_source_file", .lua_c_api=&lua_add_source_file, .args={}},	
+	{.lua_func_name="add_source_file", .lua_c_api=&lua_add_source_file, .args={}},
 	{.lua_func_name="systime", .lua_c_api=&lua_get_systime },
 	{.lua_func_name="set_bus", .lua_c_api=&lua_set_bus,  .args={}},
 	{.lua_func_name="get_bus", .lua_c_api=&lua_get_bus,  .args={} },
