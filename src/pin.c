@@ -82,6 +82,8 @@ int
 pin_is_edge ( lua_State* L )
 {
 	IDSIMMODEL* model = ( IDSIMMODEL* ) lua_get_model_obj ( L );	
+	int pin_num = get_pin_self ( L );	
+	lua_pushinteger ( L, is_pin_edge ( model->device_pins[pin_num].pin ) );
 	return 1;
 }
 
@@ -89,6 +91,8 @@ int
 pin_is_pedge ( lua_State* L )
 {
 	IDSIMMODEL* model = ( IDSIMMODEL* ) lua_get_model_obj ( L );	
+	int pin_num = get_pin_self ( L );	
+	lua_pushinteger ( L, is_pin_posedge ( model->device_pins[pin_num].pin ) );
 	return 1;
 }
 
@@ -96,6 +100,8 @@ int
 pin_is_nedge ( lua_State* L )
 {
 	IDSIMMODEL* model = ( IDSIMMODEL* ) lua_get_model_obj ( L );	
+	int pin_num = get_pin_self ( L );	
+	lua_pushinteger ( L, is_pin_negedge ( model->device_pins[pin_num].pin ) );
 	return 1;
 }
 
@@ -103,6 +109,8 @@ int
 pin_is_inverted ( lua_State* L )
 {
 	IDSIMMODEL* model = ( IDSIMMODEL* ) lua_get_model_obj ( L );	
+	int pin_num = get_pin_self ( L );	
+	lua_pushinteger ( L, is_pin_inverted ( model->device_pins[pin_num].pin ) );
 	return 1;
 }
 
@@ -110,6 +118,8 @@ int
 pin_is_steady ( lua_State* L )
 {
 	IDSIMMODEL* model = ( IDSIMMODEL* ) lua_get_model_obj ( L );	
+	int pin_num = get_pin_self ( L );	
+	lua_pushinteger ( L, is_pin_steady ( model->device_pins[pin_num].pin ) );
 	return 1;
 }
 
@@ -117,6 +127,8 @@ int
 pin_is_active ( lua_State* L )
 {
 	IDSIMMODEL* model = ( IDSIMMODEL* ) lua_get_model_obj ( L );	
+	int pin_num = get_pin_self ( L );	
+	lua_pushinteger ( L, is_pin_active ( model->device_pins[pin_num].pin ) );
 	return 1;
 }
 
@@ -124,6 +136,8 @@ int
 pin_is_inactive ( lua_State* L )
 {
 	IDSIMMODEL* model = ( IDSIMMODEL* ) lua_get_model_obj ( L );	
+	int pin_num = get_pin_self ( L );	
+	lua_pushinteger ( L, is_pin_inactive ( model->device_pins[pin_num].pin ) );
 	return 1;
 }
 
@@ -131,13 +145,18 @@ int
 pin_set_state ( lua_State* L )
 {
 	IDSIMMODEL* model = ( IDSIMMODEL* ) lua_get_model_obj ( L );	
-	return 1;
+	int pin_num = get_pin_self ( L );		
+	int pin_state = lua_tointeger ( L, -1 );
+	set_pin_state ( model, model->device_pins[pin_num], pin_state );
+	return 0;
 }
 
 int
 pin_get_state ( lua_State* L )
 {
 	IDSIMMODEL* model = ( IDSIMMODEL* ) lua_get_model_obj ( L );	
+	int pin_num = get_pin_self ( L );	
+	lua_pushinteger ( L, get_pin_state ( model->device_pins[pin_num].pin ) );	
 	return 1;
 }
 
@@ -145,6 +164,8 @@ int
 pin_is_hi ( lua_State* L )
 {
 	IDSIMMODEL* model = ( IDSIMMODEL* ) lua_get_model_obj ( L );	
+	int pin_num = get_pin_self ( L );	
+	lua_pushinteger ( L, is_pin_high ( model->device_pins[pin_num].pin ) );
 	return 1;
 }
 
@@ -152,6 +173,8 @@ int
 pin_is_lo ( lua_State* L )
 {
 	IDSIMMODEL* model = ( IDSIMMODEL* ) lua_get_model_obj ( L );	
+	int pin_num = get_pin_self ( L );
+	lua_pushinteger ( L, is_pin_low ( model->device_pins[pin_num].pin ) );	
 	return 1;
 }
 
@@ -159,5 +182,7 @@ int
 pin_is_fl ( lua_State* L )
 {
 	IDSIMMODEL* model = ( IDSIMMODEL* ) lua_get_model_obj ( L );	
+	int pin_num = get_pin_self ( L );	
+	lua_pushinteger ( L, is_pin_floating ( model->device_pins[pin_num].pin ) );
 	return 1;
 }
