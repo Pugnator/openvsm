@@ -116,10 +116,13 @@ vsm_setup ( IDSIMMODEL* this, uint32_t edx, IINSTANCE* instance, IDSIMCKT* dsimc
 	{
 		print_error ( this, "Fatal error, no pin assignments found in script" );
 		return;
-	}
-	
+	}	
 	lua_len ( this->luactx, -1 );
 	int32_t pin_number = lua_tointeger ( this->luactx, -1 );
+	if(!pin_number)
+	{
+		print_warning(this, "IC has no pins");
+	}
 	lua_pop ( this->luactx, 1 );
 	/* Pins initialization */
 	for ( int i=1; i<=pin_number; i++ )
