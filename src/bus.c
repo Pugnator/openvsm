@@ -73,7 +73,7 @@ int lua_get_bus ( lua_State* L )
 		return 0;
 	}	
 	lua_pop ( this->luactx, 1 ); // Pop out pin_number from the stack
-
+	bool has_floats = true;
 	for ( int i=1; i<=pin_number; i++ )
 	{		
 		lua_rawgeti ( this->luactx,-1, i );
@@ -86,7 +86,7 @@ int lua_get_bus ( lua_State* L )
 		{
 			//If pin is floating - set it to random value
 			bit = rand() & 1;
-			WARNING(this, "Bus has floating pins");
+			has_floats = true;			
 		}		
 		
 		if ( bit )
@@ -100,6 +100,10 @@ int lua_get_bus ( lua_State* L )
 		bit_counter++;	
 	}
 	
+	if (has_floats)
+	{
+		WARNING(this, "Bus has floating pins");
+	}
 	lua_pushinteger ( L, data );	
 	return 1;
 }
