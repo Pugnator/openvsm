@@ -382,6 +382,7 @@ DllMain ( HINSTANCE hInstDLL, uint32_t fdwReason, LPVOID lpvReserved )
 	( void ) hInstDLL;
 	( void ) fdwReason;
 	( void ) lpvReserved;
+	srand(time(0));
 	return true;
 }
 
