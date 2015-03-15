@@ -11,6 +11,11 @@
 
 #include <vsm_api.h>
 
+/**
+ * [lua_set_bus  description]
+ * @param  L [description]
+ * @return   [description]
+ */
 int lua_set_bus ( lua_State* L )
 {
 	///FIXME: add custom table-checking function, as Lua's lua_istable is a macro and can be used
@@ -53,6 +58,11 @@ int lua_set_bus ( lua_State* L )
 	return 0;
 }
 
+/**
+ * [lua_get_bus  description]
+ * @param  L [description]
+ * @return   [description]
+ */
 int lua_get_bus ( lua_State* L )
 {
 	///FIXME: add custom table-checking function, as Lua's lua_istable is a macro and can be used
