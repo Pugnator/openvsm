@@ -17,6 +17,7 @@
 #include <stdint.h>
 #include <stdlib.h>
 #include <assert.h>
+#include <math.h>
 #include <time.h>
 
 #include <lua.h>
@@ -43,6 +44,9 @@
 #ifndef MAX_PIN_NUMBER
 #define MAX_PIN_NUMBER 32
 #endif
+
+#define PRINT (print_info)
+#define WARNING (print_warning)
 
 #define LOGIC_HI (model->logic_high)
 #define LOGIC_LO (model->logic_low)
