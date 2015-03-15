@@ -84,9 +84,12 @@ int lua_get_bus ( lua_State* L )
 		lua_pop ( this->luactx, 1 ); //Pop the pin object
 		if ( -1 ==  bit )
 		{
-			return 0; //If pin is floating - we can't determine the value
+			//If pin is floating - set it to random value
+			bit = rand() & 1;
+			WARNING(this, "Bus has floating pins");
 		}		
-		else if ( bit )
+		
+		if ( bit )
 		{
 			data |= ( 1 << bit_counter );
 		}
