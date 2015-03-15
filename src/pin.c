@@ -11,6 +11,12 @@
 
 #include <vsm_api.h>
 
+/**
+ * [register_pin_obj  description]
+ * @param L    [description]
+ * @param num  [description]
+ * @param name [description]
+ */
 void register_pin_obj ( lua_State* L, int num, char* name )
 {
 	lua_newtable ( L );
@@ -80,8 +86,7 @@ void register_pin_obj ( lua_State* L, int num, char* name )
  * @param L [Lua state]
  * @return [pin number index in device_pins array]
  */
-int
-get_pin_self ( lua_State* L )
+int get_pin_self ( lua_State* L )
 {
 	IDSIMMODEL* model = ( IDSIMMODEL* ) lua_get_model_obj ( L );
 	if ( 0 == lua_istable ( L, - lua_gettop ( L ) ) ) //take the first element
@@ -93,8 +98,12 @@ get_pin_self ( lua_State* L )
 	return lua_tointeger ( L, -1 );
 }
 
-int
-pin_set_hi ( lua_State* L )
+/**
+ * [pin_set_hi  description]
+ * @param  L [description]
+ * @return   [description]
+ */
+int pin_set_hi ( lua_State* L )
 {
 	IDSIMMODEL* model = ( IDSIMMODEL* ) lua_get_model_obj ( L );
 	int pin_num = get_pin_self ( L );
@@ -102,8 +111,12 @@ pin_set_hi ( lua_State* L )
 	return 0;
 }
 
-int
-pin_set_lo ( lua_State* L )
+/**
+ * [pin_set_lo  description]
+ * @param  L [description]
+ * @return   [description]
+ */
+int pin_set_lo ( lua_State* L )
 {
 	IDSIMMODEL* model = ( IDSIMMODEL* ) lua_get_model_obj ( L );
 	int pin_num = get_pin_self ( L );
@@ -111,8 +124,12 @@ pin_set_lo ( lua_State* L )
 	return 0;
 }
 
-int
-pin_set_fl ( lua_State* L )
+/**
+ * [pin_set_fl  description]
+ * @param  L [description]
+ * @return   [description]
+ */
+int pin_set_fl ( lua_State* L )
 {
 	IDSIMMODEL* model = ( IDSIMMODEL* ) lua_get_model_obj ( L );
 	int pin_num = get_pin_self ( L );
@@ -120,8 +137,12 @@ pin_set_fl ( lua_State* L )
 	return 0;
 }
 
-int
-pin_get ( lua_State* L )
+/**
+ * [pin_get  description]
+ * @param  L [description]
+ * @return   [description]
+ */
+int pin_get ( lua_State* L )
 {
 	IDSIMMODEL* model = ( IDSIMMODEL* ) lua_get_model_obj ( L );
 	int pin_num = get_pin_self ( L );
@@ -130,8 +151,12 @@ pin_get ( lua_State* L )
 	return 1;
 }
 
-int
-pin_set ( lua_State* L )
+/**
+ * [pin_set  description]
+ * @param  L [description]
+ * @return   [description]
+ */
+int pin_set ( lua_State* L )
 {
 	IDSIMMODEL* model = ( IDSIMMODEL* ) lua_get_model_obj ( L );
 	int pin_num = get_pin_self ( L );
@@ -140,8 +165,12 @@ pin_set ( lua_State* L )
 	return 0;
 }
 
-int
-pin_is_edge ( lua_State* L )
+/**
+ * [pin_is_edge  description]
+ * @param  L [description]
+ * @return   [description]
+ */
+int pin_is_edge ( lua_State* L )
 {
 	IDSIMMODEL* model = ( IDSIMMODEL* ) lua_get_model_obj ( L );
 	int pin_num = get_pin_self ( L );
@@ -149,8 +178,12 @@ pin_is_edge ( lua_State* L )
 	return 1;
 }
 
-int
-pin_is_pedge ( lua_State* L )
+/**
+ * [pin_is_pedge  description]
+ * @param  L [description]
+ * @return   [description]
+ */
+int pin_is_pedge ( lua_State* L )
 {
 	IDSIMMODEL* model = ( IDSIMMODEL* ) lua_get_model_obj ( L );
 	int pin_num = get_pin_self ( L );
@@ -158,8 +191,12 @@ pin_is_pedge ( lua_State* L )
 	return 1;
 }
 
-int
-pin_is_nedge ( lua_State* L )
+/**
+ * [pin_is_nedge  description]
+ * @param  L [description]
+ * @return   [description]
+ */
+int pin_is_nedge ( lua_State* L )
 {
 	IDSIMMODEL* model = ( IDSIMMODEL* ) lua_get_model_obj ( L );
 	int pin_num = get_pin_self ( L );
@@ -167,8 +204,12 @@ pin_is_nedge ( lua_State* L )
 	return 1;
 }
 
-int
-pin_is_inverted ( lua_State* L )
+/**
+ * [pin_is_inverted  description]
+ * @param  L [description]
+ * @return   [description]
+ */
+int pin_is_inverted ( lua_State* L )
 {
 	IDSIMMODEL* model = ( IDSIMMODEL* ) lua_get_model_obj ( L );
 	int pin_num = get_pin_self ( L );
@@ -176,8 +217,12 @@ pin_is_inverted ( lua_State* L )
 	return 1;
 }
 
-int
-pin_is_steady ( lua_State* L )
+/**
+ * [pin_is_steady  description]
+ * @param  L [description]
+ * @return   [description]
+ */
+int pin_is_steady ( lua_State* L )
 {
 	IDSIMMODEL* model = ( IDSIMMODEL* ) lua_get_model_obj ( L );
 	int pin_num = get_pin_self ( L );
@@ -185,8 +230,12 @@ pin_is_steady ( lua_State* L )
 	return 1;
 }
 
-int
-pin_is_active ( lua_State* L )
+/**
+ * [pin_is_active  description]
+ * @param  L [description]
+ * @return   [description]
+ */
+int pin_is_active ( lua_State* L )
 {
 	IDSIMMODEL* model = ( IDSIMMODEL* ) lua_get_model_obj ( L );
 	int pin_num = get_pin_self ( L );
@@ -194,8 +243,12 @@ pin_is_active ( lua_State* L )
 	return 1;
 }
 
-int
-pin_is_inactive ( lua_State* L )
+/**
+ * [pin_is_inactive  description]
+ * @param  L [description]
+ * @return   [description]
+ */
+int pin_is_inactive ( lua_State* L )
 {
 	IDSIMMODEL* model = ( IDSIMMODEL* ) lua_get_model_obj ( L );
 	int pin_num = get_pin_self ( L );
@@ -203,8 +256,12 @@ pin_is_inactive ( lua_State* L )
 	return 1;
 }
 
-int
-pin_set_state ( lua_State* L )
+/**
+ * [pin_set_state  description]
+ * @param  L [description]
+ * @return   [description]
+ */
+int pin_set_state ( lua_State* L )
 {
 	IDSIMMODEL* model = ( IDSIMMODEL* ) lua_get_model_obj ( L );
 	int pin_num = get_pin_self ( L );
@@ -213,8 +270,12 @@ pin_set_state ( lua_State* L )
 	return 0;
 }
 
-int
-pin_get_state ( lua_State* L )
+/**
+ * [pin_get_state  description]
+ * @param  L [description]
+ * @return   [description]
+ */
+int pin_get_state ( lua_State* L )
 {
 	IDSIMMODEL* model = ( IDSIMMODEL* ) lua_get_model_obj ( L );
 	int pin_num = get_pin_self ( L );
@@ -222,8 +283,12 @@ pin_get_state ( lua_State* L )
 	return 1;
 }
 
-int
-pin_is_hi ( lua_State* L )
+/**
+ * [pin_is_hi  description]
+ * @param  L [description]
+ * @return   [description]
+ */
+int pin_is_hi ( lua_State* L )
 {
 	IDSIMMODEL* model = ( IDSIMMODEL* ) lua_get_model_obj ( L );
 	int pin_num = get_pin_self ( L );
@@ -231,8 +296,12 @@ pin_is_hi ( lua_State* L )
 	return 1;
 }
 
-int
-pin_is_lo ( lua_State* L )
+/**
+ * [pin_is_lo  description]
+ * @param  L [description]
+ * @return   [description]
+ */
+int pin_is_lo ( lua_State* L )
 {
 	IDSIMMODEL* model = ( IDSIMMODEL* ) lua_get_model_obj ( L );
 	int pin_num = get_pin_self ( L );
@@ -240,8 +309,12 @@ pin_is_lo ( lua_State* L )
 	return 1;
 }
 
-int
-pin_is_fl ( lua_State* L )
+/**
+ * [pin_is_fl  description]
+ * @param  L [description]
+ * @return   [description]
+ */
+int pin_is_fl ( lua_State* L )
 {
 	IDSIMMODEL* model = ( IDSIMMODEL* ) lua_get_model_obj ( L );
 	int pin_num = get_pin_self ( L );

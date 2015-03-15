@@ -24,7 +24,7 @@ Version
 How to
 --------------
 
-  - Install mingw32 for you platform
+  - Install mingw32 and cygwin for you platform
   - Clone: https://github.com/Pugnator/openvsm.git openvsm
   - Change to the openvsm/src
   - Issue "make" command in Linux or "mingw32-make" under Windows
