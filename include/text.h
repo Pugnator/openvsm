@@ -12,6 +12,11 @@
 #pragma once
 
 #define TEXT_NO_PIN_OBJECT_FOUND "No pin object found"
+#define TEXT_NO_BUS_FOUND "No bus specified"
+#define TEXT_BUS_HAS_NO_PINS "Bus has no pins"
+#define TEXT_VALUE_WONT_FIT_BUS "%d is larger than bus can fit (%d)"
+
+
 #define TEXT_PIN_FIELD "pin"
 #define TEXT_HI_FIELD "hi"
 #define TEXT_LO_FIELD "lo"

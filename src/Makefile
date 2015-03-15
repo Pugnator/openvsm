@@ -29,7 +29,7 @@ CFLAGS:=-O0 -gdwarf-2 -fgnu89-inline -std=gnu99 -g3 -Wno-unused-variable -I../in
 
 SHOPENVSMLIB_CFLAGS:=-Wl,--export-all-symbols,--enable-auto-import
 
-LDFLAGS:=../lua53/liblua.a
+LDFLAGS:=../lua53/liblua.a -lm
 
 OBJ=$(SRC:%.c=%.o) openvsm.res
 
@@ -41,7 +41,7 @@ OBJ=$(SRC:%.c=%.o) openvsm.res
 $(OPENVSMLIB).dll: $(OBJ)
 	$(CC) -shared -o $@ $^ $(LDFLAGS) $(SHOPENVSMLIB_CFLAGS)
 	@#$(OBJCOPY) --only-keep-debug $(OPENVSMLIB).dll $(OPENVSMLIB).dwarf
-	@$(STRIP) -s $(OPENVSMLIB).dll
+	@#$(STRIP) -s $(OPENVSMLIB).dll
 	@#$(OBJCOPY) --add-gnu-debuglink=$(OPENVSMLIB).dwarf $(OPENVSMLIB).dll
 
 .PHONY: install
