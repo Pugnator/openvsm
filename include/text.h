@@ -23,6 +23,7 @@
 #define TEXT_FL_FIELD "fl"
 #define TEXT_SET_FIELD "set"
 #define TEXT_GET_FIELD "get"
+#define TEXT_TOGGLE_FIELD "toggle"
 
 
 #define TEXT_IS_HI_FIELD "is_hi"

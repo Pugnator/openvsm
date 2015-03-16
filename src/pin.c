@@ -32,6 +32,9 @@ void register_pin_obj ( lua_State* L, int num, char* name )
 	lua_pushstring ( L, TEXT_FL_FIELD );
 	lua_pushcfunction ( L, pin_set_fl );
 	lua_rawset ( L, -3 );
+	lua_pushstring ( L, TEXT_TOGGLE_FIELD );
+	lua_pushcfunction ( L, pin_set_lo );
+	lua_rawset ( L, -3 );
 	lua_pushstring ( L, TEXT_SET_FIELD );
 	lua_pushcfunction ( L, pin_set );
 	lua_rawset ( L, -3 );
@@ -320,4 +323,21 @@ int pin_is_fl ( lua_State* L )
 	int pin_num = get_pin_self ( L );
 	lua_pushinteger ( L, is_pin_floating ( model->device_pins[pin_num].pin ) );
 	return 1;
+}
+
+
+int pin_toggle ( lua_State* L )
+{
+	IDSIMMODEL* model = ( IDSIMMODEL* ) lua_get_model_obj ( L );
+	int pin_num = get_pin_self ( L );
+	int val = get_pin_bool(model->device_pins[pin_num]);
+	if(val > 0)
+	{
+		set_pin_bool(model, model->device_pins[pin_num], 0);
+	}
+	else
+	{
+		set_pin_bool(model, model->device_pins[pin_num], 1);	
+	}
+	return 0;
 }

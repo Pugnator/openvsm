@@ -35,6 +35,7 @@ int lua_set_bus ( lua_State* L )
 		WARNING(this, TEXT_BUS_HAS_NO_PINS);
 		return 0;
 	}	
+	#ifdef __DEBUG
 	else
 	{
 		int maxval = pow(2, pin_number);
@@ -43,6 +44,7 @@ int lua_set_bus ( lua_State* L )
 			WARNING(this, TEXT_VALUE_WONT_FIT_BUS, byte, maxval - 1);
 		}
 	}
+	#endif
 	lua_pop ( this->luactx, 1 ); // Pop out pin_number from the stack
 	int bit_counter = 0;	
 	for ( int i=1; i<=pin_number; i++ )
@@ -83,7 +85,7 @@ int lua_get_bus ( lua_State* L )
 		return 0;
 	}	
 	lua_pop ( this->luactx, 1 ); // Pop out pin_number from the stack
-	bool has_floats = true;
+	bool has_floats = false;
 	for ( int i=1; i<=pin_number; i++ )
 	{		
 		lua_rawgeti ( this->luactx,-1, i );
@@ -95,7 +97,7 @@ int lua_get_bus ( lua_State* L )
 		if ( -1 ==  bit )
 		{
 			//If pin is floating - set it to random value
-			bit = rand() & 1;
+			bit = xorshift(this) & 1;
 			has_floats = true;			
 		}		
 		
@@ -109,11 +111,12 @@ int lua_get_bus ( lua_State* L )
 		}		
 		bit_counter++;	
 	}
-	
+	#ifdef __DEBUG
 	if (has_floats)
 	{
 		WARNING(this, "Bus has floating pins");
 	}
+	#endif
 	lua_pushinteger ( L, data );	
 	return 1;
 }
