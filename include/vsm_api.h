@@ -34,6 +34,7 @@
 #include <lua_bind.h>
 #include <vsmobj.h>
 #include <text.h>
+#include <utils.h>
 #include <uthash.h>
 
 #undef _WIN32_WINNT
@@ -206,6 +207,8 @@ struct IDSIMMODEL
 	bool device_simulate_declared;
 	/**/
 	int popup_id; ///< Popup identificator. Should be unique per model
+	/**/
+	uint64_t xorseed[2]; //XOR SHIFT random seed
 	
 };
 
