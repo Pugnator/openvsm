@@ -22,7 +22,8 @@ LIBDIR=../dll
 
 OPENVSMLIB?=$(LIBDIR)/openvsm
 
-SRC=vsm_api.c c_bind.c lua_bind.c pin.c bus.c vsmobj.c utils.c win32.c
+SRC=vsmapi.c pin.c bus.c vsmobj.c utils.c win32.c \
+bindings/cbind.c bindings/luabind.c
 
 CFLAGS:=-O0 -gdwarf-2 -fgnu89-inline -std=gnu99 -g3 -Wno-unused-variable -I../include \
 -I../lua53/include -D__VERSION=\"$(shell ../relgen.sh)\"
