@@ -70,6 +70,19 @@ static const lua_bind_func lua_c_api_list[] =
 	{ NULL, NULL},
 };
 
+void lua_load_modules (IDSIMMODEL* this)
+{
+	if ( luaL_loadbufferx(this->luactx, modules_bus_lua, modules_bus_lua_len, "bus_class", NULL))
+	{
+		PRINT(this, "Failed to load module");
+	}
+	else
+	{
+		PRINT(this, "Modules loaded");
+	}
+	lua_pcall(this->luactx, 0, 0, 0);
+}
+
 static void
 safe_execute ( lua_State* L, void* curfunc )
 {
