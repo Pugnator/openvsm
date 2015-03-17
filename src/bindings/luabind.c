@@ -8,7 +8,7 @@
  *
  */
 
-#include <vsm_api.h>
+#include <vsmapi.h>
 
 static const lua_bind_var lua_var_api_list[]=
 {

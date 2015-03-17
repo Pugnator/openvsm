@@ -8,7 +8,7 @@
  *
  */
 
-#include "vsm_api.h"
+#include "vsmapi.h"
 
 IDSIMMODEL_vtable VSM_DEVICE_vtable =
 {

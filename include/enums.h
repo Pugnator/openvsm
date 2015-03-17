@@ -10,7 +10,7 @@
 
 #ifndef VSMAPI_ENUMS
 #define VSMAPI_ENUMS
-#include <vsm_api.h>
+#include <vsmapi.h>
 
 typedef enum LOGIC_TYPE
 {

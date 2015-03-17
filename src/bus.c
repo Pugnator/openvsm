@@ -9,7 +9,7 @@
  *
  */
 
-#include <vsm_api.h>
+#include <vsmapi.h>
 
 /**
  * [lua_set_bus  description]

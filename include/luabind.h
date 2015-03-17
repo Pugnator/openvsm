@@ -10,7 +10,7 @@
 
 #ifndef LUA_BIND_H
 #define LUA_BIND_H
-#include <vsm_api.h>
+#include <vsmapi.h>
 
 typedef struct lua_bind_func
 {

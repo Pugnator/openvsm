@@ -26,15 +26,15 @@
 
 #include <defines.h>
 #include <enums.h>
-#include <vsm_classes.h>
-#include <device.h>
-#include <c_bind.h>
+#include <vsmclasses.h>
+#include <cbind.h>
 #include <pin.h>
 #include <bus.h>
-#include <lua_bind.h>
+#include <luabind.h>
 #include <vsmobj.h>
 #include <text.h>
 #include <utils.h>
+#include <modules.h>
 #include <uthash.h>
 
 #undef _WIN32_WINNT

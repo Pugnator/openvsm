@@ -10,8 +10,8 @@
 #pragma once
 #ifndef VSM_CLASSES_H
 #define VSM_CLASSES_H
-#include <vsm_api.h>
-#include <vdm_api.h>
+#include <vsmapi.h>
+#include <vdmapi.h>
 
 #define EDX uint32_t __EDX
 

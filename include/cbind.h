@@ -12,7 +12,7 @@
 #pragma once
 #ifndef C_BIND_H
 #define C_BIND_H
-#include <vsm_api.h>
+#include <vsmapi.h>
 
 /* DEBUG */
 

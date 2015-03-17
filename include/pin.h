@@ -9,7 +9,7 @@
  */
 
 #pragma once
-#include <vsm_api.h>
+#include <vsmapi.h>
 
 void register_pin_obj ( lua_State* L, int num, char* name );
 int get_pin_self ( lua_State* L );
