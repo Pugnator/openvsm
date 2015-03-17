@@ -12,3 +12,6 @@
 
 extern unsigned char modules_bus_lua[];
 extern unsigned int modules_bus_lua_len;
+
+extern unsigned char modules_custom_lua[];
+extern unsigned int modules_custom_lua_len;

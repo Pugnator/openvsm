@@ -28,7 +28,9 @@ SRC=vsmapi.c pin.c bus.c vsmobj.c utils.c win32.c \
 bindings/cbind.c bindings/luabind.c
 
 LUAC=luac
-LUASRC=modules/bus.lua
+MODULES=\
+$(MOD)/bus.lua \
+$(MOD)/custom.lua
 
 CFLAGS:=-O0 -gdwarf-2 -fgnu89-inline -std=gnu99 -g3 \
 -Wno-unused-variable -I../include -Imodules \
@@ -39,9 +41,9 @@ SLIB_CFLAGS:=-Wl,--export-all-symbols,--enable-auto-import
 LDFLAGS:=../lua53/liblua.a -lm
 
 OBJ=$(SRC:%.c=%.o) openvsm.res \
-$(MOD)/bus.bin.c.o
+$(MOD)/bus.bin.c.o $(MOD)/custom.bin.c.o
 
-LOBJ=$(LUASRC:%.lua=%.bin)
+LOBJ=$(MODULES:%.lua=%.bin)
 
 all: modules $(OPENVSMLIB).dll
 
@@ -54,6 +56,9 @@ openvsm.res:
 
 $(MOD)/bus.bin.c.o:
 	$(CC) -c -o $@ $(MOD)/bus.bin.c $(CFLAGS)
+
+$(MOD)/custom.bin.c.o:
+	$(CC) -c -o $@ $(MOD)/custom.bin.c $(CFLAGS)
 
 %.o: %.c
 	$(CC) -c -o $@ $< $(CFLAGS)
