@@ -8,7 +8,7 @@
  *
  */
 
-#include <vsm_api.h>
+#include <vsmapi.h>
 
 /**
  * @brief [Convert pin state to string]

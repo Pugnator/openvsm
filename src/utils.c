@@ -9,7 +9,7 @@
  *
  */
 
-#include <vsm_api.h>
+#include <vsmapi.h>
 
 uint64_t xorshift(IDSIMMODEL* this) 
 {

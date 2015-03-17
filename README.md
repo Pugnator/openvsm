@@ -21,10 +21,11 @@ Version
 ----
 0.2
 
-How to
+How to build
 --------------
 
   - Install mingw32 and cygwin for you platform
+  - Install Lua 5.3 compiler
   - Clone: https://github.com/Pugnator/openvsm.git openvsm
   - Change to the openvsm/src
   - Issue "make" command in Linux or "mingw32-make" under Windows

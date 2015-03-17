@@ -12,7 +12,7 @@
 #ifndef VSMAPI_DEFINES
 #define VSMAPI_DEFINES
 
-#include <vsm_api.h>
+#include <vsmapi.h>
 
 typedef uint32_t COLOUR;
 typedef uint32_t MESSAGE;

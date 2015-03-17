@@ -9,7 +9,7 @@
  *
  */
 
-#include <vsm_api.h>
+#include <vsmapi.h>
 
 /**
  * [register_pin_obj  description]

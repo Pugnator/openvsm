@@ -8,7 +8,7 @@
  *
  */
 
-#include <vsm_api.h>
+#include <vsmapi.h>
 
 void* lua_get_model_obj ( lua_State* L )
 {

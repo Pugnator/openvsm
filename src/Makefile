@@ -20,35 +20,56 @@ endif
 
 LIBDIR=../dll
 
+MOD=modules
+XXD=xxd
 OPENVSMLIB?=$(LIBDIR)/openvsm
 
 SRC=vsmapi.c pin.c bus.c vsmobj.c utils.c win32.c \
 bindings/cbind.c bindings/luabind.c
 
-CFLAGS:=-O0 -gdwarf-2 -fgnu89-inline -std=gnu99 -g3 -Wno-unused-variable -I../include \
+LUAC=luac
+LUASRC=modules/bus.lua
+
+CFLAGS:=-O0 -gdwarf-2 -fgnu89-inline -std=gnu99 -g3 \
+-Wno-unused-variable -I../include -Imodules \
 -I../lua53/include -D__VERSION=\"$(shell ../relgen.sh)\"
 
-SHOPENVSMLIB_CFLAGS:=-Wl,--export-all-symbols,--enable-auto-import
+SLIB_CFLAGS:=-Wl,--export-all-symbols,--enable-auto-import
 
 LDFLAGS:=../lua53/liblua.a -lm
 
-OBJ=$(SRC:%.c=%.o) openvsm.res
+OBJ=$(SRC:%.c=%.o) openvsm.res \
+$(MOD)/bus.bin.c.o
+
+LOBJ=$(LUASRC:%.lua=%.bin)
+
+all: modules $(OPENVSMLIB).dll
+
+%.bin: %.lua
+	$(LUAC) -s -o $@ $<
+	$(XXD) -i $< > $@.c
+
+openvsm.res:
+	$(WINRES) openvsm.rc -O coff -o openvsm.res
+
+$(MOD)/bus.bin.c.o:
+	$(CC) -c -o $@ $(MOD)/bus.bin.c $(CFLAGS)
 
 %.o: %.c
-	$(WINRES) openvsm.rc -O coff -o openvsm.res
 	$(CC) -c -o $@ $< $(CFLAGS)
 
-.PHONY: $(OPENVSMLIB).dll
 $(OPENVSMLIB).dll: $(OBJ)
-	$(CC) -shared -o $@ $^ $(LDFLAGS) $(SHOPENVSMLIB_CFLAGS)
+	$(CC) -shared -o $@ $^ $(LDFLAGS) $(SLIB_CFLAGS)
 	@#$(OBJCOPY) --only-keep-debug $(OPENVSMLIB).dll $(OPENVSMLIB).dwarf
 	@#$(STRIP) -s $(OPENVSMLIB).dll
 	@#$(OBJCOPY) --add-gnu-debuglink=$(OPENVSMLIB).dwarf $(OPENVSMLIB).dll
 
-.PHONY: install
+modules: $(LOBJ)
+	@echo "Lua modules compiled"
+
 install:
 
-.PHONY: clean
 clean:
 	@rm -f $(OPENVSMLIB).*
+	@rm -f modules/*.bin modules/*.c modules/*.o
 	@find -maxdepth 1 -type f -regex ".*/.*\.\(o\|res\|dll\|lib\|dwarf\\)" -delete

@@ -14,10 +14,10 @@
 #include <windows.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include "vsm_api.h"
+#include "vsmapi.h"
 #include "defines.h"
 #include "enums.h"
-#include "vsm_classes.h"
+#include "vsmclasses.h"
 
 // VDM Protocol command strcuture:
 typedef struct VDM_COMMAND

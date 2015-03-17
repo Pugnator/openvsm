@@ -8,7 +8,7 @@
  *
  */
 
-#include <vsm_api.h>
+#include <vsmapi.h>
 
 int32_t vasprintf ( char** sptr, char* fmt, va_list argv )
 {
