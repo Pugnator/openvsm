@@ -92,6 +92,7 @@ vsm_setup ( IDSIMMODEL* this, uint32_t edx, IINSTANCE* instance, IDSIMCKT* dsimc
 	this->xorseed[1] = rand() << 31 | rand() & 0xFFFFFFFF;
 	
 	char* device_script = get_string_param ( this, "lua" );
+	lua_load_modules(this);
 	load_device_script ( this, device_script );
 	print_info ( this, "%s started [OpenVSM %s, %s] %s", get_device_id ( this ), __VERSION, device_script, LUA_RELEASE );
 	free ( device_script );
