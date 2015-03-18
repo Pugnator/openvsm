@@ -65,7 +65,7 @@ deletedsimmodel ( IDSIMMODEL* model )
 	free ( model );
 }
 
-int32_t __attribute__ ( ( fastcall ) )
+int32_t __FASTCALL__
 vsm_isdigital ( IDSIMMODEL* this, uint32_t edx, char* pinname )
 {
 	( void ) this;
@@ -80,7 +80,7 @@ vsm_isdigital ( IDSIMMODEL* this, uint32_t edx, char* pinname )
  * [Set up the IC]
  * @param this  [description]
  */
-void __attribute__ ( ( fastcall ) )
+void __FASTCALL__
 vsm_setup ( IDSIMMODEL* this, uint32_t edx, IINSTANCE* instance, IDSIMCKT* dsimckt )
 {
 	( void ) edx;
@@ -229,7 +229,7 @@ vsm_setup ( IDSIMMODEL* this, uint32_t edx, IINSTANCE* instance, IDSIMCKT* dsimc
 	
 }
 
-void __attribute__ ( ( fastcall ) )
+void __FASTCALL__
 vsm_runctrl (  IDSIMMODEL* this, uint32_t edx, RUNMODES mode )
 {
 	( void ) this;
@@ -276,7 +276,7 @@ vsm_runctrl (  IDSIMMODEL* this, uint32_t edx, RUNMODES mode )
 	
 }
 
-void __attribute__ ( ( fastcall ) )
+void __FASTCALL__
 vsm_actuate  (  IDSIMMODEL* this, uint32_t edx, REALTIME atime, ACTIVESTATE newstate )
 {
 	( void ) this;
@@ -295,7 +295,7 @@ vsm_actuate  (  IDSIMMODEL* this, uint32_t edx, REALTIME atime, ACTIVESTATE news
  * @param newstate [description]
  * @return [description]
  */
-bool __attribute__ ( ( fastcall ) )
+bool __FASTCALL__
 vsm_indicate (  IDSIMMODEL* this, uint32_t edx, REALTIME atime, ACTIVEDATA* newstate )
 {
 	( void ) this;
@@ -314,7 +314,7 @@ vsm_indicate (  IDSIMMODEL* this, uint32_t edx, REALTIME atime, ACTIVEDATA* news
  * @param atime [description]
  * @param mode [description]
  */
-void __attribute__ ( ( fastcall ) )
+void __FASTCALL__
 vsm_simulate (  IDSIMMODEL* this, uint32_t edx, ABSTIME atime, DSIMMODES mode )
 {
 	( void ) edx;
@@ -344,7 +344,7 @@ vsm_simulate (  IDSIMMODEL* this, uint32_t edx, ABSTIME atime, DSIMMODES mode )
  * @param atime [description]
  * @param eventid [description]
  */
-void __attribute__ ( ( fastcall ) )
+void __FASTCALL__
 vsm_timer_callback (  IDSIMMODEL* this, uint32_t edx, ABSTIME atime, EVENTID eventid )
 {
 	( void ) edx;
@@ -380,6 +380,7 @@ vsm_timer_callback (  IDSIMMODEL* this, uint32_t edx, ABSTIME atime, EVENTID eve
  * @param thispvReserved [description]
  * @return [description]
  */
+#ifndef __MINGW32__
 bool APIENTRY
 DllMain ( HINSTANCE hInstDLL, uint32_t fdwReason, LPVOID lpvReserved )
 {
@@ -389,8 +390,9 @@ DllMain ( HINSTANCE hInstDLL, uint32_t fdwReason, LPVOID lpvReserved )
 	srand(time(0));
 	return true;
 }
+#endif
 
-LRESULT __attribute__ ( ( fastcall ) ) icpu_vdmhlr (  ICPU* this, uint32_t edx, VDM_COMMAND* cmd, uint8_t* data )
+LRESULT __FASTCALL__ icpu_vdmhlr (  ICPU* this, uint32_t edx, VDM_COMMAND* cmd, uint8_t* data )
 {
 	( void ) this;
 	( void ) edx;
@@ -399,7 +401,7 @@ LRESULT __attribute__ ( ( fastcall ) ) icpu_vdmhlr (  ICPU* this, uint32_t edx, 
 	return 0;
 }
 
-void __attribute__ ( ( fastcall ) ) icpu_loaddata ( ICPU* this, uint32_t edx, int32_t format, int32_t seg, ADDRESS address, uint8_t* data, int32_t numbytes )
+void __FASTCALL__ icpu_loaddata ( ICPU* this, uint32_t edx, int32_t format, int32_t seg, ADDRESS address, uint8_t* data, int32_t numbytes )
 {
 	( void ) this;
 	( void ) edx;
@@ -410,7 +412,7 @@ void __attribute__ ( ( fastcall ) ) icpu_loaddata ( ICPU* this, uint32_t edx, in
 	( void ) numbytes;
 }
 
-void __attribute__ ( ( fastcall ) ) icpu_disassemble ( ICPU* this, uint32_t edx, ADDRESS address, int32_t numbytes )
+void __FASTCALL__ icpu_disassemble ( ICPU* this, uint32_t edx, ADDRESS address, int32_t numbytes )
 {
 	( void ) this;
 	( void ) edx;
@@ -418,7 +420,7 @@ void __attribute__ ( ( fastcall ) ) icpu_disassemble ( ICPU* this, uint32_t edx,
 	( void ) numbytes;
 }
 
-bool __attribute__ ( ( fastcall ) ) icpu_getvardata ( ICPU* this, uint32_t edx, VARITEM* vip, VARDATA* vdp )
+bool __FASTCALL__ icpu_getvardata ( ICPU* this, uint32_t edx, VARITEM* vip, VARDATA* vdp )
 {
 	( void ) this;
 	( void ) edx;

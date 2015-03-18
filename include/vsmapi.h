@@ -58,6 +58,18 @@
 #define LUSER (&lua_islightuserdata)
 #define LTABLE (&lua_istable)
 
+#ifdef __FASTCALL__
+#error "Fastcall is already declared!"
+#endif
+
+#ifdef __MINGW32__
+	#define __FASTCALL__ __attribute__((fastcall))
+#elif _MSC_VER
+	#define __FASTCALL__ __fastcall
+#else
+	#error "Unknown compiler"
+#endif
+
 typedef struct calltrace
 {
 	void* func_addr;
@@ -67,28 +79,28 @@ typedef struct calltrace
 int32_t vasprintf ( char** sptr, char* fmt, va_list argv );
 int32_t asprintf ( char** sptr, char* fmt, ... );
 
-int32_t __attribute__ ( ( fastcall ) )
+int32_t __FASTCALL__
 vsm_isdigital ( IDSIMMODEL* this, uint32_t edx, char* pinname );
-void __attribute__ ( ( fastcall ) )
+void __FASTCALL__
 vsm_setup ( IDSIMMODEL* this, uint32_t edx, IINSTANCE* instance, IDSIMCKT* dsim );
-void __attribute__ ( ( fastcall ) )
+void __FASTCALL__
 vsm_runctrl (  IDSIMMODEL* this, uint32_t edx, RUNMODES mode );
-void __attribute__ ( ( fastcall ) )
+void __FASTCALL__
 vsm_actuate  (  IDSIMMODEL* this, uint32_t edx, REALTIME atime, ACTIVESTATE newstate );
-bool __attribute__ ( ( fastcall ) )
+bool __FASTCALL__
 vsm_indicate (  IDSIMMODEL* this, uint32_t edx, REALTIME atime, ACTIVEDATA* newstate );
-void __attribute__ ( ( fastcall ) )
+void __FASTCALL__
 vsm_simulate (  IDSIMMODEL* this, uint32_t edx, ABSTIME atime, DSIMMODES mode );
-void __attribute__ ( ( fastcall ) )
+void __FASTCALL__
 vsm_timer_callback (  IDSIMMODEL* this, uint32_t edx, ABSTIME atime, EVENTID eventid );
 
-LRESULT __attribute__ ( ( fastcall ) )
+LRESULT __FASTCALL__
 icpu_vdmhlr (  ICPU* this, uint32_t edx, VDM_COMMAND* cmd, uint8_t* data );
-void __attribute__ ( ( fastcall ) )
+void __FASTCALL__
 icpu_loaddata ( ICPU* this, EDX, int32_t format, int32_t seg, ADDRESS address, uint8_t* data, int32_t numbytes );
-void __attribute__ ( ( fastcall ) )
+void __FASTCALL__
 icpu_disassemble ( ICPU* this, EDX, ADDRESS address, int32_t numbytes );
-bool __attribute__ ( ( fastcall ) )
+bool __FASTCALL__
 icpu_getvardata ( ICPU* this, EDX, VARITEM* vip, VARDATA* vdp );
 
 struct SPICEDATA
