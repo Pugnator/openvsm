@@ -7,9 +7,14 @@
  * @license This project is released under the BSD 2-Clause license.
  *
  */
-
-#ifndef VSMAPI_H
-#define VSMAPI_H
+#pragma once
+#ifdef __MINGW32__
+	#define __FASTCALL__ __attribute__((fastcall))
+#elif _MSC_VER
+ 	#define __FASTCALL__ __fastcall
+#else
+ 	#error "unsupported compiler specified"
+#endif
 
 #include <windows.h>
 #include <stdio.h>
@@ -58,17 +63,7 @@
 #define LUSER (&lua_islightuserdata)
 #define LTABLE (&lua_istable)
 
-#ifdef __FASTCALL__
-#error "Fastcall is already declared!"
-#endif
 
-#ifdef __MINGW32__
-	#define __FASTCALL__ __attribute__((fastcall))
-#elif _MSC_VER
-	#define __FASTCALL__ __fastcall
-#else
-	#error "Unknown compiler"
-#endif
 
 typedef struct calltrace
 {
@@ -286,6 +281,4 @@ struct IMSGHLR
 };
 
 ICPU ICPU_DEVICE;
-
-#endif
 
