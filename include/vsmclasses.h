@@ -8,8 +8,6 @@
  *
  */
 #pragma once
-#ifndef VSM_CLASSES_H
-#define VSM_CLASSES_H
 #include <vsmapi.h>
 #include <vdmapi.h>
 
@@ -284,6 +282,4 @@ struct IMSGHLR_vtable
 {
 	LRESULT __FASTCALL__ ( *msghlr ) ( IMEMORYPOPUP* this, EDX, HWND, MESSAGE, WPARAM, LPARAM );
 };
-
-#endif
 
