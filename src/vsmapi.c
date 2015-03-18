@@ -146,7 +146,7 @@ vsm_setup ( IDSIMMODEL* this, uint32_t edx, IINSTANCE* instance, IDSIMCKT* dsimc
 			name_orig[strlen ( pin_name )-2]=0;
 		}
 		this->device_pins[i].pin = get_pin ( this, pin_name );
-		strncpy ( this->device_pins[i].name, pin_name , sizeof this->device_pins[i].name );
+		strncpy ( this->device_pins[i].name, pin_name , sizeof *this->device_pins[i].name );
 		lua_pop ( this->luactx, 1 );
 		//////////////////////
 		//set pin on time   //

@@ -282,7 +282,6 @@ lua_print_to_debug_popup ( lua_State* L )
 	safe_execute ( L, &lua_print_to_debug_popup );
 	const char* str = lua_tostring ( L, -1 );
 	void* popup = lua_touserdata ( L, -2 );
-	IDSIMMODEL* this = ( IDSIMMODEL* ) lua_get_model_obj ( L );
 	print_to_debug_popup ( popup,  str );
 	return 0;
 }
@@ -299,8 +298,7 @@ lua_dump_to_debug_popup ( lua_State* L )
 	lua_Number offset = luaL_checknumber ( L,-1 );
 	lua_Number size = luaL_checknumber ( L,-2 );
 	const char* buf = luaL_checkstring ( L,-3 );
-	void* popup = lua_touserdata ( L, -4 );
-	IDSIMMODEL* this = ( IDSIMMODEL* ) lua_get_model_obj ( L );
+	void* popup = lua_touserdata ( L, -4 );	
 	dump_to_debug_popup ( popup, ( BYTE* ) buf, offset, size );
 	return 0;
 }
@@ -355,7 +353,6 @@ lua_set_memory_popup ( lua_State* L )
 	lua_Number size = luaL_checknumber ( L,-1 );
 	const char* buf = luaL_checkstring ( L,-2 );
 	void* popup = lua_touserdata ( L, -3 );
-	IDSIMMODEL* this = ( IDSIMMODEL* ) lua_get_model_obj ( L );
 	set_memory_popup ( popup, 0, ( void* ) buf, size );
 	
 	return 0;
