@@ -13,7 +13,7 @@
 #elif _MSC_VER
  	#define __FASTCALL__ __fastcall
 #else
- 	#error "unsupported compiler specified"
+ 	#error "unsupported compiler"
 #endif
 
 #include <windows.h>
