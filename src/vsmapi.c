@@ -34,6 +34,9 @@ ICPU ICPU_DEVICE =
 	.vtable = &ICPU_DEVICE_vtable,
 };
 
+#ifdef _MSC_VER
+__declspec(dllexport)
+#endif
 IDSIMMODEL* __CDECL__
 createdsimmodel ( char* device, ILICENCESERVER* ils )
 {
@@ -58,6 +61,9 @@ createdsimmodel ( char* device, ILICENCESERVER* ils )
 	return vdev;
 }
 
+#ifdef _MSC_VER
+__declspec(dllexport)
+#endif
 void __CDECL__
 deletedsimmodel ( IDSIMMODEL* model )
 {
@@ -97,7 +103,6 @@ vsm_setup ( IDSIMMODEL* this, uint32_t edx, IINSTANCE* instance, IDSIMCKT* dsimc
 	lua_load_modules(this);
 	load_device_script ( this, device_script );
 	print_info ( this, "%s started [OpenVSM %s, %s] %s", get_device_id ( this ), __VERSION, device_script, LUA_RELEASE );
-	free ( device_script );
 	
 	lua_getglobal ( this->luactx,"device_init" );
 	if ( lua_isfunction ( this->luactx,lua_gettop ( this->luactx ) ) )
