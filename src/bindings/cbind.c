@@ -446,7 +446,7 @@ STATE get_pin_state ( IDSIMPIN* pin )
  * @param  pin [description]
  * @return     [description]
  */
-inline int get_pin_bool ( VSM_PIN pin )
+__INLINE__ int get_pin_bool ( VSM_PIN pin )
 {
 	if ( TRUE == is_pin_high ( pin.pin ) )
 	{
@@ -646,41 +646,41 @@ bool is_pin_inverted ( IDSIMPIN* pin )
  * @param  pinstate [description]
  * @return   [description]
  */
-inline bool islow ( STATE pinstate )
+__INLINE__ bool islow ( STATE pinstate )
 {
 	return ( pinstate & SP_MASK ) == SP_LOW;
 }
-inline bool
+__INLINE__ bool
 ishigh ( STATE pinstate )
 {
 	return ( pinstate & SP_MASK ) == SP_HIGH;
 }
-inline bool
+__INLINE__ bool
 isfloating ( STATE pinstate )
 {
 	return ( pinstate & SP_MASK ) == SP_FLOAT;
 }
-inline bool
+__INLINE__ bool
 iscontention ( STATE pinstate )
 {
 	return pinstate & SF_CONTENTION;
 }
-inline bool
+__INLINE__ bool
 isdefined ( STATE pinstate )
 {
 	return pinstate != SP_UNDEFINED;
 }
-inline bool
+__INLINE__ bool
 ishighlow ( STATE pinstate )
 {
 	return pinstate & 1;
 }
-inline INT
+__INLINE__ INT
 polarity ( STATE pinstate )
 {
 	return pinstate & SP_MASK;
 }
-inline INT
+__INLINE__ INT
 strength ( STATE pinstate )
 {
 	return pinstate & SS_MASK;

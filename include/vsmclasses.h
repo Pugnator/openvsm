@@ -74,50 +74,45 @@ typedef struct VSM_PIN
 struct IDSIMPIN2_vtable
 {
 
-	VOID __FASTCALL__ ( *settiming ) ( IDSIMPIN2* this, EDX, RELTIME tlh, RELTIME thl, RELTIME tgq );
-	VOID __FASTCALL__ ( *setstates ) ( IDSIMPIN2* this, EDX, STATE tstate, STATE fstate, STATE zstate );
-	EVENT* __FASTCALL__ ( *drivebool ) ( IDSIMPIN2* this, EDX, ABSTIME atime, bool flag );
-	EVENT* __FASTCALL__ ( *drivestate ) ( IDSIMPIN2* this, EDX, ABSTIME atime, STATE state );
-	EVENT* __FASTCALL__ ( *drivetristate ) ( IDSIMPIN2* this, EDX, ABSTIME atime );
+	VOID __FASTCALLP__ ( *settiming ) ( IDSIMPIN2* this, EDX, RELTIME tlh, RELTIME thl, RELTIME tgq );
+	VOID __FASTCALLP__ ( *setstates ) ( IDSIMPIN2* this, EDX, STATE tstate, STATE fstate, STATE zstate );
+	EVENT* __FASTCALLP__ ( *drivebool ) ( IDSIMPIN2* this, EDX, ABSTIME atime, bool flag );
+	EVENT* __FASTCALLP__ ( *drivestate ) ( IDSIMPIN2* this, EDX, ABSTIME atime, STATE state );
+	EVENT* __FASTCALLP__ ( *drivetristate ) ( IDSIMPIN2* this, EDX, ABSTIME atime );
 	
 };
 /************************************************************************/
 struct IDSIMPIN1_vtable
 {
 
-	bool __FASTCALL__ ( *invert ) ( IDSIMPIN1* this, EDX );
-	STATE __FASTCALL__ ( *istate ) ( IDSIMPIN1* this, EDX );
-	bool __FASTCALL__ ( *issteady ) ( IDSIMPIN1* this, EDX );
-	int32_t __FASTCALL__ ( *activity ) ( IDSIMPIN1* this, EDX );
-	bool __FASTCALL__ ( *isactive ) ( IDSIMPIN1* this, EDX );
-	bool __FASTCALL__ ( *isinactive ) ( IDSIMPIN1* this, EDX );
-	bool __FASTCALL__ ( *isposedge ) ( IDSIMPIN1* this, EDX );
-	bool __FASTCALL__ ( *isnegedge ) ( IDSIMPIN1* this, EDX );
-	bool __FASTCALL__ ( *isedge ) ( IDSIMPIN1* this, EDX );
-	EVENT* __FASTCALL__ ( *setstate1 ) ( IDSIMPIN1* this, EDX, ABSTIME atime, RELTIME tlh, RELTIME thl, RELTIME tgq, STATE state );
-	EVENT* __FASTCALL__ ( *setstate2 ) ( IDSIMPIN1* this, EDX, ABSTIME atime, RELTIME tgq, STATE state );
-	VOID __FASTCALL__ ( *setstate3 ) ( IDSIMPIN1* this, EDX, STATE state );
-	VOID __FASTCALL__ ( *sethandler ) ( IDSIMPIN1* this, EDX, IDSIMMODEL* model, void* phf );
-	DSIMNODE __FASTCALL__ ( *getnode ) ( IDSIMPIN1* this, EDX );
-	STATE __FASTCALL__ ( *getstate ) ( IDSIMPIN1* this, EDX );
+	bool __FASTCALLP__ ( *invert ) ( IDSIMPIN1* this, EDX );
+	STATE __FASTCALLP__ ( *istate ) ( IDSIMPIN1* this, EDX );
+	bool __FASTCALLP__ ( *issteady ) ( IDSIMPIN1* this, EDX );
+	int32_t __FASTCALLP__ ( *activity ) ( IDSIMPIN1* this, EDX );
+	bool __FASTCALLP__ ( *isactive ) ( IDSIMPIN1* this, EDX );
+	bool __FASTCALLP__ ( *isinactive ) ( IDSIMPIN1* this, EDX );
+	bool __FASTCALLP__ ( *isposedge ) ( IDSIMPIN1* this, EDX );
+	bool __FASTCALLP__ ( *isnegedge ) ( IDSIMPIN1* this, EDX );
+	bool __FASTCALLP__ ( *isedge ) ( IDSIMPIN1* this, EDX );
+	EVENT* __FASTCALLP__ ( *setstate1 ) ( IDSIMPIN1* this, EDX, ABSTIME atime, RELTIME tlh, RELTIME thl, RELTIME tgq, STATE state );
+	EVENT* __FASTCALLP__ ( *setstate2 ) ( IDSIMPIN1* this, EDX, ABSTIME atime, RELTIME tgq, STATE state );
+	VOID __FASTCALLP__ ( *setstate3 ) ( IDSIMPIN1* this, EDX, STATE state );
+	VOID __FASTCALLP__ ( *sethandler ) ( IDSIMPIN1* this, EDX, IDSIMMODEL* model, void* phf );
+	DSIMNODE __FASTCALLP__ ( *getnode ) ( IDSIMPIN1* this, EDX );
+	STATE __FASTCALLP__ ( *getstate ) ( IDSIMPIN1* this, EDX );
 };
 
-struct EVENT_vtable
-{
-
-
-};
 /************************************************************************/
 /* License server API wrapper */
 struct ILICENCESERVER_vtable
 {
 
-	bool __FASTCALL__ ( *authorize ) ( ILICENCESERVER* this, EDX, uint32_t product_id, uint32_t apiver );
-	bool __FASTCALL__ ( *authorizeex ) ( ILICENCESERVER* this, EDX, uint32_t product_id, uint32_t apiver, uint32_t builddate );
-	uint32_t __FASTCALL__ ( *getid ) (  ILICENCESERVER* this, EDX );
-	CHAR* __FASTCALL__ ( *getname ) ( ILICENCESERVER* this, EDX );
-	CHAR* __FASTCALL__ ( *getcompany ) ( ILICENCESERVER* this, EDX );
-	CHAR* __FASTCALL__ ( *getexpirydate ) ( ILICENCESERVER* this, EDX );
+	bool __FASTCALLP__ ( *authorize ) ( ILICENCESERVER* this, EDX, uint32_t product_id, uint32_t apiver );
+	bool __FASTCALLP__ ( *authorizeex ) ( ILICENCESERVER* this, EDX, uint32_t product_id, uint32_t apiver, uint32_t builddate );
+	uint32_t __FASTCALLP__ ( *getid ) (  ILICENCESERVER* this, EDX );
+	CHAR* __FASTCALLP__ ( *getname ) ( ILICENCESERVER* this, EDX );
+	CHAR* __FASTCALLP__ ( *getcompany ) ( ILICENCESERVER* this, EDX );
+	CHAR* __FASTCALLP__ ( *getexpirydate ) ( ILICENCESERVER* this, EDX );
 };
 
 /*************************************************************************/
@@ -125,23 +120,23 @@ struct ILICENCESERVER_vtable
 // CPU Interface - CPU models derive off this to implement debug support.
 struct ICPU_vtable
 {
-	LRESULT __FASTCALL__ ( *vdmhlr ) ( ICPU* this, EDX, VDM_COMMAND* cmd, BYTE* data );
-	VOID __FASTCALL__ ( *loaddata ) ( ICPU* this, EDX, int32_t format, int32_t seg, ADDRESS address, BYTE* data, int32_t numbytes );
-	VOID __FASTCALL__ ( *disassemble ) ( ICPU* this, EDX, ADDRESS address, int32_t numbytes );
-	bool __FASTCALL__ ( *getvardata ) ( ICPU* this, EDX, VARITEM* vip, VARDATA* vdp );
+	LRESULT __FASTCALLP__ ( *vdmhlr ) ( ICPU* this, EDX, VDM_COMMAND* cmd, BYTE* data );
+	VOID __FASTCALLP__ ( *loaddata ) ( ICPU* this, EDX, int32_t format, int32_t seg, ADDRESS address, BYTE* data, int32_t numbytes );
+	VOID __FASTCALLP__ ( *disassemble ) ( ICPU* this, EDX, ADDRESS address, int32_t numbytes );
+	bool __FASTCALLP__ ( *getvardata ) ( ICPU* this, EDX, VARITEM* vip, VARDATA* vdp );
 };
 
 /*************************************************************************/
 struct IDSIMMODEL_vtable
 {
 
-	int32_t __FASTCALL__ ( *isdigital ) ( IDSIMMODEL* this, EDX, CHAR* pinname );
-	VOID __FASTCALL__ ( *setup ) ( IDSIMMODEL* this, EDX, IINSTANCE* inst, IDSIMCKT* dsim );
-	VOID __FASTCALL__ ( *runctrl ) ( IDSIMMODEL* this, EDX, RUNMODES mode );
-	VOID __FASTCALL__ ( *actuate ) ( IDSIMMODEL* this, EDX, REALTIME atime, ACTIVESTATE newstate );
-	bool __FASTCALL__ ( *indicate ) ( IDSIMMODEL* this, EDX, REALTIME atime, ACTIVEDATA* data );
-	VOID __FASTCALL__ ( *simulate ) ( IDSIMMODEL* this, EDX, ABSTIME atime, DSIMMODES mode );
-	VOID __FASTCALL__ ( *callback ) ( IDSIMMODEL* this, EDX, ABSTIME atime, EVENTID eventid );
+	int32_t __FASTCALLP__ ( *isdigital ) ( IDSIMMODEL* this, EDX, CHAR* pinname );
+	VOID __FASTCALLP__ ( *setup ) ( IDSIMMODEL* this, EDX, IINSTANCE* inst, IDSIMCKT* dsim );
+	VOID __FASTCALLP__ ( *runctrl ) ( IDSIMMODEL* this, EDX, RUNMODES mode );
+	VOID __FASTCALLP__ ( *actuate ) ( IDSIMMODEL* this, EDX, REALTIME atime, ACTIVESTATE newstate );
+	bool __FASTCALLP__ ( *indicate ) ( IDSIMMODEL* this, EDX, REALTIME atime, ACTIVEDATA* data );
+	VOID __FASTCALLP__ ( *simulate ) ( IDSIMMODEL* this, EDX, ABSTIME atime, DSIMMODES mode );
+	VOID __FASTCALLP__ ( *callback ) ( IDSIMMODEL* this, EDX, ABSTIME atime, EVENTID eventid );
 };
 
 
@@ -149,15 +144,15 @@ struct IDSIMMODEL_vtable
 // Interface to bus pin object - new in APIVER 1.10
 struct IBUSPIN_vtable
 {
-	VOID __FASTCALL__ ( *settiming ) ( IBUSPIN* this, EDX, RELTIME tlh, RELTIME thl, RELTIME tz );
-	VOID __FASTCALL__ ( *setstates ) ( IBUSPIN* this, EDX, STATE tstate, STATE fstate, STATE zstate );
-	VOID __FASTCALL__ ( *sethandler ) ( IBUSPIN* this, EDX, IDSIMMODEL* model, void* phf );
-	VOID __FASTCALL__ ( *drivebusvalue ) ( IBUSPIN* this, EDX, ABSTIME atime, uint32_t value );
-	VOID __FASTCALL__ ( *drivetristate ) ( IBUSPIN* this, EDX, ABSTIME atime );
-	VOID __FASTCALL__ ( *drivebitstate ) ( IBUSPIN* this, EDX, ABSTIME atime, uint32_t bit, STATE state );
-	uint32_t __FASTCALL__ ( *getbusvalue ) ( IBUSPIN* this, EDX );
-	uint32_t __FASTCALL__ ( *getbusdrive ) ( IBUSPIN* this, EDX );
-	STATE __FASTCALL__ ( *getbitstate ) ( IBUSPIN* this, EDX, uint32_t bit );
+	VOID __FASTCALLP__ ( *settiming ) ( IBUSPIN* this, EDX, RELTIME tlh, RELTIME thl, RELTIME tz );
+	VOID __FASTCALLP__ ( *setstates ) ( IBUSPIN* this, EDX, STATE tstate, STATE fstate, STATE zstate );
+	VOID __FASTCALLP__ ( *sethandler ) ( IBUSPIN* this, EDX, IDSIMMODEL* model, void* phf );
+	VOID __FASTCALLP__ ( *drivebusvalue ) ( IBUSPIN* this, EDX, ABSTIME atime, uint32_t value );
+	VOID __FASTCALLP__ ( *drivetristate ) ( IBUSPIN* this, EDX, ABSTIME atime );
+	VOID __FASTCALLP__ ( *drivebitstate ) ( IBUSPIN* this, EDX, ABSTIME atime, uint32_t bit, STATE state );
+	uint32_t __FASTCALLP__ ( *getbusvalue ) ( IBUSPIN* this, EDX );
+	uint32_t __FASTCALLP__ ( *getbusdrive ) ( IBUSPIN* this, EDX );
+	STATE __FASTCALLP__ ( *getbitstate ) ( IBUSPIN* this, EDX, uint32_t bit );
 };
 /*************************************************************************/
 // Public Interface to a simulator component instance.
@@ -165,114 +160,114 @@ struct IBUSPIN_vtable
 struct IINSTANCE_vtable
 {
 	// Basic property access:
-	CHAR* __FASTCALL__ ( *id ) ( IINSTANCE* this, EDX );
-	CHAR* __FASTCALL__ ( *value ) ( IINSTANCE* this, EDX );
-	CHAR* __FASTCALL__ ( *getstrval ) ( IINSTANCE* this, EDX, CHAR* name, CHAR* defval );
-	VOID __FASTCALL__ ( *getnumval ) ( IINSTANCE* this, EDX, double* result, CHAR* name, double defval );
-	bool __FASTCALL__ ( *getboolval ) ( IINSTANCE* this, EDX, CHAR* name, bool defval );
-	uint32_t __FASTCALL__ ( *gethexval ) ( IINSTANCE* this, EDX, CHAR* name, uint32_t defval );
-	int64_t __FASTCALL__ ( *getinitval ) ( IINSTANCE* this, EDX, CHAR* name, int64_t defval );
-	RELTIME __FASTCALL__ ( *getdelay ) ( IINSTANCE* this, EDX, CHAR* name, RELTIME defval );
+	CHAR* __FASTCALLP__ ( *id ) ( IINSTANCE* this, EDX );
+	CHAR* __FASTCALLP__ ( *value ) ( IINSTANCE* this, EDX );
+	CHAR* __FASTCALLP__ ( *getstrval ) ( IINSTANCE* this, EDX, CHAR* name, CHAR* defval );
+	VOID __FASTCALLP__ ( *getnumval ) ( IINSTANCE* this, EDX, double* result, CHAR* name, double defval );
+	bool __FASTCALLP__ ( *getboolval ) ( IINSTANCE* this, EDX, CHAR* name, bool defval );
+	uint32_t __FASTCALLP__ ( *gethexval ) ( IINSTANCE* this, EDX, CHAR* name, uint32_t defval );
+	int64_t __FASTCALLP__ ( *getinitval ) ( IINSTANCE* this, EDX, CHAR* name, int64_t defval );
+	RELTIME __FASTCALLP__ ( *getdelay ) ( IINSTANCE* this, EDX, CHAR* name, RELTIME defval );
 	// Special property access
-	IACTIVEMODEL* __FASTCALL__ ( *getactivemodel ) (  IINSTANCE* this, EDX );
-	IINSTANCE* __FASTCALL__ ( *getinterfacemodel ) ( IINSTANCE* this, EDX );
-	bool __FASTCALL__ ( *getmoddata ) ( IINSTANCE* this, EDX, BYTE** data, uint32_t* size );
+	IACTIVEMODEL* __FASTCALLP__ ( *getactivemodel ) (  IINSTANCE* this, EDX );
+	IINSTANCE* __FASTCALLP__ ( *getinterfacemodel ) ( IINSTANCE* this, EDX );
+	bool __FASTCALLP__ ( *getmoddata ) ( IINSTANCE* this, EDX, BYTE** data, uint32_t* size );
 	// Access to the nodes and pins:
-	SPICENODE __FASTCALL__ ( *getspicenode ) ( IINSTANCE* this, EDX, CHAR* namelist, bool required );
-	IDSIMPIN* __FASTCALL__ ( *getdsimpin ) ( IINSTANCE* this, EDX, CHAR* namelist, bool required );
+	SPICENODE __FASTCALLP__ ( *getspicenode ) ( IINSTANCE* this, EDX, CHAR* namelist, bool required );
+	IDSIMPIN* __FASTCALLP__ ( *getdsimpin ) ( IINSTANCE* this, EDX, CHAR* namelist, bool required );
 	// Logging and messaging:
-	VOID __cdecl ( *log ) ( IINSTANCE* this, CHAR* msg, ... );
-	VOID __cdecl ( *warning ) ( IINSTANCE* this, CHAR* msg, ... );
-	VOID __cdecl ( *error ) ( IINSTANCE* this, CHAR* msg, ... );
-	VOID __cdecl ( *fatal ) ( IINSTANCE* this, CHAR* msg, ... );
-	bool __cdecl ( *message ) ( IINSTANCE* this, CHAR* msg, ... );
+	VOID __CDECLP__ ( *log ) ( IINSTANCE* this, CHAR* msg, ... );
+	VOID __CDECLP__ ( *warning ) ( IINSTANCE* this, CHAR* msg, ... );
+	VOID __CDECLP__ ( *error ) ( IINSTANCE* this, CHAR* msg, ... );
+	VOID __CDECLP__ ( *fatal ) ( IINSTANCE* this, CHAR* msg, ... );
+	bool __CDECLP__ ( *message ) ( IINSTANCE* this, CHAR* msg, ... );
 	// Pop-up window support:
-	IPOPUP* __FASTCALL__ ( *createpopup ) ( IINSTANCE* this, EDX, CREATEPOPUPSTRUCT* cps );
-	VOID __FASTCALL__ ( *deletepopup ) ( IINSTANCE* this, EDX, POPUPID id );
+	IPOPUP* __FASTCALLP__ ( *createpopup ) ( IINSTANCE* this, EDX, CREATEPOPUPSTRUCT* cps );
+	VOID __FASTCALLP__ ( *deletepopup ) ( IINSTANCE* this, EDX, POPUPID id );
 	//  debug monitor interface:
-	bool __FASTCALL__ ( *setvdmhlr ) ( IINSTANCE* this, EDX, ICPU* );
+	bool __FASTCALLP__ ( *setvdmhlr ) ( IINSTANCE* this, EDX, ICPU* );
 	// Generic memory loader:
-	bool __FASTCALL__ ( *loadmemory ) ( IINSTANCE* this, EDX, CHAR* filename, VOID* buffer, uint32_t size, uint32_t base, uint32_t shift );
+	bool __FASTCALLP__ ( *loadmemory ) ( IINSTANCE* this, EDX, CHAR* filename, VOID* buffer, uint32_t size, uint32_t base, uint32_t shift );
 	// Access to bus pins
-	IBUSPIN* __FASTCALL__ ( *getbuspin1 ) ( IINSTANCE* this, EDX, CHAR* namestem, uint32_t base, uint32_t width, bool required );
-	IBUSPIN __FASTCALL__ ( *getbuspin2 ) ( IINSTANCE* this, EDX, CHAR* name, IDSIMPIN** pins, uint32_t width );
+	IBUSPIN* __FASTCALLP__ ( *getbuspin1 ) ( IINSTANCE* this, EDX, CHAR* namestem, uint32_t base, uint32_t width, bool required );
+	IBUSPIN __FASTCALLP__ ( *getbuspin2 ) ( IINSTANCE* this, EDX, CHAR* name, IDSIMPIN** pins, uint32_t width );
 };
 /*************************************************************************/
 struct IDSIMCKT_vtable
 {
-	VOID __FASTCALL__ ( *sysvar ) ( IDSIMCKT* this, EDX, double* result, DSIMVARS var );
-	EVENT* __FASTCALL__ ( *setcallback ) ( IDSIMCKT* this, EDX, ABSTIME evttime, IDSIMMODEL* model, EVENTID id );
-	bool __FASTCALL__ ( *cancelcallback ) ( IDSIMCKT* this, EDX, EVENT* event, IDSIMMODEL* model );
-	VOID __FASTCALL__ ( *setbreak ) ( IDSIMCKT* this, EDX, ABSTIME breaktime );
-	VOID __FASTCALL__ ( *suspend ) ( IDSIMCKT* this, EDX, IINSTANCE* instance, CHAR* msg );
-	EVENT* __FASTCALL__ ( *setcallbackex ) ( IDSIMCKT* this, EDX, ABSTIME evttime, IDSIMMODEL* model, void* func, EVENTID id );
-	DSIMNODE __FASTCALL__ ( *newnode ) ( IDSIMCKT* this, EDX, CHAR* partid, CHAR* nodename );
-	IDSIMPIN* __FASTCALL__ ( *newpin ) ( IDSIMCKT* this, EDX, IINSTANCE*, DSIMNODE node, CHAR* name, uint32_t flags );
-	EVENT* __FASTCALL__ ( *setclockcallback ) ( IDSIMCKT* this, EDX, ABSTIME starttime, RELTIME period, IDSIMMODEL* model, void* func, EVENTID id );
+	VOID __FASTCALLP__ ( *sysvar ) ( IDSIMCKT* this, EDX, double* result, DSIMVARS var );
+	EVENT* __FASTCALLP__ ( *setcallback ) ( IDSIMCKT* this, EDX, ABSTIME evttime, IDSIMMODEL* model, EVENTID id );
+	bool __FASTCALLP__ ( *cancelcallback ) ( IDSIMCKT* this, EDX, EVENT* event, IDSIMMODEL* model );
+	VOID __FASTCALLP__ ( *setbreak ) ( IDSIMCKT* this, EDX, ABSTIME breaktime );
+	VOID __FASTCALLP__ ( *suspend ) ( IDSIMCKT* this, EDX, IINSTANCE* instance, CHAR* msg );
+	EVENT* __FASTCALLP__ ( *setcallbackex ) ( IDSIMCKT* this, EDX, ABSTIME evttime, IDSIMMODEL* model, void* func, EVENTID id );
+	DSIMNODE __FASTCALLP__ ( *newnode ) ( IDSIMCKT* this, EDX, CHAR* partid, CHAR* nodename );
+	IDSIMPIN* __FASTCALLP__ ( *newpin ) ( IDSIMCKT* this, EDX, IINSTANCE*, DSIMNODE node, CHAR* name, uint32_t flags );
+	EVENT* __FASTCALLP__ ( *setclockcallback ) ( IDSIMCKT* this, EDX, ABSTIME starttime, RELTIME period, IDSIMMODEL* model, void* func, EVENTID id );
 };
 
 /*************************************************************************/
 // User defined popup window:
 struct IUSERPOPUP_vtable
 {
-	CHAR* __FASTCALL__ ( *getprop ) ( IUSERPOPUP* this, EDX, CHAR* key );
-	VOID __FASTCALL__ ( *setprop ) ( IUSERPOPUP* this, EDX, CHAR* key, CHAR* value );
-	VOID __FASTCALL__ ( *setmsghlr ) ( IUSERPOPUP* this, EDX, IMSGHLR* handler );
-	LRESULT __FASTCALL__ ( *callwindowproc ) ( IUSERPOPUP* this, EDX, MESSAGE msg, WPARAM warg, LPARAM larg );
+	CHAR* __FASTCALLP__ ( *getprop ) ( IUSERPOPUP* this, EDX, CHAR* key );
+	VOID __FASTCALLP__ ( *setprop ) ( IUSERPOPUP* this, EDX, CHAR* key, CHAR* value );
+	VOID __FASTCALLP__ ( *setmsghlr ) ( IUSERPOPUP* this, EDX, IMSGHLR* handler );
+	LRESULT __FASTCALLP__ ( *callwindowproc ) ( IUSERPOPUP* this, EDX, MESSAGE msg, WPARAM warg, LPARAM larg );
 	
 };
 
 // Debug\logging window:
 struct IDEBUGPOPUP_vtable
 {
-	VOID __cdecl ( *print ) ( IDEBUGPOPUP* this, CHAR* msg, ... );
-	VOID __FASTCALL__ ( *dump ) ( IDEBUGPOPUP* this, EDX, const BYTE* ptr, uint32_t nbytes, uint32_t base );
+	VOID __CDECLP__ ( *print ) ( IDEBUGPOPUP* this, CHAR* msg, ... );
+	VOID __FASTCALLP__ ( *dump ) ( IDEBUGPOPUP* this, EDX, const BYTE* ptr, uint32_t nbytes, uint32_t base );
 };
 
 // Memory dump window:
 struct IMEMORYPOPUP_vtable
 {
-	VOID __FASTCALL__ ( *setmemory ) ( IMEMORYPOPUP* this, EDX, ADDRESS baseaddr, BYTE* data, uint32_t nbytes );
-	VOID __FASTCALL__ ( *repaint ) ( IMEMORYPOPUP* this, EDX );
+	VOID __FASTCALLP__ ( *setmemory ) ( IMEMORYPOPUP* this, EDX, ADDRESS baseaddr, BYTE* data, uint32_t nbytes );
+	VOID __FASTCALLP__ ( *repaint ) ( IMEMORYPOPUP* this, EDX );
 };
 
 // Status display window:
 struct ISTATUSPOPUP_vtable
 {
-	VOID __FASTCALL__ ( *setarea ) ( ISTATUSPOPUP* this, EDX, uint32_t columns, uint32_t rows, uint32_t border, bool copy );
-	VOID __FASTCALL__ ( *setcursorto ) ( ISTATUSPOPUP* this, EDX, uint32_t pixelx, uint32_t pixely );
-	uint32_t __FASTCALL__ ( *getcharwidth ) ( ISTATUSPOPUP* this, EDX );
-	uint32_t __FASTCALL__ ( *getcharheight ) ( ISTATUSPOPUP* this, EDX );
-	VOID __cdecl ( *print1 ) ( ISTATUSPOPUP* this, CHAR* message, ... );
-	VOID __cdecl ( *print2 ) ( ISTATUSPOPUP* this, int32_t col, int32_t row, COLOUR textcolour, CHAR* msg, ... );
-	VOID __FASTCALL__ ( *setctabstops1 ) ( ISTATUSPOPUP* this, EDX, const int32_t ts[], int32_t n );
-	VOID __FASTCALL__ ( *setctabstops2 ) ( ISTATUSPOPUP* this, EDX, const int32_t ts[], int32_t n ); /*FIXME: Is it error?*/
-	VOID __FASTCALL__ ( *clear ) ( ISTATUSPOPUP* this, EDX, COLOUR bkcolour );
-	bool __FASTCALL__ ( *setredraw ) ( ISTATUSPOPUP* this, EDX, bool on_off, bool redraw_now );
-	VOID __FASTCALL__ ( *repaint ) ( ISTATUSPOPUP* this, EDX );
+	VOID __FASTCALLP__ ( *setarea ) ( ISTATUSPOPUP* this, EDX, uint32_t columns, uint32_t rows, uint32_t border, bool copy );
+	VOID __FASTCALLP__ ( *setcursorto ) ( ISTATUSPOPUP* this, EDX, uint32_t pixelx, uint32_t pixely );
+	uint32_t __FASTCALLP__ ( *getcharwidth ) ( ISTATUSPOPUP* this, EDX );
+	uint32_t __FASTCALLP__ ( *getcharheight ) ( ISTATUSPOPUP* this, EDX );
+	VOID __CDECLP__ ( *print1 ) ( ISTATUSPOPUP* this, CHAR* message, ... );
+	VOID __CDECLP__ ( *print2 ) ( ISTATUSPOPUP* this, int32_t col, int32_t row, COLOUR textcolour, CHAR* msg, ... );
+	VOID __FASTCALLP__ ( *setctabstops1 ) ( ISTATUSPOPUP* this, EDX, const int32_t ts[], int32_t n );
+	VOID __FASTCALLP__ ( *setctabstops2 ) ( ISTATUSPOPUP* this, EDX, const int32_t ts[], int32_t n ); /*FIXME: Is it error?*/
+	VOID __FASTCALLP__ ( *clear ) ( ISTATUSPOPUP* this, EDX, COLOUR bkcolour );
+	bool __FASTCALLP__ ( *setredraw ) ( ISTATUSPOPUP* this, EDX, bool on_off, bool redraw_now );
+	VOID __FASTCALLP__ ( *repaint ) ( ISTATUSPOPUP* this, EDX );
 };
 
 // Status display window:
 struct ISOURCEPOPUP_vtable
 {
-	bool __FASTCALL__ ( *addsdifile ) ( ISOURCEPOPUP* this, EDX, CHAR* file );
-	bool __FASTCALL__ ( *setpcaddress ) ( ISOURCEPOPUP* this, EDX, ADDRESS addr );
-	bool __FASTCALL__ ( *isbreakpoint ) ( ISOURCEPOPUP* this, EDX, ADDRESS addr );
-	bool __FASTCALL__ ( *iscurrentline ) ( ISOURCEPOPUP* this, EDX, ADDRESS addr );
-	bool __FASTCALL__ ( *findfirstbpt ) ( ISOURCEPOPUP* this, EDX, ADDRESS addr );
-	bool __FASTCALL__ ( *findnextbpt ) ( ISOURCEPOPUP* this, EDX, ADDRESS addr );
+	bool __FASTCALLP__ ( *addsdifile ) ( ISOURCEPOPUP* this, EDX, CHAR* file );
+	bool __FASTCALLP__ ( *setpcaddress ) ( ISOURCEPOPUP* this, EDX, ADDRESS addr );
+	bool __FASTCALLP__ ( *isbreakpoint ) ( ISOURCEPOPUP* this, EDX, ADDRESS addr );
+	bool __FASTCALLP__ ( *iscurrentline ) ( ISOURCEPOPUP* this, EDX, ADDRESS addr );
+	bool __FASTCALLP__ ( *findfirstbpt ) ( ISOURCEPOPUP* this, EDX, ADDRESS addr );
+	bool __FASTCALLP__ ( *findnextbpt ) ( ISOURCEPOPUP* this, EDX, ADDRESS addr );
 	
-	bool __FASTCALL__ ( *addsrcfile ) ( ISOURCEPOPUP* this, EDX, CHAR* file, bool lowlevel );
-	VOID __FASTCALL__ ( *addcodeline ) ( ISOURCEPOPUP* this, EDX, int32_t srclinenum, ADDRESS address );
-	VOID __FASTCALL__ ( *addcodelabel ) ( ISOURCEPOPUP* this, EDX, CHAR* label, ADDRESS address );
-	VOID __FASTCALL__ ( *update ) ( ISOURCEPOPUP* this, EDX );
+	bool __FASTCALLP__ ( *addsrcfile ) ( ISOURCEPOPUP* this, EDX, CHAR* file, bool lowlevel );
+	VOID __FASTCALLP__ ( *addcodeline ) ( ISOURCEPOPUP* this, EDX, int32_t srclinenum, ADDRESS address );
+	VOID __FASTCALLP__ ( *addcodelabel ) ( ISOURCEPOPUP* this, EDX, CHAR* label, ADDRESS address );
+	VOID __FASTCALLP__ ( *update ) ( ISOURCEPOPUP* this, EDX );
 	
-	bool __FASTCALL__ ( *getsteptoaddr ) ( ISOURCEPOPUP* this, EDX, ADDRESS* addr );
-	VOID __FASTCALL__ ( *setinsertpos ) ( ISOURCEPOPUP* this, EDX, int32_t fileid, int32_t linenum, bool newblock );
-	VOID __FASTCALL__ ( *insertline ) ( ISOURCEPOPUP* this, EDX, ADDRESS addr, CHAR* opcodes, CHAR* srctext );
-	bool __FASTCALL__ ( *findfirstsrcline ) ( ISOURCEPOPUP* this, EDX, ADDRESS* addr );
-	bool __FASTCALL__ ( *findnextsrcline ) ( ISOURCEPOPUP* this, EDX, ADDRESS* addr );
-	CHAR* __FASTCALL__ ( *findlabel ) ( ISOURCEPOPUP* this, EDX, ADDRESS* addr );
+	bool __FASTCALLP__ ( *getsteptoaddr ) ( ISOURCEPOPUP* this, EDX, ADDRESS* addr );
+	VOID __FASTCALLP__ ( *setinsertpos ) ( ISOURCEPOPUP* this, EDX, int32_t fileid, int32_t linenum, bool newblock );
+	VOID __FASTCALLP__ ( *insertline ) ( ISOURCEPOPUP* this, EDX, ADDRESS addr, CHAR* opcodes, CHAR* srctext );
+	bool __FASTCALLP__ ( *findfirstsrcline ) ( ISOURCEPOPUP* this, EDX, ADDRESS* addr );
+	bool __FASTCALLP__ ( *findnextsrcline ) ( ISOURCEPOPUP* this, EDX, ADDRESS* addr );
+	CHAR* __FASTCALLP__ ( *findlabel ) ( ISOURCEPOPUP* this, EDX, ADDRESS* addr );
 	
 };
 
@@ -280,6 +275,6 @@ struct ISOURCEPOPUP_vtable
 
 struct IMSGHLR_vtable
 {
-	LRESULT __FASTCALL__ ( *msghlr ) ( IMEMORYPOPUP* this, EDX, HWND, MESSAGE, WPARAM, LPARAM );
+	LRESULT __FASTCALLP__ ( *msghlr ) ( IMEMORYPOPUP* this, EDX, HWND, MESSAGE, WPARAM, LPARAM );
 };
 
