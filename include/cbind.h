@@ -10,8 +10,7 @@
  */
 
 #pragma once
-#ifndef C_BIND_H
-#define C_BIND_H
+
 #include <vsmapi.h>
 
 /* DEBUG */
@@ -60,14 +59,14 @@ void set_pc_address ( ISOURCEPOPUP* popup, size_t address );
 
 /* PINS */
 
-inline bool iscontention ( STATE s );
-inline bool isdefined ( STATE s );
-inline bool isfloating ( STATE s );
-inline bool ishigh ( STATE s );
-inline bool ishighlow ( STATE s );
-inline bool islow ( STATE s );
-inline INT  polarity ( STATE s );
-inline INT  strength ( STATE s );
+__INLINE__ bool iscontention ( STATE s );
+__INLINE__ bool isdefined ( STATE s );
+__INLINE__ bool isfloating ( STATE s );
+__INLINE__ bool ishigh ( STATE s );
+__INLINE__ bool ishighlow ( STATE s );
+__INLINE__ bool islow ( STATE s );
+__INLINE__ INT  polarity ( STATE s );
+__INLINE__ INT  strength ( STATE s );
 
 bool is_pin_active ( IDSIMPIN* pin );
 bool is_pin_inactive ( IDSIMPIN* pin );
@@ -86,5 +85,3 @@ const char* state_to_string ( STATE s );
 int32_t get_pin_bool ( VSM_PIN pin );
 void set_pin_bool ( IDSIMMODEL* model, VSM_PIN pin, bool level );
 void toggle_pin_state ( IDSIMMODEL* model, VSM_PIN pin );
-
-#endif

@@ -8,6 +8,26 @@
  *
  */
 #pragma once
+
+///////////////////////////////////////////////////////////
+/// Several macros for compatibility between VC and GCC ///
+///////////////////////////////////////////////////////////
+#ifdef __MINGW32__
+	#define __CDECL__ __cdecl
+#elif _MSC_VER
+ 	#define __CDECL__ __cdecl
+#else
+ 	#error "unsupported compiler"
+#endif
+
+#ifdef __MINGW32__
+	#define __CDECLP__(func) (__cdecl (func))
+#elif _MSC_VER
+ 	#define __CDECLP__(func) (__cdecl func)
+#else
+ 	#error "unsupported compiler"
+#endif
+
 #ifdef __MINGW32__
 	#define __FASTCALL__ __attribute__((fastcall))
 #elif _MSC_VER
@@ -16,6 +36,24 @@
  	#error "unsupported compiler"
 #endif
 
+#ifdef __MINGW32__
+	#define __FASTCALLP__(func) (__attribute__((fastcall))(func))
+#elif _MSC_VER
+ 	#define __FASTCALLP__(func) (__fastcall func)
+#else
+ 	#error "unsupported compiler"
+#endif
+
+#ifdef __MINGW32__
+	#define __INLINE__ inline
+#elif _MSC_VER
+ 	#define __INLINE__ __inline
+#else
+ 	#error "unsupported compiler"
+#endif
+
+//////////////////////////////////////////////////////////////////
+#define _CRT_SECURE_NO_WARNINGS
 #include <windows.h>
 #include <stdio.h>
 #include <stdbool.h>
@@ -62,9 +100,7 @@
 #define LINT (&lua_isnumber)
 #define LUSER (&lua_islightuserdata)
 #define LTABLE (&lua_istable)
-
-
-
+#define LNONE (NULL)
 typedef struct calltrace
 {
 	void* func_addr;

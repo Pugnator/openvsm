@@ -77,4 +77,4 @@ install:
 clean:
 	@rm -f $(OPENVSMLIB).*
 	@rm -f modules/*.bin modules/*.c modules/*.o
-	@find -maxdepth 1 -type f -regex ".*/.*\.\(o\|res\|dll\|lib\|dwarf\\)" -delete
+	@find -maxdepth 2 -type f -regex ".*/.*\.\(o\|res\|dll\|lib\|dwarf\\)" -delete

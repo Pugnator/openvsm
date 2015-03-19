@@ -34,10 +34,12 @@ ICPU ICPU_DEVICE =
 	.vtable = &ICPU_DEVICE_vtable,
 };
 
-IDSIMMODEL* __cdecl
+IDSIMMODEL* __CDECL__
 createdsimmodel ( char* device, ILICENCESERVER* ils )
 {
 	( void ) device;
+	MessageBox(0, "Message body", "Message title", MB_OK);
+	srand(time(0));
 	if ( 0 == vsm_register ( ils ) )
 	{
 		return NULL;
@@ -56,7 +58,7 @@ createdsimmodel ( char* device, ILICENCESERVER* ils )
 	return vdev;
 }
 
-void __cdecl
+void __CDECL__
 deletedsimmodel ( IDSIMMODEL* model )
 {
 	/* Close Lua */
@@ -387,7 +389,6 @@ DllMain ( HINSTANCE hInstDLL, uint32_t fdwReason, LPVOID lpvReserved )
 	( void ) hInstDLL;
 	( void ) fdwReason;
 	( void ) lpvReserved;
-	srand(time(0));
 	return true;
 }
 #endif
