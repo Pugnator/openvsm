@@ -1,4 +1,4 @@
---Bus class handlers
+--IC Bus object
 
 Bus = {}
 Bus.__index = Bus

@@ -99,7 +99,7 @@ safe_execute ( lua_State* L, void* curfunc )
 	IDSIMMODEL* this = ( IDSIMMODEL* ) lua_get_model_obj ( L );
 	if ( !this->safe_mode )
 		return;
-		
+
 	int argnum = lua_gettop ( L );
 	for ( int i=0; lua_c_api_list[i].lua_func_name; i++ )
 	{
@@ -114,7 +114,7 @@ safe_execute ( lua_State* L, void* curfunc )
 					lua_getstack ( L, 1, &ar );
 					lua_getinfo ( L, "nSl", &ar );
 					int line = ar.currentline;
-					
+
 					print_error ( this, "Line %d: Too few arguments passed to the function \"%s\"", line, lua_c_api_list[i].lua_func_name );
 				}
 				else if ( !lua_c_api_list[i].args[argcount] ( L, argcount+1 ) )
@@ -166,9 +166,9 @@ load_device_script ( IDSIMMODEL* this, const char* device_name )
 	}
 	char* script=NULL;
 	asprintf ( &script, "%s%s%s", spath, '\\' == spath[strlen ( spath )-1]? "":"\\", device_name );
-	
+
 	int lua_err = luaL_loadfile ( this->luactx, script );
-	
+
 	if ( 0 != lua_err )
 	{
 		const char* mess = NULL;
@@ -254,7 +254,7 @@ static int
 lua_delete_popup ( lua_State* L )
 {
 	safe_execute ( L, &lua_delete_popup );
-	int id = lua_tointeger ( L, -1 );
+	ptrdiff_t id = lua_tointeger ( L, -1 );
 	IDSIMMODEL* this = ( IDSIMMODEL* ) lua_get_model_obj ( L );
 	delete_popup ( this, id );
 	return 0;
@@ -298,7 +298,7 @@ lua_dump_to_debug_popup ( lua_State* L )
 	lua_Number offset = luaL_checknumber ( L,-1 );
 	lua_Number size = luaL_checknumber ( L,-2 );
 	const char* buf = luaL_checkstring ( L,-3 );
-	void* popup = lua_touserdata ( L, -4 );	
+	void* popup = lua_touserdata ( L, -4 );
 	dump_to_debug_popup ( popup, ( BYTE* ) buf, offset, size );
 	return 0;
 }
@@ -354,7 +354,7 @@ lua_set_memory_popup ( lua_State* L )
 	const char* buf = luaL_checkstring ( L,-2 );
 	void* popup = lua_touserdata ( L, -3 );
 	set_memory_popup ( popup, 0, ( void* ) buf, size );
-	
+
 	return 0;
 }
 
@@ -367,7 +367,7 @@ lua_add_source_file ( lua_State* L )
 		IDSIMMODEL* this = ( IDSIMMODEL* ) lua_get_model_obj ( L );
 		print_info ( this, "Fail to load source file" );
 	}
-	
+
 	return 0;
 }
 
@@ -384,9 +384,9 @@ static int
 lua_state_to_string ( lua_State* L )
 {
 	safe_execute ( L, &lua_state_to_string );
-	int state = lua_tointeger ( L, -1 );
+	ptrdiff_t state = lua_tointeger ( L, -1 );
 	IDSIMMODEL* this = ( IDSIMMODEL* ) lua_get_model_obj ( L );
-	
+
 	lua_pushstring ( L,  state_to_string ( state ) );
 	return 1;
 }
