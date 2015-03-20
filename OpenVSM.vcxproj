@@ -82,8 +82,8 @@
     <ClCompile Include="src\bindings\cbind.c" />
     <ClCompile Include="src\bindings\luabind.c" />
     <ClCompile Include="src\bus.c" />
-    <ClCompile Include="src\modules\bus.bin.c" />
-    <ClCompile Include="src\modules\custom.bin.c" />
+    <ClCompile Include="src\modules\bus.mod.c" />
+    <ClCompile Include="src\modules\custom.mod.c" />
     <ClCompile Include="src\pin.c" />
     <ClCompile Include="src\utils.c" />
     <ClCompile Include="src\vsmapi.c" />

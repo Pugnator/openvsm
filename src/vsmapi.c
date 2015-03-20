@@ -82,7 +82,9 @@ vsm_isdigital ( IDSIMMODEL* this, uint32_t edx, char* pinname )
 	/**TODO*/
 	return 1;
 }
-void pinhandler (void)
+
+void __FASTCALL__
+pinhandler (IDSIMPIN *pin, uint32_t edx)
 {
 	MessageBox(NULL,"Pin handler", "Ok", MB_OK);
 }
@@ -237,7 +239,7 @@ vsm_setup ( IDSIMMODEL* this, uint32_t edx, IINSTANCE* instance, IDSIMCKT* dsimc
 		}
 	}
 
-	this->device_pins[1].pin->vtable->sethandler(this->device_pins[1].pin, 0, this, &pinhandler);
+	//this->device_pins[1].pin->vtable->sethandler(this->device_pins[1].pin, 0, this, &pinhandler);
 	
 }
 
