@@ -39,10 +39,10 @@
     <ClCompile Include="src\bindings\luabind.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\modules\bus.bin.c">
+    <ClCompile Include="src\modules\bus.mod.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\modules\custom.bin.c">
+    <ClCompile Include="src\modules\custom.mod.c">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
