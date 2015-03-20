@@ -40,8 +40,7 @@ __declspec(dllexport)
 IDSIMMODEL* __CDECL__
 createdsimmodel ( char* device, ILICENCESERVER* ils )
 {
-	( void ) device;
-	MessageBox(0, "Message body", "Message title", MB_OK);
+	( void ) device;	
 	srand(time(0));
 	if ( 0 == vsm_register ( ils ) )
 	{
@@ -82,6 +81,10 @@ vsm_isdigital ( IDSIMMODEL* this, uint32_t edx, char* pinname )
 	/* Always true at the moment */
 	/**TODO*/
 	return 1;
+}
+void pinhandler (void)
+{
+	MessageBox(NULL,"Pin handler", "Ok", MB_OK);
 }
 
 /**
@@ -152,7 +155,7 @@ vsm_setup ( IDSIMMODEL* this, uint32_t edx, IINSTANCE* instance, IDSIMCKT* dsimc
 			memmove ( name_orig, name_orig + 1, sizeof name_orig - 1 );
 			name_orig[strlen ( pin_name )-2]=0;
 		}
-		this->device_pins[i].pin = get_pin ( this, pin_name );
+		this->device_pins[i].pin = get_pin ( this, pin_name );		
 		strncpy ( this->device_pins[i].name, pin_name , sizeof *this->device_pins[i].name );
 		lua_pop ( this->luactx, 1 );
 		//////////////////////
@@ -233,6 +236,8 @@ vsm_setup ( IDSIMMODEL* this, uint32_t edx, IINSTANCE* instance, IDSIMCKT* dsimc
 			}
 		}
 	}
+
+	this->device_pins[1].pin->vtable->sethandler(this->device_pins[1].pin, 0, this, &pinhandler);
 	
 }
 

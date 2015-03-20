@@ -41,24 +41,24 @@ SLIB_CFLAGS:=-Wl,--export-all-symbols,--enable-auto-import
 LDFLAGS:=../lua53/liblua.a -lm
 
 OBJ=$(SRC:%.c=%.o) openvsm.res \
-$(MOD)/bus.bin.c.o $(MOD)/custom.bin.c.o
+$(MOD)/bus.mod.c.o $(MOD)/custom.mod.c.o
 
-LOBJ=$(MODULES:%.lua=%.bin)
+LOBJ=$(MODULES:%.lua=%.mod)
 
 all: modules $(OPENVSMLIB).dll
 
-%.bin: %.lua
+%.mod: %.lua
 	$(LUAC) -s -o $@ $<
 	$(XXD) -i $< > $@.c
 
 openvsm.res:
 	$(WINRES) openvsm.rc -O coff -o openvsm.res
 
-$(MOD)/bus.bin.c.o:
-	$(CC) -c -o $@ $(MOD)/bus.bin.c $(CFLAGS)
+$(MOD)/bus.mod.c.o:
+	$(CC) -c -o $@ $(MOD)/bus.mod.c $(CFLAGS)
 
-$(MOD)/custom.bin.c.o:
-	$(CC) -c -o $@ $(MOD)/custom.bin.c $(CFLAGS)
+$(MOD)/custom.mod.c.o:
+	$(CC) -c -o $@ $(MOD)/custom.mod.c $(CFLAGS)
 
 %.o: %.c
 	$(CC) -c -o $@ $< $(CFLAGS)
@@ -76,5 +76,5 @@ install:
 
 clean:
 	@rm -f $(OPENVSMLIB).*
-	@rm -f modules/*.bin modules/*.c modules/*.o
+	@rm -f modules/*.mod modules/*.c modules/*.o
 	@find -maxdepth 2 -type f -regex ".*/.*\.\(o\|res\|dll\|lib\|dwarf\\)" -delete
