@@ -78,8 +78,7 @@ vsm_isdigital ( IDSIMMODEL* this, uint32_t edx, char* pinname )
 	( void ) this;
 	( void ) edx;
 	( void ) pinname;
-	/* Always true at the moment */
-	/**TODO*/
+	/* Always true at the moment */	
 	return 1;
 }
 
@@ -334,7 +333,10 @@ vsm_simulate (  IDSIMMODEL* this, uint32_t edx, ABSTIME atime, DSIMMODES mode )
 	( void ) edx;
 	( void ) atime;
 	( void ) mode;
-	
+#if 0
+	/* C model speed benchmark as for NAND gate */
+	set_pin_bool(this, this->device_pins[3], (1-(get_pin_bool(this->device_pins[1]) * get_pin_bool(this->device_pins[2]))));
+#else
 	if ( this->device_simulate_declared )
 	{
 		lua_getglobal ( this->luactx, "device_simulate" );
@@ -347,6 +349,7 @@ vsm_simulate (  IDSIMMODEL* this, uint32_t edx, ABSTIME atime, DSIMMODES mode )
 			}
 		}
 	}
+#endif
 }
 
 /**

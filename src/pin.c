@@ -163,7 +163,7 @@ int pin_set ( lua_State* L )
 {
 	IDSIMMODEL* model = ( IDSIMMODEL* ) lua_get_model_obj ( L );
 	int pin_num = get_pin_self ( L );
-	int value = lua_tointeger ( L, -1 );
+	int value = lua_tointeger ( L, -2 );
 	set_pin_bool ( model, model->device_pins[pin_num], value );
 	return 0;
 }

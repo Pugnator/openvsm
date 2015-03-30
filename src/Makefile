@@ -30,9 +30,11 @@ bindings/cbind.c bindings/luabind.c
 LUAC=luac
 MODULES=\
 $(MOD)/bus.lua \
-$(MOD)/custom.lua
+$(MOD)/custom.lua \
+$(MOD)/events.lua \
+$(MOD)/pin.lua
 
-CFLAGS:=-O0 -gdwarf-2 -fgnu89-inline -std=gnu99 -g3 \
+CFLAGS:=-O3 -gdwarf-2 -fgnu89-inline -std=gnu99 -g3 \
 -Wno-unused-variable -I../include -Imodules \
 -I../lua53/include -D__VERSION=\"$(shell ../relgen.sh)\"
 
@@ -41,7 +43,8 @@ SLIB_CFLAGS:=-Wl,--export-all-symbols,--enable-auto-import
 LDFLAGS:=../lua53/liblua.a -lm
 
 OBJ=$(SRC:%.c=%.o) openvsm.res \
-$(MOD)/bus.mod.c.o $(MOD)/custom.mod.c.o
+$(MOD)/bus.mod.c.o $(MOD)/custom.mod.c.o \
+$(MOD)/events.mod.c.o $(MOD)/pin.mod.c.o
 
 LOBJ=$(MODULES:%.lua=%.mod)
 
@@ -59,6 +62,12 @@ $(MOD)/bus.mod.c.o:
 
 $(MOD)/custom.mod.c.o:
 	$(CC) -c -o $@ $(MOD)/custom.mod.c $(CFLAGS)
+
+$(MOD)/pin.mod.c.o:
+	$(CC) -c -o $@ $(MOD)/pin.mod.c $(CFLAGS)
+
+$(MOD)/events.mod.c.o:
+	$(CC) -c -o $@ $(MOD)/events.mod.c $(CFLAGS)
 
 %.o: %.c
 	$(CC) -c -o $@ $< $(CFLAGS)

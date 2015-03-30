@@ -76,10 +76,10 @@ void lua_load_modules (IDSIMMODEL* this)
 	{
 		PRINT(this, "Failed to load module");
 	}
-	else
+	if ( luaL_loadbufferx(this->luactx, modules_events_lua, modules_events_lua_len, "events_class", NULL))
 	{
-		PRINT(this, "Modules loaded");
-	}
+		PRINT(this, "Failed to load module");
+	}	
 	lua_pcall(this->luactx, 0, 0, 0);
 }
 
