@@ -6,6 +6,7 @@ OpenVSM
 OpenVSM is a model sumulation engine with C and Lua API for Proteus 7/8 CAD
 
 Documentation can be found at http://pugnator.github.io/openvsm
+
 Prebuild DLL and symbols can be found in Release section
 
 Written in C and gcc-ready (mingw/cygwin) for Linux and Windows
@@ -17,7 +18,7 @@ Written in C and gcc-ready (mingw/cygwin) for Linux and Windows
   - Designed with hope to make simulation as simple as possible for electronics enthusiasts
 
 
-Visit 'examples' directory for sample project files. Tehre is no tutorial yet but I'm working on it
+Visit 'examples' directory for sample project files. There is no tutorial yet but I'm working on it
 
 Please kindly send all your remarks and ideas to my mail [o o kami (at) ma il.ru] or submit a bug or feature request
 
@@ -27,7 +28,6 @@ Version
 ----
 0.2
 
-You can use precompiled version of DLL. It can be found under Release section.
 Generally you need to compile DLL from the sources only if you want to include custom scripts.
 
 How to build
