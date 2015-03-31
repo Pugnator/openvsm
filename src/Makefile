@@ -74,9 +74,9 @@ $(MOD)/events.mod.c.o:
 
 $(OPENVSMLIB).dll: $(OBJ)
 	$(CC) -shared -o $@ $^ $(LDFLAGS) $(SLIB_CFLAGS)
-	@#$(OBJCOPY) --only-keep-debug $(OPENVSMLIB).dll $(OPENVSMLIB).dwarf
-	@#$(STRIP) -s $(OPENVSMLIB).dll
-	@#$(OBJCOPY) --add-gnu-debuglink=$(OPENVSMLIB).dwarf $(OPENVSMLIB).dll
+	@$(OBJCOPY) --only-keep-debug $(OPENVSMLIB).dll $(OPENVSMLIB).dwarf
+	@$(STRIP) -s $(OPENVSMLIB).dll
+	@$(OBJCOPY) --add-gnu-debuglink=$(OPENVSMLIB).dwarf $(OPENVSMLIB).dll
 
 modules: $(LOBJ)
 	@echo "Lua modules compiled"
