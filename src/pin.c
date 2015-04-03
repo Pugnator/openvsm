@@ -12,7 +12,7 @@
 #include <vsmapi.h>
 
 /**
- * [register_pin_obj  description]
+ * [register_pin_obj  Create pin's method table]
  * @param L    [description]
  * @param num  [description]
  * @param name [description]
@@ -103,7 +103,7 @@ int get_pin_self ( lua_State* L )
 
 /**
  * [pin_set_hi  description]
- * @param  L [description]
+ * @param  L [Lua state]
  * @return   [description]
  */
 int pin_set_hi ( lua_State* L )
@@ -116,7 +116,7 @@ int pin_set_hi ( lua_State* L )
 
 /**
  * [pin_set_lo  description]
- * @param  L [description]
+ * @param  L [Lua state]
  * @return   [description]
  */
 int pin_set_lo ( lua_State* L )
@@ -129,7 +129,7 @@ int pin_set_lo ( lua_State* L )
 
 /**
  * [pin_set_fl  description]
- * @param  L [description]
+ * @param  L [Lua state]
  * @return   [description]
  */
 int pin_set_fl ( lua_State* L )
@@ -142,7 +142,7 @@ int pin_set_fl ( lua_State* L )
 
 /**
  * [pin_get  description]
- * @param  L [description]
+ * @param  L [Lua state]
  * @return   [description]
  */
 int pin_get ( lua_State* L )
@@ -156,7 +156,7 @@ int pin_get ( lua_State* L )
 
 /**
  * [pin_set  description]
- * @param  L [description]
+ * @param  L [Lua state]
  * @return   [description]
  */
 int pin_set ( lua_State* L )
@@ -170,7 +170,7 @@ int pin_set ( lua_State* L )
 
 /**
  * [pin_is_edge  description]
- * @param  L [description]
+ * @param  L [Lua state]
  * @return   [description]
  */
 int pin_is_edge ( lua_State* L )
@@ -183,7 +183,7 @@ int pin_is_edge ( lua_State* L )
 
 /**
  * [pin_is_pedge  description]
- * @param  L [description]
+ * @param  L [Lua state]
  * @return   [description]
  */
 int pin_is_pedge ( lua_State* L )
@@ -196,7 +196,7 @@ int pin_is_pedge ( lua_State* L )
 
 /**
  * [pin_is_nedge  description]
- * @param  L [description]
+ * @param  L [Lua state]
  * @return   [description]
  */
 int pin_is_nedge ( lua_State* L )
@@ -209,7 +209,7 @@ int pin_is_nedge ( lua_State* L )
 
 /**
  * [pin_is_inverted  description]
- * @param  L [description]
+ * @param  L [Lua state]
  * @return   [description]
  */
 int pin_is_inverted ( lua_State* L )
@@ -222,7 +222,7 @@ int pin_is_inverted ( lua_State* L )
 
 /**
  * [pin_is_steady  description]
- * @param  L [description]
+ * @param  L [Lua state]
  * @return   [description]
  */
 int pin_is_steady ( lua_State* L )
@@ -235,7 +235,7 @@ int pin_is_steady ( lua_State* L )
 
 /**
  * [pin_is_active  description]
- * @param  L [description]
+ * @param  L [Lua state]
  * @return   [description]
  */
 int pin_is_active ( lua_State* L )
@@ -248,7 +248,7 @@ int pin_is_active ( lua_State* L )
 
 /**
  * [pin_is_inactive  description]
- * @param  L [description]
+ * @param  L [Lua state]
  * @return   [description]
  */
 int pin_is_inactive ( lua_State* L )
@@ -261,7 +261,7 @@ int pin_is_inactive ( lua_State* L )
 
 /**
  * [pin_set_state  description]
- * @param  L [description]
+ * @param  L [Lua state]
  * @return   [description]
  */
 int pin_set_state ( lua_State* L )
@@ -275,7 +275,7 @@ int pin_set_state ( lua_State* L )
 
 /**
  * [pin_get_state  description]
- * @param  L [description]
+ * @param  L [Lua state]
  * @return   [description]
  */
 int pin_get_state ( lua_State* L )
@@ -288,7 +288,7 @@ int pin_get_state ( lua_State* L )
 
 /**
  * [pin_is_hi  description]
- * @param  L [description]
+ * @param  L [Lua state]
  * @return   [description]
  */
 int pin_is_hi ( lua_State* L )
@@ -301,7 +301,7 @@ int pin_is_hi ( lua_State* L )
 
 /**
  * [pin_is_lo  description]
- * @param  L [description]
+ * @param  L [Lua state]
  * @return   [description]
  */
 int pin_is_lo ( lua_State* L )
@@ -314,7 +314,7 @@ int pin_is_lo ( lua_State* L )
 
 /**
  * [pin_is_fl  description]
- * @param  L [description]
+ * @param  L [Lua state]
  * @return   [description]
  */
 int pin_is_fl ( lua_State* L )
@@ -325,19 +325,25 @@ int pin_is_fl ( lua_State* L )
 	return 1;
 }
 
-
+/**
+ * @brief [brief description]
+ * @details [long description]
+ *
+ * @param L [description]
+ * @return [description]
+ */
 int pin_toggle ( lua_State* L )
 {
 	IDSIMMODEL* model = ( IDSIMMODEL* ) lua_get_model_obj ( L );
 	int pin_num = get_pin_self ( L );
-	int val = get_pin_bool(model->device_pins[pin_num]);
-	if(val > 0)
+	int val = get_pin_bool ( model->device_pins[pin_num] );
+	if ( val > 0 )
 	{
-		set_pin_bool(model, model->device_pins[pin_num], 0);
+		set_pin_bool ( model, model->device_pins[pin_num], 0 );
 	}
 	else
 	{
-		set_pin_bool(model, model->device_pins[pin_num], 1);	
+		set_pin_bool ( model, model->device_pins[pin_num], 1 );
 	}
 	return 0;
 }

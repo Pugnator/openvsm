@@ -12,4 +12,4 @@
 #pragma once
 #include <vsmapi.h>
 
-uint64_t xorshift(IDSIMMODEL* this);
+uint64_t xorshift ( IDSIMMODEL* this );
