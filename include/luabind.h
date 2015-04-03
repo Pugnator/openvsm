@@ -30,7 +30,7 @@ typedef struct lua_bind_var
 #define PIN_OFF_TIME "off_time"
 #define PIN_ON_TIME "on_time"
 
-void lua_load_modules (IDSIMMODEL* this);
+void lua_load_modules ( IDSIMMODEL* this );
 bool load_device_script ( IDSIMMODEL* model, const char* function );
 void register_functions ( IDSIMMODEL* model, lua_State* L );
 

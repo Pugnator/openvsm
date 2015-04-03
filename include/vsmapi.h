@@ -13,43 +13,43 @@
 /// Several macros for compatibility between VC and GCC ///
 ///////////////////////////////////////////////////////////
 #ifdef __MINGW32__
-	#define __CDECL__ __cdecl
+#define __CDECL__ __cdecl
 #elif _MSC_VER
- 	#define __CDECL__ __cdecl
+#define __CDECL__ __cdecl
 #else
- 	#error "unsupported compiler"
+#error "unsupported compiler"
 #endif
 
 #ifdef __MINGW32__
-	#define __CDECLP__(func) (__cdecl (func))
+#define __CDECLP__(func) (__cdecl (func))
 #elif _MSC_VER
- 	#define __CDECLP__(func) (__cdecl func)
+#define __CDECLP__(func) (__cdecl func)
 #else
- 	#error "unsupported compiler"
+#error "unsupported compiler"
 #endif
 
 #ifdef __MINGW32__
-	#define __FASTCALL__ __attribute__((fastcall))
+#define __FASTCALL__ __attribute__((fastcall))
 #elif _MSC_VER
- 	#define __FASTCALL__ __fastcall
+#define __FASTCALL__ __fastcall
 #else
- 	#error "unsupported compiler"
+#error "unsupported compiler"
 #endif
 
 #ifdef __MINGW32__
-	#define __FASTCALLP__(func) (__attribute__((fastcall))(func))
+#define __FASTCALLP__(func) (__attribute__((fastcall))(func))
 #elif _MSC_VER
- 	#define __FASTCALLP__(func) (__fastcall func)
+#define __FASTCALLP__(func) (__fastcall func)
 #else
- 	#error "unsupported compiler"
+#error "unsupported compiler"
 #endif
 
 #ifdef __MINGW32__
-	#define __INLINE__ inline
+#define __INLINE__ inline
 #elif _MSC_VER
- 	#define __INLINE__ __inline
+#define __INLINE__ __inline
 #else
- 	#error "unsupported compiler"
+#error "unsupported compiler"
 #endif
 
 //////////////////////////////////////////////////////////////////

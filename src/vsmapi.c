@@ -35,13 +35,13 @@ ICPU ICPU_DEVICE =
 };
 
 #ifdef _MSC_VER
-__declspec(dllexport)
+__declspec ( dllexport )
 #endif
 IDSIMMODEL* __CDECL__
 createdsimmodel ( char* device, ILICENCESERVER* ils )
 {
-	( void ) device;	
-	srand(time(0));
+	( void ) device;
+	srand ( time ( 0 ) );
 	if ( 0 == vsm_register ( ils ) )
 	{
 		return NULL;
@@ -61,7 +61,7 @@ createdsimmodel ( char* device, ILICENCESERVER* ils )
 }
 
 #ifdef _MSC_VER
-__declspec(dllexport)
+__declspec ( dllexport )
 #endif
 void __CDECL__
 deletedsimmodel ( IDSIMMODEL* model )
@@ -78,14 +78,14 @@ vsm_isdigital ( IDSIMMODEL* this, uint32_t edx, char* pinname )
 	( void ) this;
 	( void ) edx;
 	( void ) pinname;
-	/* Always true at the moment */	
+	/* Always true at the moment */
 	return 1;
 }
 
 void __FASTCALL__
-pinhandler (IDSIMPIN *pin, uint32_t edx)
+pinhandler ( IDSIMPIN* pin, uint32_t edx )
 {
-	MessageBox(NULL,"Pin handler", "Ok", MB_OK);
+	MessageBox ( NULL,"Pin handler", "Ok", MB_OK );
 }
 
 /**
@@ -104,7 +104,7 @@ vsm_setup ( IDSIMMODEL* this, uint32_t edx, IINSTANCE* instance, IDSIMCKT* dsimc
 	this->xorseed[1] = rand() << 31 | rand() & 0xFFFFFFFF;
 	
 	char* device_script = get_string_param ( this, "lua" );
-	lua_load_modules(this);
+	lua_load_modules ( this );
 	load_device_script ( this, device_script );
 	print_info ( this, "%s started [OpenVSM %s, %s] %s", get_device_id ( this ), __VERSION, device_script, LUA_RELEASE );
 	
@@ -131,12 +131,12 @@ vsm_setup ( IDSIMMODEL* this, uint32_t edx, IINSTANCE* instance, IDSIMCKT* dsimc
 	{
 		print_error ( this, "Fatal error, no pin assignments found in script" );
 		return;
-	}	
+	}
 	lua_len ( this->luactx, -1 );
 	int32_t pin_number = lua_tointeger ( this->luactx, -1 );
-	if(!pin_number)
+	if ( !pin_number )
 	{
-		print_warning(this, "IC has no pins");
+		print_warning ( this, "IC has no pins" );
 	}
 	lua_pop ( this->luactx, 1 );
 	/* Pins initialization */
@@ -156,7 +156,7 @@ vsm_setup ( IDSIMMODEL* this, uint32_t edx, IINSTANCE* instance, IDSIMCKT* dsimc
 			memmove ( name_orig, name_orig + 1, sizeof name_orig - 1 );
 			name_orig[strlen ( pin_name )-2]=0;
 		}
-		this->device_pins[i].pin = get_pin ( this, pin_name );		
+		this->device_pins[i].pin = get_pin ( this, pin_name );
 		strncpy ( this->device_pins[i].name, pin_name , sizeof *this->device_pins[i].name );
 		lua_pop ( this->luactx, 1 );
 		//////////////////////
@@ -237,7 +237,7 @@ vsm_setup ( IDSIMMODEL* this, uint32_t edx, IINSTANCE* instance, IDSIMCKT* dsimc
 			}
 		}
 	}
-
+	
 	//this->device_pins[1].pin->vtable->sethandler(this->device_pins[1].pin, 0, this, &pinhandler);
 	
 }
@@ -335,7 +335,7 @@ vsm_simulate (  IDSIMMODEL* this, uint32_t edx, ABSTIME atime, DSIMMODES mode )
 	( void ) mode;
 #if 0
 	/* C model speed benchmark as for NAND gate */
-	set_pin_bool(this, this->device_pins[3], (1-(get_pin_bool(this->device_pins[1]) * get_pin_bool(this->device_pins[2]))));
+	set_pin_bool ( this, this->device_pins[3], ( 1- ( get_pin_bool ( this->device_pins[1] ) * get_pin_bool ( this->device_pins[2] ) ) ) );
 #else
 	if ( this->device_simulate_declared )
 	{
