@@ -22,7 +22,7 @@ DefaultDirName={pf}\{#MyAppName}
 DefaultGroupName={#MyAppName}
 AllowNoIcons=yes
 LicenseFile=E:\IBM-PC\Lin32\openvsm\LICENSE
-OutputBaseFilename=openvsm
+OutputBaseFilename=Installer
 Compression=lzma
 SolidCompression=yes
 
@@ -43,6 +43,10 @@ Root: "HKCU"; Subkey: "Environment"; ValueType: expandsz; ValueName: "LUAVSM"; V
 [Dirs]
 Name: "{app}\LuaScripts"; Flags: uninsneveruninstall
 Name: "{app}\Docs"
+
+[Messages]
+BeveledLabel=NonameGarage
+FinishedLabel=The default folder for your scripts is LuaScripts inside installation directory.%nYou should place all your device scripts there.%nIn order to change it, you should edit LUAVSM environment variable and set the corresponding path
 
 [Code]
 
