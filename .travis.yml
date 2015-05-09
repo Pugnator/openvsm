@@ -6,7 +6,7 @@ include:
 
 install:
  - sudo apt-get update -qq
- - sudo apt-get install mingw32-x-binutils mingw32-x-gcc mingw32-x-runtime -y -qq 
+ - sudo apt-get install lua5.2 mingw32-binutils mingw32 mingw32-runtime -y -qq 
 
 script:
  - make
