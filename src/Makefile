@@ -40,11 +40,11 @@ $(DEV)/device.lua
 
 CFLAGS:=-O3 -gdwarf-2 -fgnu89-inline -std=gnu99 -g3 \
 -Wno-unused-variable -I../include -Imodules \
--I../lua53/include -D__VERSION=\"$(shell ../relgen.sh)\"
+-I../externals/lua53/include -D__VERSION=\"$(shell ../relgen.sh)\"
 
 SLIB_CFLAGS:=-Wl,--export-all-symbols,--enable-auto-import
 
-LDFLAGS:=../lua53/liblua.a -lm
+LDFLAGS:=../externals/lua53/liblua.a -lm
 
 OBJ=$(SRC:%.c=%.o) openvsm.res \
 $(MOD)/bus.mod.c.o $(MOD)/custom.mod.c.o \
