@@ -89,7 +89,7 @@ pinhandler ( IDSIMPIN* pin, uint32_t edx )
 }
 
 /**
- * [Set up the IC]
+ * [Set up the model]
  * @param this  [description]
  */
 void __FASTCALL__
