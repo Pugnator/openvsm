@@ -6,7 +6,12 @@ include:
 
 install:
  - sudo apt-get update -qq
- - sudo apt-get install lua5.2 mingw32-binutils mingw32 mingw32-runtime -y -qq 
+ - sudo apt-get install mingw32-binutils mingw32 mingw32-runtime -y -qq 
+ - curl -R -O http://www.lua.org/ftp/lua-5.3.0.tar.gz
+ - tar zxf lua-5.3.0.tar.gz
+ - cd lua-5.3.0
+ - make linux test
+ - make install
 
 script:
  - make
