@@ -1,10 +1,12 @@
 language: c
 include:
-  # cross-compile using mingw
-  - compiler: ": w64"
-    env: PLATFORM="mingw32" ARCH="x86_64" BITSIZE=64 HOST="x86_64"
+  # cross-compile using mingw 
   - compiler: ": w32"
     env: PLATFORM="mingw32" ARCH="x86" BITSIZE=32 HOST="i686"
+
+install:
+ - sudo apt-get update -qq
+ - sudo apt-get install mingw32-x-binutils mingw32-x-gcc mingw32-x-runtime -y -qq 
 
 script:
  - make
