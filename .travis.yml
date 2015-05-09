@@ -1,0 +1,11 @@
+language: c
+include:
+  # cross-compile using mingw
+  - compiler: ": w64"
+    env: PLATFORM="mingw32" ARCH="x86_64" BITSIZE=64 HOST="x86_64"
+  - compiler: ": w32"
+    env: PLATFORM="mingw32" ARCH="x86" BITSIZE=32 HOST="i686"
+
+script:
+ - make
+
