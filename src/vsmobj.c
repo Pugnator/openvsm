@@ -10,6 +10,12 @@
 
 #include <vsmapi.h>
 
+/**
+ * @brief extracts model object from Lua state 
+ * 
+ * @param L Lua state
+ * @return model object
+ */
 void* lua_get_model_obj ( lua_State* L )
 {
 	lua_pushliteral ( L, "__this" );
