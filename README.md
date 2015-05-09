@@ -1,5 +1,6 @@
 OpenVSM
 =========
+[![Build Status](https://travis-ci.org/Pugnator/openvsm.svg?branch=testing)](https://travis-ci.org/Pugnator/openvsm)
 
 ![Openvsm logo by 4eRt0vKa](logo.png)
 
