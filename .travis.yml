@@ -13,7 +13,7 @@ install:
  - make linux test
  - sudo make install
  - popd
- - mkdir - p ../dll
+ - mkdir -p ../dll
 
 script:
  - make
