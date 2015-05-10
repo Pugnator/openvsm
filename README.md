@@ -12,7 +12,7 @@ Powered by Lua http://www.lua.org/
 
 Documentation can be found at http://pugnator.github.io/openvsm
 
-Prebuild DLL and symbols can be found in Release section
+Prebuild DLL and symbols or installer are in [Release](https://github.com/Pugnator/openvsm/releases) section
 
 Written in C and gcc-ready (mingw/cygwin) for Linux and Windows
 
