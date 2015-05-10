@@ -14,6 +14,7 @@ install:
  - sudo make install
  - popd
  - mkdir -p ../dll
+ - if [[ ! -e "../dll" ]]; then echo "Output directory is not created!!!" fi
 
 script:
  - make
