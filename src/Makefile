@@ -25,8 +25,15 @@ DEV=device
 XXD=xxd
 OPENVSMLIB?=$(LIBDIR)/openvsm
 
-SRC=vsmapi.c pin.c bus.c vsmobj.c utils.c win32.c \
-bindings/cbind.c bindings/luabind.c
+SRC:=vsmapi.c \
+lua_pin.c \
+lua_bus.c \
+lua_vsmobj.c \
+utils.c \
+wincompat.c \
+bindings/cbind.c \
+bindings/luabind.c
+
 
 LUAC=luac
 MODULES=\
