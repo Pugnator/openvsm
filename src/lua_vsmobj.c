@@ -11,8 +11,8 @@
 #include <vsmapi.h>
 
 /**
- * @brief extracts model object from Lua state 
- * 
+ * @brief extracts model object from Lua state
+ *
  * @param L Lua state
  * @return model object
  */
