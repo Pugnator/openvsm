@@ -80,6 +80,10 @@ void lua_load_modules (IDSIMMODEL* this)
 	{
 		PRINT(this, "Failed to load module");
 	}	
+	if ( luaL_loadbufferx(this->luactx, device_device_lua, device_device_lua_len, "precompiled_device", NULL))
+	{
+		PRINT(this, "Failed to load module");
+	}
 	lua_pcall(this->luactx, 0, 0, 0);
 }
 
