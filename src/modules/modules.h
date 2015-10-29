@@ -22,3 +22,5 @@ extern unsigned int modules_events_lua_len;
 extern unsigned char modules_pin_lua[];
 extern unsigned int modules_pin_lua_len;
 
+extern unsigned char device_device_lua[];
+extern unsigned int device_device_lua_len;

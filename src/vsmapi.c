@@ -89,7 +89,7 @@ pinhandler ( IDSIMPIN* pin, uint32_t edx )
 }
 
 /**
- * [Set up the IC]
+ * [Set up the model]
  * @param this  [description]
  */
 void __FASTCALL__
@@ -105,8 +105,18 @@ vsm_setup ( IDSIMMODEL* this, uint32_t edx, IINSTANCE* instance, IDSIMCKT* dsimc
 	
 	char* device_script = get_string_param ( this, "lua" );
 	lua_load_modules ( this );
-	load_device_script ( this, device_script );
-	print_info ( this, "%s started [OpenVSM %s, %s] %s", get_device_id ( this ), __VERSION, device_script, LUA_RELEASE );
+	/* If user uses precompiled device script - don't load external script */
+	lua_getglobal ( this->luactx,"__USE_PRECOMPILED" );
+	if ( lua_isinteger ( this->luactx,lua_gettop ( this->luactx ) ) )
+	{
+		print_info ( this, "%s started [OpenVSM %s, precompiled device script] %s", get_device_id ( this ), __VERSION, LUA_RELEASE );
+	}
+	else
+	{
+		load_device_script ( this, device_script );
+		print_info ( this, "%s started [OpenVSM %s, %s] %s", get_device_id ( this ), __VERSION, device_script, LUA_RELEASE );
+	}
+	
 	
 	lua_getglobal ( this->luactx,"device_init" );
 	if ( lua_isfunction ( this->luactx,lua_gettop ( this->luactx ) ) )
