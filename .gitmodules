@@ -1,0 +1,6 @@
+[submodule "externals/systemc"]
+	path = externals/systemc
+	url = https://github.com/systemc/systemc-2.3.git
+[submodule "externals/qbox"]
+	path = externals/qbox
+	url = http://git.greensocs.com/qemu/qbox.git
