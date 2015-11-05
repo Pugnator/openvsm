@@ -4,9 +4,9 @@ ifneq (, $(findstring mingw, $(CURENV)))
 	MAKE=mingw32-make
 	CC:=mingw32-gcc
 	AR:=mingw32-ar
-	OBJCOPY:=mingw32-objcopy
+	OBJCOPY:=objcopy
 	STRIP:=mingw32-strip
-	WINRES:=mingw32-windres
+	WINRES:=windres
 else ifneq (, $(findstring linux, $(CURENV)))
 	MAKE=make
 	CC:=i586-mingw32msvc-gcc

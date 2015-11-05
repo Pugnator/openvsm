@@ -1,5 +1,14 @@
+CURENV=$(shell gcc -dumpmachine)
+ifneq (, $(findstring mingw, $(CURENV)))
+	MAKE=mingw32-make	
+else ifneq (, $(findstring linux, $(CURENV)))
+	MAKE=make	
+else
+	exit 0
+endif
+
 all:
-	mkdir -p dll
-	make -C src
+	$(MAKE) -p dll
+	$(MAKE) -C src
 clean:
-	make -C src clean
+	$(MAKE) -C src clean
