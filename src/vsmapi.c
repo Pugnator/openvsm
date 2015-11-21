@@ -14,6 +14,7 @@
 #define __VERSION 0
 #endif
 
+/** \brief	The vsm device vtable. */
 IDSIMMODEL_vtable VSM_DEVICE_vtable =
 {
 	.isdigital      = vsm_isdigital,
@@ -25,6 +26,7 @@ IDSIMMODEL_vtable VSM_DEVICE_vtable =
 	.callback       = vsm_timer_callback,
 };
 
+/** \brief	The icpu device vtable. */
 ICPU_vtable ICPU_DEVICE_vtable =
 {
 	.vdmhlr = icpu_vdmhlr,
@@ -33,6 +35,7 @@ ICPU_vtable ICPU_DEVICE_vtable =
 	.getvardata = icpu_getvardata,
 };
 
+/** \brief	The icpu device. */
 ICPU ICPU_DEVICE =
 {
 	.vtable = &ICPU_DEVICE_vtable,
@@ -41,6 +44,23 @@ ICPU ICPU_DEVICE =
 #ifdef _MSC_VER
 __declspec ( dllexport )
 #endif
+
+/**********************************************************************************************//**
+ * \fn	IDSIMMODEL* __CDECL__ createdsimmodel ( char* device, ILICENCESERVER* ils )
+ *
+ * \brief	Createdsimmodels.
+ *
+ * \author	Pugnator
+ * \date	11/21/2015
+ *
+ * \param [in,out]	device	If non-null, the device.
+ * \param [in,out]	ils   	If non-null, the ils.
+ *
+ * \return	null if it fails, else an IDSIMMODEL*.
+ *
+ * ### remarks	Pugnator, 11/21/2015.
+ **************************************************************************************************/
+
 IDSIMMODEL* __CDECL__
 createdsimmodel ( char* device, ILICENCESERVER* ils )
 {
@@ -67,6 +87,20 @@ createdsimmodel ( char* device, ILICENCESERVER* ils )
 #ifdef _MSC_VER
 __declspec ( dllexport )
 #endif
+
+/**********************************************************************************************//**
+ * \fn	void __CDECL__ deletedsimmodel ( IDSIMMODEL* model )
+ *
+ * \brief	Deletedsimmodels the given model.
+ *
+ * \author	Pugnator
+ * \date	11/21/2015
+ *
+ * \param [in,out]	model	If non-null, the model.
+ *
+ * ### remarks	Pugnator, 11/21/2015.
+ **************************************************************************************************/
+
 void __CDECL__
 deletedsimmodel ( IDSIMMODEL* model )
 {
@@ -86,16 +120,39 @@ vsm_isdigital ( IDSIMMODEL* this, uint32_t edx, char* pinname )
 	return 1;
 }
 
+/**********************************************************************************************//**
+ * \fn	void __FASTCALL__ pinhandler ( IDSIMPIN* pin, uint32_t edx )
+ *
+ * \brief	Pinhandler, called when the pin.
+ *
+ * \author	Pugnator
+ * \date	11/21/2015
+ *
+ * \param [in,out]	pin	If non-null, the pin.
+ * \param	edx		   	The edx.
+ **************************************************************************************************/
+
 void __FASTCALL__
 pinhandler ( IDSIMPIN* pin, uint32_t edx )
 {
 	
 }
 
-/**
- * [Set up the model]
- * @param this  [description]
- */
+/**********************************************************************************************//**
+ * \fn	void __FASTCALL__ vsm_setup ( IDSIMMODEL* this, uint32_t edx, IINSTANCE* instance, IDSIMCKT* dsimckt )
+ *
+ * \brief	[Set up the model]
+ * 			@param this  [description].
+ *
+ * \author	Pugnator
+ * \date	11/21/2015
+ *
+ * \param [in,out]	this		If non-null, this.
+ * \param	edx					The edx.
+ * \param [in,out]	instance	If non-null, the instance.
+ * \param [in,out]	dsimckt 	If non-null, the dsimckt.
+ **************************************************************************************************/
+
 void __FASTCALL__
 vsm_setup ( IDSIMMODEL* this, uint32_t edx, IINSTANCE* instance, IDSIMCKT* dsimckt )
 {
@@ -256,6 +313,19 @@ vsm_setup ( IDSIMMODEL* this, uint32_t edx, IINSTANCE* instance, IDSIMCKT* dsimc
 	
 }
 
+/**********************************************************************************************//**
+ * \fn	void __FASTCALL__ vsm_runctrl ( IDSIMMODEL* this, uint32_t edx, RUNMODES mode )
+ *
+ * \brief	Vsm runctrl.
+ *
+ * \author	Pugnator
+ * \date	11/21/2015
+ *
+ * \param [in,out]	this	If non-null, this.
+ * \param	edx				The edx.
+ * \param	mode			The mode.
+ **************************************************************************************************/
+
 void __FASTCALL__
 vsm_runctrl (  IDSIMMODEL* this, uint32_t edx, RUNMODES mode )
 {
@@ -303,6 +373,20 @@ vsm_runctrl (  IDSIMMODEL* this, uint32_t edx, RUNMODES mode )
 	
 }
 
+/**********************************************************************************************//**
+ * \fn	void __FASTCALL__ vsm_actuate ( IDSIMMODEL* this, uint32_t edx, REALTIME atime, ACTIVESTATE newstate )
+ *
+ * \brief	Vsm actuate.
+ *
+ * \author	Pugnator
+ * \date	11/21/2015
+ *
+ * \param [in,out]	this	If non-null, this.
+ * \param	edx				The edx.
+ * \param	atime			The atime.
+ * \param	newstate		The newstate.
+ **************************************************************************************************/
+
 void __FASTCALL__
 vsm_actuate  (  IDSIMMODEL* this, uint32_t edx, REALTIME atime, ACTIVESTATE newstate )
 {
@@ -312,16 +396,22 @@ vsm_actuate  (  IDSIMMODEL* this, uint32_t edx, REALTIME atime, ACTIVESTATE news
 	( void ) newstate;
 }
 
-/**
- * @brief [brief description]
- * @details [long description]
+/**********************************************************************************************//**
+ * \fn	bool __FASTCALL__ vsm_indicate ( IDSIMMODEL* this, uint32_t edx, REALTIME atime, ACTIVEDATA* newstate )
  *
- * @param this [description]
- * @param edx [description]
- * @param atime [description]
- * @param newstate [description]
- * @return [description]
- */
+ * \brief	Vsm indicate.
+ *
+ * \author	Pugnator
+ * \date	11/21/2015
+ *
+ * \param [in,out]	this		If non-null, this.
+ * \param	edx					The edx.
+ * \param	atime				The atime.
+ * \param [in,out]	newstate	If non-null, the newstate.
+ *
+ * \return	true if it succeeds, false if it fails.
+ **************************************************************************************************/
+
 bool __FASTCALL__
 vsm_indicate (  IDSIMMODEL* this, uint32_t edx, REALTIME atime, ACTIVEDATA* newstate )
 {
@@ -332,15 +422,20 @@ vsm_indicate (  IDSIMMODEL* this, uint32_t edx, REALTIME atime, ACTIVEDATA* news
 	return false;
 }
 
-/**
- * @brief [brief description]
- * @details [long description]
+/**********************************************************************************************//**
+ * \fn	void __FASTCALL__ vsm_simulate ( IDSIMMODEL* this, uint32_t edx, ABSTIME atime, DSIMMODES mode )
  *
- * @param this [description]
- * @param edx [description]
- * @param atime [description]
- * @param mode [description]
- */
+ * \brief	Vsm simulate.
+ *
+ * \author	Pugnator
+ * \date	11/21/2015
+ *
+ * \param [in,out]	this	If non-null, this.
+ * \param	edx				The edx.
+ * \param	atime			The atime.
+ * \param	mode			The mode.
+ **************************************************************************************************/
+
 void __FASTCALL__
 vsm_simulate (  IDSIMMODEL* this, uint32_t edx, ABSTIME atime, DSIMMODES mode )
 {
@@ -366,15 +461,20 @@ vsm_simulate (  IDSIMMODEL* this, uint32_t edx, ABSTIME atime, DSIMMODES mode )
 #endif
 }
 
-/**
- * @brief [brief description]
- * @details [long description]
+/**********************************************************************************************//**
+ * \fn	void __FASTCALL__ vsm_timer_callback ( IDSIMMODEL* this, uint32_t edx, ABSTIME atime, EVENTID eventid )
  *
- * @param this [description]
- * @param edx [description]
- * @param atime [description]
- * @param eventid [description]
- */
+ * \brief	Callback, called when the vsm timer is overflown.
+ *
+ * \author	Pugnator
+ * \date	11/21/2015
+ *
+ * \param [in,out]	this	If non-null, this.
+ * \param	edx				The edx.
+ * \param	atime			The atime.
+ * \param	eventid			The eventid.
+ **************************************************************************************************/
+
 void __FASTCALL__
 vsm_timer_callback (  IDSIMMODEL* this, uint32_t edx, ABSTIME atime, EVENTID eventid )
 {
@@ -402,16 +502,24 @@ vsm_timer_callback (  IDSIMMODEL* this, uint32_t edx, ABSTIME atime, EVENTID eve
 	}
 }
 
-/**
- * @brief [brief description]
- * @details [long description]
- *
- * @param hInstDLL [description]
- * @param fdwReason [description]
- * @param thispvReserved [description]
- * @return [description]
- */
+
 #ifndef __MINGW32__
+
+/**********************************************************************************************//**
+ * \fn	bool APIENTRY DllMain ( HINSTANCE hInstDLL, uint32_t fdwReason, LPVOID lpvReserved )
+ *
+ * \brief	DLL main.
+ *
+ * \author	Pugnator
+ * \date	11/21/2015
+ *
+ * \param	hInstDLL   	The instance DLL.
+ * \param	fdwReason  	The fdw reason.
+ * \param	lpvReserved	The lpv reserved.
+ *
+ * \return	An APIENTRY.
+ **************************************************************************************************/
+
 bool APIENTRY
 DllMain ( HINSTANCE hInstDLL, uint32_t fdwReason, LPVOID lpvReserved )
 {
@@ -422,6 +530,22 @@ DllMain ( HINSTANCE hInstDLL, uint32_t fdwReason, LPVOID lpvReserved )
 }
 #endif
 
+/**********************************************************************************************//**
+ * \fn	LRESULT __FASTCALL__ icpu_vdmhlr ( ICPU* this, uint32_t edx, VDM_COMMAND* cmd, uint8_t* data )
+ *
+ * \brief	Icpu vdmhlr.
+ *
+ * \author	Pugnator
+ * \date	11/21/2015
+ *
+ * \param [in,out]	this	If non-null, this.
+ * \param	edx				The edx.
+ * \param [in,out]	cmd 	If non-null, the command.
+ * \param [in,out]	data	If non-null, the data.
+ *
+ * \return	A LRESULT.
+ **************************************************************************************************/
+
 LRESULT __FASTCALL__ icpu_vdmhlr (  ICPU* this, uint32_t edx, VDM_COMMAND* cmd, uint8_t* data )
 {
 	( void ) this;
@@ -430,6 +554,23 @@ LRESULT __FASTCALL__ icpu_vdmhlr (  ICPU* this, uint32_t edx, VDM_COMMAND* cmd, 
 	( void ) data;
 	return 0;
 }
+
+/**********************************************************************************************//**
+ * \fn	void __FASTCALL__ icpu_loaddata ( ICPU* this, uint32_t edx, int32_t format, int32_t seg, ADDRESS address, uint8_t* data, int32_t numbytes )
+ *
+ * \brief	Icpu loaddata.
+ *
+ * \author	Pugnator
+ * \date	11/21/2015
+ *
+ * \param [in,out]	this	If non-null, this.
+ * \param	edx				The edx.
+ * \param	format			Describes the format to use.
+ * \param	seg				The segment.
+ * \param	address			The address.
+ * \param [in,out]	data	If non-null, the data.
+ * \param	numbytes		The numbytes.
+ **************************************************************************************************/
 
 void __FASTCALL__ icpu_loaddata ( ICPU* this, uint32_t edx, int32_t format, int32_t seg, ADDRESS address, uint8_t* data, int32_t numbytes )
 {
@@ -442,6 +583,20 @@ void __FASTCALL__ icpu_loaddata ( ICPU* this, uint32_t edx, int32_t format, int3
 	( void ) numbytes;
 }
 
+/**********************************************************************************************//**
+ * \fn	void __FASTCALL__ icpu_disassemble ( ICPU* this, uint32_t edx, ADDRESS address, int32_t numbytes )
+ *
+ * \brief	Icpu disassemble.
+ *
+ * \author	Pugnator
+ * \date	11/21/2015
+ *
+ * \param [in,out]	this	If non-null, this.
+ * \param	edx				The edx.
+ * \param	address			The address.
+ * \param	numbytes		The numbytes.
+ **************************************************************************************************/
+
 void __FASTCALL__ icpu_disassemble ( ICPU* this, uint32_t edx, ADDRESS address, int32_t numbytes )
 {
 	( void ) this;
@@ -449,6 +604,22 @@ void __FASTCALL__ icpu_disassemble ( ICPU* this, uint32_t edx, ADDRESS address, 
 	( void ) address;
 	( void ) numbytes;
 }
+
+/**********************************************************************************************//**
+ * \fn	bool __FASTCALL__ icpu_getvardata ( ICPU* this, uint32_t edx, VARITEM* vip, VARDATA* vdp )
+ *
+ * \brief	Icpu getvardata.
+ *
+ * \author	Pugnator
+ * \date	11/21/2015
+ *
+ * \param [in,out]	this	If non-null, this.
+ * \param	edx				The edx.
+ * \param [in,out]	vip 	If non-null, the vip.
+ * \param [in,out]	vdp 	If non-null, the vdp.
+ *
+ * \return	true if it succeeds, false if it fails.
+ **************************************************************************************************/
 
 bool __FASTCALL__ icpu_getvardata ( ICPU* this, uint32_t edx, VARITEM* vip, VARDATA* vdp )
 {

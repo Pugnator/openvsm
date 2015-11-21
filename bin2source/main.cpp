@@ -11,7 +11,21 @@
 #define DELIM '/'
 #endif
 
+/** \brief	The filename[ maximum path]. */
 char filename[MAX_PATH] = {0};
+
+/**********************************************************************************************//**
+ * \fn	char *basename(char *path)
+ *
+ * \brief	Basenames the given file.
+ *
+ * \author	Pugnator
+ * \date	11/21/2015
+ *
+ * \param [in,out]	path	If non-null, full pathname of the file.
+ *
+ * \return	null if it fails, else a char*.
+ **************************************************************************************************/
 
 char 
 *basename(char *path)
@@ -31,6 +45,17 @@ char
 	}
 	return p ? p : path;
 }
+
+/**********************************************************************************************//**
+ * \fn	void make_ident(char* name)
+ *
+ * \brief	Makes an identifier.
+ *
+ * \author	Pugnator
+ * \date	11/21/2015
+ *
+ * \param [in,out]	name	If non-null, the name.
+ **************************************************************************************************/
 
 void
 make_ident(char* name)

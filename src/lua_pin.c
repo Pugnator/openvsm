@@ -11,12 +11,19 @@
 
 #include <vsmapi.h>
 
-/**
- * [register_pin_obj  Create pin's method table]
- * @param L    [description]
- * @param num  [description]
- * @param name [description]
- */
+/**********************************************************************************************//**
+ * \fn	void register_pin_obj ( lua_State* L, int num, char* name )
+ *
+ * \brief	Registers the pin object.
+ *
+ * \author	Pugnator
+ * \date	11/22/2015
+ *
+ * \param [in,out]	L   	If non-null, the lua_State to process.
+ * \param	num				Number of.
+ * \param [in,out]	name	If non-null, the name.
+ **************************************************************************************************/
+
 void register_pin_obj ( lua_State* L, int num, char* name )
 {
 	lua_newtable ( L );
@@ -82,13 +89,19 @@ void register_pin_obj ( lua_State* L, int num, char* name )
 	lua_pop ( L, 1 );
 }
 
-/**
- * @brief [extract pin number from object]
- * @details [This must be called from pin's methods in order to get pin index]
+/**********************************************************************************************//**
+ * \fn	int get_pin_self ( lua_State* L )
  *
- * @param L [Lua state]
- * @return [pin number index in device_pins array]
- */
+ * \brief	Gets pin self.
+ *
+ * \author	Pugnator
+ * \date	11/22/2015
+ *
+ * \param [in,out]	L	If non-null, the lua_State to process.
+ *
+ * \return	The pin self.
+ **************************************************************************************************/
+
 int get_pin_self ( lua_State* L )
 {
 	IDSIMMODEL* model = ( IDSIMMODEL* ) lua_get_model_obj ( L );
@@ -101,11 +114,19 @@ int get_pin_self ( lua_State* L )
 	return lua_tointeger ( L, -1 );
 }
 
-/**
- * [pin_set_hi  description]
- * @param  L [Lua state]
- * @return   [description]
- */
+/**********************************************************************************************//**
+ * \fn	int pin_set_hi ( lua_State* L )
+ *
+ * \brief	Pin set higher.
+ *
+ * \author	Pugnator
+ * \date	11/22/2015
+ *
+ * \param [in,out]	L	If non-null, the lua_State to process.
+ *
+ * \return	An int.
+ **************************************************************************************************/
+
 int pin_set_hi ( lua_State* L )
 {
 	IDSIMMODEL* model = ( IDSIMMODEL* ) lua_get_model_obj ( L );
@@ -114,11 +135,19 @@ int pin_set_hi ( lua_State* L )
 	return 0;
 }
 
-/**
- * [pin_set_lo  description]
- * @param  L [Lua state]
- * @return   [description]
- */
+/**********************************************************************************************//**
+ * \fn	int pin_set_lo ( lua_State* L )
+ *
+ * \brief	Pin set lower.
+ *
+ * \author	Pugnator
+ * \date	11/22/2015
+ *
+ * \param [in,out]	L	If non-null, the lua_State to process.
+ *
+ * \return	An int.
+ **************************************************************************************************/
+
 int pin_set_lo ( lua_State* L )
 {
 	IDSIMMODEL* model = ( IDSIMMODEL* ) lua_get_model_obj ( L );
@@ -127,11 +156,19 @@ int pin_set_lo ( lua_State* L )
 	return 0;
 }
 
-/**
- * [pin_set_fl  description]
- * @param  L [Lua state]
- * @return   [description]
- */
+/**********************************************************************************************//**
+ * \fn	int pin_set_fl ( lua_State* L )
+ *
+ * \brief	Pin set fl.
+ *
+ * \author	Pugnator
+ * \date	11/22/2015
+ *
+ * \param [in,out]	L	If non-null, the lua_State to process.
+ *
+ * \return	An int.
+ **************************************************************************************************/
+
 int pin_set_fl ( lua_State* L )
 {
 	IDSIMMODEL* model = ( IDSIMMODEL* ) lua_get_model_obj ( L );
@@ -140,11 +177,19 @@ int pin_set_fl ( lua_State* L )
 	return 0;
 }
 
-/**
- * [pin_get  description]
- * @param  L [Lua state]
- * @return   [description]
- */
+/**********************************************************************************************//**
+ * \fn	int pin_get ( lua_State* L )
+ *
+ * \brief	Pin get.
+ *
+ * \author	Pugnator
+ * \date	11/22/2015
+ *
+ * \param [in,out]	L	If non-null, the lua_State to process.
+ *
+ * \return	An int.
+ **************************************************************************************************/
+
 int pin_get ( lua_State* L )
 {
 	IDSIMMODEL* model = ( IDSIMMODEL* ) lua_get_model_obj ( L );
@@ -154,11 +199,19 @@ int pin_get ( lua_State* L )
 	return 1;
 }
 
-/**
- * [pin_set  description]
- * @param  L [Lua state]
- * @return   [description]
- */
+/**********************************************************************************************//**
+ * \fn	int pin_set ( lua_State* L )
+ *
+ * \brief	Pin set.
+ *
+ * \author	Pugnator
+ * \date	11/22/2015
+ *
+ * \param [in,out]	L	If non-null, the lua_State to process.
+ *
+ * \return	An int.
+ **************************************************************************************************/
+
 int pin_set ( lua_State* L )
 {
 	IDSIMMODEL* model = ( IDSIMMODEL* ) lua_get_model_obj ( L );
@@ -168,11 +221,19 @@ int pin_set ( lua_State* L )
 	return 0;
 }
 
-/**
- * [pin_is_edge  description]
- * @param  L [Lua state]
- * @return   [description]
- */
+/**********************************************************************************************//**
+ * \fn	int pin_is_edge ( lua_State* L )
+ *
+ * \brief	Pin is edge.
+ *
+ * \author	Pugnator
+ * \date	11/22/2015
+ *
+ * \param [in,out]	L	If non-null, the lua_State to process.
+ *
+ * \return	An int.
+ **************************************************************************************************/
+
 int pin_is_edge ( lua_State* L )
 {
 	IDSIMMODEL* model = ( IDSIMMODEL* ) lua_get_model_obj ( L );
@@ -181,11 +242,19 @@ int pin_is_edge ( lua_State* L )
 	return 1;
 }
 
-/**
- * [pin_is_pedge  description]
- * @param  L [Lua state]
- * @return   [description]
- */
+/**********************************************************************************************//**
+ * \fn	int pin_is_pedge ( lua_State* L )
+ *
+ * \brief	Pin is pedge.
+ *
+ * \author	Pugnator
+ * \date	11/22/2015
+ *
+ * \param [in,out]	L	If non-null, the lua_State to process.
+ *
+ * \return	An int.
+ **************************************************************************************************/
+
 int pin_is_pedge ( lua_State* L )
 {
 	IDSIMMODEL* model = ( IDSIMMODEL* ) lua_get_model_obj ( L );
@@ -194,11 +263,19 @@ int pin_is_pedge ( lua_State* L )
 	return 1;
 }
 
-/**
- * [pin_is_nedge  description]
- * @param  L [Lua state]
- * @return   [description]
- */
+/**********************************************************************************************//**
+ * \fn	int pin_is_nedge ( lua_State* L )
+ *
+ * \brief	Pin is nedge.
+ *
+ * \author	Pugnator
+ * \date	11/22/2015
+ *
+ * \param [in,out]	L	If non-null, the lua_State to process.
+ *
+ * \return	An int.
+ **************************************************************************************************/
+
 int pin_is_nedge ( lua_State* L )
 {
 	IDSIMMODEL* model = ( IDSIMMODEL* ) lua_get_model_obj ( L );
@@ -207,11 +284,19 @@ int pin_is_nedge ( lua_State* L )
 	return 1;
 }
 
-/**
- * [pin_is_inverted  description]
- * @param  L [Lua state]
- * @return   [description]
- */
+/**********************************************************************************************//**
+ * \fn	int pin_is_inverted ( lua_State* L )
+ *
+ * \brief	Pin is inverted.
+ *
+ * \author	Pugnator
+ * \date	11/22/2015
+ *
+ * \param [in,out]	L	If non-null, the lua_State to process.
+ *
+ * \return	An int.
+ **************************************************************************************************/
+
 int pin_is_inverted ( lua_State* L )
 {
 	IDSIMMODEL* model = ( IDSIMMODEL* ) lua_get_model_obj ( L );
@@ -220,11 +305,19 @@ int pin_is_inverted ( lua_State* L )
 	return 1;
 }
 
-/**
- * [pin_is_steady  description]
- * @param  L [Lua state]
- * @return   [description]
- */
+/**********************************************************************************************//**
+ * \fn	int pin_is_steady ( lua_State* L )
+ *
+ * \brief	Pin is steady.
+ *
+ * \author	Pugnator
+ * \date	11/22/2015
+ *
+ * \param [in,out]	L	If non-null, the lua_State to process.
+ *
+ * \return	An int.
+ **************************************************************************************************/
+
 int pin_is_steady ( lua_State* L )
 {
 	IDSIMMODEL* model = ( IDSIMMODEL* ) lua_get_model_obj ( L );
@@ -233,11 +326,19 @@ int pin_is_steady ( lua_State* L )
 	return 1;
 }
 
-/**
- * [pin_is_active  description]
- * @param  L [Lua state]
- * @return   [description]
- */
+/**********************************************************************************************//**
+ * \fn	int pin_is_active ( lua_State* L )
+ *
+ * \brief	Pin is active.
+ *
+ * \author	Pugnator
+ * \date	11/22/2015
+ *
+ * \param [in,out]	L	If non-null, the lua_State to process.
+ *
+ * \return	An int.
+ **************************************************************************************************/
+
 int pin_is_active ( lua_State* L )
 {
 	IDSIMMODEL* model = ( IDSIMMODEL* ) lua_get_model_obj ( L );
@@ -246,11 +347,19 @@ int pin_is_active ( lua_State* L )
 	return 1;
 }
 
-/**
- * [pin_is_inactive  description]
- * @param  L [Lua state]
- * @return   [description]
- */
+/**********************************************************************************************//**
+ * \fn	int pin_is_inactive ( lua_State* L )
+ *
+ * \brief	Pin is inactive.
+ *
+ * \author	Pugnator
+ * \date	11/22/2015
+ *
+ * \param [in,out]	L	If non-null, the lua_State to process.
+ *
+ * \return	An int.
+ **************************************************************************************************/
+
 int pin_is_inactive ( lua_State* L )
 {
 	IDSIMMODEL* model = ( IDSIMMODEL* ) lua_get_model_obj ( L );
@@ -259,11 +368,19 @@ int pin_is_inactive ( lua_State* L )
 	return 1;
 }
 
-/**
- * [pin_set_state  description]
- * @param  L [Lua state]
- * @return   [description]
- */
+/**********************************************************************************************//**
+ * \fn	int pin_set_state ( lua_State* L )
+ *
+ * \brief	Pin set state.
+ *
+ * \author	Pugnator
+ * \date	11/22/2015
+ *
+ * \param [in,out]	L	If non-null, the lua_State to process.
+ *
+ * \return	An int.
+ **************************************************************************************************/
+
 int pin_set_state ( lua_State* L )
 {
 	IDSIMMODEL* model = ( IDSIMMODEL* ) lua_get_model_obj ( L );
@@ -273,11 +390,19 @@ int pin_set_state ( lua_State* L )
 	return 0;
 }
 
-/**
- * [pin_get_state  description]
- * @param  L [Lua state]
- * @return   [description]
- */
+/**********************************************************************************************//**
+ * \fn	int pin_get_state ( lua_State* L )
+ *
+ * \brief	Pin get state.
+ *
+ * \author	Pugnator
+ * \date	11/22/2015
+ *
+ * \param [in,out]	L	If non-null, the lua_State to process.
+ *
+ * \return	An int.
+ **************************************************************************************************/
+
 int pin_get_state ( lua_State* L )
 {
 	IDSIMMODEL* model = ( IDSIMMODEL* ) lua_get_model_obj ( L );
@@ -286,11 +411,19 @@ int pin_get_state ( lua_State* L )
 	return 1;
 }
 
-/**
- * [pin_is_hi  description]
- * @param  L [Lua state]
- * @return   [description]
- */
+/**********************************************************************************************//**
+ * \fn	int pin_is_hi ( lua_State* L )
+ *
+ * \brief	Pin is higher.
+ *
+ * \author	Pugnator
+ * \date	11/22/2015
+ *
+ * \param [in,out]	L	If non-null, the lua_State to process.
+ *
+ * \return	An int.
+ **************************************************************************************************/
+
 int pin_is_hi ( lua_State* L )
 {
 	IDSIMMODEL* model = ( IDSIMMODEL* ) lua_get_model_obj ( L );
@@ -299,11 +432,19 @@ int pin_is_hi ( lua_State* L )
 	return 1;
 }
 
-/**
- * [pin_is_lo  description]
- * @param  L [Lua state]
- * @return   [description]
- */
+/**********************************************************************************************//**
+ * \fn	int pin_is_lo ( lua_State* L )
+ *
+ * \brief	Pin is lower.
+ *
+ * \author	Pugnator
+ * \date	11/22/2015
+ *
+ * \param [in,out]	L	If non-null, the lua_State to process.
+ *
+ * \return	An int.
+ **************************************************************************************************/
+
 int pin_is_lo ( lua_State* L )
 {
 	IDSIMMODEL* model = ( IDSIMMODEL* ) lua_get_model_obj ( L );
@@ -312,11 +453,19 @@ int pin_is_lo ( lua_State* L )
 	return 1;
 }
 
-/**
- * [pin_is_fl  description]
- * @param  L [Lua state]
- * @return   [description]
- */
+/**********************************************************************************************//**
+ * \fn	int pin_is_fl ( lua_State* L )
+ *
+ * \brief	Pin is fl.
+ *
+ * \author	Pugnator
+ * \date	11/22/2015
+ *
+ * \param [in,out]	L	If non-null, the lua_State to process.
+ *
+ * \return	An int.
+ **************************************************************************************************/
+
 int pin_is_fl ( lua_State* L )
 {
 	IDSIMMODEL* model = ( IDSIMMODEL* ) lua_get_model_obj ( L );
@@ -325,13 +474,19 @@ int pin_is_fl ( lua_State* L )
 	return 1;
 }
 
-/**
- * @brief [brief description]
- * @details [long description]
+/**********************************************************************************************//**
+ * \fn	int pin_toggle ( lua_State* L )
  *
- * @param L [description]
- * @return [description]
- */
+ * \brief	Pin toggle.
+ *
+ * \author	Pugnator
+ * \date	11/22/2015
+ *
+ * \param [in,out]	L	If non-null, the lua_State to process.
+ *
+ * \return	An int.
+ **************************************************************************************************/
+
 int pin_toggle ( lua_State* L )
 {
 	IDSIMMODEL* model = ( IDSIMMODEL* ) lua_get_model_obj ( L );

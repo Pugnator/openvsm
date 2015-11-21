@@ -10,7 +10,8 @@
 
 #include <vsmapi.h>
 
-static const lua_bind_var lua_var_api_list[]=
+/// @brief	The lua variable API list[]=.
+static const lua_bind_var lua_var_api_list[]=   ///< The lua variable API list[]=
 {
 	/* Logic states */
 	{.var_name="SHI", .var_value=SHI},
@@ -40,7 +41,8 @@ static const lua_bind_var lua_var_api_list[]=
 	{.var_name=NULL},
 };
 
-static const lua_bind_func lua_c_api_list[] =
+/// @brief	The lua c API list[].
+static const lua_bind_func lua_c_api_list[] =   ///< The lua c API list[]
 {
 	{.lua_func_name="state_to_string", .lua_c_api=&lua_state_to_string, .args={LSTRING}},
 	{.lua_func_name="info", .lua_c_api=&lua_print_info, .args={LSTRING}},
@@ -70,6 +72,19 @@ static const lua_bind_func lua_c_api_list[] =
 	{ NULL, NULL},
 };
 
+/**********************************************************************************************//**
+ * \fn	void lua_load_modules (IDSIMMODEL* this)
+ *
+ * \brief	Lua load modules.
+ *
+ * \author	Pugnator
+ * \date	11/21/2015
+ *
+ * \param [in,out]	this	If non-null, this.
+ *
+ * ### remarks	Pugnator, 11/21/2015.
+ **************************************************************************************************/
+
 void lua_load_modules (IDSIMMODEL* this)
 {
 	if ( luaL_loadbufferx(this->luactx, module_bus_lua, module_bus_lua_len, "bus_class", NULL))
@@ -86,6 +101,20 @@ void lua_load_modules (IDSIMMODEL* this)
 	}
 	lua_pcall(this->luactx, 0, 0, 0);
 }
+
+/**********************************************************************************************//**
+ * \fn	static void safe_execute ( lua_State* L, void* curfunc )
+ *
+ * \brief	Safe execute.
+ *
+ * \author	Pugnator
+ * \date	11/21/2015
+ *
+ * \param [in,out]	L	   	If non-null, the lua_State to process.
+ * \param [in,out]	curfunc	If non-null, the curfunc.
+ *
+ * ### remarks	Pugnator, 11/21/2015.
+ **************************************************************************************************/
 
 static void
 safe_execute ( lua_State* L, void* curfunc )
@@ -142,6 +171,20 @@ safe_execute ( lua_State* L, void* curfunc )
 	}
 }
 
+/**********************************************************************************************//**
+ * \fn	void register_functions ( IDSIMMODEL* this, lua_State* L )
+ *
+ * \brief	Registers the functions.
+ *
+ * \author	Pugnator
+ * \date	11/21/2015
+ *
+ * \param [in,out]	this	If non-null, this.
+ * \param [in,out]	L   	If non-null, the lua_State to process.
+ *
+ * ### remarks	Pugnator, 11/21/2015.
+ **************************************************************************************************/
+
 void
 register_functions ( IDSIMMODEL* this, lua_State* L )
 {
@@ -158,6 +201,22 @@ register_functions ( IDSIMMODEL* this, lua_State* L )
 		lua_setglobal ( L, lua_var_api_list[i].var_name );
 	}
 }
+
+/**********************************************************************************************//**
+ * \fn	bool load_device_script ( IDSIMMODEL* this, const char* device_name )
+ *
+ * \brief	Loads device script.
+ *
+ * \author	Pugnator
+ * \date	11/21/2015
+ *
+ * \param [in,out]	this	If non-null, this.
+ * \param	device_name 	Name of the device.
+ *
+ * \return	true if it succeeds, false if it fails.
+ *
+ * ### remarks	Pugnator, 11/21/2015.
+ **************************************************************************************************/
 
 bool
 load_device_script ( IDSIMMODEL* this, const char* device_name )
@@ -204,6 +263,21 @@ load_device_script ( IDSIMMODEL* this, const char* device_name )
 	return true;
 }
 
+/**********************************************************************************************//**
+ * \fn	static int lua_get_string_param ( lua_State* L )
+ *
+ * \brief	Lua get string parameter.
+ *
+ * \author	Pugnator
+ * \date	11/21/2015
+ *
+ * \param [in,out]	L	If non-null, the lua_State to process.
+ *
+ * \return	An int.
+ *
+ * ### remarks	Pugnator, 11/21/2015.
+ **************************************************************************************************/
+
 static int
 lua_get_string_param ( lua_State* L )
 {
@@ -213,6 +287,21 @@ lua_get_string_param ( lua_State* L )
 	lua_pushstring ( L, get_string_param ( this, str ) );
 	return 1;
 }
+
+/**********************************************************************************************//**
+ * \fn	static int lua_get_bool_param ( lua_State* L )
+ *
+ * \brief	Lua get bool parameter.
+ *
+ * \author	Pugnator
+ * \date	11/21/2015
+ *
+ * \param [in,out]	L	If non-null, the lua_State to process.
+ *
+ * \return	An int.
+ *
+ * ### remarks	Pugnator, 11/21/2015.
+ **************************************************************************************************/
 
 static int
 lua_get_bool_param ( lua_State* L )
@@ -224,6 +313,21 @@ lua_get_bool_param ( lua_State* L )
 	return 1;
 }
 
+/**********************************************************************************************//**
+ * \fn	static int lua_get_num_param ( lua_State* L )
+ *
+ * \brief	Lua get number parameter.
+ *
+ * \author	Pugnator
+ * \date	11/21/2015
+ *
+ * \param [in,out]	L	If non-null, the lua_State to process.
+ *
+ * \return	An int.
+ *
+ * ### remarks	Pugnator, 11/21/2015.
+ **************************************************************************************************/
+
 static int
 lua_get_num_param ( lua_State* L )
 {
@@ -233,6 +337,21 @@ lua_get_num_param ( lua_State* L )
 	lua_pushinteger ( L, get_num_param ( this, str )  );
 	return 1;
 }
+
+/**********************************************************************************************//**
+ * \fn	static int lua_get_hex_param ( lua_State* L )
+ *
+ * \brief	Lua get hexadecimal parameter.
+ *
+ * \author	Pugnator
+ * \date	11/21/2015
+ *
+ * \param [in,out]	L	If non-null, the lua_State to process.
+ *
+ * \return	An int.
+ *
+ * ### remarks	Pugnator, 11/21/2015.
+ **************************************************************************************************/
 
 static int
 lua_get_hex_param ( lua_State* L )
@@ -244,6 +363,21 @@ lua_get_hex_param ( lua_State* L )
 	return 1;
 }
 
+/**********************************************************************************************//**
+ * \fn	static int lua_get_init_param ( lua_State* L )
+ *
+ * \brief	Lua get initialise parameter.
+ *
+ * \author	Pugnator
+ * \date	11/21/2015
+ *
+ * \param [in,out]	L	If non-null, the lua_State to process.
+ *
+ * \return	An int.
+ *
+ * ### remarks	Pugnator, 11/21/2015.
+ **************************************************************************************************/
+
 static int
 lua_get_init_param ( lua_State* L )
 {
@@ -254,6 +388,21 @@ lua_get_init_param ( lua_State* L )
 	return 1;
 }
 
+/**********************************************************************************************//**
+ * \fn	static int lua_delete_popup ( lua_State* L )
+ *
+ * \brief	Lua delete popup.
+ *
+ * \author	Pugnator
+ * \date	11/21/2015
+ *
+ * \param [in,out]	L	If non-null, the lua_State to process.
+ *
+ * \return	An int.
+ *
+ * ### remarks	Pugnator, 11/21/2015.
+ **************************************************************************************************/
+
 static int
 lua_delete_popup ( lua_State* L )
 {
@@ -263,6 +412,21 @@ lua_delete_popup ( lua_State* L )
 	delete_popup ( this, id );
 	return 0;
 }
+
+/**********************************************************************************************//**
+ * \fn	static int lua_create_debug_popup ( lua_State* L )
+ *
+ * \brief	Lua create debug popup.
+ *
+ * \author	Pugnator
+ * \date	11/21/2015
+ *
+ * \param [in,out]	L	If non-null, the lua_State to process.
+ *
+ * \return	An int.
+ *
+ * ### remarks	Pugnator, 11/21/2015.
+ **************************************************************************************************/
 
 static int
 lua_create_debug_popup ( lua_State* L )
@@ -275,11 +439,21 @@ lua_create_debug_popup ( lua_State* L )
 	return 2;
 }
 
-/**
-* Prints a text string to debug popup
-* @param L Lua state
-* @return a pointer to popup and its ID
-*/
+/**********************************************************************************************//**
+ * \fn	static int lua_print_to_debug_popup ( lua_State* L )
+ *
+ * \brief	Lua print to debug popup.
+ *
+ * \author	Pugnator
+ * \date	11/21/2015
+ *
+ * \param [in,out]	L	If non-null, the lua_State to process.
+ *
+ * \return	An int.
+ *
+ * ### remarks	Pugnator, 11/21/2015.
+ **************************************************************************************************/
+
 static int
 lua_print_to_debug_popup ( lua_State* L )
 {
@@ -290,11 +464,21 @@ lua_print_to_debug_popup ( lua_State* L )
 	return 0;
 }
 
-/**
-* Prints a text string to debug popup
-* @param L Lua state
-* @return a pointer to popup and its ID
-*/
+/**********************************************************************************************//**
+ * \fn	static int lua_dump_to_debug_popup ( lua_State* L )
+ *
+ * \brief	Lua dump to debug popup.
+ *
+ * \author	Pugnator
+ * \date	11/21/2015
+ *
+ * \param [in,out]	L	If non-null, the lua_State to process.
+ *
+ * \return	An int.
+ *
+ * ### remarks	Pugnator, 11/21/2015.
+ **************************************************************************************************/
+
 static int
 lua_dump_to_debug_popup ( lua_State* L )
 {
@@ -307,6 +491,20 @@ lua_dump_to_debug_popup ( lua_State* L )
 	return 0;
 }
 
+/**********************************************************************************************//**
+ * \fn	static int lua_create_source_popup ( lua_State* L )
+ *
+ * \brief	Lua create source popup.
+ *
+ * \author	Pugnator
+ * \date	11/21/2015
+ *
+ * \param [in,out]	L	If non-null, the lua_State to process.
+ *
+ * \return	An int.
+ *
+ * ### remarks	Pugnator, 11/21/2015.
+ **************************************************************************************************/
 
 static int
 lua_create_source_popup ( lua_State* L )
@@ -318,6 +516,22 @@ lua_create_source_popup ( lua_State* L )
 	lua_pushinteger ( L, this->popup_id );
 	return 2;
 }
+
+/**********************************************************************************************//**
+ * \fn	static int lua_create_status_popup ( lua_State* L )
+ *
+ * \brief	Lua create status popup.
+ *
+ * \author	Pugnator
+ * \date	11/22/2015
+ *
+ * \param [in,out]	L	If non-null, the lua_State to process.
+ *
+ * \return	An int.
+ *
+ * ### remarks	Pugnator, 11/21/2015.
+ **************************************************************************************************/
+
 static int
 lua_create_status_popup ( lua_State* L )
 {
@@ -328,6 +542,22 @@ lua_create_status_popup ( lua_State* L )
 	lua_pushinteger ( L, this->popup_id );
 	return 2;
 }
+
+/**********************************************************************************************//**
+ * \fn	static int lua_create_var_popup ( lua_State* L )
+ *
+ * \brief	Lua create variable popup.
+ *
+ * \author	Pugnator
+ * \date	11/22/2015
+ *
+ * \param [in,out]	L	If non-null, the lua_State to process.
+ *
+ * \return	An int.
+ *
+ * ### remarks	Pugnator, 11/21/2015.
+ **************************************************************************************************/
+
 static int
 lua_create_var_popup ( lua_State* L )
 {
@@ -338,6 +568,21 @@ lua_create_var_popup ( lua_State* L )
 	lua_pushinteger ( L, this->popup_id );
 	return 2;
 }
+
+/**********************************************************************************************//**
+ * \fn	static int lua_create_memory_popup ( lua_State* L )
+ *
+ * \brief	Lua create memory popup.
+ *
+ * \author	Pugnator
+ * \date	11/22/2015
+ *
+ * \param [in,out]	L	If non-null, the lua_State to process.
+ *
+ * \return	An int.
+ *
+ * ### remarks	Pugnator, 11/21/2015.
+ **************************************************************************************************/
 
 static int
 lua_create_memory_popup ( lua_State* L )
@@ -350,6 +595,21 @@ lua_create_memory_popup ( lua_State* L )
 	return 2;
 }
 
+/**********************************************************************************************//**
+ * \fn	static int lua_set_memory_popup ( lua_State* L )
+ *
+ * \brief	Lua set memory popup.
+ *
+ * \author	Pugnator
+ * \date	11/22/2015
+ *
+ * \param [in,out]	L	If non-null, the lua_State to process.
+ *
+ * \return	An int.
+ *
+ * ### remarks	Pugnator, 11/21/2015.
+ **************************************************************************************************/
+
 static int
 lua_set_memory_popup ( lua_State* L )
 {
@@ -361,6 +621,21 @@ lua_set_memory_popup ( lua_State* L )
 
 	return 0;
 }
+
+/**********************************************************************************************//**
+ * \fn	static int lua_add_source_file ( lua_State* L )
+ *
+ * \brief	Lua add source file.
+ *
+ * \author	Pugnator
+ * \date	11/22/2015
+ *
+ * \param [in,out]	L	If non-null, the lua_State to process.
+ *
+ * \return	An int.
+ *
+ * ### remarks	Pugnator, 11/21/2015.
+ **************************************************************************************************/
 
 static int
 lua_add_source_file ( lua_State* L )
@@ -375,6 +650,21 @@ lua_add_source_file ( lua_State* L )
 	return 0;
 }
 
+/**********************************************************************************************//**
+ * \fn	static int lua_repaint_memory_popup ( lua_State* L )
+ *
+ * \brief	Lua repaint memory popup.
+ *
+ * \author	Pugnator
+ * \date	11/22/2015
+ *
+ * \param [in,out]	L	If non-null, the lua_State to process.
+ *
+ * \return	An int.
+ *
+ * ### remarks	Pugnator, 11/21/2015.
+ **************************************************************************************************/
+
 static int
 lua_repaint_memory_popup ( lua_State* L )
 {
@@ -383,6 +673,21 @@ lua_repaint_memory_popup ( lua_State* L )
 	repaint_memory_popup ( popup );
 	return 0;
 }
+
+/**********************************************************************************************//**
+ * \fn	static int lua_state_to_string ( lua_State* L )
+ *
+ * \brief	Lua state to string.
+ *
+ * \author	Pugnator
+ * \date	11/22/2015
+ *
+ * \param [in,out]	L	If non-null, the lua_State to process.
+ *
+ * \return	An int.
+ *
+ * ### remarks	Pugnator, 11/21/2015.
+ **************************************************************************************************/
 
 static int
 lua_state_to_string ( lua_State* L )
@@ -395,6 +700,21 @@ lua_state_to_string ( lua_State* L )
 	return 1;
 }
 
+/**********************************************************************************************//**
+ * \fn	static int lua_print_info ( lua_State* L )
+ *
+ * \brief	Lua print information.
+ *
+ * \author	Pugnator
+ * \date	11/22/2015
+ *
+ * \param [in,out]	L	If non-null, the lua_State to process.
+ *
+ * \return	An int.
+ *
+ * ### remarks	Pugnator, 11/21/2015.
+ **************************************************************************************************/
+
 static int
 lua_print_info ( lua_State* L )
 {
@@ -404,6 +724,21 @@ lua_print_info ( lua_State* L )
 	print_info ( this, text );
 	return 0;
 }
+
+/**********************************************************************************************//**
+ * \fn	static int lua_print_message ( lua_State* L )
+ *
+ * \brief	Lua print message.
+ *
+ * \author	Pugnator
+ * \date	11/22/2015
+ *
+ * \param [in,out]	L	If non-null, the lua_State to process.
+ *
+ * \return	An int.
+ *
+ * ### remarks	Pugnator, 11/21/2015.
+ **************************************************************************************************/
 
 static int
 lua_print_message ( lua_State* L )
@@ -415,6 +750,21 @@ lua_print_message ( lua_State* L )
 	return 0;
 }
 
+/**********************************************************************************************//**
+ * \fn	static int lua_print_warning ( lua_State* L )
+ *
+ * \brief	Lua print warning.
+ *
+ * \author	Pugnator
+ * \date	11/22/2015
+ *
+ * \param [in,out]	L	If non-null, the lua_State to process.
+ *
+ * \return	An int.
+ *
+ * ### remarks	Pugnator, 11/21/2015.
+ **************************************************************************************************/
+
 static int
 lua_print_warning ( lua_State* L )
 {
@@ -424,6 +774,21 @@ lua_print_warning ( lua_State* L )
 	print_warning ( this, text );
 	return 0;
 }
+
+/**********************************************************************************************//**
+ * \fn	static int lua_print_error ( lua_State* L )
+ *
+ * \brief	Lua print error.
+ *
+ * \author	Pugnator
+ * \date	11/22/2015
+ *
+ * \param [in,out]	L	If non-null, the lua_State to process.
+ *
+ * \return	An int.
+ *
+ * ### remarks	Pugnator, 11/21/2015.
+ **************************************************************************************************/
 
 static int
 lua_print_error ( lua_State* L )
@@ -435,6 +800,21 @@ lua_print_error ( lua_State* L )
 	return 0;
 }
 
+/**********************************************************************************************//**
+ * \fn	static int lua_set_callback ( lua_State* L )
+ *
+ * \brief	Callback, called when the lua set.
+ *
+ * \author	Pugnator
+ * \date	11/22/2015
+ *
+ * \param [in,out]	L	If non-null, the lua_State to process.
+ *
+ * \return	An int.
+ *
+ * ### remarks	Pugnator, 11/21/2015.
+ **************************************************************************************************/
+
 static int
 lua_set_callback ( lua_State* L )
 {
@@ -445,6 +825,21 @@ lua_set_callback ( lua_State* L )
 	set_callback ( this, picotime, eventid );
 	return 0;
 }
+
+/**********************************************************************************************//**
+ * \fn	static int lua_get_systime ( lua_State* L )
+ *
+ * \brief	Lua get systime.
+ *
+ * \author	Pugnator
+ * \date	11/22/2015
+ *
+ * \param [in,out]	L	If non-null, the lua_State to process.
+ *
+ * \return	An int.
+ *
+ * ### remarks	Pugnator, 11/21/2015.
+ **************************************************************************************************/
 
 static int
 lua_get_systime ( lua_State* L )

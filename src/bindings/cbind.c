@@ -10,12 +10,19 @@
 
 #include <vsmapi.h>
 
-/**
- * @brief [Convert pin state to string]
+/**********************************************************************************************//**
+ * \fn	const char* state_to_string ( STATE pinstate )
  *
- * @param pinstate [pin state]
- * @return [string representation of pin state]
- */
+ * \brief	State to string.
+ *
+ * \author	Pugnator
+ * \date	11/22/2015
+ *
+ * \param	pinstate	The pinstate.
+ *
+ * \return	null if it fails, else a char*.
+ **************************************************************************************************/
+
 const char* state_to_string ( STATE pinstate )
 {
 	switch ( pinstate )
@@ -53,11 +60,19 @@ const char* state_to_string ( STATE pinstate )
 	}
 }
 
-/**
- * [Register model to Proteus license server]
- * @param  ils [description]
- * @return     [true on success]
- */
+/**********************************************************************************************//**
+ * \fn	bool vsm_register ( ILICENCESERVER* ils )
+ *
+ * \brief	Vsm register.
+ *
+ * \author	Pugnator
+ * \date	11/22/2015
+ *
+ * \param [in,out]	ils	If non-null, the ils.
+ *
+ * \return	true if it succeeds, false if it fails.
+ **************************************************************************************************/
+
 bool
 vsm_register ( ILICENCESERVER* ils )
 {
@@ -69,11 +84,19 @@ vsm_register ( ILICENCESERVER* ils )
 	return TRUE;
 }
 
-/**
- * [set_pin_state  description]
- * @param pin   [description]
- * @param state [description]
- */
+/**********************************************************************************************//**
+ * \fn	void set_pin_state ( IDSIMMODEL* model, VSM_PIN pin, STATE state )
+ *
+ * \brief	Sets pin state.
+ *
+ * \author	Pugnator
+ * \date	11/22/2015
+ *
+ * \param [in,out]	model	If non-null, the model.
+ * \param	pin			 	The pin.
+ * \param	state		 	The state.
+ **************************************************************************************************/
+
 void set_pin_state ( IDSIMMODEL* model, VSM_PIN pin, STATE state )
 {
 	ABSTIME curtime = 0;
@@ -81,11 +104,19 @@ void set_pin_state ( IDSIMMODEL* model, VSM_PIN pin, STATE state )
 	pin.pin->vtable->setstate2 ( pin.pin, 0, curtime, pin.on_time, state );
 }
 
-/**
- * [set_pin_bool  description]
- * @param pin   [description]
- * @param level [description]
- */
+/**********************************************************************************************//**
+ * \fn	void set_pin_bool ( IDSIMMODEL* model, VSM_PIN pin, bool level )
+ *
+ * \brief	Sets pin bool.
+ *
+ * \author	Pugnator
+ * \date	11/22/2015
+ *
+ * \param [in,out]	model	If non-null, the model.
+ * \param	pin			 	The pin.
+ * \param	level		 	true to level.
+ **************************************************************************************************/
+
 void set_pin_bool ( IDSIMMODEL* model, VSM_PIN pin, bool level )
 {
 	ABSTIME curtime = 0;
@@ -93,51 +124,93 @@ void set_pin_bool ( IDSIMMODEL* model, VSM_PIN pin, bool level )
 	pin.pin->vtable->setstate2 ( pin.pin, 0, curtime, pin.on_time, level ? LOGIC_HI : LOGIC_LO );
 }
 
-/**
- * [systime  description]
- * @param at [description]
- */
+/**********************************************************************************************//**
+ * \fn	void systime ( IDSIMMODEL* model, ABSTIME* at )
+ *
+ * \brief	Systimes.
+ *
+ * \author	Pugnator
+ * \date	11/22/2015
+ *
+ * \param [in,out]	model	If non-null, the model.
+ * \param [in,out]	at   	If non-null, at.
+ **************************************************************************************************/
+
 void systime ( IDSIMMODEL* model, ABSTIME* at )
 {
 	model->model_dsim->vtable->sysvar ( model->model_dsim, 0, ( DOUBLE* ) at, DSIMTIMENOW );
 }
 
+/************************************************************************************************
+ * \fn	char* get_device_id ( IDSIMMODEL* model )
+ *
+ * \brief	Gets device identifier.
+ *
+ * \author	Pugnator
+ * \date	11/22/2015
+ *
+ * \param [in,out]	model	If non-null, the model.
+ *
+ * \return	null if it fails, else the device identifier.
+ **************************************************************************************************/
 
-/**
- * [get_string_param  description]
- * @param  field_name [description]
- * @return            [description]
- */
 char* get_device_id ( IDSIMMODEL* model )
 {
 	return model->model_instance->vtable->id ( model->model_instance, 0 );
 }
 
-/**
- * [get_string_param  description]
- * @param  field_name [description]
- * @return            [description]
- */
+/************************************************************************************************
+ * \fn	char* get_string_param ( IDSIMMODEL* model, char* field_name )
+ *
+ * \brief	Gets string parameter.
+ *
+ * \author	Pugnator
+ * \date	11/22/2015
+ *
+ * \param [in,out]	model	  	If non-null, the model.
+ * \param [in,out]	field_name	If non-null, name of the field.
+ *
+ * \return	null if it fails, else the string parameter.
+ **************************************************************************************************/
+
 char* get_string_param ( IDSIMMODEL* model, char* field_name )
 {
 	return model->model_instance->vtable->getstrval ( model->model_instance, 0, field_name, "?" );
 }
 
-/**
- * [get_bool_param  description]
- * @param  field_name [description]
- * @return            [description]
- */
+/**********************************************************************************************//**
+ * \fn	bool get_bool_param ( IDSIMMODEL* model, char* field_name )
+ *
+ * \brief	Gets bool parameter.
+ *
+ * \author	Pugnator
+ * \date	11/22/2015
+ *
+ * \param [in,out]	model	  	If non-null, the model.
+ * \param [in,out]	field_name	If non-null, name of the field.
+ *
+ * \return	true if it succeeds, false if it fails.
+ **************************************************************************************************/
+
 bool get_bool_param ( IDSIMMODEL* model, char* field_name )
 {
 	return model->model_instance->vtable->getboolval ( model->model_instance, 0, field_name, FALSE );
 }
 
-/**
- * [get_num_param  description]
- * @param  field_name [description]
- * @return            [description]
- */
+/**********************************************************************************************//**
+ * \fn	double get_num_param ( IDSIMMODEL* model, char* field_name )
+ *
+ * \brief	Gets number parameter.
+ *
+ * \author	Pugnator
+ * \date	11/22/2015
+ *
+ * \param [in,out]	model	  	If non-null, the model.
+ * \param [in,out]	field_name	If non-null, name of the field.
+ *
+ * \return	The number parameter.
+ **************************************************************************************************/
+
 double get_num_param ( IDSIMMODEL* model, char* field_name )
 {
 	double result = 0;
@@ -145,53 +218,97 @@ double get_num_param ( IDSIMMODEL* model, char* field_name )
 	return result;
 }
 
-/**
- * [get_hex_param  description]
- * @param  field_name [description]
- * @return            [description]
- */
+/**********************************************************************************************//**
+ * \fn	int32_t get_hex_param ( IDSIMMODEL* model, char* field_name )
+ *
+ * \brief	Gets hexadecimal parameter.
+ *
+ * \author	Pugnator
+ * \date	11/22/2015
+ *
+ * \param [in,out]	model	  	If non-null, the model.
+ * \param [in,out]	field_name	If non-null, name of the field.
+ *
+ * \return	The hexadecimal parameter.
+ **************************************************************************************************/
+
 int32_t get_hex_param ( IDSIMMODEL* model, char* field_name )
 {
 	return ( int32_t ) model->model_instance->vtable->gethexval ( model->model_instance, 0, field_name, 0 );
 }
 
-/**
- * [get_init_param  description]
- * @param  field_name [description]
- * @return            [description]
- */
+/**********************************************************************************************//**
+ * \fn	int64_t get_init_param ( IDSIMMODEL* model, char* field_name )
+ *
+ * \brief	Gets initialise parameter.
+ *
+ * \author	Pugnator
+ * \date	11/22/2015
+ *
+ * \param [in,out]	model	  	If non-null, the model.
+ * \param [in,out]	field_name	If non-null, name of the field.
+ *
+ * \return	The initialise parameter.
+ **************************************************************************************************/
+
 int64_t get_init_param ( IDSIMMODEL* model, char* field_name )
 {
 	return ( int64_t ) model->model_instance->vtable->getinitval ( model->model_instance, 0, field_name, 0 );
 }
 
-/**
- * [load_image  description]
- * @param filename    [description]
- * @param buffer      [description]
- * @param buffer_size [description]
- */
+/**********************************************************************************************//**
+ * \fn	void load_image ( IDSIMMODEL* model, char* filename, uint8_t* buffer, size_t buffer_size )
+ *
+ * \brief	Loads an image.
+ *
+ * \author	Pugnator
+ * \date	11/22/2015
+ *
+ * \param [in,out]	model   	If non-null, the model.
+ * \param [in,out]	filename	If non-null, filename of the file.
+ * \param [in,out]	buffer  	If non-null, the buffer.
+ * \param	buffer_size			Size of the buffer.
+ **************************************************************************************************/
+
 void load_image ( IDSIMMODEL* model, char* filename, uint8_t* buffer, size_t buffer_size )
 {
 	model->model_instance->vtable->loadmemory ( model->model_instance, 0, filename, buffer, buffer_size, 0, 0 );
 }
 
-/**
- * [create_popup  description]
- * @param  cps [description]
- * @return     [description]
- */
+/**********************************************************************************************//**
+ * \fn	IPOPUP* create_popup ( IDSIMMODEL* model, CREATEPOPUPSTRUCT* cps )
+ *
+ * \brief	Creates a popup.
+ *
+ * \author	Pugnator
+ * \date	11/22/2015
+ *
+ * \param [in,out]	model	If non-null, the model.
+ * \param [in,out]	cps  	If non-null, the CPS.
+ *
+ * \return	null if it fails, else the new popup.
+ **************************************************************************************************/
+
 IPOPUP* create_popup ( IDSIMMODEL* model, CREATEPOPUPSTRUCT* cps )
 {
 	return ( ( IPOPUP* ) model->model_instance->vtable->createpopup ( model->model_instance, 0, cps ) );
 }
 
-/**
- * [create_memory_popup  description]
- * @param  title [description]
- * @param  id    [description]
- * @return       [description]
- */
+/**********************************************************************************************//**
+ * \fn	IMEMORYPOPUP* create_memory_popup ( IDSIMMODEL* model, const char* title, const int32_t id )
+ *
+ * \brief	Creates memory popup.
+ *
+ * \author	Pugnator
+ * \date	11/22/2015
+ *
+ * \param [in,out]	model	If non-null, the model.
+ * \param	title		 	The title.
+ * \param	id			 	The identifier.
+ *
+ * \return	null if it fails, else the new memory popup.
+ **************************************************************************************************/
+
 IMEMORYPOPUP* create_memory_popup ( IDSIMMODEL* model, const char* title, const int32_t id )
 {
 	CREATEPOPUPSTRUCT* cps = malloc ( sizeof *cps );
@@ -206,12 +323,21 @@ IMEMORYPOPUP* create_memory_popup ( IDSIMMODEL* model, const char* title, const 
 	return popup;
 }
 
-/**
- * [create_debug_popup  description]
- * @param  title [description]
- * @param  id    [description]
- * @return       [description]
- */
+/**********************************************************************************************//**
+ * \fn	IDEBUGPOPUP* create_debug_popup ( IDSIMMODEL* model, const char* title, const int32_t id )
+ *
+ * \brief	Creates debug popup.
+ *
+ * \author	Pugnator
+ * \date	11/22/2015
+ *
+ * \param [in,out]	model	If non-null, the model.
+ * \param	title		 	The title.
+ * \param	id			 	The identifier.
+ *
+ * \return	null if it fails, else the new debug popup.
+ **************************************************************************************************/
+
 IDEBUGPOPUP* create_debug_popup ( IDSIMMODEL* model, const char* title, const int32_t id )
 {
 	CREATEPOPUPSTRUCT* cps = malloc ( sizeof *cps );
@@ -226,12 +352,21 @@ IDEBUGPOPUP* create_debug_popup ( IDSIMMODEL* model, const char* title, const in
 	return popup;
 }
 
-/**
- * [create_source_popup  description]
- * @param  title [description]
- * @param  id    [description]
- * @return       [description]
- */
+/**********************************************************************************************//**
+ * \fn	IDEBUGPOPUP* create_source_popup ( IDSIMMODEL* model, const char* title, const int32_t id )
+ *
+ * \brief	Creates source popup.
+ *
+ * \author	Pugnator
+ * \date	11/22/2015
+ *
+ * \param [in,out]	model	If non-null, the model.
+ * \param	title		 	The title.
+ * \param	id			 	The identifier.
+ *
+ * \return	null if it fails, else the new source popup.
+ **************************************************************************************************/
+
 IDEBUGPOPUP* create_source_popup ( IDSIMMODEL* model, const char* title, const int32_t id )
 {
 	CREATEPOPUPSTRUCT* cps = malloc ( sizeof *cps );
@@ -246,12 +381,21 @@ IDEBUGPOPUP* create_source_popup ( IDSIMMODEL* model, const char* title, const i
 	return popup;
 }
 
-/**
- * [create_status_popup  description]
- * @param  title [description]
- * @param  id    [description]
- * @return       [description]
- */
+/**********************************************************************************************//**
+ * \fn	IDEBUGPOPUP* create_status_popup ( IDSIMMODEL* model, const char* title, const int32_t id )
+ *
+ * \brief	Creates status popup.
+ *
+ * \author	Pugnator
+ * \date	11/22/2015
+ *
+ * \param [in,out]	model	If non-null, the model.
+ * \param	title		 	The title.
+ * \param	id			 	The identifier.
+ *
+ * \return	null if it fails, else the new status popup.
+ **************************************************************************************************/
+
 IDEBUGPOPUP* create_status_popup ( IDSIMMODEL* model, const char* title, const int32_t id )
 {
 	CREATEPOPUPSTRUCT* cps = malloc ( sizeof *cps );
@@ -266,12 +410,21 @@ IDEBUGPOPUP* create_status_popup ( IDSIMMODEL* model, const char* title, const i
 	return popup;
 }
 
-/**
- * [create_var_popup  description]
- * @param  title [description]
- * @param  id    [description]
- * @return       [description]
- */
+/**********************************************************************************************//**
+ * \fn	IDEBUGPOPUP* create_var_popup ( IDSIMMODEL* model, const char* title, const int32_t id )
+ *
+ * \brief	Creates variable popup.
+ *
+ * \author	Pugnator
+ * \date	11/22/2015
+ *
+ * \param [in,out]	model	If non-null, the model.
+ * \param	title		 	The title.
+ * \param	id			 	The identifier.
+ *
+ * \return	null if it fails, else the new variable popup.
+ **************************************************************************************************/
+
 IDEBUGPOPUP* create_var_popup ( IDSIMMODEL* model, const char* title, const int32_t id )
 {
 	CREATEPOPUPSTRUCT* cps = malloc ( sizeof *cps );
@@ -286,34 +439,57 @@ IDEBUGPOPUP* create_var_popup ( IDSIMMODEL* model, const char* title, const int3
 	return popup;
 }
 
-/**
- * [delete_popup  description]
- * @param id [description]
- */
+/**********************************************************************************************//**
+ * \fn	void delete_popup ( IDSIMMODEL* model, POPUPID id )
+ *
+ * \brief	Deletes the popup.
+ *
+ * \author	Pugnator
+ * \date	11/22/2015
+ *
+ * \param [in,out]	model	If non-null, the model.
+ * \param	id			 	The identifier.
+ **************************************************************************************************/
+
 void delete_popup ( IDSIMMODEL* model, POPUPID id )
 {
 	model->model_instance->vtable->deletepopup ( model->model_instance, 0, id );
 }
 
-/**
- * [set_memory_popup  description]
- * @param popup  [description]
- * @param offset [description]
- * @param buffer [description]
- * @param size   [description]
- */
+/**********************************************************************************************//**
+ * \fn	void set_memory_popup ( IMEMORYPOPUP* popup, size_t offset, void* buffer, size_t size )
+ *
+ * \brief	Sets memory popup.
+ *
+ * \author	Pugnator
+ * \date	11/22/2015
+ *
+ * \param [in,out]	popup 	If non-null, the popup.
+ * \param	offset		  	The offset.
+ * \param [in,out]	buffer	If non-null, the buffer.
+ * \param	size		  	The size.
+ **************************************************************************************************/
+
 void set_memory_popup ( IMEMORYPOPUP* popup, size_t offset, void* buffer, size_t size )
 {
 	popup->vtable->setmemory ( popup, 0, offset, buffer, size );
 }
 
-/**
- * [add_source_file  description]
- * @param  popup    [description]
- * @param  filename [description]
- * @param  lowlevel [description]
- * @return          [description]
- */
+/**********************************************************************************************//**
+ * \fn	bool add_source_file ( ISOURCEPOPUP* popup, char* filename, bool lowlevel )
+ *
+ * \brief	Adds a source file.
+ *
+ * \author	Pugnator
+ * \date	11/22/2015
+ *
+ * \param [in,out]	popup   	If non-null, the popup.
+ * \param [in,out]	filename	If non-null, filename of the file.
+ * \param	lowlevel			true to lowlevel.
+ *
+ * \return	true if it succeeds, false if it fails.
+ **************************************************************************************************/
+
 bool add_source_file ( ISOURCEPOPUP* popup, char* filename, bool lowlevel )
 {
 	bool result = popup->vtable->addsrcfile ( popup, 0, filename, lowlevel );
@@ -321,56 +497,105 @@ bool add_source_file ( ISOURCEPOPUP* popup, char* filename, bool lowlevel )
 	return result;
 }
 
-/**
- * [set_vdm_handler  description]
- * @return  [description]
- */
+/**********************************************************************************************//**
+ * \fn	bool set_vdm_handler ( IDSIMMODEL* model )
+ *
+ * \brief	Handler, called when the set vdm.
+ *
+ * \author	Pugnator
+ * \date	11/22/2015
+ *
+ * \param [in,out]	model	If non-null, the model.
+ *
+ * \return	true if it succeeds, false if it fails.
+ **************************************************************************************************/
+
 bool set_vdm_handler ( IDSIMMODEL* model )
 {
 	return model->model_instance->vtable->setvdmhlr ( model->model_instance, 0, &ICPU_DEVICE );
 }
 
-/**
- * [set_pc_address  description]
- * @param popup   [description]
- * @param address [description]
- */
+/**********************************************************************************************//**
+ * \fn	void set_pc_address ( ISOURCEPOPUP* popup, size_t address )
+ *
+ * \brief	Sets PC address.
+ *
+ * \author	Pugnator
+ * \date	11/22/2015
+ *
+ * \param [in,out]	popup	If non-null, the popup.
+ * \param	address		 	The address.
+ **************************************************************************************************/
+
 void set_pc_address ( ISOURCEPOPUP* popup, size_t address )
 {
 	popup->vtable->setpcaddress ( popup, 0, address );
 }
 
-/**
- * [repaint_memory_popup  description]
- * @param popup [description]
- */
+/**********************************************************************************************//**
+ * \fn	void repaint_memory_popup ( IMEMORYPOPUP* popup )
+ *
+ * \brief	Repaint memory popup.
+ *
+ * \author	Pugnator
+ * \date	11/22/2015
+ *
+ * \param [in,out]	popup	If non-null, the popup.
+ **************************************************************************************************/
+
 void repaint_memory_popup ( IMEMORYPOPUP* popup )
 {
 	popup->vtable->repaint ( popup, 0 );
 }
 
-/**
- * [print_to_debug_popup  description]
- * @param popup   [description]
- * @param message [description]
- */
+/**********************************************************************************************//**
+ * \fn	void print_to_debug_popup ( IDEBUGPOPUP* popup, const char* message )
+ *
+ * \brief	Print to debug popup.
+ *
+ * \author	Pugnator
+ * \date	11/22/2015
+ *
+ * \param [in,out]	popup	If non-null, the popup.
+ * \param	message		 	The message.
+ **************************************************************************************************/
+
 void print_to_debug_popup ( IDEBUGPOPUP* popup, const char* message )
 {
 	popup->vtable->print ( popup, ( char* ) message );
 }
 
-/**
- * [dump_to_debug_popup  description]
- * @param popup  [description]
- * @param buf    [description]
- * @param offset [description]
- * @param size   [description]
- */
+/**********************************************************************************************//**
+ * \fn	void dump_to_debug_popup ( IDEBUGPOPUP* popup, const uint8_t* buf, uint32_t offset, uint32_t size )
+ *
+ * \brief	Dumps to debug popup.
+ *
+ * \author	Pugnator
+ * \date	11/22/2015
+ *
+ * \param [in,out]	popup	If non-null, the popup.
+ * \param	buf			 	The buffer.
+ * \param	offset		 	The offset.
+ * \param	size		 	The size.
+ **************************************************************************************************/
+
 void dump_to_debug_popup ( IDEBUGPOPUP* popup, const uint8_t* buf, uint32_t offset, uint32_t size )
 {
 	popup->vtable->dump ( popup, 0, buf + offset, size, 16 );
 }
 
+/**********************************************************************************************//**
+ * \fn	const char* logic_type_to_string ( LOGIC_TYPE type )
+ *
+ * \brief	Logic type to string.
+ *
+ * \author	Pugnator
+ * \date	11/22/2015
+ *
+ * \param	type	The type.
+ *
+ * \return	null if it fails, else a char*.
+ **************************************************************************************************/
 
 const char* logic_type_to_string ( LOGIC_TYPE type )
 {
@@ -386,6 +611,18 @@ const char* logic_type_to_string ( LOGIC_TYPE type )
 			return "Unknown";
 	}
 }
+
+/**********************************************************************************************//**
+ * \fn	void set_logic_type ( IDSIMMODEL* model, LOGIC_TYPE type )
+ *
+ * \brief	Sets logic type.
+ *
+ * \author	Pugnator
+ * \date	11/22/2015
+ *
+ * \param [in,out]	model	If non-null, the model.
+ * \param	type		 	The type.
+ **************************************************************************************************/
 
 void set_logic_type ( IDSIMMODEL* model, LOGIC_TYPE type )
 {
@@ -413,10 +650,18 @@ void set_logic_type ( IDSIMMODEL* model, LOGIC_TYPE type )
 	}
 }
 
-/**
- * [toggle_pin_state  description]
- * @param pin [description]
- */
+/**********************************************************************************************//**
+ * \fn	void toggle_pin_state ( IDSIMMODEL* model, VSM_PIN pin )
+ *
+ * \brief	Toggle pin state.
+ *
+ * \author	Pugnator
+ * \date	11/22/2015
+ *
+ * \param [in,out]	model	If non-null, the model.
+ * \param	pin			 	The pin.
+ **************************************************************************************************/
+
 void toggle_pin_state ( IDSIMMODEL* model, VSM_PIN pin )
 {
 	if ( TRUE == is_pin_high ( pin.pin ) )
@@ -431,21 +676,37 @@ void toggle_pin_state ( IDSIMMODEL* model, VSM_PIN pin )
 	}
 }
 
-/**
- * [get_pin_state  description]
- * @param  pin [description]
- * @return     [description]
- */
+/**********************************************************************************************//**
+ * \fn	STATE get_pin_state ( IDSIMPIN* pin )
+ *
+ * \brief	Gets pin state.
+ *
+ * \author	Pugnator
+ * \date	11/22/2015
+ *
+ * \param [in,out]	pin	If non-null, the pin.
+ *
+ * \return	The pin state.
+ **************************************************************************************************/
+
 STATE get_pin_state ( IDSIMPIN* pin )
 {
 	return pin->vtable->getstate ( pin, 0 );
 }
 
-/**
- * [get_pin_bool  description]
- * @param  pin [description]
- * @return     [description]
- */
+/**********************************************************************************************//**
+ * \fn	int get_pin_bool ( VSM_PIN pin )
+ *
+ * \brief	Gets pin bool.
+ *
+ * \author	Pugnator
+ * \date	11/22/2015
+ *
+ * \param	pin	The pin.
+ *
+ * \return	The pin bool.
+ **************************************************************************************************/
+
 int get_pin_bool ( VSM_PIN pin )
 {
 	if ( TRUE == is_pin_high ( pin.pin ) )
@@ -460,71 +721,128 @@ int get_pin_bool ( VSM_PIN pin )
 	return -1;
 }
 
-/**
- * [is_pin_active  description]
- * @param  pin [description]
- * @return     [description]
- */
+/**********************************************************************************************//**
+ * \fn	bool is_pin_active ( IDSIMPIN* pin )
+ *
+ * \brief	Queries if a pin is active.
+ *
+ * \author	Pugnator
+ * \date	11/22/2015
+ *
+ * \param [in,out]	pin	If non-null, the pin.
+ *
+ * \return	true if a pin is active, false if not.
+ **************************************************************************************************/
+
 bool is_pin_active ( IDSIMPIN* pin )
 {
 	return pin->vtable->isactive ( pin, 0 );
 }
 
-/**
- * [is_pin_active  description]
- * @param  pin [description]
- * @return     [description]
- */
+/**********************************************************************************************//**
+ * \fn	bool is_pin_inactive ( IDSIMPIN* pin )
+ *
+ * \brief	Queries if a pin is inactive.
+ *
+ * \author	Pugnator
+ * \date	11/22/2015
+ *
+ * \param [in,out]	pin	If non-null, the pin.
+ *
+ * \return	true if a pin is inactive, false if not.
+ **************************************************************************************************/
+
 bool is_pin_inactive ( IDSIMPIN* pin )
 {
 	return pin->vtable->isinactive ( pin, 0 );
 }
 
-/**
- * [is_pin_posedge  description]
- * @param  pin [description]
- * @return     [description]
- */
+/**********************************************************************************************//**
+ * \fn	bool is_pin_posedge ( IDSIMPIN* pin )
+ *
+ * \brief	Query if 'pin' is pin posedge.
+ *
+ * \author	Pugnator
+ * \date	11/22/2015
+ *
+ * \param [in,out]	pin	If non-null, the pin.
+ *
+ * \return	true if pin posedge, false if not.
+ **************************************************************************************************/
+
 bool is_pin_posedge ( IDSIMPIN* pin )
 {
 	return pin->vtable->isposedge ( pin, 0 );
 }
 
-/**
- * [is_pin_negedge  description]
- * @param  pin [description]
- * @return     [description]
- */
+/**********************************************************************************************//**
+ * \fn	bool is_pin_negedge ( IDSIMPIN* pin )
+ *
+ * \brief	Query if 'pin' is pin negedge.
+ *
+ * \author	Pugnator
+ * \date	11/22/2015
+ *
+ * \param [in,out]	pin	If non-null, the pin.
+ *
+ * \return	true if pin negedge, false if not.
+ **************************************************************************************************/
+
 bool is_pin_negedge ( IDSIMPIN* pin )
 {
 	return pin->vtable->isnegedge ( pin, 0 );
 }
 
-/**
- * [is_pin_edge  description]
- * @param  pin [description]
- * @return     [description]
- */
+/**********************************************************************************************//**
+ * \fn	bool is_pin_edge ( IDSIMPIN* pin )
+ *
+ * \brief	Query if 'pin' is pin edge.
+ *
+ * \author	Pugnator
+ * \date	11/22/2015
+ *
+ * \param [in,out]	pin	If non-null, the pin.
+ *
+ * \return	true if pin edge, false if not.
+ **************************************************************************************************/
+
 bool is_pin_edge ( IDSIMPIN* pin )
 {
 	return pin->vtable->isedge ( pin, 0 );
 }
 
-/**
- * [set_callback  Set the system callback]
- * @param picotime [Time callback should be triggered on]
- * @param id       [unique event id]
- */
+/**********************************************************************************************//**
+ * \fn	void set_callback ( IDSIMMODEL* model, RELTIME picotime, EVENTID id )
+ *
+ * \brief	Callback, called when the set.
+ *
+ * \author	Pugnator
+ * \date	11/22/2015
+ *
+ * \param [in,out]	model	If non-null, the model.
+ * \param	picotime	 	The picotime.
+ * \param	id			 	The identifier.
+ **************************************************************************************************/
+
 void set_callback ( IDSIMMODEL* model, RELTIME picotime, EVENTID id )
 {
 	/* Add event to the model's hash table in order to keep count of registered events */
 	model->model_dsim->vtable->setcallback ( model->model_dsim, 0, picotime, model, id );
 }
 
-/**
- * [out_log  description]
- * @param format [description]
- */
+/**********************************************************************************************//**
+ * \fn	void print_info ( IDSIMMODEL* model, const char* format, ... )
+ *
+ * \brief	Print information.
+ *
+ * \author	Pugnator
+ * \date	11/22/2015
+ *
+ * \param [in,out]	model	If non-null, the model.
+ * \param	format		 	Describes the format to use.
+ * \param	...			 	Variable arguments providing additional information.
+ **************************************************************************************************/
+
 void print_info ( IDSIMMODEL* model, const char* format, ... )
 {
 	char* string;
@@ -536,10 +854,19 @@ void print_info ( IDSIMMODEL* model, const char* format, ... )
 	free ( string );
 }
 
-/**
- * [out_message  description]
- * @param format [description]
- */
+/**********************************************************************************************//**
+ * \fn	void print_message ( IDSIMMODEL* model, const char* format, ... )
+ *
+ * \brief	Print message.
+ *
+ * \author	Pugnator
+ * \date	11/22/2015
+ *
+ * \param [in,out]	model	If non-null, the model.
+ * \param	format		 	Describes the format to use.
+ * \param	...			 	Variable arguments providing additional information.
+ **************************************************************************************************/
+
 void print_message ( IDSIMMODEL* model, const char* format, ... )
 {
 	char* string;
@@ -551,10 +878,19 @@ void print_message ( IDSIMMODEL* model, const char* format, ... )
 	free ( string );
 }
 
-/**
- * [out_warning  description]
- * @param format [description]
- */
+/**********************************************************************************************//**
+ * \fn	void print_warning ( IDSIMMODEL* model, const char* format, ... )
+ *
+ * \brief	Print warning.
+ *
+ * \author	Pugnator
+ * \date	11/22/2015
+ *
+ * \param [in,out]	model	If non-null, the model.
+ * \param	format		 	Describes the format to use.
+ * \param	...			 	Variable arguments providing additional information.
+ **************************************************************************************************/
+
 void print_warning ( IDSIMMODEL* model, const char* format, ... )
 {
 	char* string;
@@ -566,10 +902,19 @@ void print_warning ( IDSIMMODEL* model, const char* format, ... )
 	free ( string );
 }
 
-/**
- * [out_error  description]
- * @param format [description]
- */
+/**********************************************************************************************//**
+ * \fn	void print_error ( IDSIMMODEL* model, const char* format, ... )
+ *
+ * \brief	Print error.
+ *
+ * \author	Pugnator
+ * \date	11/22/2015
+ *
+ * \param [in,out]	model	If non-null, the model.
+ * \param	format		 	Describes the format to use.
+ * \param	...			 	Variable arguments providing additional information.
+ **************************************************************************************************/
+
 void print_error ( IDSIMMODEL* model, const char* format, ... )
 {
 	char* string;
@@ -581,105 +926,260 @@ void print_error ( IDSIMMODEL* model, const char* format, ... )
 	free ( string );
 }
 
-/**
- * [get_pin  description]
- * @param  pin_name [description]
- * @return          [description]
- */
+/**********************************************************************************************//**
+ * \fn	IDSIMPIN* get_pin ( IDSIMMODEL* model, char* pin_name )
+ *
+ * \brief	Gets a pin.
+ *
+ * \author	Pugnator
+ * \date	11/22/2015
+ *
+ * \param [in,out]	model   	If non-null, the model.
+ * \param [in,out]	pin_name	If non-null, name of the pin.
+ *
+ * \return	null if it fails, else the pin.
+ **************************************************************************************************/
+
 IDSIMPIN* get_pin ( IDSIMMODEL* model, char* pin_name )
 {
 	return model->model_instance->vtable->getdsimpin ( model->model_instance, 0, pin_name, TRUE );
 }
 
-/**
- * [is_pin_low  description]
- * @param  pin [description]
- * @return     [description]
- */
+/**********************************************************************************************//**
+ * \fn	bool is_pin_low ( IDSIMPIN* pin )
+ *
+ * \brief	Query if 'pin' is pin low.
+ *
+ * \author	Pugnator
+ * \date	11/22/2015
+ *
+ * \param [in,out]	pin	If non-null, the pin.
+ *
+ * \return	true if pin low, false if not.
+ **************************************************************************************************/
+
 bool is_pin_low ( IDSIMPIN* pin )
 {
 	return islow ( pin->vtable->istate ( pin, 0 ) );
 }
 
-/**
- * [is_pin_high  description]
- * @param  pin [description]
- * @return     [description]
- */
+/**********************************************************************************************//**
+ * \fn	bool is_pin_high ( IDSIMPIN* pin )
+ *
+ * \brief	Query if 'pin' is pin high.
+ *
+ * \author	Pugnator
+ * \date	11/22/2015
+ *
+ * \param [in,out]	pin	If non-null, the pin.
+ *
+ * \return	true if pin high, false if not.
+ **************************************************************************************************/
+
 bool is_pin_high ( IDSIMPIN* pin )
 {
 	return ishigh ( pin->vtable->istate ( pin, 0 ) );
 }
 
-/**
- * [is_pin_floating  description]
- * @param  pin [description]
- * @return     [description]
- */
+/**********************************************************************************************//**
+ * \fn	bool is_pin_floating ( IDSIMPIN* pin )
+ *
+ * \brief	Query if 'pin' is pin floating.
+ *
+ * \author	Pugnator
+ * \date	11/22/2015
+ *
+ * \param [in,out]	pin	If non-null, the pin.
+ *
+ * \return	true if pin floating, false if not.
+ **************************************************************************************************/
+
 bool is_pin_floating ( IDSIMPIN* pin )
 {
 	return isfloating ( pin->vtable->istate ( pin, 0 ) );
 }
 
-/**
- * [is_pin_steady  description]
- * @param  pin [description]
- * @return     [description]
- */
+/**********************************************************************************************//**
+ * \fn	bool is_pin_steady ( IDSIMPIN* pin )
+ *
+ * \brief	Query if 'pin' is pin steady.
+ *
+ * \author	Pugnator
+ * \date	11/22/2015
+ *
+ * \param [in,out]	pin	If non-null, the pin.
+ *
+ * \return	true if pin steady, false if not.
+ **************************************************************************************************/
+
 bool is_pin_steady ( IDSIMPIN* pin )
 {
 	return pin->vtable->issteady ( pin, 0 );
 }
 
-/**
- * [is_pin_inverted  description]
- * @param  pin [description]
- * @return     [description]
- */
+/**********************************************************************************************//**
+ * \fn	bool is_pin_inverted ( IDSIMPIN* pin )
+ *
+ * \brief	Query if 'pin' is pin inverted.
+ *
+ * \author	Pugnator
+ * \date	11/22/2015
+ *
+ * \param [in,out]	pin	If non-null, the pin.
+ *
+ * \return	true if pin inverted, false if not.
+ **************************************************************************************************/
+
 bool is_pin_inverted ( IDSIMPIN* pin )
 {
 	return pin->vtable->invert ( pin, 0 );
 }
 
-/**
- * [islow  description]
- * @param  pinstate [description]
- * @return   [description]
- */
+/**********************************************************************************************//**
+ * \fn	__INLINE__ bool islow ( STATE pinstate )
+ *
+ * \brief	Query if 'pinstate' islow.
+ *
+ * \author	Pugnator
+ * \date	11/22/2015
+ *
+ * \param	pinstate	The pinstate.
+ *
+ * \return	true if it succeeds, false if it fails.
+ **************************************************************************************************/
+
 __INLINE__ bool islow ( STATE pinstate )
 {
 	return ( pinstate & SP_MASK ) == SP_LOW;
 }
+
+/**********************************************************************************************//**
+ * \fn	__INLINE__ bool ishigh ( STATE pinstate )
+ *
+ * \brief	Query if 'pinstate' ishigh.
+ *
+ * \author	Pugnator
+ * \date	11/22/2015
+ *
+ * \param	pinstate	The pinstate.
+ *
+ * \return	true if it succeeds, false if it fails.
+ **************************************************************************************************/
+
 __INLINE__ bool
 ishigh ( STATE pinstate )
 {
 	return ( pinstate & SP_MASK ) == SP_HIGH;
 }
+
+/**********************************************************************************************//**
+ * \fn	__INLINE__ bool isfloating ( STATE pinstate )
+ *
+ * \brief	Query if 'pinstate' isfloating.
+ *
+ * \author	Pugnator
+ * \date	11/22/2015
+ *
+ * \param	pinstate	The pinstate.
+ *
+ * \return	true if it succeeds, false if it fails.
+ **************************************************************************************************/
+
 __INLINE__ bool
 isfloating ( STATE pinstate )
 {
 	return ( pinstate & SP_MASK ) == SP_FLOAT;
 }
+
+/**********************************************************************************************//**
+ * \fn	__INLINE__ bool iscontention ( STATE pinstate )
+ *
+ * \brief	Query if 'pinstate' iscontention.
+ *
+ * \author	Pugnator
+ * \date	11/22/2015
+ *
+ * \param	pinstate	The pinstate.
+ *
+ * \return	true if it succeeds, false if it fails.
+ **************************************************************************************************/
+
 __INLINE__ bool
 iscontention ( STATE pinstate )
 {
 	return pinstate & SF_CONTENTION;
 }
+
+/**********************************************************************************************//**
+ * \fn	__INLINE__ bool isdefined ( STATE pinstate )
+ *
+ * \brief	Query if 'pinstate' isdefined.
+ *
+ * \author	Pugnator
+ * \date	11/22/2015
+ *
+ * \param	pinstate	The pinstate.
+ *
+ * \return	true if it succeeds, false if it fails.
+ **************************************************************************************************/
+
 __INLINE__ bool
 isdefined ( STATE pinstate )
 {
 	return pinstate != SP_UNDEFINED;
 }
+
+/**********************************************************************************************//**
+ * \fn	__INLINE__ bool ishighlow ( STATE pinstate )
+ *
+ * \brief	Query if 'pinstate' ishighlow.
+ *
+ * \author	Pugnator
+ * \date	11/22/2015
+ *
+ * \param	pinstate	The pinstate.
+ *
+ * \return	true if it succeeds, false if it fails.
+ **************************************************************************************************/
+
 __INLINE__ bool
 ishighlow ( STATE pinstate )
 {
 	return pinstate & 1;
 }
+
+/**********************************************************************************************//**
+ * \fn	__INLINE__ INT polarity ( STATE pinstate )
+ *
+ * \brief	Polarities the given pinstate.
+ *
+ * \author	Pugnator
+ * \date	11/22/2015
+ *
+ * \param	pinstate	The pinstate.
+ *
+ * \return	An INT.
+ **************************************************************************************************/
+
 __INLINE__ INT
 polarity ( STATE pinstate )
 {
 	return pinstate & SP_MASK;
 }
+
+/**********************************************************************************************//**
+ * \fn	__INLINE__ INT strength ( STATE pinstate )
+ *
+ * \brief	Strengths the given pinstate.
+ *
+ * \author	Pugnator
+ * \date	11/22/2015
+ *
+ * \param	pinstate	The pinstate.
+ *
+ * \return	An INT.
+ **************************************************************************************************/
+
 __INLINE__ INT
 strength ( STATE pinstate )
 {

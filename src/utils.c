@@ -11,6 +11,19 @@
 
 #include <vsmapi.h>
 
+/**********************************************************************************************//**
+ * \fn	uint64_t xorshift ( IDSIMMODEL* this )
+ *
+ * \brief	Xorshifts the given this.
+ *
+ * \author	Pugnator
+ * \date	11/22/2015
+ *
+ * \param [in,out]	this	If non-null, this.
+ *
+ * \return	An uint64_t.
+ **************************************************************************************************/
+
 uint64_t xorshift ( IDSIMMODEL* this )
 {
 	uint64_t x = this->xorseed[0];

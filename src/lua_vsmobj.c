@@ -10,12 +10,19 @@
 
 #include <vsmapi.h>
 
-/**
- * @brief extracts model object from Lua state
+/**********************************************************************************************//**
+ * \fn	void* lua_get_model_obj ( lua_State* L )
  *
- * @param L Lua state
- * @return model object
- */
+ * \brief	Lua get model object.
+ *
+ * \author	Pugnator
+ * \date	11/22/2015
+ *
+ * \param [in,out]	L	If non-null, the lua_State to process.
+ *
+ * \return	null if it fails, else a void*.
+ **************************************************************************************************/
+
 void* lua_get_model_obj ( lua_State* L )
 {
 	lua_pushliteral ( L, "__this" );
