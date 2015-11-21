@@ -2,7 +2,7 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "openVSM"
-#define MyAppVersion "0.2"
+#define MyAppVersion "0.3"
 #define MyAppPublisher "NonameGarage"
 #define MyAppURL "https://github.com/Pugnator/openvsm"
 
@@ -21,8 +21,9 @@ AppUpdatesURL={#MyAppURL}
 DefaultDirName={pf}\{#MyAppName}
 DefaultGroupName={#MyAppName}
 AllowNoIcons=yes
-LicenseFile=E:\IBM-PC\Lin32\openvsm\LICENSE
-OutputBaseFilename=Installer
+LicenseFile="..\..\LICENSE"
+OutputDir=".\"
+OutputBaseFilename="openVSM_installer"
 Compression=lzma
 SolidCompression=yes
 
@@ -30,15 +31,15 @@ SolidCompression=yes
 Name: "english"; MessagesFile: "compiler:Default.isl"
 
 [Files]
-Source: "..\..\dll\openvsm.dll"; DestDir: "{app}"
+Source: "..\..\dll\openvsm.dll"; DestDir: "{code:GetProteusInstallDir}\Models"
 Source: "..\..\dll\UserManual-RUS.pdf"; DestDir: "{app}\Docs"
 
 [Icons]
 Name: "{group}\{cm:UninstallProgram,{#MyAppName}}"; Filename: "{uninstallexe}"
 
 [Registry]
-Root: "HKLM"; Subkey: "SYSTEM\CurrentControlSet\Control\Session Manager\Environment"; ValueType: expandsz; ValueName: "Path"; ValueData: "{olddata};{app}"; Check: NeedsAddPath('C:\foo')
-Root: "HKCU"; Subkey: "Environment"; ValueType: expandsz; ValueName: "LUAVSM"; ValueData: "{app}"; Flags: createvalueifdoesntexist
+;Root: "HKLM"; Subkey: "SYSTEM\CurrentControlSet\Control\Session Manager\Environment"; ValueType: expandsz; ValueName: "Path"; ValueData: "{olddata};{app}"; Check: NeedsAddPath('C:\foo')
+Root: "HKCU"; Subkey: "Environment"; ValueType: expandsz; ValueName: "LUAVSM"; ValueData: "{app}\LuaScripts"; Flags: deletevalue
 
 [Dirs]
 Name: "{app}\LuaScripts"; Flags: uninsneveruninstall
@@ -49,6 +50,24 @@ BeveledLabel=NonameGarage
 FinishedLabel=The default folder for your scripts is LuaScripts inside installation directory.%nYou should place all your device scripts there.%nIn order to change it, you should edit LUAVSM environment variable and set the corresponding path
 
 [Code]
+
+function GetProteusInstallDir(Value: string): string;
+var          
+  InstallPath: string;
+begin
+  
+  Result := ExpandConstant('{app}')
+
+  if RegQueryStringValue(HKLM, 'SOFTWARE\Wow6432Node\Labcenter Electronics\Proteus 8 Professional', 'Path', InstallPath) then
+      Result := InstallPath
+  if RegQueryStringValue(HKLM, 'SOFTWARE\Labcenter Electronics\Proteus 8 Professional', 'Path', InstallPath) then
+      Result := InstallPath
+  if RegQueryStringValue(HKLM, 'SOFTWARE\Wow6432Node\Labcenter Electronics\Proteus 7 Professional', 'Path', InstallPath) then
+      Result := InstallPath
+  if RegQueryStringValue(HKLM, 'SOFTWARE\Labcenter Electronics\Proteus 7 Professional', 'Path', InstallPath) then
+      Result := InstallPath 
+  
+end;
 
 function NeedsAddPath(Param: string): boolean;
 var
