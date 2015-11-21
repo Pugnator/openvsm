@@ -270,7 +270,7 @@ int64_t get_init_param ( IDSIMMODEL* model, char* field_name )
  * \param	buffer_size			Size of the buffer.
  **************************************************************************************************/
 
-void load_image ( IDSIMMODEL* model, char* filename, uint8_t* buffer, size_t buffer_size )
+void load_image ( IDSIMMODEL* model, char* filename, uint8_t* buffer, uint32_t buffer_size )
 {
 	model->model_instance->vtable->loadmemory ( model->model_instance, 0, filename, buffer, buffer_size, 0, 0 );
 }
@@ -315,7 +315,7 @@ IMEMORYPOPUP* create_memory_popup ( IDSIMMODEL* model, const char* title, const 
 	cps->caption = ( char* ) title;
 	cps->flags = PWF_VISIBLE | PWF_HIDEONANIMATE | PWF_SIZEABLE| PWF_AUTOREFRESH ;
 	cps->type = PWT_MEMORY;
-	cps->height = 32;
+	cps->height = 32; //-V112
 	cps->width = 16;
 	cps->id = id;
 	IMEMORYPOPUP* popup = ( IMEMORYPOPUP* ) create_popup ( model, cps );
@@ -470,7 +470,7 @@ void delete_popup ( IDSIMMODEL* model, POPUPID id )
  * \param	size		  	The size.
  **************************************************************************************************/
 
-void set_memory_popup ( IMEMORYPOPUP* popup, size_t offset, void* buffer, size_t size )
+void set_memory_popup ( IMEMORYPOPUP* popup, uint32_t offset, void* buffer, uint32_t size )
 {
 	popup->vtable->setmemory ( popup, 0, offset, buffer, size );
 }
@@ -527,7 +527,7 @@ bool set_vdm_handler ( IDSIMMODEL* model )
  * \param	address		 	The address.
  **************************************************************************************************/
 
-void set_pc_address ( ISOURCEPOPUP* popup, size_t address )
+void set_pc_address ( ISOURCEPOPUP* popup, uint32_t address )
 {
 	popup->vtable->setpcaddress ( popup, 0, address );
 }

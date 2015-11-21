@@ -12,4 +12,5 @@
 #pragma once
 #include <vsmapi.h>
 
+uint64_t rand64bits();
 uint64_t xorshift ( IDSIMMODEL* this );

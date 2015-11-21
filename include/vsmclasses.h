@@ -64,11 +64,11 @@ typedef struct IMSGHLR_vtable IMSGHLR_vtable;
 
 typedef struct VSM_PIN
 {
-	BOOL is_digital; ///< Pin is a digital one
-	char name[128]; ///< The name of the pin in graphical model
-	ABSTIME on_time; ///< Pin switch on-time
-	ABSTIME off_time; ///< Pin switch off-time
+	char name[128]; ///< The name of the pin in graphical model	
 	IDSIMPIN* pin; ///< DSIM pin pointer itself
+	ABSTIME on_time; ///< Pin switch on-time
+	ABSTIME off_time; ///< Pin switch off-time	
+	BOOL is_digital; ///< Pin is a digital one	
 } VSM_PIN; ///< OpenVSM pin structure
 
 struct IDSIMPIN2_vtable

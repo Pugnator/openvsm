@@ -170,7 +170,7 @@ struct ACTIVEDATA
 		double wireinfo[2]; // Voltage and current
 		SPICEDATA spicedata;
 		DSIMDATA dsimdata;
-		void* userinfo; // Pointer to user data
+		void* userinfo; // Pointer to user data //-V117
 	};
 };
 

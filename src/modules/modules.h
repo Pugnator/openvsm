@@ -11,16 +11,16 @@
 #pragma once
 
 extern unsigned char module_bus_lua[];
-extern unsigned int module_bus_lua_len;
+extern size_t module_bus_lua_len;
 
 extern unsigned char module_custom_lua[];
-extern unsigned int module_custom_lua_len;
+extern size_t module_custom_lua_len;
 
 extern unsigned char module_events_lua[];
-extern unsigned int module_events_lua_len;
+extern size_t module_events_lua_len;
 
 extern unsigned char module_pin_lua[];
-extern unsigned int module_pin_lua_len;
+extern size_t module_pin_lua_len;
 
 extern unsigned char device_lua[];
-extern unsigned int device_lua_len;
+extern size_t device_lua_len;

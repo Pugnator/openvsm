@@ -39,7 +39,7 @@ char
 		*p = '\0';
 	}
 	p = strrchr(path, DELIM);
-	if (DELIM == *p)
+	if (DELIM == *p) //-V595
 	{
 		p++;
 	}
@@ -103,7 +103,7 @@ main(int argc, char* argv[])
 	make_ident(argv[1]);
 	size_t rd = 0;
 	size_t totalsize = 0;
-	printf("const unsigned char %s[] = {", filename);
+	printf("#include <stdint.h>\n\nconst unsigned char %s[] = {", filename);
 	for (int total = 0, need_comma = 0; (rd = fread(buf, 1, BUFSIZ, fd)) > 0; )
 	{
 		totalsize += rd;
@@ -122,6 +122,6 @@ main(int argc, char* argv[])
 		}
 	}
 	printf("\n};\n");
-	printf("const unsigned %s_len = %zu;\n", filename, totalsize);	
+	printf("const size_t %s_len = %zu;\n", filename, totalsize);	
 	return 0;
 }

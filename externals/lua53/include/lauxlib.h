@@ -142,7 +142,7 @@ typedef struct luaL_Buffer {
   size_t size;  /* buffer size */
   size_t n;  /* number of characters in buffer */
   lua_State *L;
-  char initb[LUAL_BUFFERSIZE];  /* initial buffer */
+  char initb[LUAL_BUFFERSIZE];  /* initial buffer */ //-V119
 } luaL_Buffer;
 
 

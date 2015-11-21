@@ -29,7 +29,7 @@ char* get_string_param ( IDSIMMODEL* model, char* field_name );
 double get_num_param ( IDSIMMODEL* model, char* field_name );
 int32_t get_hex_param ( IDSIMMODEL* model, char* field_name );
 int64_t get_init_param ( IDSIMMODEL* model, char* field_name );
-void load_image ( IDSIMMODEL* model, char* filename, uint8_t* buffer, size_t buffer_size );
+void load_image ( IDSIMMODEL* model, char* filename, uint8_t* buffer, uint32_t buffer_size );
 void systime ( IDSIMMODEL* model, ABSTIME* at );
 
 /* LOGGING */
@@ -54,8 +54,8 @@ void delete_popup ( IDSIMMODEL* model, POPUPID id );
 void dump_to_debug_popup ( IDEBUGPOPUP* popup, const uint8_t* buf, uint32_t offset, uint32_t size );
 void print_to_debug_popup ( IDEBUGPOPUP* popup, const char* message );
 void repaint_memory_popup ( IMEMORYPOPUP* popup );
-void set_memory_popup ( IMEMORYPOPUP* popup, size_t offset, void* buffer, size_t size );
-void set_pc_address ( ISOURCEPOPUP* popup, size_t address );
+void set_memory_popup ( IMEMORYPOPUP* popup, uint32_t offset, void* buffer, size_t size );
+void set_pc_address ( ISOURCEPOPUP* popup, uint32_t address );
 
 /* PINS */
 

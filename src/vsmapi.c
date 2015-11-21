@@ -161,8 +161,8 @@ vsm_setup ( IDSIMMODEL* this, uint32_t edx, IINSTANCE* instance, IDSIMCKT* dsimc
 	this->model_instance = instance;
 	this->model_dsim = dsimckt;
 	/*Init xor shift PRNG*/
-	this->xorseed[0] = rand() << 31 | rand() & 0xFFFFFFFF;
-	this->xorseed[1] = rand() << 31 | rand() & 0xFFFFFFFF;
+	this->xorseed[0] = rand64bits();
+	this->xorseed[1] = rand64bits();
 	
 	char* device_script = get_string_param ( this, "lua" );
 	lua_load_modules ( this );
