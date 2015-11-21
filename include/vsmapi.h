@@ -47,7 +47,7 @@
 #ifdef __MINGW32__
 #define __INLINE__ inline
 #elif _MSC_VER
-#define __INLINE__ __inline
+#define __INLINE__ __forceinline
 #else
 #error "unsupported compiler"
 #endif

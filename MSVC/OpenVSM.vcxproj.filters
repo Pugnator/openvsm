@@ -15,170 +15,176 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\bus.c">
+    <ClCompile Include="..\src\lua_bus.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\pin.c">
+    <ClCompile Include="..\src\lua_pin.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\utils.c">
+    <ClCompile Include="..\src\lua_vsmobj.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\vsmapi.c">
+    <ClCompile Include="..\src\utils.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\vsmobj.c">
+    <ClCompile Include="..\src\vsmapi.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\win32.c">
+    <ClCompile Include="..\src\wincompat.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\bindings\cbind.c">
+    <ClCompile Include="..\src\bindings\cbind.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\bindings\luabind.c">
+    <ClCompile Include="..\src\bindings\luabind.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\modules\bus.mod.c">
+    <ClCompile Include="..\src\modules\module_bus.lua.mod.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\modules\custom.mod.c">
+    <ClCompile Include="..\src\modules\module_custom.lua.mod.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\modules\module_events.lua.mod.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\modules\module_pin.lua.mod.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\device\device.lua.mod.c">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="include\bus.h">
+    <ClInclude Include="..\include\_version.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\cbind.h">
+    <ClInclude Include="..\include\bus.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\defines.h">
+    <ClInclude Include="..\include\cbind.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\enums.h">
+    <ClInclude Include="..\include\defines.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\luabind.h">
+    <ClInclude Include="..\include\enums.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\pin.h">
+    <ClInclude Include="..\include\luabind.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\text.h">
+    <ClInclude Include="..\include\pin.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\uthash.h">
+    <ClInclude Include="..\include\text.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\utils.h">
+    <ClInclude Include="..\include\uthash.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\vdm.h">
+    <ClInclude Include="..\include\utils.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\vdmapi.h">
+    <ClInclude Include="..\include\vdm.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\version.h">
+    <ClInclude Include="..\include\vdmapi.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\vsm.h">
+    <ClInclude Include="..\include\version.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\vsmapi.h">
+    <ClInclude Include="..\include\vsm.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\vsmclasses.h">
+    <ClInclude Include="..\include\vsmapi.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\vsmobj.h">
+    <ClInclude Include="..\include\vsmclasses.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\_version.h">
+    <ClInclude Include="..\include\vsmobj.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="lua53\include\lapi.h">
+    <ClInclude Include="..\externals\lua53\include\lapi.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="lua53\include\lauxlib.h">
+    <ClInclude Include="..\externals\lua53\include\lauxlib.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="lua53\include\lcode.h">
+    <ClInclude Include="..\externals\lua53\include\lcode.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="lua53\include\lctype.h">
+    <ClInclude Include="..\externals\lua53\include\lctype.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="lua53\include\ldebug.h">
+    <ClInclude Include="..\externals\lua53\include\ldebug.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="lua53\include\ldo.h">
+    <ClInclude Include="..\externals\lua53\include\ldo.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="lua53\include\lfunc.h">
+    <ClInclude Include="..\externals\lua53\include\lfunc.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="lua53\include\lgc.h">
+    <ClInclude Include="..\externals\lua53\include\lgc.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="lua53\include\llex.h">
+    <ClInclude Include="..\externals\lua53\include\llex.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="lua53\include\llimits.h">
+    <ClInclude Include="..\externals\lua53\include\llimits.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="lua53\include\lmem.h">
+    <ClInclude Include="..\externals\lua53\include\lmem.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="lua53\include\lobject.h">
+    <ClInclude Include="..\externals\lua53\include\lobject.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="lua53\include\lopcodes.h">
+    <ClInclude Include="..\externals\lua53\include\lopcodes.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="lua53\include\lparser.h">
+    <ClInclude Include="..\externals\lua53\include\lparser.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="lua53\include\lprefix.h">
+    <ClInclude Include="..\externals\lua53\include\lprefix.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="lua53\include\lstate.h">
+    <ClInclude Include="..\externals\lua53\include\lstate.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="lua53\include\lstring.h">
+    <ClInclude Include="..\externals\lua53\include\lstring.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="lua53\include\ltable.h">
+    <ClInclude Include="..\externals\lua53\include\ltable.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="lua53\include\ltm.h">
+    <ClInclude Include="..\externals\lua53\include\ltm.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="lua53\include\lua.h">
+    <ClInclude Include="..\externals\lua53\include\lua.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="lua53\include\luaconf.h">
+    <ClInclude Include="..\externals\lua53\include\luaconf.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="lua53\include\lualib.h">
+    <ClInclude Include="..\externals\lua53\include\lualib.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="lua53\include\lundump.h">
+    <ClInclude Include="..\externals\lua53\include\lundump.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="lua53\include\lvm.h">
+    <ClInclude Include="..\externals\lua53\include\lvm.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="lua53\include\lzio.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\modules\modules.h">
+    <ClInclude Include="..\externals\lua53\include\lzio.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ResourceCompile Include="src\openvsm.rc">
+    <ResourceCompile Include="..\src\openvsm.rc">
       <Filter>Resource Files</Filter>
     </ResourceCompile>
   </ItemGroup>

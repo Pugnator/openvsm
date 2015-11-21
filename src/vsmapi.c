@@ -10,6 +10,10 @@
 
 #include "vsmapi.h"
 
+#ifndef __VERSION
+#define __VERSION 0
+#endif
+
 IDSIMMODEL_vtable VSM_DEVICE_vtable =
 {
 	.isdigital      = vsm_isdigital,
@@ -85,7 +89,7 @@ vsm_isdigital ( IDSIMMODEL* this, uint32_t edx, char* pinname )
 void __FASTCALL__
 pinhandler ( IDSIMPIN* pin, uint32_t edx )
 {
-	MessageBox ( NULL,"Pin handler", "Ok", MB_OK );
+	
 }
 
 /**

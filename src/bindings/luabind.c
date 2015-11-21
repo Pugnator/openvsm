@@ -72,15 +72,15 @@ static const lua_bind_func lua_c_api_list[] =
 
 void lua_load_modules (IDSIMMODEL* this)
 {
-	if ( luaL_loadbufferx(this->luactx, modules_bus_lua, modules_bus_lua_len, "bus_class", NULL))
+	if ( luaL_loadbufferx(this->luactx, module_bus_lua, module_bus_lua_len, "bus_class", NULL))
 	{
 		PRINT(this, "Failed to load module");
 	}
-	if ( luaL_loadbufferx(this->luactx, modules_events_lua, modules_events_lua_len, "events_class", NULL))
+	if ( luaL_loadbufferx(this->luactx, module_events_lua, module_events_lua_len, "events_class", NULL))
 	{
 		PRINT(this, "Failed to load module");
 	}	
-	if ( luaL_loadbufferx(this->luactx, device_device_lua, device_device_lua_len, "precompiled_device", NULL))
+	if ( luaL_loadbufferx(this->luactx, device_lua, device_lua_len, "precompiled_device", NULL))
 	{
 		PRINT(this, "Failed to load module");
 	}

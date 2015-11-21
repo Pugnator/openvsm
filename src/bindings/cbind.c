@@ -446,7 +446,7 @@ STATE get_pin_state ( IDSIMPIN* pin )
  * @param  pin [description]
  * @return     [description]
  */
-__INLINE__ int get_pin_bool ( VSM_PIN pin )
+int get_pin_bool ( VSM_PIN pin )
 {
 	if ( TRUE == is_pin_high ( pin.pin ) )
 	{
