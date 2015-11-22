@@ -31,7 +31,7 @@ SolidCompression=yes
 Name: "english"; MessagesFile: "compiler:Default.isl"
 
 [Files]
-Source: "..\..\dll\openvsm.dll"; DestDir: "{code:GetProteusInstallDir}\Models"
+Source: "..\..\dll\openvsm.dll"; DestDir: "{code:GetProteusInstallDir}\Models"; Flags: ignoreversion
 Source: "..\..\dll\UserManual-RUS.pdf"; DestDir: "{app}\Docs"
 
 [Icons]

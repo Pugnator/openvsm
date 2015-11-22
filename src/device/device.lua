@@ -10,9 +10,9 @@ device_pins =
 {
     {is_digital=true, name = "A"},
     {is_digital=true, name = "B"},
-    {is_digital=true, name = "Y"},
+    {is_digital=true, name = "Q"},
 }
 
 function device_simulate ()
-    Y:set(1-(A:get() * B:get()))
+    Q:set(1-(A:get() * B:get()))
 end
