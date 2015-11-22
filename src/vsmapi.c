@@ -168,7 +168,7 @@ vsm_setup ( IDSIMMODEL* this, uint32_t edx, IINSTANCE* instance, IDSIMCKT* dsimc
 	lua_load_modules ( this );
 	/* If user uses precompiled device script - don't load external script */
 	lua_getglobal ( this->luactx,"__USE_PRECOMPILED" );
-	if ( lua_isinteger ( this->luactx,lua_gettop ( this->luactx ) ) )
+	if ( '?' == *device_script && lua_isinteger ( this->luactx,lua_gettop ( this->luactx ) ) )
 	{
 		print_info ( this, "%s started [OpenVSM %s, precompiled device script] %s", get_device_id ( this ), __VERSION, LUA_RELEASE );
 	}

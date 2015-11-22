@@ -1,1 +1,5 @@
 *.log
+/src/modules/module_pin.lua.mod.c
+/src/modules/module_bus.lua.mod.c
+/src/modules/module_custom.lua.mod.c
+/src/modules/module_events.lua.mod.c
