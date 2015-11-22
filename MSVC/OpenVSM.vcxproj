@@ -39,10 +39,10 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <LibraryPath>$(SolutionDir)..\externals\lua53;$(LibraryPath)</LibraryPath>
+    <LibraryPath>$(SolutionDir)..\externals\lua-5.3.1\lib;$(LibraryPath)</LibraryPath>
     <TargetName>openvsm</TargetName>
     <OutDir>..\dll\</OutDir>
-    <IncludePath>$(ProjectDir)..\src\modules;$(ProjectDir)..\externals\lua53\include;$(ProjectDir)..\include;$(IncludePath)</IncludePath>
+    <IncludePath>$(ProjectDir)..\src\modules;..\externals\lua-5.3.1\src;$(ProjectDir)..\include;$(IncludePath)</IncludePath>
     <ExecutablePath>..\tools;$(ExecutablePath)</ExecutablePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -67,11 +67,11 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
       <AdditionalLibraryDirectories>$(SolutionDir)\lua53;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>lua53.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>lua531.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PreBuildEvent>
-      <Command>for /f %%f in ('dir /b $(ProjectDir)..\src\modules\*.lua') do luac -s -o $(ProjectDir)..\src\modules\%%f.mod $(ProjectDir)..\src\modules\%%f
-for /f %%f in ('dir /b $(ProjectDir)..\src\device\*.lua') do luac -s -o $(ProjectDir)..\src\device\%%f.mod $(ProjectDir)..\src\device\%%f
+      <Command>for /f %%f in ('dir /b $(ProjectDir)..\src\modules\*.lua') do ..\tools\luac -s -o $(ProjectDir)..\src\modules\%%f.mod $(ProjectDir)..\src\modules\%%f
+for /f %%f in ('dir /b $(ProjectDir)..\src\device\*.lua') do ..\tools\luac -s -o $(ProjectDir)..\src\device\%%f.mod $(ProjectDir)..\src\device\%%f
 for /f %%f in ('dir /b $(ProjectDir)..\src\modules\*.mod') do ..\tools\bin2source $(ProjectDir)..\src\modules\%%~nf &gt; $(ProjectDir)..\src\modules\%%f.c
 for /f %%f in ('dir /b $(ProjectDir)..\src\device\*.mod') do ..\tools\bin2source $(ProjectDir)..\src\device\%%~nf &gt; $(ProjectDir)..\src\device\%%f.c</Command>
     </PreBuildEvent>
@@ -110,31 +110,32 @@ for /f %%f in ('dir /b $(ProjectDir)..\src\device\*.mod') do ..\tools\bin2source
     <ClCompile Include="..\src\wincompat.c" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\externals\lua53\include\lapi.h" />
-    <ClInclude Include="..\externals\lua53\include\lauxlib.h" />
-    <ClInclude Include="..\externals\lua53\include\lcode.h" />
-    <ClInclude Include="..\externals\lua53\include\lctype.h" />
-    <ClInclude Include="..\externals\lua53\include\ldebug.h" />
-    <ClInclude Include="..\externals\lua53\include\ldo.h" />
-    <ClInclude Include="..\externals\lua53\include\lfunc.h" />
-    <ClInclude Include="..\externals\lua53\include\lgc.h" />
-    <ClInclude Include="..\externals\lua53\include\llex.h" />
-    <ClInclude Include="..\externals\lua53\include\llimits.h" />
-    <ClInclude Include="..\externals\lua53\include\lmem.h" />
-    <ClInclude Include="..\externals\lua53\include\lobject.h" />
-    <ClInclude Include="..\externals\lua53\include\lopcodes.h" />
-    <ClInclude Include="..\externals\lua53\include\lparser.h" />
-    <ClInclude Include="..\externals\lua53\include\lprefix.h" />
-    <ClInclude Include="..\externals\lua53\include\lstate.h" />
-    <ClInclude Include="..\externals\lua53\include\lstring.h" />
-    <ClInclude Include="..\externals\lua53\include\ltable.h" />
-    <ClInclude Include="..\externals\lua53\include\ltm.h" />
-    <ClInclude Include="..\externals\lua53\include\lua.h" />
-    <ClInclude Include="..\externals\lua53\include\luaconf.h" />
-    <ClInclude Include="..\externals\lua53\include\lualib.h" />
-    <ClInclude Include="..\externals\lua53\include\lundump.h" />
-    <ClInclude Include="..\externals\lua53\include\lvm.h" />
-    <ClInclude Include="..\externals\lua53\include\lzio.h" />
+    <ClInclude Include="..\externals\lua-5.3.1\src\lapi.h" />
+    <ClInclude Include="..\externals\lua-5.3.1\src\lauxlib.h" />
+    <ClInclude Include="..\externals\lua-5.3.1\src\lcode.h" />
+    <ClInclude Include="..\externals\lua-5.3.1\src\lctype.h" />
+    <ClInclude Include="..\externals\lua-5.3.1\src\ldebug.h" />
+    <ClInclude Include="..\externals\lua-5.3.1\src\ldo.h" />
+    <ClInclude Include="..\externals\lua-5.3.1\src\lfunc.h" />
+    <ClInclude Include="..\externals\lua-5.3.1\src\lgc.h" />
+    <ClInclude Include="..\externals\lua-5.3.1\src\llex.h" />
+    <ClInclude Include="..\externals\lua-5.3.1\src\llimits.h" />
+    <ClInclude Include="..\externals\lua-5.3.1\src\lmem.h" />
+    <ClInclude Include="..\externals\lua-5.3.1\src\lobject.h" />
+    <ClInclude Include="..\externals\lua-5.3.1\src\lopcodes.h" />
+    <ClInclude Include="..\externals\lua-5.3.1\src\lparser.h" />
+    <ClInclude Include="..\externals\lua-5.3.1\src\lprefix.h" />
+    <ClInclude Include="..\externals\lua-5.3.1\src\lstate.h" />
+    <ClInclude Include="..\externals\lua-5.3.1\src\lstring.h" />
+    <ClInclude Include="..\externals\lua-5.3.1\src\ltable.h" />
+    <ClInclude Include="..\externals\lua-5.3.1\src\ltm.h" />
+    <ClInclude Include="..\externals\lua-5.3.1\src\lua.h" />
+    <ClInclude Include="..\externals\lua-5.3.1\src\lua.hpp" />
+    <ClInclude Include="..\externals\lua-5.3.1\src\luaconf.h" />
+    <ClInclude Include="..\externals\lua-5.3.1\src\lualib.h" />
+    <ClInclude Include="..\externals\lua-5.3.1\src\lundump.h" />
+    <ClInclude Include="..\externals\lua-5.3.1\src\lvm.h" />
+    <ClInclude Include="..\externals\lua-5.3.1\src\lzio.h" />
     <ClInclude Include="..\include\bus.h" />
     <ClInclude Include="..\include\cbind.h" />
     <ClInclude Include="..\include\defines.h" />

@@ -107,79 +107,82 @@
     <ClInclude Include="..\include\vsmobj.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\externals\lua53\include\lapi.h">
+    <ClInclude Include="..\externals\lua-5.3.1\src\lapi.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\externals\lua53\include\lauxlib.h">
+    <ClInclude Include="..\externals\lua-5.3.1\src\lauxlib.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\externals\lua53\include\lcode.h">
+    <ClInclude Include="..\externals\lua-5.3.1\src\lcode.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\externals\lua53\include\lctype.h">
+    <ClInclude Include="..\externals\lua-5.3.1\src\lctype.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\externals\lua53\include\ldebug.h">
+    <ClInclude Include="..\externals\lua-5.3.1\src\ldebug.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\externals\lua53\include\ldo.h">
+    <ClInclude Include="..\externals\lua-5.3.1\src\ldo.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\externals\lua53\include\lfunc.h">
+    <ClInclude Include="..\externals\lua-5.3.1\src\lfunc.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\externals\lua53\include\lgc.h">
+    <ClInclude Include="..\externals\lua-5.3.1\src\lgc.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\externals\lua53\include\llex.h">
+    <ClInclude Include="..\externals\lua-5.3.1\src\llex.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\externals\lua53\include\llimits.h">
+    <ClInclude Include="..\externals\lua-5.3.1\src\llimits.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\externals\lua53\include\lmem.h">
+    <ClInclude Include="..\externals\lua-5.3.1\src\lmem.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\externals\lua53\include\lobject.h">
+    <ClInclude Include="..\externals\lua-5.3.1\src\lobject.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\externals\lua53\include\lopcodes.h">
+    <ClInclude Include="..\externals\lua-5.3.1\src\lopcodes.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\externals\lua53\include\lparser.h">
+    <ClInclude Include="..\externals\lua-5.3.1\src\lparser.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\externals\lua53\include\lprefix.h">
+    <ClInclude Include="..\externals\lua-5.3.1\src\lprefix.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\externals\lua53\include\lstate.h">
+    <ClInclude Include="..\externals\lua-5.3.1\src\lstate.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\externals\lua53\include\lstring.h">
+    <ClInclude Include="..\externals\lua-5.3.1\src\lstring.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\externals\lua53\include\ltable.h">
+    <ClInclude Include="..\externals\lua-5.3.1\src\ltable.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\externals\lua53\include\ltm.h">
+    <ClInclude Include="..\externals\lua-5.3.1\src\ltm.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\externals\lua53\include\lua.h">
+    <ClInclude Include="..\externals\lua-5.3.1\src\lua.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\externals\lua53\include\luaconf.h">
+    <ClInclude Include="..\externals\lua-5.3.1\src\lua.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\externals\lua53\include\lualib.h">
+    <ClInclude Include="..\externals\lua-5.3.1\src\luaconf.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\externals\lua53\include\lundump.h">
+    <ClInclude Include="..\externals\lua-5.3.1\src\lualib.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\externals\lua53\include\lvm.h">
+    <ClInclude Include="..\externals\lua-5.3.1\src\lundump.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\externals\lua53\include\lzio.h">
+    <ClInclude Include="..\externals\lua-5.3.1\src\lvm.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\externals\lua-5.3.1\src\lzio.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
