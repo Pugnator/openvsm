@@ -5,10 +5,10 @@
 #include <string.h>
 #include <stdlib.h>
 #ifdef _WIN32
-#include <Shlwapi.h>
 #define DELIM '\\'
-#elif
+#else
 #define DELIM '/'
+#define MAX_PATH 255
 #endif
 
 /** \brief	The filename[ maximum path]. */
@@ -103,7 +103,7 @@ main(int argc, char* argv[])
 	make_ident(argv[1]);
 	size_t rd = 0;
 	size_t totalsize = 0;
-	printf("#include <stdint.h>\n\nconst unsigned char %s[] = {", filename);
+	printf("const unsigned char %s[] =\n{\n", filename);
 	for (int total = 0, need_comma = 0; (rd = fread(buf, 1, BUFSIZ, fd)) > 0; )
 	{
 		totalsize += rd;
@@ -122,6 +122,6 @@ main(int argc, char* argv[])
 		}
 	}
 	printf("\n};\n");
-	printf("const size_t %s_len = %zu;\n", filename, totalsize);	
+	printf("const unsigned long long %s_len = %zu;\n", filename, totalsize);	
 	return 0;
 }

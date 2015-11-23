@@ -9,6 +9,10 @@ endif
 
 all:
 	$(MAKE) -p dll
+	$(MAKE) -C bin2source clean
+	$(MAKE) -C bin2source
+	$(MAKE) -C externals/lua-5.3.1 linux
+	cp externals/lua-5.3.1/src/luac tools/
 	$(MAKE) -C src
 clean:
 	$(MAKE) -C src clean

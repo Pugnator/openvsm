@@ -22,7 +22,8 @@ LIBDIR=../dll
 
 MOD=modules
 DEV=device
-XXD=xxd
+XXD=../tools/bin2source
+LUAC=../tools/luac
 OPENVSMLIB?=$(LIBDIR)/openvsm
 
 SRC:=vsmapi.c \
@@ -34,29 +35,27 @@ wincompat.c \
 bindings/cbind.c \
 bindings/luabind.c
 
-
-LUAC=luac
 MODULES=\
-$(MOD)/bus.lua \
-$(MOD)/custom.lua \
-$(MOD)/events.lua \
-$(MOD)/pin.lua
+$(MOD)/module_bus.lua \
+$(MOD)/module_custom.lua \
+$(MOD)/module_events.lua \
+$(MOD)/module_pin.lua
 
 DEVICE=\
 $(DEV)/device.lua
 
 CFLAGS:=-O3 -gdwarf-2 -fgnu89-inline -std=gnu99 -g3 \
 -Wno-unused-variable -I../include -Imodules \
--I../externals/lua53/include -D__VERSION=\"$(shell ../relgen.sh)\"
+-I../externals/lua-5.3.1/src -D__VERSION=\"$(shell ../relgen.sh)\"
 
 SLIB_CFLAGS:=-Wl,--export-all-symbols,--enable-auto-import
 
 LDFLAGS:=../externals/lua53/liblua.a -lm
 
 OBJ=$(SRC:%.c=%.o) openvsm.res \
-$(MOD)/bus.mod.c.o $(MOD)/custom.mod.c.o \
-$(MOD)/events.mod.c.o $(MOD)/pin.mod.c.o \
-$(DEV)/device.mod.c.o
+$(MOD)/module_bus.c.o $(MOD)/module_custom.c.o \
+$(MOD)/module_events.c.o $(MOD)/module_pin.c.o \
+$(DEV)/device.c.o
 
 LOBJ:=$(MODULES:%.lua=%.mod)
 LOBJ+=$(DEVICE:%.lua=%.mod)
@@ -65,25 +64,25 @@ all: modules $(OPENVSMLIB).dll
 
 %.mod: %.lua
 	$(LUAC) -s -o $@ $<
-	$(XXD) -i $< > $@.c
+	$(XXD) $< > $@.c
 
 openvsm.res:
 	$(WINRES) openvsm.rc -O coff -o openvsm.res
 
-$(DEV)/device.mod.c.o:
+$(DEV)/device.c.o:
 	$(CC) -c -o $@ $(DEV)/device.mod.c $(CFLAGS)
 
-$(MOD)/bus.mod.c.o:
-	$(CC) -c -o $@ $(MOD)/bus.mod.c $(CFLAGS)
+$(MOD)/module_bus.c.o:
+	$(CC) -c -o $@ $(MOD)/module_bus.mod.c $(CFLAGS)
 
-$(MOD)/custom.mod.c.o:
-	$(CC) -c -o $@ $(MOD)/custom.mod.c $(CFLAGS)
+$(MOD)/module_custom.c.o:
+	$(CC) -c -o $@ $(MOD)/module_custom.mod.c $(CFLAGS)
 
-$(MOD)/pin.mod.c.o:
-	$(CC) -c -o $@ $(MOD)/pin.mod.c $(CFLAGS)
+$(MOD)/module_pin.c.o:
+	$(CC) -c -o $@ $(MOD)/module_pin.mod.c $(CFLAGS)
 
-$(MOD)/events.mod.c.o:
-	$(CC) -c -o $@ $(MOD)/events.mod.c $(CFLAGS)
+$(MOD)/module_events.c.o:
+	$(CC) -c -o $@ $(MOD)/module_events.mod.c $(CFLAGS)
 
 %.o: %.c
 	$(CC) -c -o $@ $< $(CFLAGS)
