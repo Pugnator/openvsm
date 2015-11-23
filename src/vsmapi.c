@@ -569,7 +569,7 @@ LRESULT __FASTCALL__ icpu_vdmhlr (  ICPU* this, uint32_t edx, VDM_COMMAND* cmd, 
  * \param	seg				The segment.
  * \param	address			The address.
  * \param [in,out]	data	If non-null, the data.
- * \param	numbytes		The numbytes.
+ * \param	numbytes		The number of bytes.
  **************************************************************************************************/
 
 void __FASTCALL__ icpu_loaddata ( ICPU* this, uint32_t edx, int32_t format, int32_t seg, ADDRESS address, uint8_t* data, int32_t numbytes )

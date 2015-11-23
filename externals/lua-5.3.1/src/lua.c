@@ -469,7 +469,7 @@ static int collectargs (char **argv, int *first) {
   int i;
   for (i = 1; argv[i] != NULL; i++) {
     *first = i;
-    if (argv[i][0] != '-')  /* not an option? */
+    if (argv[i][0] != '-')  /* not an option? */ //-V595
         return args;  /* stop handling options */
     switch (argv[i][1]) {  /* else check option */
       case '-':  /* '--' */

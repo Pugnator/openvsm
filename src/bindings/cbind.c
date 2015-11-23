@@ -87,7 +87,7 @@ vsm_register ( ILICENCESERVER* ils )
 /**********************************************************************************************//**
  * \fn	void set_pin_state ( IDSIMMODEL* model, VSM_PIN pin, STATE state )
  *
- * \brief	Sets pin state.
+ * \brief	Set pin state.
  *
  * \author	Pugnator
  * \date	11/22/2015
@@ -107,7 +107,7 @@ void set_pin_state ( IDSIMMODEL* model, VSM_PIN pin, STATE state )
 /**********************************************************************************************//**
  * \fn	void set_pin_bool ( IDSIMMODEL* model, VSM_PIN pin, bool level )
  *
- * \brief	Sets pin bool.
+ * \brief	Set pin boolean.
  *
  * \author	Pugnator
  * \date	11/22/2015
@@ -127,7 +127,7 @@ void set_pin_bool ( IDSIMMODEL* model, VSM_PIN pin, bool level )
 /**********************************************************************************************//**
  * \fn	void systime ( IDSIMMODEL* model, ABSTIME* at )
  *
- * \brief	Systimes.
+ * \brief	System time.
  *
  * \author	Pugnator
  * \date	11/22/2015
@@ -442,7 +442,7 @@ IDEBUGPOPUP* create_var_popup ( IDSIMMODEL* model, const char* title, const int3
 /**********************************************************************************************//**
  * \fn	void delete_popup ( IDSIMMODEL* model, POPUPID id )
  *
- * \brief	Deletes the popup.
+ * \brief	Delete popup.
  *
  * \author	Pugnator
  * \date	11/22/2015
@@ -459,7 +459,7 @@ void delete_popup ( IDSIMMODEL* model, POPUPID id )
 /**********************************************************************************************//**
  * \fn	void set_memory_popup ( IMEMORYPOPUP* popup, size_t offset, void* buffer, size_t size )
  *
- * \brief	Sets memory popup.
+ * \brief	Set memory popup.
  *
  * \author	Pugnator
  * \date	11/22/2015
@@ -478,7 +478,7 @@ void set_memory_popup ( IMEMORYPOPUP* popup, uint32_t offset, void* buffer, uint
 /**********************************************************************************************//**
  * \fn	bool add_source_file ( ISOURCEPOPUP* popup, char* filename, bool lowlevel )
  *
- * \brief	Adds a source file.
+ * \brief	Add a source file.
  *
  * \author	Pugnator
  * \date	11/22/2015
