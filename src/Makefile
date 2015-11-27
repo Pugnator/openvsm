@@ -1,7 +1,7 @@
 CURENV=$(shell gcc -dumpmachine)
 RELEASE=`../relgen.sh`
 ifneq (, $(findstring mingw, $(CURENV)))
-	MAKE=mingw32-make
+	MAKE=make
 	CC:=mingw32-gcc
 	AR:=mingw32-ar
 	OBJCOPY:=objcopy
@@ -22,8 +22,8 @@ LIBDIR=../dll
 
 MOD=modules
 DEV=device
-XXD=../tools/bin2source
-LUAC=../tools/luac
+XXD=../tools/bin2source.exe
+LUAC=../tools/luac.exe
 OPENVSMLIB?=$(LIBDIR)/openvsm
 
 SRC:=vsmapi.c \
@@ -50,7 +50,7 @@ CFLAGS:=-O3 -gdwarf-2 -fgnu89-inline -std=gnu99 -g3 \
 
 SLIB_CFLAGS:=-Wl,--export-all-symbols,--enable-auto-import
 
-LDFLAGS:=../externals/lua53/liblua.a -lm
+LDFLAGS:=../externals/lua-5.3.1/src/liblua.a -lm
 
 OBJ=$(SRC:%.c=%.o) openvsm.res \
 $(MOD)/module_bus.c.o $(MOD)/module_custom.c.o \
@@ -89,17 +89,19 @@ $(MOD)/module_events.c.o:
 
 $(OPENVSMLIB).dll: $(OBJ)
 	$(CC) -shared -o $@ $^ $(LDFLAGS) $(SLIB_CFLAGS)
-	@$(OBJCOPY) --only-keep-debug $(OPENVSMLIB).dll $(OPENVSMLIB).dwarf
-	@$(STRIP) -s $(OPENVSMLIB).dll
-	@$(OBJCOPY) --add-gnu-debuglink=$(OPENVSMLIB).dwarf $(OPENVSMLIB).dll
+	$(OBJCOPY) --only-keep-debug $(OPENVSMLIB).dll $(OPENVSMLIB).dwarf
+	$(STRIP) -s $(OPENVSMLIB).dll
+	$(OBJCOPY) --add-gnu-debuglink=$(OPENVSMLIB).dwarf $(OPENVSMLIB).dll
 
 modules: $(LOBJ)
 	@echo "Lua modules compiled"
 
-install:
+SUBDIRS:=$(wildcard */)
 
-clean:
-	@-rm -f $(OPENVSMLIB).*
-	@rm -f $(MOD)/*.mod $(MOD)/*.o $(MOD)/*.mod.c
-	@rm -f $(DEV)/*.mod $(DEV)/*.o $(DEV)/*.mod.c
-	@find -maxdepth 2 -type f -regex ".*/.*\.\(o\|res\|dll\|lib\|dwarf\\)" -delete
+clean:	
+	rm -f $(OPENVSMLIB).*	
+	for dir in $(SUBDIRS); do \
+		rm -f $$dir/*.o; \
+		rm -f $$dir/*.mod; \
+		rm -f $$dir/*.mod.c; \
+	done
