@@ -1,17 +1,17 @@
 /**
  *
- * @file   vsm_api.c
+ * @file   vsmapi.c
  * @author Lavrentiy Ivanov (ookami@mail.ru)
  * @date   22.09.2014
- * @copyright Copyright 2014 Lavrentiy Ivanov. All rights reserved
- * @license This project is released under the BSD 2-Clause license.
+ * @copyright Copyright 2015 Lavrentiy Ivanov. All rights reserved
+ * @license This project is released under the GPL 2 license.
  *
  */
 
 #include "vsmapi.h"
 
 #ifndef __VERSION
-#define __VERSION 0
+#define __VERSION "0.3"
 #endif
 
 /** \brief	The vsm device vtable. */
@@ -105,7 +105,7 @@ void __CDECL__
 deletedsimmodel ( IDSIMMODEL* model )
 {
 	/* Close Lua */
-	lua_close ( model->luactx );
+	//lua_close ( model->luactx );
 	/* Remove device object */
 	free ( model );
 }
@@ -174,10 +174,12 @@ vsm_setup ( IDSIMMODEL* this, uint32_t edx, IINSTANCE* instance, IDSIMCKT* dsimc
 	}
 	else
 	{
-		load_device_script ( this, device_script );
+		if (!load_device_script(this, device_script))
+		{
+			return;
+		}
 		print_info ( this, "%s started [OpenVSM %s, %s] %s", get_device_id ( this ), __VERSION, device_script, LUA_RELEASE );
-	}
-	
+	}	
 	
 	lua_getglobal ( this->luactx,"device_init" );
 	if ( lua_isfunction ( this->luactx,lua_gettop ( this->luactx ) ) )
@@ -211,6 +213,7 @@ vsm_setup ( IDSIMMODEL* this, uint32_t edx, IINSTANCE* instance, IDSIMCKT* dsimc
 	}
 	lua_pop ( this->luactx, 1 );
 	/* Pins initialization */
+	char name_orig[64] = { 0 };
 	for ( int i=1; i<=pin_number; i++ )
 	{
 		lua_rawgeti ( this->luactx,-1, i );
@@ -218,8 +221,7 @@ vsm_setup ( IDSIMMODEL* this, uint32_t edx, IINSTANCE* instance, IDSIMCKT* dsimc
 		//set pin   //
 		//////////////
 		lua_getfield ( this->luactx,-1, PIN_NAME );
-		char* pin_name = ( char* ) lua_tostring ( this->luactx,-1 );
-		char name_orig[64] = {0};
+		char* pin_name = ( char* ) lua_tostring ( this->luactx,-1 );		
 		strcpy ( name_orig, pin_name );
 		/* Replace leading AND trailing underscore with $ sign */
 		if ( '$' == pin_name[0] || '$' == pin_name[strlen ( pin_name )] )

@@ -1,10 +1,10 @@
 /**
  *
- * @file   bus.c
+ * @file   lua_bus.c
  * @author Lavrentiy Ivanov (ookami@mail.ru)
  * @date   22.09.2014
- * @copyright Copyright 2014 Lavrentiy Ivanov. All rights reserved
- * @license This project is released under the BSD 2-Clause license.
+ * @copyright Copyright 2015 Lavrentiy Ivanov. All rights reserved
+ * @license This project is released under the GPL 2 license.
  * @brief Set of PIN object methods
  *
  */

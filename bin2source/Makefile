@@ -33,5 +33,4 @@ $(BIN2SRC): $(OBJ)
 	$(CC) -o $@ $^
 
 clean:
-	@-rm -f $(BIN2SRC)
-	@find -maxdepth 2 -type f -regex ".*/.*\.\(o\|res\|dll\|lib\|dwarf\\)" -delete
+	@-rm -f $(BIN2SRC) *.o	

@@ -23,6 +23,11 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Lua531Compiler", "Lua531Com
 		{A8AA0ACD-E43D-4B00-9A99-3417DB54ACE4} = {A8AA0ACD-E43D-4B00-9A99-3417DB54ACE4}
 	EndProjectSection
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{A5771D7A-EDB5-4424-AB87-9F3B8799A565}"
+	ProjectSection(SolutionItems) = preProject
+		Performance1.psess = Performance1.psess
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32

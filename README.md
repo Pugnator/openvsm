@@ -54,4 +54,4 @@ setx LUAVSM "C:\script"
 License
 ----
 
-BSD
+GPL 2

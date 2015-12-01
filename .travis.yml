@@ -6,14 +6,7 @@ include:
 
 install:
  - sudo apt-get update -qq
- - sudo apt-get install mingw32-binutils mingw32 mingw32-runtime -y -qq 
- - curl -R -O http://www.lua.org/ftp/lua-5.3.0.tar.gz
- - tar zxf lua-5.3.0.tar.gz
- - pushd lua-5.3.0
- - make linux test
- - sudo make install
- - popd
- - mkdir -p dll
+ - sudo apt-get install mingw32-binutils mingw32 mingw32-runtime -y -qq
 
 script:
  - make

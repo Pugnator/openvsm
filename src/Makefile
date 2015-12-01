@@ -96,7 +96,7 @@ $(OPENVSMLIB).dll: $(OBJ)
 modules: $(LOBJ)
 	@echo "Lua modules compiled"
 
-SUBDIRS:=$(wildcard */)
+SUBDIRS:=modules device
 
 clean:	
 	rm -f $(OPENVSMLIB).*	

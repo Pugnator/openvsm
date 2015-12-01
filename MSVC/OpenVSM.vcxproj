@@ -70,11 +70,15 @@
       <AdditionalDependencies>lua531.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PreBuildEvent>
-      <Command>for /f %%f in ('dir /b $(ProjectDir)..\src\modules\*.lua') do ..\tools\luac -s -o $(ProjectDir)..\src\modules\%%f.mod $(ProjectDir)..\src\modules\%%f
-for /f %%f in ('dir /b $(ProjectDir)..\src\device\*.lua') do ..\tools\luac -s -o $(ProjectDir)..\src\device\%%f.mod $(ProjectDir)..\src\device\%%f
-for /f %%f in ('dir /b $(ProjectDir)..\src\modules\*.mod') do ..\tools\bin2source $(ProjectDir)..\src\modules\%%~nf &gt; $(ProjectDir)..\src\modules\%%f.c
-for /f %%f in ('dir /b $(ProjectDir)..\src\device\*.mod') do ..\tools\bin2source $(ProjectDir)..\src\device\%%~nf &gt; $(ProjectDir)..\src\device\%%f.c</Command>
+      <Command>for /f %%f in ('dir /b $(ProjectDir)..\src\modules\*.lua') do ..\tools\luac.exe -s -o $(ProjectDir)..\src\modules\%%f.mod $(ProjectDir)..\src\modules\%%f
+for /f %%f in ('dir /b $(ProjectDir)..\src\device\*.lua') do ..\tools\luac.exe -s -o $(ProjectDir)..\src\device\%%f.mod $(ProjectDir)..\src\device\%%f
+for /f %%f in ('dir /b $(ProjectDir)..\src\modules\*.mod') do ..\tools\bin2source.exe $(ProjectDir)..\src\modules\%%~nf &gt; $(ProjectDir)..\src\modules\%%f.c
+for /f %%f in ('dir /b $(ProjectDir)..\src\device\*.mod') do ..\tools\bin2source.exe $(ProjectDir)..\src\device\%%~nf &gt; $(ProjectDir)..\src\device\%%f.c</Command>
     </PreBuildEvent>
+    <PostBuildEvent>
+      <Command>
+      </Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>

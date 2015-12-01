@@ -1,14 +1,10 @@
-# Makefile for building Lua
-# See ../doc/readme.html for installation and customization instructions.
+# Makefile for building Lua modified to meet openvsm needs
 
-# == CHANGE THE SETTINGS BELOW TO SUIT YOUR ENVIRONMENT =======================
-
-# Your platform. See PLATS for possible values.
 CFLAGS= -O2 -Wall -Wextra -DLUA_COMPAT_5_2 $(SYSCFLAGS) $(MYCFLAGS)
 LDFLAGS= $(SYSLDFLAGS) $(MYLDFLAGS)
 LIBS= -lm $(SYSLIBS) $(MYLIBS)
 CURENV=$(shell gcc -dumpmachine)
-RM= rm -f
+RM=rm -f
 
 SYSCFLAGS=
 SYSLDFLAGS=
@@ -22,22 +18,24 @@ MYOBJS=
 # == END OF USER SETTINGS -- NO NEED TO CHANGE ANYTHING BELOW THIS LINE =======
 
 LUA_A=liblua.a
+
 CORE_O=lapi.o lcode.o lctype.o ldebug.o ldo.o ldump.o lfunc.o lgc.o llex.o \
-	lmem.o lobject.o lopcodes.o lparser.o lstate.o lstring.o ltable.o \
-	ltm.o lundump.o lvm.o lzio.o
-LIB_O=	lauxlib.o lbaselib.o lbitlib.o lcorolib.o ldblib.o liolib.o \
-	lmathlib.o loslib.o lstrlib.o ltablib.o lutf8lib.o loadlib.o linit.o
+lmem.o lobject.o lopcodes.o lparser.o lstate.o lstring.o ltable.o \
+ltm.o lundump.o lvm.o lzio.o
+
+LIB_O=lauxlib.o lbaselib.o lbitlib.o lcorolib.o ldblib.o liolib.o \
+lmathlib.o loslib.o lstrlib.o ltablib.o lutf8lib.o loadlib.o linit.o
 BASE_O= $(CORE_O) $(LIB_O) $(MYOBJS)
 
-LUA_T=	lua
+LUA_T=lua
 LUA_O=lua.o
 
 LUAC_T=luac
 LUAC_O=luac.o
 
-ALL_O= $(BASE_O) $(LUA_O) $(LUAC_O)
-ALL_T= $(LUA_A) $(LUA_T) $(LUAC_T)
-ALL_A= $(LUA_A)
+ALL_O=$(BASE_O) $(LUA_O) $(LUAC_O)
+ALL_T=$(LUA_A) $(LUA_T) $(LUAC_T)
+ALL_A=$(LUA_A)
 
 # Targets start here.
 

@@ -4,15 +4,15 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#include <limits.h>
 #ifdef _WIN32
 #define DELIM '\\'
 #else
 #define DELIM '/'
-#define MAX_PATH 255
 #endif
 
 /** \brief	The filename[ maximum path]. */
-char filename[MAX_PATH] = {0};
+char filename[255] = {0};
 
 /**********************************************************************************************//**
  * \fn	char *basename(char *path)

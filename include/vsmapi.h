@@ -4,7 +4,7 @@
  * @author Lavrentiy Ivanov (ookami@mail.ru)
  * @date   22.09.2014
  * @copyright Copyright 2014 Lavrentiy Ivanov. All rights reserved
- * @license This project is released under the BSD 2-Clause license.
+ * @license This project is released under the GPL 2 license.
  *
  */
 #pragma once
@@ -86,7 +86,7 @@
 #define model_key 0x00000000
 
 #ifndef MAX_PIN_NUMBER
-#define MAX_PIN_NUMBER 32
+#define MAX_PIN_NUMBER 64
 #endif
 
 #define PRINT (print_info)
@@ -237,7 +237,7 @@ struct IDSIMMODEL
 	IDSIMCKT* model_dsim;
 	lua_State* luactx;
 	VSM_PIN device_pins[MAX_PIN_NUMBER];
-	calltrace* trace;
+	calltrace* trace;	
 	/* Emulated logic type */
 	LOGIC_TYPE ltype;
 	int logic_high;

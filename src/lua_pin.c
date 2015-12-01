@@ -1,10 +1,10 @@
 /**
  *
- * @file   pin.c
+ * @file   lua_pin.c
  * @author Lavrentiy Ivanov (ookami@mail.ru)
  * @date   22.09.2014
- * @copyright Copyright 2014 Lavrentiy Ivanov. All rights reserved
- * @license This project is released under the BSD 2-Clause license.
+ * @copyright Copyright 2015 Lavrentiy Ivanov. All rights reserved
+ * @license This project is released under the GPL 2 license.
  * @brief Set of PIN object methods
  *
  */
@@ -24,6 +24,25 @@
  * \param [in,out]	name	If non-null, the name.
  **************************************************************************************************/
 
+static int pin_set_hi(lua_State* L);
+static int pin_set_lo(lua_State* L);
+static int pin_set_fl(lua_State* L);
+static int pin_toggle(lua_State* L);
+static int pin_set(lua_State* L);
+static int pin_get(lua_State* L);
+static int pin_is_hi(lua_State* L);
+static int pin_is_lo(lua_State* L);
+static int pin_is_fl(lua_State* L);
+static int pin_is_edge(lua_State* L);
+static int pin_is_pedge(lua_State* L);
+static int pin_is_nedge(lua_State* L);
+static int pin_is_steady(lua_State* L);
+static int pin_is_active(lua_State* L);
+static int pin_is_inactive(lua_State* L);
+static int pin_is_inverted(lua_State* L);
+static int pin_set_state(lua_State* L);
+static int pin_get_state(lua_State* L);
+
 void register_pin_obj ( lua_State* L, int num, char* name )
 {
 	lua_newtable ( L );
@@ -40,7 +59,7 @@ void register_pin_obj ( lua_State* L, int num, char* name )
 	lua_pushcfunction ( L, pin_set_fl );
 	lua_rawset ( L, -3 );
 	lua_pushstring ( L, TEXT_TOGGLE_FIELD );
-	lua_pushcfunction ( L, pin_set_lo );
+	lua_pushcfunction ( L, pin_toggle );
 	lua_rawset ( L, -3 );
 	lua_pushstring ( L, TEXT_SET_FIELD );
 	lua_pushcfunction ( L, pin_set );
@@ -49,40 +68,40 @@ void register_pin_obj ( lua_State* L, int num, char* name )
 	lua_pushcfunction ( L, pin_get );
 	lua_rawset ( L, -3 );
 	lua_pushstring ( L, TEXT_IS_HI_FIELD );
-	lua_pushcfunction ( L, pin_get );
+	lua_pushcfunction ( L, pin_is_hi );
 	lua_rawset ( L, -3 );
 	lua_pushstring ( L, TEXT_IS_LO_FIELD );
-	lua_pushcfunction ( L, pin_get );
+	lua_pushcfunction ( L, pin_is_lo );
 	lua_rawset ( L, -3 );
 	lua_pushstring ( L, TEXT_IS_FL_FIELD );
-	lua_pushcfunction ( L, pin_get );
+	lua_pushcfunction ( L, pin_is_fl );
 	lua_rawset ( L, -3 );
 	lua_pushstring ( L, TEXT_IS_EDGE_FIELD );
-	lua_pushcfunction ( L, pin_get );
+	lua_pushcfunction ( L, pin_is_edge );
 	lua_rawset ( L, -3 );
 	lua_pushstring ( L, TEXT_IS_PEDGE_FIELD );
-	lua_pushcfunction ( L, pin_get );
+	lua_pushcfunction ( L, pin_is_pedge );
 	lua_rawset ( L, -3 );
 	lua_pushstring ( L, TEXT_IS_NEDGE_FIELD );
-	lua_pushcfunction ( L, pin_get );
+	lua_pushcfunction ( L, pin_is_nedge );
 	lua_rawset ( L, -3 );
 	lua_pushstring ( L, TEXT_IS_STEADY_FIELD );
-	lua_pushcfunction ( L, pin_get );
+	lua_pushcfunction ( L, pin_is_steady );
 	lua_rawset ( L, -3 );
 	lua_pushstring ( L, TEXT_IS_ACTIVE_FIELD );
-	lua_pushcfunction ( L, pin_get );
+	lua_pushcfunction ( L, pin_is_active );
 	lua_rawset ( L, -3 );
 	lua_pushstring ( L, TEXT_IS_INACTIVE_FIELD );
-	lua_pushcfunction ( L, pin_get );
+	lua_pushcfunction ( L, pin_is_inactive );
 	lua_rawset ( L, -3 );
 	lua_pushstring ( L, TEXT_IS_INVERTED_FIELD );
-	lua_pushcfunction ( L, pin_get );
+	lua_pushcfunction ( L, pin_is_inverted );
 	lua_rawset ( L, -3 );
 	lua_pushstring ( L, TEXT_SET_STATE_FIELD );
-	lua_pushcfunction ( L, pin_get );
+	lua_pushcfunction ( L, pin_set_state );
 	lua_rawset ( L, -3 );
 	lua_pushstring ( L, TEXT_GET_STATE_FIELD );
-	lua_pushcfunction ( L, pin_get );
+	lua_pushcfunction ( L, pin_get_state );
 	lua_rawset ( L, -3 );
 	
 	lua_setglobal ( L, name );
@@ -102,7 +121,7 @@ void register_pin_obj ( lua_State* L, int num, char* name )
  * \return	The pin self.
  **************************************************************************************************/
 
-int get_pin_self ( lua_State* L )
+static int get_pin_self ( lua_State* L )
 {
 	IDSIMMODEL* model = ( IDSIMMODEL* ) lua_get_model_obj ( L );
 	if ( 0 == lua_istable ( L, - lua_gettop ( L ) ) ) //take the first element
@@ -127,7 +146,7 @@ int get_pin_self ( lua_State* L )
  * \return	An int.
  **************************************************************************************************/
 
-int pin_set_hi ( lua_State* L )
+static int pin_set_hi ( lua_State* L )
 {
 	IDSIMMODEL* model = ( IDSIMMODEL* ) lua_get_model_obj ( L );
 	int pin_num = get_pin_self ( L );
@@ -148,7 +167,7 @@ int pin_set_hi ( lua_State* L )
  * \return	An int.
  **************************************************************************************************/
 
-int pin_set_lo ( lua_State* L )
+static int pin_set_lo ( lua_State* L )
 {
 	IDSIMMODEL* model = ( IDSIMMODEL* ) lua_get_model_obj ( L );
 	int pin_num = get_pin_self ( L );
@@ -169,7 +188,7 @@ int pin_set_lo ( lua_State* L )
  * \return	An int.
  **************************************************************************************************/
 
-int pin_set_fl ( lua_State* L )
+static int pin_set_fl ( lua_State* L )
 {
 	IDSIMMODEL* model = ( IDSIMMODEL* ) lua_get_model_obj ( L );
 	int pin_num = get_pin_self ( L );
@@ -190,7 +209,7 @@ int pin_set_fl ( lua_State* L )
  * \return	An int.
  **************************************************************************************************/
 
-int pin_get ( lua_State* L )
+static int pin_get ( lua_State* L )
 {
 	IDSIMMODEL* model = ( IDSIMMODEL* ) lua_get_model_obj ( L );
 	int pin_num = get_pin_self ( L );
@@ -212,7 +231,7 @@ int pin_get ( lua_State* L )
  * \return	An int.
  **************************************************************************************************/
 
-int pin_set ( lua_State* L )
+static int pin_set ( lua_State* L )
 {
 	IDSIMMODEL* model = ( IDSIMMODEL* ) lua_get_model_obj ( L );
 	int pin_num = get_pin_self ( L );
@@ -234,7 +253,7 @@ int pin_set ( lua_State* L )
  * \return	An int.
  **************************************************************************************************/
 
-int pin_is_edge ( lua_State* L )
+static int pin_is_edge ( lua_State* L )
 {
 	IDSIMMODEL* model = ( IDSIMMODEL* ) lua_get_model_obj ( L );
 	int pin_num = get_pin_self ( L );
@@ -255,7 +274,7 @@ int pin_is_edge ( lua_State* L )
  * \return	An int.
  **************************************************************************************************/
 
-int pin_is_pedge ( lua_State* L )
+static int pin_is_pedge ( lua_State* L )
 {
 	IDSIMMODEL* model = ( IDSIMMODEL* ) lua_get_model_obj ( L );
 	int pin_num = get_pin_self ( L );
@@ -276,7 +295,7 @@ int pin_is_pedge ( lua_State* L )
  * \return	An int.
  **************************************************************************************************/
 
-int pin_is_nedge ( lua_State* L )
+static int pin_is_nedge ( lua_State* L )
 {
 	IDSIMMODEL* model = ( IDSIMMODEL* ) lua_get_model_obj ( L );
 	int pin_num = get_pin_self ( L );
@@ -297,7 +316,7 @@ int pin_is_nedge ( lua_State* L )
  * \return	An int.
  **************************************************************************************************/
 
-int pin_is_inverted ( lua_State* L )
+static int pin_is_inverted ( lua_State* L )
 {
 	IDSIMMODEL* model = ( IDSIMMODEL* ) lua_get_model_obj ( L );
 	int pin_num = get_pin_self ( L );
@@ -318,7 +337,7 @@ int pin_is_inverted ( lua_State* L )
  * \return	An int.
  **************************************************************************************************/
 
-int pin_is_steady ( lua_State* L )
+static int pin_is_steady ( lua_State* L )
 {
 	IDSIMMODEL* model = ( IDSIMMODEL* ) lua_get_model_obj ( L );
 	int pin_num = get_pin_self ( L );
@@ -339,7 +358,7 @@ int pin_is_steady ( lua_State* L )
  * \return	An int.
  **************************************************************************************************/
 
-int pin_is_active ( lua_State* L )
+static int pin_is_active ( lua_State* L )
 {
 	IDSIMMODEL* model = ( IDSIMMODEL* ) lua_get_model_obj ( L );
 	int pin_num = get_pin_self ( L );
@@ -360,7 +379,7 @@ int pin_is_active ( lua_State* L )
  * \return	An int.
  **************************************************************************************************/
 
-int pin_is_inactive ( lua_State* L )
+static int pin_is_inactive ( lua_State* L )
 {
 	IDSIMMODEL* model = ( IDSIMMODEL* ) lua_get_model_obj ( L );
 	int pin_num = get_pin_self ( L );
@@ -381,7 +400,7 @@ int pin_is_inactive ( lua_State* L )
  * \return	An int.
  **************************************************************************************************/
 
-int pin_set_state ( lua_State* L )
+static int pin_set_state ( lua_State* L )
 {
 	IDSIMMODEL* model = ( IDSIMMODEL* ) lua_get_model_obj ( L );
 	int pin_num = get_pin_self ( L );
@@ -403,7 +422,7 @@ int pin_set_state ( lua_State* L )
  * \return	An int.
  **************************************************************************************************/
 
-int pin_get_state ( lua_State* L )
+static int pin_get_state ( lua_State* L )
 {
 	IDSIMMODEL* model = ( IDSIMMODEL* ) lua_get_model_obj ( L );
 	int pin_num = get_pin_self ( L );
@@ -424,7 +443,7 @@ int pin_get_state ( lua_State* L )
  * \return	An int.
  **************************************************************************************************/
 
-int pin_is_hi ( lua_State* L )
+static int pin_is_hi ( lua_State* L )
 {
 	IDSIMMODEL* model = ( IDSIMMODEL* ) lua_get_model_obj ( L );
 	int pin_num = get_pin_self ( L );
@@ -445,7 +464,7 @@ int pin_is_hi ( lua_State* L )
  * \return	An int.
  **************************************************************************************************/
 
-int pin_is_lo ( lua_State* L )
+static int pin_is_lo ( lua_State* L )
 {
 	IDSIMMODEL* model = ( IDSIMMODEL* ) lua_get_model_obj ( L );
 	int pin_num = get_pin_self ( L );
@@ -466,7 +485,7 @@ int pin_is_lo ( lua_State* L )
  * \return	An int.
  **************************************************************************************************/
 
-int pin_is_fl ( lua_State* L )
+static int pin_is_fl ( lua_State* L )
 {
 	IDSIMMODEL* model = ( IDSIMMODEL* ) lua_get_model_obj ( L );
 	int pin_num = get_pin_self ( L );
@@ -487,7 +506,7 @@ int pin_is_fl ( lua_State* L )
  * \return	An int.
  **************************************************************************************************/
 
-int pin_toggle ( lua_State* L )
+static int pin_toggle ( lua_State* L )
 {
 	IDSIMMODEL* model = ( IDSIMMODEL* ) lua_get_model_obj ( L );
 	int pin_num = get_pin_self ( L );
