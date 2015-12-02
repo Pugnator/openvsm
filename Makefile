@@ -14,18 +14,18 @@ endif
 
 all:
 	mkdir -p tools
-	mkdir -p dll	
+	mkdir -p dll
 	$(MAKE) tools
-	$(MAKE) lua	
+	$(MAKE) lua
 	$(MAKE) -C src
 
-clean:	
+clean:
 	$(MAKE) -C bin2source clean
 	$(MAKE) -C src clean
 	$(MAKE) -C externals/lua-5.3.1/src clean
 	$(RM) tools/*
 
-tools:		
+tools:
 	$(MAKE) -C bin2source
 
 lua:
@@ -34,4 +34,4 @@ lua:
 	$(MAKE) -C externals/lua-5.3.1/src clean
 	$(MAKE) -C externals/lua-5.3.1/src mingw
 
-.PHONY: all clean
+.PHONY: all clean tools lua
