@@ -1,21 +1,18 @@
-CURENV=$(shell gcc -dumpmachine)
 RELEASE=`../relgen.sh`
-ifneq (, $(findstring mingw, $(CURENV)))
-	MAKE=make
+ifdef SystemRoot
+	MAKE=mingw32-make
 	CC:=mingw32-gcc
 	AR:=mingw32-ar
 	OBJCOPY:=objcopy
 	STRIP:=mingw32-strip
 	WINRES:=windres
-else ifneq (, $(findstring linux, $(CURENV)))
+else
 	MAKE=make
 	CC:=i586-mingw32msvc-gcc
 	AR:=i586-mingw32msvc-ar
 	OBJCOPY:=i586-mingw32msvc-objcopy
 	STRIP:=i586-mingw32msvc-strip
 	WINRES:=i586-mingw32msvc-windres
-else
-	exit 0
 endif
 
 LIBDIR=../dll
@@ -64,7 +61,7 @@ all: modules $(OPENVSMLIB).dll
 
 %.mod: %.lua
 	$(LUAC) -s -o $@ $<
-	$(XXD) $< > $@.c
+	$(XXD) $@ > $@.c
 
 openvsm.res:
 	$(WINRES) openvsm.rc -O coff -o openvsm.res

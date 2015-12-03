@@ -10,17 +10,17 @@
 
 #pragma once
 
-extern unsigned char module_bus_lua[];
-extern unsigned long long module_bus_lua_len;
+extern unsigned char module_bus_mod[];
+extern unsigned long long module_bus_mod_len;
 
-extern unsigned char module_custom_lua[];
-extern unsigned long long module_custom_lua_len;
+extern unsigned char module_custom_mod[];
+extern unsigned long long module_custom_mod_len;
 
-extern unsigned char module_events_lua[];
-extern unsigned long long module_events_lua_len;
+extern unsigned char module_events_mod[];
+extern unsigned long long module_events_mod_len;
 
-extern unsigned char module_pin_lua[];
-extern unsigned long long module_pin_lua_len;
+extern unsigned char module_pin_mod[];
+extern unsigned long long module_pin_mod_len;
 
-extern unsigned char device_lua[];
-extern unsigned long long device_lua_len;
+extern unsigned char device_mod[];
+extern unsigned long long device_mod_len;

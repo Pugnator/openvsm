@@ -5,6 +5,9 @@
 #include <string.h>
 #include <stdlib.h>
 #include <limits.h>
+
+#define MAX_PATH 255
+
 #ifdef _WIN32
 #define DELIM '\\'
 #else
@@ -12,10 +15,10 @@
 #endif
 
 /** \brief	The filename[ maximum path]. */
-char filename[255] = {0};
+char filename[MAX_PATH] = {0};
 
 /**********************************************************************************************//**
- * \fn	char *basename(char *path)
+ * \fn	char *fbasename(char *path)
  *
  * \brief	Basenames the given file.
  *
@@ -28,11 +31,11 @@ char filename[255] = {0};
  **************************************************************************************************/
 
 char 
-*basename(char *path)
-{
+*fbasename(char *path)
+{		
 	char *p;
 	if (path == NULL)
-		return path;
+		return 0;
 
 	for (p = path + strlen(path); --p > path && *p == DELIM;)
 	{
@@ -60,7 +63,7 @@ char
 void
 make_ident(char* name)
 {	
-	strncpy(filename, basename(name), sizeof filename);	
+	strncpy(filename, fbasename(name), sizeof filename);	
 	for (char *p = filename; *p; p++)
 	{
 		if (!isalnum(*p)) 
@@ -69,22 +72,9 @@ make_ident(char* name)
 		}
 	}	
 }
-
 int
 main(int argc, char* argv[])
 {	
-#if 0
-	for (;;)
-	{
-		if (IsDebuggerPresent())
-		{
-			__debugbreak();
-			break;
-		}
-		Sleep(1000);
-	}
-#endif // 0
-
 	unsigned char buf[BUFSIZ];
 
 	if (argc < 2)

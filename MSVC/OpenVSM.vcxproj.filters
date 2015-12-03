@@ -39,19 +39,19 @@
     <ClCompile Include="..\src\bindings\luabind.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\modules\module_bus.lua.mod.c">
+    <ClCompile Include="..\src\modules\module_bus.mod.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\modules\module_custom.lua.mod.c">
+    <ClCompile Include="..\src\modules\module_custom.mod.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\modules\module_events.lua.mod.c">
+    <ClCompile Include="..\src\modules\module_events.mod.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\modules\module_pin.lua.mod.c">
+    <ClCompile Include="..\src\modules\module_pin.mod.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\device\device.lua.mod.c">
+    <ClCompile Include="..\src\device\device.mod.c">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

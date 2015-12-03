@@ -1,22 +1,32 @@
+LUATOOLS=""
+
 ifdef SystemRoot
-   MAKE=make
+   MAKE=mingw32-make
    RM = rm -f
    CP = copy
+   LUATOOLS=win32lua
    FixPath = $(subst /,\,$1)
 else
-   ifeq ($(shell uname), Linux)
+	ifeq ($(shell uname), Linux)
 	  RM = rm -f
 	  CP = cp
       MAKE=make
       FixPath = $1
-   endif
+      LUATOOLS=linlua   
+	else ifeq ($(OS), Windows_NT)
+      MAKE=mingw32-make
+   	  RM = rm -f
+   	  CP = copy
+   	  LUATOOLS=win32lua
+   	  FixPath = $(subst /,\,$1)
+	endif
 endif
 
 all:
 	mkdir -p tools
 	mkdir -p dll
 	$(MAKE) tools
-	$(MAKE) lua
+	$(MAKE) $(LUATOOLS)
 	$(MAKE) -C src
 
 clean:
@@ -28,10 +38,14 @@ clean:
 tools:
 	$(MAKE) -C bin2source
 
-lua:
+linlua:
 	$(MAKE) -C externals/lua-5.3.1/src linux
 	cp externals/lua-5.3.1/src/luac.exe tools/
 	$(MAKE) -C externals/lua-5.3.1/src clean
 	$(MAKE) -C externals/lua-5.3.1/src mingw
 
-.PHONY: all clean tools lua
+win32lua:
+	$(MAKE) -C externals/lua-5.3.1/src win32
+	cp externals/lua-5.3.1/src/luac.exe tools/	
+
+.PHONY: all clean tools

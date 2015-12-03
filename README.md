@@ -35,6 +35,13 @@ Version
 
 Generally you need to compile DLL from the sources only if you want to include custom scripts.
 
+Installation
+--------------
+
+  - Download OPenVSM MSI installer from `release` section
+  - Run installer and install it
+  - Visit `exmples` for some example projects  
+
 How to build
 --------------
 

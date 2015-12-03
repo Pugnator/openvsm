@@ -92,15 +92,15 @@ static const lua_bind_func lua_c_api_list[] =   ///< The lua c API list[]
 
 void lua_load_modules (IDSIMMODEL* this)
 {
-	if ( luaL_loadbufferx(this->luactx, module_bus_lua, module_bus_lua_len, "bus_class", NULL))
+	if ( luaL_loadbufferx(this->luactx, module_bus_mod, module_bus_mod_len, "bus_class", NULL))
 	{
 		PRINT(this, "Failed to load module");
 	}
-	if ( luaL_loadbufferx(this->luactx, module_events_lua, module_events_lua_len, "events_class", NULL))
+	if ( luaL_loadbufferx(this->luactx, module_events_mod, module_events_mod_len, "events_class", NULL))
 	{
 		PRINT(this, "Failed to load module");
 	}	
-	if ( luaL_loadbufferx(this->luactx, device_lua, device_lua_len, "precompiled_device", NULL))
+	if ( luaL_loadbufferx(this->luactx, device_mod, device_mod_len, "precompiled_device", NULL))
 	{
 		PRINT(this, "Failed to load module");
 	}
@@ -161,7 +161,7 @@ safe_execute ( lua_State* L, void* curfunc )
 					lua_getstack ( L, 1, &ar );
 					lua_getinfo ( L, "nSl", &ar );
 					int line = ar.currentline;
-					print_error ( this, "Line %d: Argument %d of \"%s\" is of wrong type [%s]", line, argcount+1, lua_c_api_list[i].lua_func_name, lua_typename ( L, argcount+1 ) );
+					print_error ( this, "Line %d: Argument %d of \"%s\" is of wrong type [%s]", line, argcount + 1, lua_c_api_list[i].lua_func_name, lua_typename ( L, argcount+1 ) );
 				}
 			}
 			if ( lua_c_api_list[i].args[argcount+2] )
@@ -194,13 +194,13 @@ void
 register_functions ( IDSIMMODEL* this, lua_State* L )
 {
 	/*  Declare functions */
-	for ( int i=0; lua_c_api_list[i].lua_func_name; i++ )
+	for ( int i = 0; lua_c_api_list[i].lua_func_name; i++ )
 	{
 		lua_pushcfunction ( L, lua_c_api_list[i].lua_c_api );
 		lua_setglobal ( L, lua_c_api_list[i].lua_func_name );
 	}
 	/* Declare variables */
-	for ( int i=0; lua_var_api_list[i].var_name ; i++ )
+	for ( int i = 0; lua_var_api_list[i].var_name ; i++ )
 	{
 		lua_pushinteger ( L, lua_var_api_list[i].var_value );
 		lua_setglobal ( L, lua_var_api_list[i].var_name );
@@ -233,7 +233,7 @@ load_device_script ( IDSIMMODEL* this, const char* device_name )
 		return false;
 	}
 	char* script=NULL;
-	asprintf ( &script, "%s%s%s", spath, '\\' == spath[strlen ( spath ) -1]? "":"\\", device_name );
+	asprintf ( &script, "%s%s%s", spath, '\\' == spath[strlen ( spath ) -1 ] ? "" : "\\", device_name );
 
 	int lua_err = luaL_loadfile ( this->luactx, script );
 

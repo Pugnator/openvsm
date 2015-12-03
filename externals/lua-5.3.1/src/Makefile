@@ -3,7 +3,6 @@
 CFLAGS= -O2 -Wall -Wextra -DLUA_COMPAT_5_2 $(SYSCFLAGS) $(MYCFLAGS)
 LDFLAGS= $(SYSLDFLAGS) $(MYLDFLAGS)
 LIBS= -lm $(SYSLIBS) $(MYLIBS)
-CURENV=$(shell gcc -dumpmachine)
 RM=rm -f
 
 SYSCFLAGS=
@@ -77,10 +76,10 @@ mingw:
 	$(MAKE) "LUAC_T=luac.exe" "AR=i586-mingw32msvc-ar rcu" "CC=i586-mingw32msvc-gcc" luac.exe
 
 win32:
-	$(MAKE) "CC=mingw32-gcc -std=gnu99" "AR=mingw32-ar rcu" \
+	$(MAKE) "CC=mingw32-gcc -std=gnu99" "AR=ar rcu" \
 	"AR=mingw32-gcc -shared -o" "RANLIB=mingw32-strip --strip-unneeded" \
 	"SYSCFLAGS=-DLUA_BUILD_AS_DLL" "SYSLIBS=" "SYSLDFLAGS=-s"
-	$(MAKE) "AR=mingw32-ar rcu" "CC=mingw32-gcc -std=gnu99" "LUAC_T=luac.exe" luac.exe
+	$(MAKE) "AR=ar rcu" "CC=mingw32-gcc -std=gnu99" "LUAC_T=luac.exe" luac.exe
 
 linux:
 	$(MAKE) "CC=gcc -std=gnu99" "AR=ar rcu" \
