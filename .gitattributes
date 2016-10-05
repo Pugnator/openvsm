@@ -1,0 +1,9 @@
+*.h         eol=crlf
+*.hpp       eol=crlf
+*.cpp       eol=crlf
+*.c         eol=crlf
+*.rc        eol=crlf
+*.vcproj    eol=crlf
+*.bat       eol=crlf
+*.sln       eol=crlf
+*.ico -text
