@@ -77,10 +77,10 @@ main(int argc, char* argv[])
 {	
 	unsigned char buf[BUFSIZ];
 
-	if (argc < 2)
+//	if (argc < 2)
 	{
-		fprintf(stderr, "Usage: %s binary_file > output_file\n", argv[0]);
-		return -1;
+	//	fprintf(stderr, "Usage: %s binary_file > output_file\n", argv[0]);
+	//	return -1;
 	}
 
 	FILE *fd = fopen(argv[1], "rb");

@@ -47,6 +47,11 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>true</LinkIncremental>
+    <OutDir>..\dll\</OutDir>
+    <TargetName>openvsm</TargetName>
+    <ExecutablePath>..\tools;$(ExecutablePath)</ExecutablePath>
+    <IncludePath>$(ProjectDir)..\src\modules;..\externals\lua-5.3.1\src;$(ProjectDir)..\include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)..\externals\lua-5.3.1\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -88,6 +93,9 @@ del /S $(SolutionDir)..\*.res</Command>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <WarningLevel>Level3</WarningLevel>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <Optimization>Full</Optimization>
+      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
     </ClCompile>
     <Link>
       <TargetMachine>MachineX86</TargetMachine>
@@ -95,7 +103,20 @@ del /S $(SolutionDir)..\*.res</Command>
       <SubSystem>Windows</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
+      <AdditionalDependencies>lua531.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
+    <PreBuildEvent>
+      <Command>for /f %%f in ('dir /b $(ProjectDir)..\src\modules\*.lua') do ..\tools\luac.exe -s -o $(ProjectDir)..\src\modules\%%~nf.mod $(ProjectDir)..\src\modules\%%f
+for /f %%f in ('dir /b $(ProjectDir)..\src\device\*.lua') do ..\tools\luac.exe -s -o $(ProjectDir)..\src\device\%%~nf.mod $(ProjectDir)..\src\device\%%f
+for /f %%f in ('dir /b $(ProjectDir)..\src\modules\*.mod') do ..\tools\bin2source.exe $(ProjectDir)..\src\modules\%%f &gt; $(ProjectDir)..\src\modules\%%f.c
+for /f %%f in ('dir /b $(ProjectDir)..\src\device\*.mod') do ..\tools\bin2source.exe $(ProjectDir)..\src\device\%%f &gt; $(ProjectDir)..\src\device\%%f.c</Command>
+    </PreBuildEvent>
+    <PostBuildEvent>
+      <Command>del /S $(SolutionDir)..\*.o
+del /S $(SolutionDir)..\*.mod
+del /S $(SolutionDir)..\*.mod.c
+del /S $(SolutionDir)..\*.res</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ResourceCompile Include="..\src\openvsm.rc" />
