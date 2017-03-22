@@ -2,8 +2,6 @@ OpenVSM
 =========
 [![Build Status](https://travis-ci.org/Pugnator/openvsm.svg?branch=testing)](https://travis-ci.org/Pugnator/openvsm)
 
-![Openvsm logo by 4eRt0vKa](logo.png)
-
 OpenVSM is a model sumulation engine with C and Lua API for Proteus 7/8 CAD
 
 ![Lua logo](http://www.lua.org/images/powered-by-lua.gif)
