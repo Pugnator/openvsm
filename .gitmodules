@@ -1,9 +1,0 @@
-[submodule "externals/qbox"]
-	path = externals/qbox
-	url = http://git.greensocs.com/qemu/qbox.git
-[submodule "externals/systemc-2.3.1"]
-	path = externals/systemc-2.3.1
-	url = https://github.com/Pugnator/systemc-2.3.1.git
-[submodule "externals\\SystemLua"]
-	path = externals\\SystemLua
-	url = https://github.com/Pugnator/SystemLua.git
