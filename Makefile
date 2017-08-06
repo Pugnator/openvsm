@@ -39,10 +39,8 @@ tools:
 	$(MAKE) -C bin2source
 
 linlua:
-	$(MAKE) -C externals/lua/src linux
-	cp externals/lua/src/luac.exe tools/
-	$(MAKE) -C externals/lua/src clean
 	$(MAKE) -C externals/lua/src mingw
+	cp externals/lua/src/luac.exe tools/
 
 win32lua:
 	$(MAKE) -C externals/lua/src win32
