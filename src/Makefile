@@ -22,6 +22,7 @@ DEV=device
 XXD=../tools/bin2source.exe
 LUAC=../tools/luac.exe
 OPENVSMLIB?=$(LIBDIR)/openvsm
+LIADIR=lua-5.3.1
 
 SRC:=vsmapi.c \
 lua_pin.c \
@@ -43,11 +44,11 @@ $(DEV)/device.lua
 
 CFLAGS:=-O3 -gdwarf-2 -fgnu89-inline -std=gnu99 -g3 \
 -Wno-unused-variable -I../include -Imodules \
--I../externals/lua-5.3.1/src -D__VERSION=\"$(shell ../relgen.sh)\"
+-I../externals/$(LIADIR)/src -D__VERSION=\"$(shell ../relgen.sh)\"
 
 SLIB_CFLAGS:=-Wl,--export-all-symbols,--enable-auto-import
 
-LDFLAGS:=../externals/lua-5.3.1/src/liblua.a -lm
+LDFLAGS:=../externals/$(LIADIR)/src/liblua.a -lm
 
 OBJ=$(SRC:%.c=%.o) openvsm.res \
 $(MOD)/module_bus.c.o $(MOD)/module_custom.c.o \
