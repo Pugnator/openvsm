@@ -7,6 +7,10 @@
 #include <limits.h>
 #include <libgen.h>
 
+#if !defined MAX_PATH
+#define MAX_PATH 255
+#endif
+
 /** \brief	The filename[ maximum path]. */
 char filename[MAX_PATH] = {0};
 
