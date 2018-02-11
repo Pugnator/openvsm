@@ -8,8 +8,7 @@
  *
  */
 
-#ifndef VDMAPI_GLOBAL
-#define VDMAPI_GLOBAL
+#pragma once
 
 #include <windows.h>
 #include <stdio.h>
@@ -29,4 +28,3 @@ typedef struct VDM_COMMAND
 } VDM_COMMAND;
 
 
-#endif

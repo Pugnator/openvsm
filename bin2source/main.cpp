@@ -5,49 +5,11 @@
 #include <string.h>
 #include <stdlib.h>
 #include <limits.h>
-
-#define MAX_PATH 255
-
-#ifdef _WIN32
-#define DELIM '\\'
-#else
-#define DELIM '/'
-#endif
+#include <libgen.h>
 
 /** \brief	The filename[ maximum path]. */
 char filename[MAX_PATH] = {0};
 
-/**********************************************************************************************//**
- * \fn	char *fbasename(char *path)
- *
- * \brief	Basenames the given file.
- *
- * \author	Pugnator
- * \date	11/21/2015
- *
- * \param [in,out]	path	If non-null, full pathname of the file.
- *
- * \return	null if it fails, else a char*.
- **************************************************************************************************/
-
-char 
-*fbasename(char *path)
-{		
-	char *p;
-	if (path == NULL)
-		return 0;
-
-	for (p = path + strlen(path); --p > path && *p == DELIM;)
-	{
-		*p = '\0';
-	}
-	p = strrchr(path, DELIM);
-	if (DELIM == *p) //-V595
-	{
-		p++;
-	}
-	return p ? p : path;
-}
 
 /**********************************************************************************************//**
  * \fn	void make_ident(char* name)
@@ -63,7 +25,7 @@ char
 void
 make_ident(char* name)
 {	
-	strncpy(filename, fbasename(name), sizeof filename);	
+	strncpy(filename, basename(name), sizeof filename);	
 	for (char *p = filename; *p; p++)
 	{
 		if (!isalnum(*p)) 
@@ -112,6 +74,6 @@ main(int argc, char* argv[])
 		}
 	}
 	printf("\n};\n");
-	printf("const unsigned long long %s_len = %zu;\n", filename, totalsize);	
+	printf("const unsigned long long %s_len = %u;\n", filename, totalsize);	
 	return 0;
 }

@@ -20,7 +20,7 @@ BIN2SRC:=../tools/bin2source.exe
 
 SRC:=main.cpp
 
-CFLAGS:=-O0 -gdwarf-2 -std=gnu99 -g3
+CFLAGS:=-O0 -ggdb -g3 -std=gnu99 
 
 OBJ=$(SRC:%.c=%.o)
 

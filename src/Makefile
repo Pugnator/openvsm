@@ -4,7 +4,7 @@ ifdef SystemRoot
 	CC:=mingw32-gcc
 	AR:=mingw32-ar
 	OBJCOPY:=objcopy
-	STRIP:=mingw32-strip
+	STRIP:=echo#mingw32-strip XXX: should handle it somehow
 	WINRES:=windres
 else
 	MAKE=make
