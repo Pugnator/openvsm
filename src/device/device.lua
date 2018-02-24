@@ -1,8 +1,8 @@
 -- Here you can place you device code. 
 -- It will be automatically compiled at build time
 -- Comment out this to use predefined script
-
---[[__USE_PRECOMPILED = 0xDEADC0DE
+--[[
+__USE_PRECOMPILED = 0xDEADC0DE
 
 --NAND gate placeholder script
 SAFE_MODE=true
@@ -10,9 +10,7 @@ LOGIC_TYPE=TTL
 
 device_pins =
 {
-    {is_digital=true, name = "A"},
-    {is_digital=true, name = "B"},
-    {is_digital=true, name = "Q"},
+    {name = "TX", on_time=100000, off_time=100000} 
 }
 
 function device_simulate ()

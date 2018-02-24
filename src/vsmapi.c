@@ -164,11 +164,12 @@ vsm_setup ( IDSIMMODEL* this, uint32_t edx, IINSTANCE* instance, IDSIMCKT* dsimc
 	this->xorseed[0] = rand64bits();
 	this->xorseed[1] = rand64bits();
 	
-	char* device_script = get_string_param ( this, "lua" );
 	lua_load_modules ( this );
+	
+	char* device_script = get_string_param ( this, "lua" );
 	/* If user uses precompiled device script - don't load external script */
 	lua_getglobal ( this->luactx,"__USE_PRECOMPILED" );
-	if ( '?' == *device_script && lua_isinteger ( this->luactx,lua_gettop ( this->luactx ) ) )
+	if (0xDEADC0DE == lua_tointeger ( this->luactx, lua_gettop ( this->luactx ) ) || '?' == *device_script)
 	{
 		print_info ( this, "%s started [OpenVSM %s, precompiled device script] %s", get_device_id ( this ), __VERSION, LUA_RELEASE );
 	}
@@ -214,7 +215,7 @@ vsm_setup ( IDSIMMODEL* this, uint32_t edx, IINSTANCE* instance, IDSIMCKT* dsimc
 	lua_pop ( this->luactx, 1 );
 	/* Pins initialization */
 	char name_orig[64] = { 0 };
-	for ( int i=1; i<=pin_number; i++ )
+	for ( int i=1; i <= pin_number; i++ )
 	{
 		lua_rawgeti ( this->luactx,-1, i );
 		//////////////

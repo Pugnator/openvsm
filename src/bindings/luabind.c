@@ -92,23 +92,38 @@ static const lua_bind_func lua_c_api_list[] =   ///< The lua c API list[]
 
 void lua_load_modules (IDSIMMODEL* this)
 {
-	if ( luaL_loadbufferx(this->luactx, module_bus_mod, module_bus_mod_len, "bus_class", NULL))
+	if ( luaL_loadbuffer(this->luactx, module_bus_mod, module_bus_mod_len, "bus_class"))
 	{
-		PRINT(this, "Failed to load module");
+		PRINT(this, "Failed to load BUS module");
 	}
-	if ( luaL_loadbufferx(this->luactx, module_events_mod, module_events_mod_len, "events_class", NULL))
+	if ( 0 != lua_pcall ( this->luactx, 0, 0, 0 ) )
 	{
-		PRINT(this, "Failed to load module");
+		print_error ( this, "Failed to precompile module");
+	}
+	if ( luaL_loadbuffer(this->luactx, module_events_mod, module_events_mod_len, "events_class"))
+	{
+		PRINT(this, "Failed to load EVENTS module");
+	}
+	if ( 0 != lua_pcall ( this->luactx, 0, 0, 0 ) )
+	{
+		print_error ( this, "Failed to precompile module");
 	}	
-	if ( luaL_loadbufferx(this->luactx, device_mod, device_mod_len, "precompiled_device", NULL))
+	if ( luaL_loadbuffer(this->luactx, device_mod, device_mod_len, "precompiled_device"))
 	{
-		PRINT(this, "Failed to load module");
+		PRINT(this, "Failed to load DEVICE module");
 	}
-	if ( luaL_loadbufferx(this->luactx, module_fifo_mod, module_fifo_mod_len, "fifo_class", NULL))
+	if ( 0 != lua_pcall ( this->luactx, 0, 0, 0 ) )
 	{
-		PRINT(this, "Failed to load module");
+		print_error ( this, "Failed to precompile module");
+	}	
+	if ( luaL_loadbuffer(this->luactx, module_fifo_mod, module_fifo_mod_len, "fifo_class"))
+	{
+		PRINT(this, "Failed to load FIFO module");
+	}	
+	if ( 0 != lua_pcall ( this->luactx, 0, 0, 0 ) )
+	{
+		print_error ( this, "Failed to precompile module");
 	}
-	lua_pcall(this->luactx, 0, 0, 0);
 }
 
 /**********************************************************************************************//**
@@ -254,7 +269,7 @@ load_device_script ( IDSIMMODEL* this, const char* device_name )
 				print_error ( this, "Not enough memory to load script \"%s\"", script );
 				return false;
 			case LUA_ERRFILE:
-				print_error ( this, "Error loading script file \"%s\"", script );
+				print_error ( this, "Error opening/loading script file \"%s\"", script );
 				return false;
 			default:
 				print_error ( this, "Unknown error, shouldn't happen" );
