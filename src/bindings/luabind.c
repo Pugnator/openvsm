@@ -104,6 +104,10 @@ void lua_load_modules (IDSIMMODEL* this)
 	{
 		PRINT(this, "Failed to load module");
 	}
+	if ( luaL_loadbufferx(this->luactx, module_fifo_mod, module_fifo_mod_len, "fifo_class", NULL))
+	{
+		PRINT(this, "Failed to load module");
+	}
 	lua_pcall(this->luactx, 0, 0, 0);
 }
 

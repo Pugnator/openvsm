@@ -37,6 +37,7 @@ MODULES=\
 $(MOD)/module_bus.lua \
 $(MOD)/module_custom.lua \
 $(MOD)/module_events.lua \
+$(MOD)/module_fifo.lua \
 $(MOD)/module_pin.lua
 
 DEVICE=\
@@ -53,6 +54,7 @@ LDFLAGS:=../externals/$(LIADIR)/src/liblua.a -lm
 OBJ=$(SRC:%.c=%.o) openvsm.res \
 $(MOD)/module_bus.c.o $(MOD)/module_custom.c.o \
 $(MOD)/module_events.c.o $(MOD)/module_pin.c.o \
+$(MOD)/module_fifo.c.o \
 $(DEV)/device.c.o
 
 LOBJ:=$(MODULES:%.lua=%.mod)
@@ -72,6 +74,9 @@ $(DEV)/device.c.o:
 
 $(MOD)/module_bus.c.o:
 	$(CC) -c -o $@ $(MOD)/module_bus.mod.c $(CFLAGS)
+	
+$(MOD)/module_fifo.c.o:
+	$(CC) -c -o $@ $(MOD)/module_fifo.mod.c $(CFLAGS)
 
 $(MOD)/module_custom.c.o:
 	$(CC) -c -o $@ $(MOD)/module_custom.mod.c $(CFLAGS)
