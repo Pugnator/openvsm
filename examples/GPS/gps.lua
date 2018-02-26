@@ -1,10 +1,12 @@
 -- GPS hardware part
+
+print = info
 SAFE_MODE = true
 LOGIC_TYPE = TTL
 
 device_pins = 
 {
-    {name = "RX", on_time=100000, off_time=100000} 
+    {name = "TX", on_time=100000, off_time=100000} 
 }
 
 ------------------------------------------------
@@ -123,25 +125,23 @@ function increment_lon()
 	GPS.lon["lon"] = string.format("%.2u%.2u.%.3u", GPS.lon["deg"], GPS.lon["min"], GPS.lon["sec"])
 end
 
---[[
-while(true)
-do
-	wait(1)
-	increment_lat()
-	increment_lon()
-	GPS.pts = GPS.pts + 1
-	print(RMC.get())
-end
-]]--
-
 GPS_PPS = 777
 
-function device_init()      
-   set_callback(0, GPS_PPS)   
+function device_init()
+	gps_tx = Uart.new(TX)
+	TX:set(1)
+	set_callback(0, GPS_PPS)
 end
 
 function timer_callback( time, eventid)    
-    if eventid == GPS_PPS then                
-        set_callback(time + SEC, GPS_PPS)   
+    if eventid == GPS_PPS then
+		increment_lat()
+		increment_lon()
+		GPS.pts = GPS.pts + 1
+		gps_tx:send_string(RMC.get().."\r\n")
+		set_callback(0, UART_CLOCK_ID)
+        set_callback(time + SEC, GPS_PPS)
+	elseif eventid == UART_CLOCK_ID then
+		gps_tx:send(time)
     end
 end
