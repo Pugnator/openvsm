@@ -38,6 +38,7 @@ $(MOD)/module_bus.lua \
 $(MOD)/module_custom.lua \
 $(MOD)/module_events.lua \
 $(MOD)/module_fifo.lua \
+$(MOD)/module_uart.lua \
 $(MOD)/module_pin.lua
 
 DEVICE=\
@@ -54,7 +55,7 @@ LDFLAGS:=../externals/$(LIADIR)/src/liblua.a -lm
 OBJ=$(SRC:%.c=%.o) openvsm.res \
 $(MOD)/module_bus.c.o $(MOD)/module_custom.c.o \
 $(MOD)/module_events.c.o $(MOD)/module_pin.c.o \
-$(MOD)/module_fifo.c.o \
+$(MOD)/module_fifo.c.o $(MOD)/module_uart.c.o \
 $(DEV)/device.c.o
 
 LOBJ:=$(MODULES:%.lua=%.mod)
@@ -81,6 +82,9 @@ $(MOD)/module_fifo.c.o:
 $(MOD)/module_custom.c.o:
 	$(CC) -c -o $@ $(MOD)/module_custom.mod.c $(CFLAGS)
 
+$(MOD)/module_uart.c.o:
+	$(CC) -c -o $@ $(MOD)/module_uart.mod.c $(CFLAGS)
+	
 $(MOD)/module_pin.c.o:
 	$(CC) -c -o $@ $(MOD)/module_pin.mod.c $(CFLAGS)
 
@@ -99,10 +103,10 @@ $(OPENVSMLIB).dll: $(OBJ)
 modules: $(LOBJ)
 	@echo "Lua modules compiled"
 
-SUBDIRS:=modules device
+SUBDIRS:= . modules device bindings
 
 clean:	
-	rm -f $(OPENVSMLIB).*	
+	rm -f $(OPENVSMLIB).*
 	for dir in $(SUBDIRS); do \
 		rm -f $$dir/*.o; \
 		rm -f $$dir/*.mod; \

@@ -17,7 +17,7 @@ function fifo:new()
   function t:push(...)
     if ... then
       local targs = {...}
-      -- add values
+      -- add values at the END
       for _,v in ipairs(targs) do
         table.insert(self._et, 1, v)
       end

@@ -124,6 +124,14 @@ void lua_load_modules (IDSIMMODEL* this)
 	{
 		print_error ( this, "Failed to precompile module");
 	}
+	if ( luaL_loadbuffer(this->luactx, module_uart_mod, module_uart_mod_len, "uart_class"))
+	{
+		PRINT(this, "Failed to load UART module");
+	}	
+	if ( 0 != lua_pcall ( this->luactx, 0, 0, 0 ) )
+	{
+		print_error ( this, "Failed to precompile module");
+	}
 }
 
 /**********************************************************************************************//**

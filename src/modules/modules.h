@@ -27,3 +27,6 @@ extern unsigned long long module_fifo_mod_len;
 
 extern unsigned char device_mod[];
 extern unsigned long long device_mod_len;
+
+extern unsigned char module_uart_mod[];
+extern unsigned long long module_uart_mod_len;
