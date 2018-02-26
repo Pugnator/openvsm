@@ -92,6 +92,14 @@ static const lua_bind_func lua_c_api_list[] =   ///< The lua c API list[]
 
 void lua_load_modules (IDSIMMODEL* this)
 {
+	if ( luaL_loadbuffer(this->luactx, module_custom_mod, module_custom_mod_len, "custom_assignments"))
+	{
+		PRINT(this, "Failed to load CUSTOM module");
+	}
+	if ( 0 != lua_pcall ( this->luactx, 0, 0, 0 ) )
+	{
+		print_error ( this, "Failed to precompile module");
+	}
 	if ( luaL_loadbuffer(this->luactx, module_bus_mod, module_bus_mod_len, "bus_class"))
 	{
 		PRINT(this, "Failed to load BUS module");

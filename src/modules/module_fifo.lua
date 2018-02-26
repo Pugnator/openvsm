@@ -4,60 +4,65 @@
 
 -- GLOBAL
 fifo = {}
+fifo.__index = fifo
+
+setmetatable(fifo, {
+  __call = function (cls, ...)
+    return cls.new(...)
+  end,
+})
 
 -- Create a Table with stack functions
-function fifo:new()
+function fifo.new()
+	local self = setmetatable({}, fifo)
+	self.stack = {}
+	return self
+end
 
-  -- stack table
-  local t = {}
-  -- entry table
-  t._et = {}
 
-  -- push a value on to the stack
-  function t:push(...)
-    if ... then
-      local targs = {...}
-      -- add values at the END
-      for _,v in ipairs(targs) do
-        table.insert(self._et, 1, v)
-      end
-    end
+-- push a value on to the stack
+function fifo:push(...)
+if ... then
+  local targs = {...}
+  -- add values at the END
+  for _,v in ipairs(targs) do
+	table.insert(self.stack, 1, v)
   end
+end
+end
 
-  -- pop a value from the stack
-  function t:pop(num)
+-- pop a value from the stack
+function fifo:pop(num)
 
-    -- get num values from stack
-    local num = num or 1
+-- get num values from stack
+local num = num or 1
 
-    -- return table
-    local entries = {}
+-- return table
+local entries = {}
 
-    -- get values into entries
-    for i = 1, num do
-      -- get last entry
-      if #self._et ~= 0 then
-        table.insert(entries, self._et[#self._et])
-        -- remove last value
-        table.remove(self._et)
-      else
-        break
-      end
-    end
-    -- return unpacked entries
-    return table.unpack(entries)
+-- get values into entries
+for i = 1, num do
+  -- get last entry
+  if #self.stack ~= 0 then
+	table.insert(entries, self.stack[#self.stack])
+	-- remove last value
+	table.remove(self.stack)
+  else
+	break
   end
+end
+-- return unpacked entries
+return table.unpack(entries)
+end
 
-  -- get entries
-  function t:getn()
-    return #self._et
-  end
+-- get entries
+function fifo:getn()
+return #self.stack
+end
 
-  -- list values
-  function t:list()
-    for i,v in pairs(self._et) do
-      info(i, v)
-    end
-  end
-  return t
+-- list values
+function fifo:list()
+for i,v in pairs(self.stack) do
+  info(i, v)
+end
 end
