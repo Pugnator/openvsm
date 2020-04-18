@@ -4,13 +4,17 @@ OpenVSM
 
 OpenVSM is a model sumulation engine with C and Lua API for Proteus 7/8 CAD
 
+Tested on Proteus 8.9
+
+Please report all issues you face in order to make this tool better
+
 ![Lua logo](http://www.lua.org/images/powered-by-lua.gif)
 
 Powered by Lua http://www.lua.org/
 
 Documentation can be found at http://pugnator.github.io/openvsm
 
-Prebuild DLL and symbols or installer are in [Release](https://github.com/Pugnator/openvsm/releases) section
+Prebuilt DLL and symbols or installer are in [Release](https://github.com/Pugnator/openvsm/releases) section
 
 Written in C and gcc-ready (mingw/cygwin) for Linux and Windows
 
@@ -29,7 +33,7 @@ There are plenty to do!
 
 Version
 ----
-0.2
+0.3
 
 Generally you need to compile DLL from the sources only if you want to include custom scripts.
 
@@ -44,9 +48,9 @@ How to build
 --------------
 
   - Install mingw32 and cygwin for you platform
-  - Install Lua 5.3 or higher compiler
+  - Install Lua 5.3 or higher
   - Clone: https://github.com/Pugnator/openvsm.git openvsm
-  - Change to the openvsm
+  - Navigate to the openvsm directory
   - Issue "make" command in Linux or "mingw32-make" under Windows
   - Create environment variable containing path to the script directory,
 issuing the following command:
