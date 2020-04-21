@@ -1,24 +1,26 @@
 LUATOOLS=""
 
+ISCC := iscc
+
 ifdef SystemRoot
-   MAKE=mingw32-make
-   RM = rm -f
-   CP = copy
-   LUATOOLS=win32lua
-   FixPath = $(subst /,\,$1)
+	MAKE := mingw32-make
+	RM := rm -f
+	CP := copy
+	LUATOOLS := win32lua
+	FixPath = $(subst /,\,$1)
 else
 	ifeq ($(shell uname), Linux)
-	  RM = rm -f
-	  CP = cp
-      MAKE=make
-      FixPath = $1
-      LUATOOLS=linlua   
+		RM = rm -f
+		CP = cp
+    	MAKE=make
+    	FixPath = $1
+    	LUATOOLS=linlua   
 	else ifeq ($(OS), Windows_NT)
-      MAKE=mingw32-make
-   	  RM = rm -f
-   	  CP = copy
-   	  LUATOOLS=win32lua
-   	  FixPath = $(subst /,\,$1)
+    	MAKE := mingw32-make
+   		RM := rm -f
+   		CP := copy		
+   		LUATOOLS := win32lua
+   		FixPath := $(subst /,\,$1)
 	endif
 endif
 
@@ -40,12 +42,15 @@ tools:
 
 linlua:
 	$(MAKE) -C externals/lua/src linux
-	cp externals/lua/src/luac.exe tools/
+	$(CP) externals/lua/src/luac.exe tools/
 	$(MAKE) -C externals/lua/src clean
 	$(MAKE) -C externals/lua/src mingw
 
 win32lua:
 	$(MAKE) -C externals/lua/src win32
-	cp externals/lua/src/luac.exe tools/	
+	cp externals/lua/src/luac.exe tools
 
-.PHONY: all clean tools
+innosetup:
+	$(ISCC) externals/installer/openvsm.iss
+
+.PHONY: all clean tools innosetup win32lua linlua

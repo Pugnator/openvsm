@@ -2,8 +2,8 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "openVSM"
-#define MyAppVersion "0.3"
-#define MyAppPublisher "NonameGarage"
+#define MyAppVersion "0.3.1"
+#define MyAppPublisher "432 Works"
 #define MyAppURL "https://github.com/Pugnator/openvsm"
 
 [Setup]
@@ -12,8 +12,7 @@
 ; (To generate a new GUID, click Tools | Generate GUID inside the IDE.)
 AppId={{2C8D59D6-6238-41D8-8890-9F4C25010548}
 AppName={#MyAppName}
-AppVersion={#MyAppVersion}
-;AppVerName={#MyAppName} {#MyAppVersion}
+AppVersion={#MyAppVersion}Â
 AppPublisher={#MyAppPublisher}
 AppPublisherURL={#MyAppURL}
 AppSupportURL={#MyAppURL}
@@ -38,7 +37,6 @@ Source: "..\..\dll\UserManual-RUS.pdf"; DestDir: "{app}\Docs"
 Name: "{group}\{cm:UninstallProgram,{#MyAppName}}"; Filename: "{uninstallexe}"
 
 [Registry]
-;Root: "HKLM"; Subkey: "SYSTEM\CurrentControlSet\Control\Session Manager\Environment"; ValueType: expandsz; ValueName: "Path"; ValueData: "{olddata};{app}"; Check: NeedsAddPath('C:\foo')
 Root: "HKCU"; Subkey: "Environment"; ValueType: expandsz; ValueName: "LUAVSM"; ValueData: "{app}\LuaScripts"; Flags: deletevalue
 
 [Dirs]
@@ -58,14 +56,22 @@ begin
   
   Result := ExpandConstant('{app}')
 
-  if RegQueryStringValue(HKLM, 'SOFTWARE\Wow6432Node\Labcenter Electronics\Proteus 8 Professional', 'Path', InstallPath) then
+  if RegQueryStringValue(HKEY_LOCAL_MACHINE, 'SOFTWARE\Wow6432Node\Labcenter Electronics\Proteus 8 Professional', 'Path', InstallPath) then
+  begin
       Result := InstallPath
-  if RegQueryStringValue(HKLM, 'SOFTWARE\Labcenter Electronics\Proteus 8 Professional', 'Path', InstallPath) then
+  end;
+  if RegQueryStringValue(HKEY_LOCAL_MACHINE, 'SOFTWARE\Labcenter Electronics\Proteus 8 Professional', 'Path', InstallPath) then
+  begin
       Result := InstallPath
-  if RegQueryStringValue(HKLM, 'SOFTWARE\Wow6432Node\Labcenter Electronics\Proteus 7 Professional', 'Path', InstallPath) then
+  end;
+  if RegQueryStringValue(HKEY_LOCAL_MACHINE, 'SOFTWARE\Wow6432Node\Labcenter Electronics\Proteus 7 Professional', 'Path', InstallPath) then
+  begin
       Result := InstallPath
-  if RegQueryStringValue(HKLM, 'SOFTWARE\Labcenter Electronics\Proteus 7 Professional', 'Path', InstallPath) then
+  end;
+  if RegQueryStringValue(HKEY_LOCAL_MACHINE, 'SOFTWARE\Labcenter Electronics\Proteus 7 Professional', 'Path', InstallPath) then
+  begin
       Result := InstallPath 
+  end;
   
 end;
 

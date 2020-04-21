@@ -70,10 +70,10 @@ echo:
 # Convenience targets for popular platforms
 
 mingw:
-	$(MAKE) "CC=i586-mingw32msvc-gcc -std=gnu99" "AR=i586-mingw32msvc-ar rcu" \
-	"AR=i586-mingw32msvc-gcc -shared -o" "RANLIB=i586-mingw32msvc-strip --strip-unneeded" \
+	$(MAKE) "CC=i686-w64-mingw32-gcc -std=gnu99" "AR=i686-w64-mingw32-ar rcu" \
+	"AR=i686-w64-mingw32-gcc -shared -o" "RANLIB=i686-w64-mingw32-strip --strip-unneeded" \
 	"SYSCFLAGS=-DLUA_BUILD_AS_DLL" "SYSLIBS=" "SYSLDFLAGS=-s"
-	$(MAKE) "LUAC_T=luac.exe" "AR=i586-mingw32msvc-ar rcu" "CC=i586-mingw32msvc-gcc" luac.exe
+	$(MAKE) "LUAC_T=luac.exe" "AR=i686-w64-mingw32-ar rcu" "CC=i686-w64-mingw32-gcc" luac.exe
 
 win32:
 	$(MAKE) "CC=mingw32-gcc -std=gnu99" "AR=ar rcu" \

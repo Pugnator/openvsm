@@ -4,15 +4,15 @@ ifdef SystemRoot
 	CC:=mingw32-gcc
 	AR:=mingw32-ar
 	OBJCOPY:=objcopy
-	STRIP:=echo#mingw32-strip XXX: should handle it somehow
+	STRIP:=strip
 	WINRES:=windres
 else
 	MAKE=make
-	CC:=i586-mingw32msvc-gcc
-	AR:=i586-mingw32msvc-ar
-	OBJCOPY:=i586-mingw32msvc-objcopy
-	STRIP:=i586-mingw32msvc-strip
-	WINRES:=i586-mingw32msvc-windres
+	CC:=i686-w64-mingw32-gcc
+	AR:=i686-w64-mingw32-ar
+	OBJCOPY:=i686-w64-mingw32-objcopy
+	STRIP:=i686-w64-mingw32-strip
+	WINRES:=i686-w64-mingw32-windres
 endif
 
 LIBDIR=../dll
@@ -44,13 +44,12 @@ $(MOD)/module_pin.lua
 DEVICE=\
 $(DEV)/device.lua
 
-CFLAGS:=-O3 -gdwarf-2 -fgnu89-inline -std=gnu99 -g3 \
--Wno-unused-variable -I../include -Imodules \
+CFLAGS:=-O3 -gdwarf-2 -fgnu89-inline -std=gnu99 -g3 -Wno-unused-variable -static-libgcc -static-libstdc++ -I../include -Imodules \
 -I../externals/$(LIADIR)/src -D__VERSION=\"$(shell ../relgen.sh)\"
 
 SLIB_CFLAGS:=-Wl,--export-all-symbols,--enable-auto-import
 
-LDFLAGS:=../externals/$(LIADIR)/src/liblua.a -lm
+LDFLAGS:=../externals/$(LIADIR)/src/liblua.a -lm -static-libgcc -static-libstdc++
 
 OBJ=$(SRC:%.c=%.o) openvsm.res \
 $(MOD)/module_bus.c.o $(MOD)/module_custom.c.o \
