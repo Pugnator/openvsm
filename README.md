@@ -1,8 +1,14 @@
-OpenVSM
-=========
-[![Build Status](https://travis-ci.org/Pugnator/openvsm.svg?branch=master)](https://travis-ci.org/Pugnator/openvsm)
+# OpenVSM is Lua bindings for Proteus 7/8 CAD
+[![Build Status][travis-image]][travis] [![Release][release-image]][releases] [![Wiki][wiki-img]][wiki]
 
-OpenVSM is a model sumulation engine with C and Lua API for Proteus 7/8 CAD
+
+[travis-image]: https://travis-ci.org/Pugnator/openvsm.svg?branch=master
+[travis]: https://travis-ci.org/Pugnator/openvsm
+[release-image]: https://img.shields.io/badge/release-0.3.1-blue.svg?style=flat
+[releases]: https://github.com/Pugnator/openvsm/releases
+[wiki-img]: https://img.shields.io/badge/docs-Wiki-blue.svg
+[wiki]: https://github.com/Pugnator/openvsm/wiki
+
 
 Tested on Proteus 8.9
 
@@ -16,7 +22,7 @@ Documentation can be found at http://pugnator.github.io/openvsm
 
 Prebuilt DLL and symbols or installer are in [Release](https://github.com/Pugnator/openvsm/releases) section
 
-Written in C and gcc-ready (mingw/cygwin) for Linux and Windows
+Written in C99 and gcc-ready (mingw/cygwin) for Linux and Windows
 
   - You don't need to recompile anything - one DLL for all models in Lua
   - You can create your model as a standalone DLL or use DLL and Lua script together while prototyping
@@ -31,13 +37,9 @@ Please kindly send all your remarks and ideas to my mail [o o kami (at) ma il.ru
 
 There are plenty to do!
 
-Version
-----
-0.3
-
 Generally you need to compile DLL from the sources only if you want to include custom scripts.
 
-Installation
+# Installation
 --------------
 
   - Download OPenVSM MSI installer from `release` section
@@ -60,7 +62,7 @@ setx LUAVSM "C:\script"
 ```
   - In this case you should place your model script to c:\script directory
 
-License
+# License
 ----
 
 GPL 2
