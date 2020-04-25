@@ -70,16 +70,16 @@ echo:
 # Convenience targets for popular platforms
 
 mingw:
-	$(MAKE) "CC=i686-w64-mingw32-gcc -std=gnu99" "AR=i686-w64-mingw32-ar rcu" \
-	"AR=i686-w64-mingw32-gcc -shared -o" "RANLIB=i686-w64-mingw32-strip --strip-unneeded" \
+	$(MAKE) "CC=gcc -std=gnu99" "AR=i686-w64-mingw32-ar rcu" \
+	"AR=gcc -shared -o" "RANLIB=i686-w64-mingw32-strip --strip-unneeded" \
 	"SYSCFLAGS=-DLUA_BUILD_AS_DLL" "SYSLIBS=" "SYSLDFLAGS=-s"
-	$(MAKE) "LUAC_T=luac.exe" "AR=i686-w64-mingw32-ar rcu" "CC=i686-w64-mingw32-gcc" luac.exe
+	$(MAKE) "LUAC_T=luac.exe" "AR=i686-w64-mingw32-ar rcu" "CC=gcc" luac.exe
 
 win32:
-	$(MAKE) "CC=mingw32-gcc -std=gnu99" "AR=ar rcu" \
-	"AR=mingw32-gcc -shared -o" "RANLIB=mingw32-strip --strip-unneeded" \
+	$(MAKE) "CC=gcc -std=gnu99" "AR=ar rcu" \
+	"AR=gcc -shared -o" "RANLIB=mingw32-strip --strip-unneeded" \
 	"SYSCFLAGS=-DLUA_BUILD_AS_DLL" "SYSLIBS=" "SYSLDFLAGS=-s"
-	$(MAKE) "AR=ar rcu" "CC=mingw32-gcc -std=gnu99" "LUAC_T=luac.exe" luac.exe
+	$(MAKE) "AR=ar rcu" "CC=gcc -std=gnu99" "LUAC_T=luac.exe" luac.exe
 
 linux:
 	$(MAKE) "CC=gcc -std=gnu99" "AR=ar rcu" \

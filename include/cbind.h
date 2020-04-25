@@ -11,8 +11,6 @@
 
 #pragma once
 
-#include <vsmapi.h>
-
 /* DEBUG */
 
 void console_alloc ( const char* title );
@@ -54,7 +52,7 @@ void delete_popup ( IDSIMMODEL* model, POPUPID id );
 void dump_to_debug_popup ( IDEBUGPOPUP* popup, const uint8_t* buf, uint32_t offset, uint32_t size );
 void print_to_debug_popup ( IDEBUGPOPUP* popup, const char* message );
 void repaint_memory_popup ( IMEMORYPOPUP* popup );
-void set_memory_popup ( IMEMORYPOPUP* popup, uint32_t offset, void* buffer, size_t size );
+void set_memory_popup ( IMEMORYPOPUP* popup, uint32_t offset, void* buffer, uint32_t size );
 void set_pc_address ( ISOURCEPOPUP* popup, uint32_t address );
 
 /* PINS */

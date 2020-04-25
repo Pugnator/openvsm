@@ -1,18 +1,18 @@
 RELEASE=`../relgen.sh`
 ifdef SystemRoot
 	MAKE=mingw32-make
-	CC:=mingw32-gcc
+	CC:=gcc
 	AR:=mingw32-ar
 	OBJCOPY:=objcopy
 	STRIP:=strip
 	WINRES:=windres
 else
 	MAKE=make
-	CC:=i686-w64-mingw32-gcc
-	AR:=i686-w64-mingw32-ar
-	OBJCOPY:=i686-w64-mingw32-objcopy
-	STRIP:=i686-w64-mingw32-strip
-	WINRES:=i686-w64-mingw32-windres
+	CC:=gcc
+	AR:=i686-mingw32-ar
+	OBJCOPY:=objcopy
+	STRIP:=strip
+	WINRES:=windres
 endif
 
 LIBDIR=../dll
