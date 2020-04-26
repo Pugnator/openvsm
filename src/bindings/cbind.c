@@ -470,7 +470,7 @@ void delete_popup ( IDSIMMODEL* model, POPUPID id )
  * \param	size		  	The size.
  **************************************************************************************************/
 
-void set_memory_popup ( IMEMORYPOPUP* popup, uint32_t offset, void* buffer, uint32_t size )
+void set_memory_popup ( IMEMORYPOPUP* popup, uint32_t offset, void* buffer, size_t size )
 {
 	popup->vtable->setmemory ( popup, 0, offset, buffer, size );
 }
