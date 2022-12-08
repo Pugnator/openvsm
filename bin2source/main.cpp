@@ -24,7 +24,7 @@ char filename[MAX_PATH] = {0};
  * \date	11/21/2015
  *
  * \param [in,out]	name	If non-null, the name.
- **************************************************************************************************/
+ **/
 
 void
 make_ident(char* name)

@@ -16,7 +16,7 @@ else
     	FixPath = $1
     	LUATOOLS=linlua   
 	else ifeq ($(OS), Windows_NT)
-    	MAKE := mingw32-make
+    	MAKE := make
    		RM := rm -f
    		CP := copy		
    		LUATOOLS := win32lua
@@ -47,7 +47,7 @@ linlua:
 	$(MAKE) -C externals/lua/src mingw
 
 win32lua:
-	$(MAKE) -C externals/lua/src win32
+	$(MAKE) -C externals/lua/src mingw
 	cp externals/lua/src/luac.exe tools
 
 innosetup:

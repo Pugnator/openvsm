@@ -1,10 +1,10 @@
 CURENV=$(shell gcc -dumpmachine)
 ifneq (, $(findstring mingw, $(CURENV)))
-	MAKE=mingw32-make
-	CC:=mingw32-gcc
-	AR:=mingw32-ar
+	MAKE=make
+	CC:=gcc
+	AR:=ar
 	OBJCOPY:=objcopy
-	STRIP:=mingw32-strip
+	STRIP:=strip
 	WINRES:=windres
 else ifneq (, $(findstring linux, $(CURENV)))
 	MAKE=make

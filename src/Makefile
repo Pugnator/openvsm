@@ -1,8 +1,8 @@
 RELEASE=`../relgen.sh`
 ifdef SystemRoot
-	MAKE=mingw32-make
-	CC:=mingw32-gcc
-	AR:=mingw32-ar
+	MAKE=make
+	CC:=gcc
+	AR:=ar
 	OBJCOPY:=objcopy
 	STRIP:=strip
 	WINRES:=windres

@@ -10,7 +10,7 @@
 
 #include <vsmapi.h>
 
-/**********************************************************************************************//**
+/**
  * \fn	const char* state_to_string ( STATE pinstate )
  *
  * \brief	State to string.
@@ -21,46 +21,46 @@
  * \param	pinstate	The pinstate.
  *
  * \return	null if it fails, else a char*.
- **************************************************************************************************/
+ **/
 
-const char* state_to_string ( STATE pinstate )
+const char *state_to_string(STATE pinstate)
 {
-	switch ( pinstate )
+	switch (pinstate)
 	{
-		case UNDEFINED:
-			return "UNDEFINED";
-		case TSTATE:
-			return "TSTATE";
-		case FSTATE:
-			return "FSTATE";
-		case PLO:
-			return "PLO";
-		case ILO:
-			return "ILO";
-		case SLO:
-			return "SLO";
-		case WLO:
-			return "WLO";
-		case FLT:
-			return "FLT";
-		case WHI:
-			return "WHI";
-		case SHI:
-			return "SHI";
-		case IHI:
-			return "IHI";
-		case PHI:
-			return "PHI";
-		case WUD:
-			return "WUD";
-		case SUD:
-			return "SUD";
-		default:
-			return "wrong state";
+	case UNDEFINED:
+		return "UNDEFINED";
+	case TSTATE:
+		return "TSTATE";
+	case FSTATE:
+		return "FSTATE";
+	case PLO:
+		return "PLO";
+	case ILO:
+		return "ILO";
+	case SLO:
+		return "SLO";
+	case WLO:
+		return "WLO";
+	case FLT:
+		return "FLT";
+	case WHI:
+		return "WHI";
+	case SHI:
+		return "SHI";
+	case IHI:
+		return "IHI";
+	case PHI:
+		return "PHI";
+	case WUD:
+		return "WUD";
+	case SUD:
+		return "SUD";
+	default:
+		return "wrong state";
 	}
 }
 
-/**********************************************************************************************//**
+/**
  * \fn	bool vsm_register ( ILICENCESERVER* ils )
  *
  * \brief	Vsm register.
@@ -71,20 +71,19 @@ const char* state_to_string ( STATE pinstate )
  * \param [in,out]	ils	If non-null, the ils.
  *
  * \return	true if it succeeds, false if it fails.
- **************************************************************************************************/
+ **/
 
-bool
-vsm_register ( ILICENCESERVER* ils )
+bool vsm_register(ILICENCESERVER *ils)
 {
 
-	if ( FALSE ==  ils->vtable->authorize ( ils, 0, model_key, VSM_API_VERSION ) )
+	if (FALSE == ils->vtable->authorize(ils, 0, model_key, VSM_API_VERSION))
 	{
 		return FALSE;
 	}
 	return TRUE;
 }
 
-/**********************************************************************************************//**
+/**
  * \fn	void set_pin_state ( IDSIMMODEL* model, VSM_PIN pin, STATE state )
  *
  * \brief	Set pin state.
@@ -95,16 +94,16 @@ vsm_register ( ILICENCESERVER* ils )
  * \param [in,out]	model	If non-null, the model.
  * \param	pin			 	The pin.
  * \param	state		 	The state.
- **************************************************************************************************/
+ **/
 
-void set_pin_state ( IDSIMMODEL* model, VSM_PIN pin, STATE state )
+void set_pin_state(IDSIMMODEL *model, VSM_PIN pin, STATE state)
 {
 	ABSTIME curtime = 0;
-	systime ( model, &curtime );
-	pin.pin->vtable->setstate2 ( pin.pin, 0, curtime, pin.on_time, state );
+	systime(model, &curtime);
+	pin.pin->vtable->setstate2(pin.pin, 0, curtime, pin.on_time, state);
 }
 
-/**********************************************************************************************//**
+/**
  * \fn	void set_pin_bool ( IDSIMMODEL* model, VSM_PIN pin, bool level )
  *
  * \brief	Set pin boolean.
@@ -115,16 +114,16 @@ void set_pin_state ( IDSIMMODEL* model, VSM_PIN pin, STATE state )
  * \param [in,out]	model	If non-null, the model.
  * \param	pin			 	The pin.
  * \param	level		 	true to level.
- **************************************************************************************************/
+ **/
 
-void set_pin_bool ( IDSIMMODEL* model, VSM_PIN pin, bool level )
+void set_pin_bool(IDSIMMODEL *model, VSM_PIN pin, bool level)
 {
 	ABSTIME curtime = 0;
-	systime ( model, &curtime );
-	pin.pin->vtable->setstate2 ( pin.pin, 0, curtime, pin.on_time, level ? LOGIC_HI : LOGIC_LO );
+	systime(model, &curtime);
+	pin.pin->vtable->setstate2(pin.pin, 0, curtime, pin.on_time, level ? LOGIC_HI : LOGIC_LO);
 }
 
-/**********************************************************************************************//**
+/**
  * \fn	void systime ( IDSIMMODEL* model, ABSTIME* at )
  *
  * \brief	System time.
@@ -134,15 +133,14 @@ void set_pin_bool ( IDSIMMODEL* model, VSM_PIN pin, bool level )
  *
  * \param [in,out]	model	If non-null, the model.
  * \param [in,out]	at   	If non-null, at.
- **************************************************************************************************/
+ **/
 
-void systime ( IDSIMMODEL* model, ABSTIME* at )
+void systime(IDSIMMODEL *model, ABSTIME *at)
 {
-	model->model_dsim->vtable->sysvar ( model->model_dsim, 0, ( DOUBLE* ) at, DSIMTIMENOW );
+	model->model_dsim->vtable->sysvar(model->model_dsim, 0, (DOUBLE *)at, DSIMTIMENOW);
 }
 
-/************************************************************************************************
- * \fn	char* get_device_id ( IDSIMMODEL* model )
+/* \fn	char* get_device_id ( IDSIMMODEL* model )
  *
  * \brief	Gets device identifier.
  *
@@ -152,15 +150,14 @@ void systime ( IDSIMMODEL* model, ABSTIME* at )
  * \param [in,out]	model	If non-null, the model.
  *
  * \return	null if it fails, else the device identifier.
- **************************************************************************************************/
+ **/
 
-char* get_device_id ( IDSIMMODEL* model )
+char *get_device_id(IDSIMMODEL *model)
 {
-	return model->model_instance->vtable->id ( model->model_instance, 0 );
+	return model->model_instance->vtable->id(model->model_instance, 0);
 }
 
-/************************************************************************************************
- * \fn	char* get_string_param ( IDSIMMODEL* model, char* field_name )
+/* \fn	char* get_string_param ( IDSIMMODEL* model, char* field_name )
  *
  * \brief	Gets string parameter.
  *
@@ -171,14 +168,14 @@ char* get_device_id ( IDSIMMODEL* model )
  * \param [in,out]	field_name	If non-null, name of the field.
  *
  * \return	null if it fails, else the string parameter.
- **************************************************************************************************/
+ **/
 
-char* get_string_param ( IDSIMMODEL* model, char* field_name )
+char *get_string_param(IDSIMMODEL *model, char *field_name)
 {
-	return model->model_instance->vtable->getstrval ( model->model_instance, 0, field_name, "?" );
+	return model->model_instance->vtable->getstrval(model->model_instance, 0, field_name, "?");
 }
 
-/**********************************************************************************************//**
+/**
  * \fn	bool get_bool_param ( IDSIMMODEL* model, char* field_name )
  *
  * \brief	Gets bool parameter.
@@ -190,14 +187,14 @@ char* get_string_param ( IDSIMMODEL* model, char* field_name )
  * \param [in,out]	field_name	If non-null, name of the field.
  *
  * \return	true if it succeeds, false if it fails.
- **************************************************************************************************/
+ **/
 
-bool get_bool_param ( IDSIMMODEL* model, char* field_name )
+bool get_bool_param(IDSIMMODEL *model, char *field_name)
 {
-	return model->model_instance->vtable->getboolval ( model->model_instance, 0, field_name, FALSE );
+	return model->model_instance->vtable->getboolval(model->model_instance, 0, field_name, FALSE);
 }
 
-/**********************************************************************************************//**
+/**
  * \fn	double get_num_param ( IDSIMMODEL* model, char* field_name )
  *
  * \brief	Gets number parameter.
@@ -209,16 +206,16 @@ bool get_bool_param ( IDSIMMODEL* model, char* field_name )
  * \param [in,out]	field_name	If non-null, name of the field.
  *
  * \return	The number parameter.
- **************************************************************************************************/
+ **/
 
-double get_num_param ( IDSIMMODEL* model, char* field_name )
+double get_num_param(IDSIMMODEL *model, char *field_name)
 {
 	double result = 0;
-	model->model_instance->vtable->getnumval ( model->model_instance, 0, &result, field_name, 0.0 );
+	model->model_instance->vtable->getnumval(model->model_instance, 0, &result, field_name, 0.0);
 	return result;
 }
 
-/**********************************************************************************************//**
+/**
  * \fn	int32_t get_hex_param ( IDSIMMODEL* model, char* field_name )
  *
  * \brief	Gets hexadecimal parameter.
@@ -230,14 +227,14 @@ double get_num_param ( IDSIMMODEL* model, char* field_name )
  * \param [in,out]	field_name	If non-null, name of the field.
  *
  * \return	The hexadecimal parameter.
- **************************************************************************************************/
+ **/
 
-int32_t get_hex_param ( IDSIMMODEL* model, char* field_name )
+int32_t get_hex_param(IDSIMMODEL *model, char *field_name)
 {
-	return ( int32_t ) model->model_instance->vtable->gethexval ( model->model_instance, 0, field_name, 0 );
+	return (int32_t)model->model_instance->vtable->gethexval(model->model_instance, 0, field_name, 0);
 }
 
-/**********************************************************************************************//**
+/**
  * \fn	int64_t get_init_param ( IDSIMMODEL* model, char* field_name )
  *
  * \brief	Gets initialise parameter.
@@ -249,14 +246,14 @@ int32_t get_hex_param ( IDSIMMODEL* model, char* field_name )
  * \param [in,out]	field_name	If non-null, name of the field.
  *
  * \return	The initialise parameter.
- **************************************************************************************************/
+ **/
 
-int64_t get_init_param ( IDSIMMODEL* model, char* field_name )
+int64_t get_init_param(IDSIMMODEL *model, char *field_name)
 {
-	return ( int64_t ) model->model_instance->vtable->getinitval ( model->model_instance, 0, field_name, 0 );
+	return (int64_t)model->model_instance->vtable->getinitval(model->model_instance, 0, field_name, 0);
 }
 
-/**********************************************************************************************//**
+/**
  * \fn	void load_image ( IDSIMMODEL* model, char* filename, uint8_t* buffer, size_t buffer_size )
  *
  * \brief	Loads an image.
@@ -268,14 +265,14 @@ int64_t get_init_param ( IDSIMMODEL* model, char* field_name )
  * \param [in,out]	filename	If non-null, filename of the file.
  * \param [in,out]	buffer  	If non-null, the buffer.
  * \param	buffer_size			Size of the buffer.
- **************************************************************************************************/
+ **/
 
-void load_image ( IDSIMMODEL* model, char* filename, uint8_t* buffer, uint32_t buffer_size )
+void load_image(IDSIMMODEL *model, char *filename, uint8_t *buffer, uint32_t buffer_size)
 {
-	model->model_instance->vtable->loadmemory ( model->model_instance, 0, filename, buffer, buffer_size, 0, 0 );
+	model->model_instance->vtable->loadmemory(model->model_instance, 0, filename, buffer, buffer_size, 0, 0);
 }
 
-/**********************************************************************************************//**
+/**
  * \fn	IPOPUP* create_popup ( IDSIMMODEL* model, CREATEPOPUPSTRUCT* cps )
  *
  * \brief	Creates a popup.
@@ -287,14 +284,14 @@ void load_image ( IDSIMMODEL* model, char* filename, uint8_t* buffer, uint32_t b
  * \param [in,out]	cps  	If non-null, the CPS.
  *
  * \return	null if it fails, else the new popup.
- **************************************************************************************************/
+ **/
 
-IPOPUP* create_popup ( IDSIMMODEL* model, CREATEPOPUPSTRUCT* cps )
+IPOPUP *create_popup(IDSIMMODEL *model, CREATEPOPUPSTRUCT *cps)
 {
-	return ( ( IPOPUP* ) model->model_instance->vtable->createpopup ( model->model_instance, 0, cps ) );
+	return ((IPOPUP *)model->model_instance->vtable->createpopup(model->model_instance, 0, cps));
 }
 
-/**********************************************************************************************//**
+/**
  * \fn	IMEMORYPOPUP* create_memory_popup ( IDSIMMODEL* model, const char* title, const int32_t id )
  *
  * \brief	Creates memory popup.
@@ -307,23 +304,23 @@ IPOPUP* create_popup ( IDSIMMODEL* model, CREATEPOPUPSTRUCT* cps )
  * \param	id			 	The identifier.
  *
  * \return	null if it fails, else the new memory popup.
- **************************************************************************************************/
+ **/
 
-IMEMORYPOPUP* create_memory_popup ( IDSIMMODEL* model, const char* title, const int32_t id )
+IMEMORYPOPUP *create_memory_popup(IDSIMMODEL *model, const char *title, const int32_t id)
 {
-	CREATEPOPUPSTRUCT* cps = malloc ( sizeof *cps );
-	cps->caption = ( char* ) title;
-	cps->flags = PWF_VISIBLE | PWF_HIDEONANIMATE | PWF_SIZEABLE| PWF_AUTOREFRESH ;
+	CREATEPOPUPSTRUCT *cps = malloc(sizeof *cps);
+	cps->caption = (char *)title;
+	cps->flags = PWF_VISIBLE | PWF_HIDEONANIMATE | PWF_SIZEABLE | PWF_AUTOREFRESH;
 	cps->type = PWT_MEMORY;
 	cps->height = 32; //-V112
 	cps->width = 16;
 	cps->id = id;
-	IMEMORYPOPUP* popup = ( IMEMORYPOPUP* ) create_popup ( model, cps );
-	free ( cps );
+	IMEMORYPOPUP *popup = (IMEMORYPOPUP *)create_popup(model, cps);
+	free(cps);
 	return popup;
 }
 
-/**********************************************************************************************//**
+/**
  * \fn	IDEBUGPOPUP* create_debug_popup ( IDSIMMODEL* model, const char* title, const int32_t id )
  *
  * \brief	Creates debug popup.
@@ -336,23 +333,23 @@ IMEMORYPOPUP* create_memory_popup ( IDSIMMODEL* model, const char* title, const 
  * \param	id			 	The identifier.
  *
  * \return	null if it fails, else the new debug popup.
- **************************************************************************************************/
+ **/
 
-IDEBUGPOPUP* create_debug_popup ( IDSIMMODEL* model, const char* title, const int32_t id )
+IDEBUGPOPUP *create_debug_popup(IDSIMMODEL *model, const char *title, const int32_t id)
 {
-	CREATEPOPUPSTRUCT* cps = malloc ( sizeof *cps );
-	cps->caption = ( char* ) title;
-	cps->flags = PWF_VISIBLE | PWF_HIDEONANIMATE | PWF_SIZEABLE| PWF_AUTOREFRESH ;
+	CREATEPOPUPSTRUCT *cps = malloc(sizeof *cps);
+	cps->caption = (char *)title;
+	cps->flags = PWF_VISIBLE | PWF_HIDEONANIMATE | PWF_SIZEABLE | PWF_AUTOREFRESH;
 	cps->type = PWT_DEBUG;
 	cps->height = 200;
 	cps->width = 640;
 	cps->id = id;
-	IDEBUGPOPUP* popup = create_popup ( model, cps );
-	free ( cps );
+	IDEBUGPOPUP *popup = create_popup(model, cps);
+	free(cps);
 	return popup;
 }
 
-/**********************************************************************************************//**
+/**
  * \fn	IDEBUGPOPUP* create_source_popup ( IDSIMMODEL* model, const char* title, const int32_t id )
  *
  * \brief	Creates source popup.
@@ -365,23 +362,23 @@ IDEBUGPOPUP* create_debug_popup ( IDSIMMODEL* model, const char* title, const in
  * \param	id			 	The identifier.
  *
  * \return	null if it fails, else the new source popup.
- **************************************************************************************************/
+ **/
 
-IDEBUGPOPUP* create_source_popup ( IDSIMMODEL* model, const char* title, const int32_t id )
+IDEBUGPOPUP *create_source_popup(IDSIMMODEL *model, const char *title, const int32_t id)
 {
-	CREATEPOPUPSTRUCT* cps = malloc ( sizeof *cps );
-	cps->caption = ( char* ) title;
-	cps->flags = PWF_VISIBLE | PWF_HIDEONANIMATE | PWF_SIZEABLE| PWF_AUTOREFRESH ;
+	CREATEPOPUPSTRUCT *cps = malloc(sizeof *cps);
+	cps->caption = (char *)title;
+	cps->flags = PWF_VISIBLE | PWF_HIDEONANIMATE | PWF_SIZEABLE | PWF_AUTOREFRESH;
 	cps->type = PWT_SOURCE;
 	cps->height = 200;
 	cps->width = 640;
 	cps->id = id;
-	IDEBUGPOPUP* popup = create_popup ( model, cps );
-	free ( cps );
+	IDEBUGPOPUP *popup = create_popup(model, cps);
+	free(cps);
 	return popup;
 }
 
-/**********************************************************************************************//**
+/**
  * \fn	IDEBUGPOPUP* create_status_popup ( IDSIMMODEL* model, const char* title, const int32_t id )
  *
  * \brief	Creates status popup.
@@ -394,23 +391,23 @@ IDEBUGPOPUP* create_source_popup ( IDSIMMODEL* model, const char* title, const i
  * \param	id			 	The identifier.
  *
  * \return	null if it fails, else the new status popup.
- **************************************************************************************************/
+ **/
 
-IDEBUGPOPUP* create_status_popup ( IDSIMMODEL* model, const char* title, const int32_t id )
+IDEBUGPOPUP *create_status_popup(IDSIMMODEL *model, const char *title, const int32_t id)
 {
-	CREATEPOPUPSTRUCT* cps = malloc ( sizeof *cps );
-	cps->caption = ( char* ) title;
-	cps->flags = PWF_VISIBLE | PWF_HIDEONANIMATE | PWF_SIZEABLE | PWF_AUTOREFRESH ;
+	CREATEPOPUPSTRUCT *cps = malloc(sizeof *cps);
+	cps->caption = (char *)title;
+	cps->flags = PWF_VISIBLE | PWF_HIDEONANIMATE | PWF_SIZEABLE | PWF_AUTOREFRESH;
 	cps->type = PWT_STATUS;
 	cps->height = 200;
 	cps->width = 200;
 	cps->id = id;
-	IDEBUGPOPUP* popup = create_popup ( model, cps );
-	free ( cps );
+	IDEBUGPOPUP *popup = create_popup(model, cps);
+	free(cps);
 	return popup;
 }
 
-/**********************************************************************************************//**
+/**
  * \fn	IDEBUGPOPUP* create_var_popup ( IDSIMMODEL* model, const char* title, const int32_t id )
  *
  * \brief	Creates variable popup.
@@ -423,23 +420,23 @@ IDEBUGPOPUP* create_status_popup ( IDSIMMODEL* model, const char* title, const i
  * \param	id			 	The identifier.
  *
  * \return	null if it fails, else the new variable popup.
- **************************************************************************************************/
+ **/
 
-IDEBUGPOPUP* create_var_popup ( IDSIMMODEL* model, const char* title, const int32_t id )
+IDEBUGPOPUP *create_var_popup(IDSIMMODEL *model, const char *title, const int32_t id)
 {
-	CREATEPOPUPSTRUCT* cps = malloc ( sizeof *cps );
-	cps->caption = ( char* ) title;
-	cps->flags = PWF_VISIBLE | PWF_HIDEONANIMATE | PWF_SIZEABLE| PWF_AUTOREFRESH ;
+	CREATEPOPUPSTRUCT *cps = malloc(sizeof *cps);
+	cps->caption = (char *)title;
+	cps->flags = PWF_VISIBLE | PWF_HIDEONANIMATE | PWF_SIZEABLE | PWF_AUTOREFRESH;
 	cps->type = PWT_VAR;
 	cps->height = 200;
 	cps->width = 200;
 	cps->id = id;
-	IDEBUGPOPUP* popup = create_popup ( model, cps );
-	free ( cps );
+	IDEBUGPOPUP *popup = create_popup(model, cps);
+	free(cps);
 	return popup;
 }
 
-/**********************************************************************************************//**
+/**
  * \fn	void delete_popup ( IDSIMMODEL* model, POPUPID id )
  *
  * \brief	Delete popup.
@@ -449,14 +446,14 @@ IDEBUGPOPUP* create_var_popup ( IDSIMMODEL* model, const char* title, const int3
  *
  * \param [in,out]	model	If non-null, the model.
  * \param	id			 	The identifier.
- **************************************************************************************************/
+ **/
 
-void delete_popup ( IDSIMMODEL* model, POPUPID id )
+void delete_popup(IDSIMMODEL *model, POPUPID id)
 {
-	model->model_instance->vtable->deletepopup ( model->model_instance, 0, id );
+	model->model_instance->vtable->deletepopup(model->model_instance, 0, id);
 }
 
-/**********************************************************************************************//**
+/**
  * \fn	void set_memory_popup ( IMEMORYPOPUP* popup, size_t offset, void* buffer, size_t size )
  *
  * \brief	Set memory popup.
@@ -468,14 +465,14 @@ void delete_popup ( IDSIMMODEL* model, POPUPID id )
  * \param	offset		  	The offset.
  * \param [in,out]	buffer	If non-null, the buffer.
  * \param	size		  	The size.
- **************************************************************************************************/
+ **/
 
-void set_memory_popup ( IMEMORYPOPUP* popup, uint32_t offset, void* buffer, size_t size )
+void set_memory_popup(IMEMORYPOPUP *popup, uint32_t offset, void *buffer, size_t size)
 {
-	popup->vtable->setmemory ( popup, 0, offset, buffer, size );
+	popup->vtable->setmemory(popup, 0, offset, buffer, size);
 }
 
-/**********************************************************************************************//**
+/**
  * \fn	bool add_source_file ( ISOURCEPOPUP* popup, char* filename, bool lowlevel )
  *
  * \brief	Add a source file.
@@ -488,16 +485,16 @@ void set_memory_popup ( IMEMORYPOPUP* popup, uint32_t offset, void* buffer, size
  * \param	lowlevel			true to lowlevel.
  *
  * \return	true if it succeeds, false if it fails.
- **************************************************************************************************/
+ **/
 
-bool add_source_file ( ISOURCEPOPUP* popup, char* filename, bool lowlevel )
+bool add_source_file(ISOURCEPOPUP *popup, char *filename, bool lowlevel)
 {
-	bool result = popup->vtable->addsrcfile ( popup, 0, filename, lowlevel );
-	popup->vtable->setpcaddress ( popup, 0, 0 );
+	bool result = popup->vtable->addsrcfile(popup, 0, filename, lowlevel);
+	popup->vtable->setpcaddress(popup, 0, 0);
 	return result;
 }
 
-/**********************************************************************************************//**
+/**
  * \fn	bool set_vdm_handler ( IDSIMMODEL* model )
  *
  * \brief	Handler, called when the set vdm.
@@ -508,14 +505,14 @@ bool add_source_file ( ISOURCEPOPUP* popup, char* filename, bool lowlevel )
  * \param [in,out]	model	If non-null, the model.
  *
  * \return	true if it succeeds, false if it fails.
- **************************************************************************************************/
+ **/
 
-bool set_vdm_handler ( IDSIMMODEL* model )
+bool set_vdm_handler(IDSIMMODEL *model)
 {
-	return model->model_instance->vtable->setvdmhlr ( model->model_instance, 0, &ICPU_DEVICE );
+	return model->model_instance->vtable->setvdmhlr(model->model_instance, 0, &ICPU_DEVICE);
 }
 
-/**********************************************************************************************//**
+/**
  * \fn	void set_pc_address ( ISOURCEPOPUP* popup, size_t address )
  *
  * \brief	Sets PC address.
@@ -525,14 +522,14 @@ bool set_vdm_handler ( IDSIMMODEL* model )
  *
  * \param [in,out]	popup	If non-null, the popup.
  * \param	address		 	The address.
- **************************************************************************************************/
+ **/
 
-void set_pc_address ( ISOURCEPOPUP* popup, uint32_t address )
+void set_pc_address(ISOURCEPOPUP *popup, uint32_t address)
 {
-	popup->vtable->setpcaddress ( popup, 0, address );
+	popup->vtable->setpcaddress(popup, 0, address);
 }
 
-/**********************************************************************************************//**
+/**
  * \fn	void repaint_memory_popup ( IMEMORYPOPUP* popup )
  *
  * \brief	Repaint memory popup.
@@ -541,14 +538,14 @@ void set_pc_address ( ISOURCEPOPUP* popup, uint32_t address )
  * \date	11/22/2015
  *
  * \param [in,out]	popup	If non-null, the popup.
- **************************************************************************************************/
+ **/
 
-void repaint_memory_popup ( IMEMORYPOPUP* popup )
+void repaint_memory_popup(IMEMORYPOPUP *popup)
 {
-	popup->vtable->repaint ( popup, 0 );
+	popup->vtable->repaint(popup, 0);
 }
 
-/**********************************************************************************************//**
+/**
  * \fn	void print_to_debug_popup ( IDEBUGPOPUP* popup, const char* message )
  *
  * \brief	Print to debug popup.
@@ -558,14 +555,14 @@ void repaint_memory_popup ( IMEMORYPOPUP* popup )
  *
  * \param [in,out]	popup	If non-null, the popup.
  * \param	message		 	The message.
- **************************************************************************************************/
+ **/
 
-void print_to_debug_popup ( IDEBUGPOPUP* popup, const char* message )
+void print_to_debug_popup(IDEBUGPOPUP *popup, const char *message)
 {
-	popup->vtable->print ( popup, ( char* ) message );
+	popup->vtable->print(popup, (char *)message);
 }
 
-/**********************************************************************************************//**
+/**
  * \fn	void dump_to_debug_popup ( IDEBUGPOPUP* popup, const uint8_t* buf, uint32_t offset, uint32_t size )
  *
  * \brief	Dumps to debug popup.
@@ -577,14 +574,14 @@ void print_to_debug_popup ( IDEBUGPOPUP* popup, const char* message )
  * \param	buf			 	The buffer.
  * \param	offset		 	The offset.
  * \param	size		 	The size.
- **************************************************************************************************/
+ **/
 
-void dump_to_debug_popup ( IDEBUGPOPUP* popup, const uint8_t* buf, uint32_t offset, uint32_t size )
+void dump_to_debug_popup(IDEBUGPOPUP *popup, const uint8_t *buf, uint32_t offset, uint32_t size)
 {
-	popup->vtable->dump ( popup, 0, buf + offset, size, 16 );
+	popup->vtable->dump(popup, 0, buf + offset, size, 16);
 }
 
-/**********************************************************************************************//**
+/**
  * \fn	const char* logic_type_to_string ( LOGIC_TYPE type )
  *
  * \brief	Logic type to string.
@@ -595,24 +592,24 @@ void dump_to_debug_popup ( IDEBUGPOPUP* popup, const uint8_t* buf, uint32_t offs
  * \param	type	The type.
  *
  * \return	null if it fails, else a char*.
- **************************************************************************************************/
+ **/
 
-const char* logic_type_to_string ( LOGIC_TYPE type )
+const char *logic_type_to_string(LOGIC_TYPE type)
 {
-	switch ( type )
+	switch (type)
 	{
-		case TTL:
-			return "TTL";
-		case CMOS:
-			return "CMOS";
-		case I2L:
-			return "I2L";
-		default:
-			return "Unknown";
+	case TTL:
+		return "TTL";
+	case CMOS:
+		return "CMOS";
+	case I2L:
+		return "I2L";
+	default:
+		return "Unknown";
 	}
 }
 
-/**********************************************************************************************//**
+/**
  * \fn	void set_logic_type ( IDSIMMODEL* model, LOGIC_TYPE type )
  *
  * \brief	Sets logic type.
@@ -622,35 +619,35 @@ const char* logic_type_to_string ( LOGIC_TYPE type )
  *
  * \param [in,out]	model	If non-null, the model.
  * \param	type		 	The type.
- **************************************************************************************************/
+ **/
 
-void set_logic_type ( IDSIMMODEL* model, LOGIC_TYPE type )
+void set_logic_type(IDSIMMODEL *model, LOGIC_TYPE type)
 {
 	model->ltype = type;
-	switch ( type )
+	switch (type)
 	{
-		case TTL:
-			model->logic_high = SHI;
-			model->logic_low = SLO;
-			model->logic_flt = FLT;
-			break;
-		case CMOS:
-			model->logic_high = IHI;
-			model->logic_low = ILO;
-			model->logic_flt = FLT;
-			break;
-		case I2L:
-			model->logic_high = WHI;
-			model->logic_low = WLO;
-			model->logic_flt = FLT;
-			break;
-		default:
-			print_error ( model, "Unknown logic type specified: %d", type );
-			break;
+	case TTL:
+		model->logic_high = SHI;
+		model->logic_low = SLO;
+		model->logic_flt = FLT;
+		break;
+	case CMOS:
+		model->logic_high = IHI;
+		model->logic_low = ILO;
+		model->logic_flt = FLT;
+		break;
+	case I2L:
+		model->logic_high = WHI;
+		model->logic_low = WLO;
+		model->logic_flt = FLT;
+		break;
+	default:
+		print_error(model, "Unknown logic type specified: %d", type);
+		break;
 	}
 }
 
-/**********************************************************************************************//**
+/**
  * \fn	void toggle_pin_state ( IDSIMMODEL* model, VSM_PIN pin )
  *
  * \brief	Toggle pin state.
@@ -660,23 +657,23 @@ void set_logic_type ( IDSIMMODEL* model, LOGIC_TYPE type )
  *
  * \param [in,out]	model	If non-null, the model.
  * \param	pin			 	The pin.
- **************************************************************************************************/
+ **/
 
-void toggle_pin_state ( IDSIMMODEL* model, VSM_PIN pin )
+void toggle_pin_state(IDSIMMODEL *model, VSM_PIN pin)
 {
-	if ( TRUE == is_pin_high ( pin.pin ) )
+	if (TRUE == is_pin_high(pin.pin))
 	{
-		set_pin_state ( model, pin, LOGIC_LO );
+		set_pin_state(model, pin, LOGIC_LO);
 		return;
 	}
-	else if ( TRUE == is_pin_low ( pin.pin ) )
+	else if (TRUE == is_pin_low(pin.pin))
 	{
-		set_pin_state ( model, pin, LOGIC_HI );
+		set_pin_state(model, pin, LOGIC_HI);
 		return;
 	}
 }
 
-/**********************************************************************************************//**
+/**
  * \fn	STATE get_pin_state ( IDSIMPIN* pin )
  *
  * \brief	Gets pin state.
@@ -687,14 +684,14 @@ void toggle_pin_state ( IDSIMMODEL* model, VSM_PIN pin )
  * \param [in,out]	pin	If non-null, the pin.
  *
  * \return	The pin state.
- **************************************************************************************************/
+ **/
 
-STATE get_pin_state ( IDSIMPIN* pin )
+STATE get_pin_state(IDSIMPIN *pin)
 {
-	return pin->vtable->getstate ( pin, 0 );
+	return pin->vtable->getstate(pin, 0);
 }
 
-/**********************************************************************************************//**
+/**
  * \fn	int get_pin_bool ( VSM_PIN pin )
  *
  * \brief	Gets pin bool.
@@ -705,15 +702,15 @@ STATE get_pin_state ( IDSIMPIN* pin )
  * \param	pin	The pin.
  *
  * \return	The pin bool.
- **************************************************************************************************/
+ **/
 
-int get_pin_bool ( VSM_PIN pin )
+int get_pin_bool(VSM_PIN pin)
 {
-	if ( TRUE == is_pin_high ( pin.pin ) )
+	if (TRUE == is_pin_high(pin.pin))
 	{
 		return 1;
 	}
-	else if ( TRUE == is_pin_low ( pin.pin ) )
+	else if (TRUE == is_pin_low(pin.pin))
 	{
 		return 0;
 	}
@@ -721,7 +718,7 @@ int get_pin_bool ( VSM_PIN pin )
 	return -1;
 }
 
-/**********************************************************************************************//**
+/**
  * \fn	bool is_pin_active ( IDSIMPIN* pin )
  *
  * \brief	Queries if a pin is active.
@@ -732,14 +729,14 @@ int get_pin_bool ( VSM_PIN pin )
  * \param [in,out]	pin	If non-null, the pin.
  *
  * \return	true if a pin is active, false if not.
- **************************************************************************************************/
+ **/
 
-bool is_pin_active ( IDSIMPIN* pin )
+bool is_pin_active(IDSIMPIN *pin)
 {
-	return pin->vtable->isactive ( pin, 0 );
+	return pin->vtable->isactive(pin, 0);
 }
 
-/**********************************************************************************************//**
+/**
  * \fn	bool is_pin_inactive ( IDSIMPIN* pin )
  *
  * \brief	Queries if a pin is inactive.
@@ -750,14 +747,14 @@ bool is_pin_active ( IDSIMPIN* pin )
  * \param [in,out]	pin	If non-null, the pin.
  *
  * \return	true if a pin is inactive, false if not.
- **************************************************************************************************/
+ **/
 
-bool is_pin_inactive ( IDSIMPIN* pin )
+bool is_pin_inactive(IDSIMPIN *pin)
 {
-	return pin->vtable->isinactive ( pin, 0 );
+	return pin->vtable->isinactive(pin, 0);
 }
 
-/**********************************************************************************************//**
+/**
  * \fn	bool is_pin_posedge ( IDSIMPIN* pin )
  *
  * \brief	Query if 'pin' is pin posedge.
@@ -768,14 +765,14 @@ bool is_pin_inactive ( IDSIMPIN* pin )
  * \param [in,out]	pin	If non-null, the pin.
  *
  * \return	true if pin posedge, false if not.
- **************************************************************************************************/
+ **/
 
-bool is_pin_posedge ( IDSIMPIN* pin )
+bool is_pin_posedge(IDSIMPIN *pin)
 {
-	return pin->vtable->isposedge ( pin, 0 );
+	return pin->vtable->isposedge(pin, 0);
 }
 
-/**********************************************************************************************//**
+/**
  * \fn	bool is_pin_negedge ( IDSIMPIN* pin )
  *
  * \brief	Query if 'pin' is pin negedge.
@@ -786,14 +783,14 @@ bool is_pin_posedge ( IDSIMPIN* pin )
  * \param [in,out]	pin	If non-null, the pin.
  *
  * \return	true if pin negedge, false if not.
- **************************************************************************************************/
+ **/
 
-bool is_pin_negedge ( IDSIMPIN* pin )
+bool is_pin_negedge(IDSIMPIN *pin)
 {
-	return pin->vtable->isnegedge ( pin, 0 );
+	return pin->vtable->isnegedge(pin, 0);
 }
 
-/**********************************************************************************************//**
+/**
  * \fn	bool is_pin_edge ( IDSIMPIN* pin )
  *
  * \brief	Query if 'pin' is pin edge.
@@ -804,14 +801,14 @@ bool is_pin_negedge ( IDSIMPIN* pin )
  * \param [in,out]	pin	If non-null, the pin.
  *
  * \return	true if pin edge, false if not.
- **************************************************************************************************/
+ **/
 
-bool is_pin_edge ( IDSIMPIN* pin )
+bool is_pin_edge(IDSIMPIN *pin)
 {
-	return pin->vtable->isedge ( pin, 0 );
+	return pin->vtable->isedge(pin, 0);
 }
 
-/**********************************************************************************************//**
+/**
  * \fn	void set_callback ( IDSIMMODEL* model, RELTIME picotime, EVENTID id )
  *
  * \brief	Callback, called when the set.
@@ -822,15 +819,15 @@ bool is_pin_edge ( IDSIMPIN* pin )
  * \param [in,out]	model	If non-null, the model.
  * \param	picotime	 	The picotime.
  * \param	id			 	The identifier.
- **************************************************************************************************/
+ **/
 
-void set_callback ( IDSIMMODEL* model, RELTIME picotime, EVENTID id )
+void set_callback(IDSIMMODEL *model, RELTIME picotime, EVENTID id)
 {
 	/* Add event to the model's hash table in order to keep count of registered events */
-	model->model_dsim->vtable->setcallback ( model->model_dsim, 0, picotime, model, id );
+	model->model_dsim->vtable->setcallback(model->model_dsim, 0, picotime, model, id);
 }
 
-/**********************************************************************************************//**
+/**
  * \fn	void print_info ( IDSIMMODEL* model, const char* format, ... )
  *
  * \brief	Print information.
@@ -841,20 +838,21 @@ void set_callback ( IDSIMMODEL* model, RELTIME picotime, EVENTID id )
  * \param [in,out]	model	If non-null, the model.
  * \param	format		 	Describes the format to use.
  * \param	...			 	Variable arguments providing additional information.
- **************************************************************************************************/
+ **/
 
-void print_info ( IDSIMMODEL* model, const char* format, ... )
+void print_info(IDSIMMODEL *model, const char *format, ...)
 {
-	char* string;
+	char *string;
 	va_list args;
-	va_start ( args, format );
-	if ( 0 > vasprintf ( &string, ( char* ) format, args ) ) string = NULL;
-	va_end ( args );
-	model->model_instance->vtable->log ( model->model_instance, string );
-	free ( string );
+	va_start(args, format);
+	if (0 > vasprintf(&string, (char *)format, args))
+		string = NULL;
+	va_end(args);
+	model->model_instance->vtable->log(model->model_instance, string);
+	free(string);
 }
 
-/**********************************************************************************************//**
+/**
  * \fn	void print_message ( IDSIMMODEL* model, const char* format, ... )
  *
  * \brief	Print message.
@@ -865,20 +863,21 @@ void print_info ( IDSIMMODEL* model, const char* format, ... )
  * \param [in,out]	model	If non-null, the model.
  * \param	format		 	Describes the format to use.
  * \param	...			 	Variable arguments providing additional information.
- **************************************************************************************************/
+ **/
 
-void print_message ( IDSIMMODEL* model, const char* format, ... )
+void print_message(IDSIMMODEL *model, const char *format, ...)
 {
-	char* string;
+	char *string;
 	va_list args;
-	va_start ( args, format );
-	if ( 0 > vasprintf ( &string, ( char* ) format, args ) ) string = NULL;
-	va_end ( args );
-	model->model_instance->vtable->message ( model->model_instance, string );
-	free ( string );
+	va_start(args, format);
+	if (0 > vasprintf(&string, (char *)format, args))
+		string = NULL;
+	va_end(args);
+	model->model_instance->vtable->message(model->model_instance, string);
+	free(string);
 }
 
-/**********************************************************************************************//**
+/**
  * \fn	void print_warning ( IDSIMMODEL* model, const char* format, ... )
  *
  * \brief	Print warning.
@@ -889,20 +888,21 @@ void print_message ( IDSIMMODEL* model, const char* format, ... )
  * \param [in,out]	model	If non-null, the model.
  * \param	format		 	Describes the format to use.
  * \param	...			 	Variable arguments providing additional information.
- **************************************************************************************************/
+ **/
 
-void print_warning ( IDSIMMODEL* model, const char* format, ... )
+void print_warning(IDSIMMODEL *model, const char *format, ...)
 {
-	char* string;
+	char *string;
 	va_list args;
-	va_start ( args, format );
-	if ( 0 > vasprintf ( &string, ( char* ) format, args ) ) string = NULL;
-	va_end ( args );
-	model->model_instance->vtable->warning ( model->model_instance, string );
-	free ( string );
+	va_start(args, format);
+	if (0 > vasprintf(&string, (char *)format, args))
+		string = NULL;
+	va_end(args);
+	model->model_instance->vtable->warning(model->model_instance, string);
+	free(string);
 }
 
-/**********************************************************************************************//**
+/**
  * \fn	void print_error ( IDSIMMODEL* model, const char* format, ... )
  *
  * \brief	Print error.
@@ -913,20 +913,21 @@ void print_warning ( IDSIMMODEL* model, const char* format, ... )
  * \param [in,out]	model	If non-null, the model.
  * \param	format		 	Describes the format to use.
  * \param	...			 	Variable arguments providing additional information.
- **************************************************************************************************/
+ **/
 
-void print_error ( IDSIMMODEL* model, const char* format, ... )
+void print_error(IDSIMMODEL *model, const char *format, ...)
 {
-	char* string;
+	char *string;
 	va_list args;
-	va_start ( args, format );
-	if ( 0 > vasprintf ( &string, ( char* ) format, args ) ) string = NULL;
-	va_end ( args );
-	model->model_instance->vtable->error ( model->model_instance, string );
-	free ( string );
+	va_start(args, format);
+	if (0 > vasprintf(&string, (char *)format, args))
+		string = NULL;
+	va_end(args);
+	model->model_instance->vtable->error(model->model_instance, string);
+	free(string);
 }
 
-/**********************************************************************************************//**
+/**
  * \fn	IDSIMPIN* get_pin ( IDSIMMODEL* model, char* pin_name )
  *
  * \brief	Gets a pin.
@@ -938,14 +939,14 @@ void print_error ( IDSIMMODEL* model, const char* format, ... )
  * \param [in,out]	pin_name	If non-null, name of the pin.
  *
  * \return	null if it fails, else the pin.
- **************************************************************************************************/
+ **/
 
-IDSIMPIN* get_pin ( IDSIMMODEL* model, char* pin_name )
+IDSIMPIN *get_pin(IDSIMMODEL *model, char *pin_name)
 {
-	return model->model_instance->vtable->getdsimpin ( model->model_instance, 0, pin_name, TRUE );
+	return model->model_instance->vtable->getdsimpin(model->model_instance, 0, pin_name, TRUE);
 }
 
-/**********************************************************************************************//**
+/**
  * \fn	bool is_pin_low ( IDSIMPIN* pin )
  *
  * \brief	Query if 'pin' is pin low.
@@ -956,14 +957,14 @@ IDSIMPIN* get_pin ( IDSIMMODEL* model, char* pin_name )
  * \param [in,out]	pin	If non-null, the pin.
  *
  * \return	true if pin low, false if not.
- **************************************************************************************************/
+ **/
 
-bool is_pin_low ( IDSIMPIN* pin )
+bool is_pin_low(IDSIMPIN *pin)
 {
-	return islow ( pin->vtable->istate ( pin, 0 ) );
+	return islow(pin->vtable->istate(pin, 0));
 }
 
-/**********************************************************************************************//**
+/**
  * \fn	bool is_pin_high ( IDSIMPIN* pin )
  *
  * \brief	Query if 'pin' is pin high.
@@ -974,14 +975,14 @@ bool is_pin_low ( IDSIMPIN* pin )
  * \param [in,out]	pin	If non-null, the pin.
  *
  * \return	true if pin high, false if not.
- **************************************************************************************************/
+ **/
 
-bool is_pin_high ( IDSIMPIN* pin )
+bool is_pin_high(IDSIMPIN *pin)
 {
-	return ishigh ( pin->vtable->istate ( pin, 0 ) );
+	return ishigh(pin->vtable->istate(pin, 0));
 }
 
-/**********************************************************************************************//**
+/**
  * \fn	bool is_pin_floating ( IDSIMPIN* pin )
  *
  * \brief	Query if 'pin' is pin floating.
@@ -992,14 +993,14 @@ bool is_pin_high ( IDSIMPIN* pin )
  * \param [in,out]	pin	If non-null, the pin.
  *
  * \return	true if pin floating, false if not.
- **************************************************************************************************/
+ **/
 
-bool is_pin_floating ( IDSIMPIN* pin )
+bool is_pin_floating(IDSIMPIN *pin)
 {
-	return isfloating ( pin->vtable->istate ( pin, 0 ) );
+	return isfloating(pin->vtable->istate(pin, 0));
 }
 
-/**********************************************************************************************//**
+/**
  * \fn	bool is_pin_steady ( IDSIMPIN* pin )
  *
  * \brief	Query if 'pin' is pin steady.
@@ -1010,14 +1011,14 @@ bool is_pin_floating ( IDSIMPIN* pin )
  * \param [in,out]	pin	If non-null, the pin.
  *
  * \return	true if pin steady, false if not.
- **************************************************************************************************/
+ **/
 
-bool is_pin_steady ( IDSIMPIN* pin )
+bool is_pin_steady(IDSIMPIN *pin)
 {
-	return pin->vtable->issteady ( pin, 0 );
+	return pin->vtable->issteady(pin, 0);
 }
 
-/**********************************************************************************************//**
+/**
  * \fn	bool is_pin_inverted ( IDSIMPIN* pin )
  *
  * \brief	Query if 'pin' is pin inverted.
@@ -1028,14 +1029,14 @@ bool is_pin_steady ( IDSIMPIN* pin )
  * \param [in,out]	pin	If non-null, the pin.
  *
  * \return	true if pin inverted, false if not.
- **************************************************************************************************/
+ **/
 
-bool is_pin_inverted ( IDSIMPIN* pin )
+bool is_pin_inverted(IDSIMPIN *pin)
 {
-	return pin->vtable->invert ( pin, 0 );
+	return pin->vtable->invert(pin, 0);
 }
 
-/**********************************************************************************************//**
+/**
  * \fn	__INLINE__ bool islow ( STATE pinstate )
  *
  * \brief	Query if 'pinstate' islow.
@@ -1046,14 +1047,14 @@ bool is_pin_inverted ( IDSIMPIN* pin )
  * \param	pinstate	The pinstate.
  *
  * \return	true if it succeeds, false if it fails.
- **************************************************************************************************/
+ **/
 
-__INLINE__ bool islow ( STATE pinstate )
+__INLINE__ bool islow(STATE pinstate)
 {
-	return ( pinstate & SP_MASK ) == SP_LOW;
+	return (pinstate & SP_MASK) == SP_LOW;
 }
 
-/**********************************************************************************************//**
+/**
  * \fn	__INLINE__ bool ishigh ( STATE pinstate )
  *
  * \brief	Query if 'pinstate' ishigh.
@@ -1064,15 +1065,15 @@ __INLINE__ bool islow ( STATE pinstate )
  * \param	pinstate	The pinstate.
  *
  * \return	true if it succeeds, false if it fails.
- **************************************************************************************************/
+ **/
 
 __INLINE__ bool
-ishigh ( STATE pinstate )
+ishigh(STATE pinstate)
 {
-	return ( pinstate & SP_MASK ) == SP_HIGH;
+	return (pinstate & SP_MASK) == SP_HIGH;
 }
 
-/**********************************************************************************************//**
+/**
  * \fn	__INLINE__ bool isfloating ( STATE pinstate )
  *
  * \brief	Query if 'pinstate' isfloating.
@@ -1083,15 +1084,15 @@ ishigh ( STATE pinstate )
  * \param	pinstate	The pinstate.
  *
  * \return	true if it succeeds, false if it fails.
- **************************************************************************************************/
+ **/
 
 __INLINE__ bool
-isfloating ( STATE pinstate )
+isfloating(STATE pinstate)
 {
-	return ( pinstate & SP_MASK ) == SP_FLOAT;
+	return (pinstate & SP_MASK) == SP_FLOAT;
 }
 
-/**********************************************************************************************//**
+/**
  * \fn	__INLINE__ bool iscontention ( STATE pinstate )
  *
  * \brief	Query if 'pinstate' iscontention.
@@ -1102,15 +1103,15 @@ isfloating ( STATE pinstate )
  * \param	pinstate	The pinstate.
  *
  * \return	true if it succeeds, false if it fails.
- **************************************************************************************************/
+ **/
 
 __INLINE__ bool
-iscontention ( STATE pinstate )
+iscontention(STATE pinstate)
 {
 	return pinstate & SF_CONTENTION;
 }
 
-/**********************************************************************************************//**
+/**
  * \fn	__INLINE__ bool isdefined ( STATE pinstate )
  *
  * \brief	Query if 'pinstate' isdefined.
@@ -1121,15 +1122,15 @@ iscontention ( STATE pinstate )
  * \param	pinstate	The pinstate.
  *
  * \return	true if it succeeds, false if it fails.
- **************************************************************************************************/
+ **/
 
 __INLINE__ bool
-isdefined ( STATE pinstate )
+isdefined(STATE pinstate)
 {
 	return pinstate != SP_UNDEFINED;
 }
 
-/**********************************************************************************************//**
+/**
  * \fn	__INLINE__ bool ishighlow ( STATE pinstate )
  *
  * \brief	Query if 'pinstate' ishighlow.
@@ -1140,15 +1141,15 @@ isdefined ( STATE pinstate )
  * \param	pinstate	The pinstate.
  *
  * \return	true if it succeeds, false if it fails.
- **************************************************************************************************/
+ **/
 
 __INLINE__ bool
-ishighlow ( STATE pinstate )
+ishighlow(STATE pinstate)
 {
 	return pinstate & 1;
 }
 
-/**********************************************************************************************//**
+/**
  * \fn	__INLINE__ INT polarity ( STATE pinstate )
  *
  * \brief	Polarities the given pinstate.
@@ -1159,15 +1160,15 @@ ishighlow ( STATE pinstate )
  * \param	pinstate	The pinstate.
  *
  * \return	An INT.
- **************************************************************************************************/
+ **/
 
 __INLINE__ INT
-polarity ( STATE pinstate )
+polarity(STATE pinstate)
 {
 	return pinstate & SP_MASK;
 }
 
-/**********************************************************************************************//**
+/**
  * \fn	__INLINE__ INT strength ( STATE pinstate )
  *
  * \brief	Strengths the given pinstate.
@@ -1178,10 +1179,10 @@ polarity ( STATE pinstate )
  * \param	pinstate	The pinstate.
  *
  * \return	An INT.
- **************************************************************************************************/
+ **/
 
 __INLINE__ INT
-strength ( STATE pinstate )
+strength(STATE pinstate)
 {
 	return pinstate & SS_MASK;
 }
