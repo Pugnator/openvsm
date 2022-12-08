@@ -8,6 +8,8 @@
 *.ko
 *.obj
 *.elf
+*.mod
+*.res
 
 # Precompiled Headers
 *.gch

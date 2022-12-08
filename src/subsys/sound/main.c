@@ -9,7 +9,7 @@ int main()
 	{
 		puts("Failed");
 	}
-	
+
 	sfMusic_play(buf);
 	getchar();
 	sfMusic_destroy(buf);
