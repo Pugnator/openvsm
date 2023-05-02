@@ -3,7 +3,7 @@ LUATOOLS=""
 ISCC := iscc
 
 ifdef SystemRoot
-	MAKE := mingw32-make
+	MAKE := make
 	RM := rm -f
 	CP := copy
 	LUATOOLS := win32lua

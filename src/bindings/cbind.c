@@ -25,39 +25,39 @@
 
 const char *state_to_string(STATE pinstate)
 {
-	switch (pinstate)
-	{
-	case UNDEFINED:
-		return "UNDEFINED";
-	case TSTATE:
-		return "TSTATE";
-	case FSTATE:
-		return "FSTATE";
-	case PLO:
-		return "PLO";
-	case ILO:
-		return "ILO";
-	case SLO:
-		return "SLO";
-	case WLO:
-		return "WLO";
-	case FLT:
-		return "FLT";
-	case WHI:
-		return "WHI";
-	case SHI:
-		return "SHI";
-	case IHI:
-		return "IHI";
-	case PHI:
-		return "PHI";
-	case WUD:
-		return "WUD";
-	case SUD:
-		return "SUD";
-	default:
-		return "wrong state";
-	}
+  switch (pinstate)
+  {
+  case UNDEFINED:
+    return "UNDEFINED";
+  case TSTATE:
+    return "TSTATE";
+  case FSTATE:
+    return "FSTATE";
+  case PLO:
+    return "PLO";
+  case ILO:
+    return "ILO";
+  case SLO:
+    return "SLO";
+  case WLO:
+    return "WLO";
+  case FLT:
+    return "FLT";
+  case WHI:
+    return "WHI";
+  case SHI:
+    return "SHI";
+  case IHI:
+    return "IHI";
+  case PHI:
+    return "PHI";
+  case WUD:
+    return "WUD";
+  case SUD:
+    return "SUD";
+  default:
+    return "wrong state";
+  }
 }
 
 /**
@@ -76,11 +76,11 @@ const char *state_to_string(STATE pinstate)
 bool vsm_register(ILICENCESERVER *ils)
 {
 
-	if (FALSE == ils->vtable->authorize(ils, 0, model_key, VSM_API_VERSION))
-	{
-		return FALSE;
-	}
-	return TRUE;
+  if (FALSE == ils->vtable->authorize(ils, 0, model_key, VSM_API_VERSION))
+  {
+    return FALSE;
+  }
+  return TRUE;
 }
 
 /**
@@ -98,9 +98,9 @@ bool vsm_register(ILICENCESERVER *ils)
 
 void set_pin_state(IDSIMMODEL *model, VSM_PIN pin, STATE state)
 {
-	ABSTIME curtime = 0;
-	systime(model, &curtime);
-	pin.pin->vtable->setstate2(pin.pin, 0, curtime, pin.on_time, state);
+  ABSTIME curtime = 0;
+  systime(model, &curtime);
+  pin.pin->vtable->setstate2(pin.pin, 0, curtime, pin.on_time, state);
 }
 
 /**
@@ -118,9 +118,9 @@ void set_pin_state(IDSIMMODEL *model, VSM_PIN pin, STATE state)
 
 void set_pin_bool(IDSIMMODEL *model, VSM_PIN pin, bool level)
 {
-	ABSTIME curtime = 0;
-	systime(model, &curtime);
-	pin.pin->vtable->setstate2(pin.pin, 0, curtime, pin.on_time, level ? LOGIC_HI : LOGIC_LO);
+  ABSTIME curtime = 0;
+  systime(model, &curtime);
+  pin.pin->vtable->setstate2(pin.pin, 0, curtime, pin.on_time, level ? LOGIC_HI : LOGIC_LO);
 }
 
 /**
@@ -137,7 +137,7 @@ void set_pin_bool(IDSIMMODEL *model, VSM_PIN pin, bool level)
 
 void systime(IDSIMMODEL *model, ABSTIME *at)
 {
-	model->model_dsim->vtable->sysvar(model->model_dsim, 0, (DOUBLE *)at, DSIMTIMENOW);
+  model->model_dsim->vtable->sysvar(model->model_dsim, 0, (DOUBLE *)at, DSIMTIMENOW);
 }
 
 /* \fn	char* get_device_id ( IDSIMMODEL* model )
@@ -154,7 +154,7 @@ void systime(IDSIMMODEL *model, ABSTIME *at)
 
 char *get_device_id(IDSIMMODEL *model)
 {
-	return model->model_instance->vtable->id(model->model_instance, 0);
+  return model->model_instance->vtable->id(model->model_instance, 0);
 }
 
 /* \fn	char* get_string_param ( IDSIMMODEL* model, char* field_name )
@@ -172,7 +172,7 @@ char *get_device_id(IDSIMMODEL *model)
 
 char *get_string_param(IDSIMMODEL *model, char *field_name)
 {
-	return model->model_instance->vtable->getstrval(model->model_instance, 0, field_name, "?");
+  return model->model_instance->vtable->getstrval(model->model_instance, 0, field_name, "?");
 }
 
 /**
@@ -191,7 +191,7 @@ char *get_string_param(IDSIMMODEL *model, char *field_name)
 
 bool get_bool_param(IDSIMMODEL *model, char *field_name)
 {
-	return model->model_instance->vtable->getboolval(model->model_instance, 0, field_name, FALSE);
+  return model->model_instance->vtable->getboolval(model->model_instance, 0, field_name, FALSE);
 }
 
 /**
@@ -210,9 +210,9 @@ bool get_bool_param(IDSIMMODEL *model, char *field_name)
 
 double get_num_param(IDSIMMODEL *model, char *field_name)
 {
-	double result = 0;
-	model->model_instance->vtable->getnumval(model->model_instance, 0, &result, field_name, 0.0);
-	return result;
+  double result = 0;
+  model->model_instance->vtable->getnumval(model->model_instance, 0, &result, field_name, 0.0);
+  return result;
 }
 
 /**
@@ -231,7 +231,7 @@ double get_num_param(IDSIMMODEL *model, char *field_name)
 
 int32_t get_hex_param(IDSIMMODEL *model, char *field_name)
 {
-	return (int32_t)model->model_instance->vtable->gethexval(model->model_instance, 0, field_name, 0);
+  return (int32_t)model->model_instance->vtable->gethexval(model->model_instance, 0, field_name, 0);
 }
 
 /**
@@ -250,7 +250,7 @@ int32_t get_hex_param(IDSIMMODEL *model, char *field_name)
 
 int64_t get_init_param(IDSIMMODEL *model, char *field_name)
 {
-	return (int64_t)model->model_instance->vtable->getinitval(model->model_instance, 0, field_name, 0);
+  return (int64_t)model->model_instance->vtable->getinitval(model->model_instance, 0, field_name, 0);
 }
 
 /**
@@ -269,7 +269,7 @@ int64_t get_init_param(IDSIMMODEL *model, char *field_name)
 
 void load_image(IDSIMMODEL *model, char *filename, uint8_t *buffer, uint32_t buffer_size)
 {
-	model->model_instance->vtable->loadmemory(model->model_instance, 0, filename, buffer, buffer_size, 0, 0);
+  model->model_instance->vtable->loadmemory(model->model_instance, 0, filename, buffer, buffer_size, 0, 0);
 }
 
 /**
@@ -288,7 +288,7 @@ void load_image(IDSIMMODEL *model, char *filename, uint8_t *buffer, uint32_t buf
 
 IPOPUP *create_popup(IDSIMMODEL *model, CREATEPOPUPSTRUCT *cps)
 {
-	return ((IPOPUP *)model->model_instance->vtable->createpopup(model->model_instance, 0, cps));
+  return ((IPOPUP *)model->model_instance->vtable->createpopup(model->model_instance, 0, cps));
 }
 
 /**
@@ -308,16 +308,16 @@ IPOPUP *create_popup(IDSIMMODEL *model, CREATEPOPUPSTRUCT *cps)
 
 IMEMORYPOPUP *create_memory_popup(IDSIMMODEL *model, const char *title, const int32_t id)
 {
-	CREATEPOPUPSTRUCT *cps = malloc(sizeof *cps);
-	cps->caption = (char *)title;
-	cps->flags = PWF_VISIBLE | PWF_HIDEONANIMATE | PWF_SIZEABLE | PWF_AUTOREFRESH;
-	cps->type = PWT_MEMORY;
-	cps->height = 32; //-V112
-	cps->width = 16;
-	cps->id = id;
-	IMEMORYPOPUP *popup = (IMEMORYPOPUP *)create_popup(model, cps);
-	free(cps);
-	return popup;
+  CREATEPOPUPSTRUCT *cps = malloc(sizeof *cps);
+  cps->caption = (char *)title;
+  cps->flags = PWF_VISIBLE | PWF_HIDEONANIMATE | PWF_SIZEABLE | PWF_AUTOREFRESH;
+  cps->type = PWT_MEMORY;
+  cps->height = 32; //-V112
+  cps->width = 16;
+  cps->id = id;
+  IMEMORYPOPUP *popup = (IMEMORYPOPUP *)create_popup(model, cps);
+  free(cps);
+  return popup;
 }
 
 /**
@@ -337,16 +337,16 @@ IMEMORYPOPUP *create_memory_popup(IDSIMMODEL *model, const char *title, const in
 
 IDEBUGPOPUP *create_debug_popup(IDSIMMODEL *model, const char *title, const int32_t id)
 {
-	CREATEPOPUPSTRUCT *cps = malloc(sizeof *cps);
-	cps->caption = (char *)title;
-	cps->flags = PWF_VISIBLE | PWF_HIDEONANIMATE | PWF_SIZEABLE | PWF_AUTOREFRESH;
-	cps->type = PWT_DEBUG;
-	cps->height = 200;
-	cps->width = 640;
-	cps->id = id;
-	IDEBUGPOPUP *popup = create_popup(model, cps);
-	free(cps);
-	return popup;
+  CREATEPOPUPSTRUCT *cps = malloc(sizeof *cps);
+  cps->caption = (char *)title;
+  cps->flags = PWF_VISIBLE | PWF_HIDEONANIMATE | PWF_SIZEABLE | PWF_AUTOREFRESH;
+  cps->type = PWT_DEBUG;
+  cps->height = 200;
+  cps->width = 640;
+  cps->id = id;
+  IDEBUGPOPUP *popup = create_popup(model, cps);
+  free(cps);
+  return popup;
 }
 
 /**
@@ -366,16 +366,16 @@ IDEBUGPOPUP *create_debug_popup(IDSIMMODEL *model, const char *title, const int3
 
 IDEBUGPOPUP *create_source_popup(IDSIMMODEL *model, const char *title, const int32_t id)
 {
-	CREATEPOPUPSTRUCT *cps = malloc(sizeof *cps);
-	cps->caption = (char *)title;
-	cps->flags = PWF_VISIBLE | PWF_HIDEONANIMATE | PWF_SIZEABLE | PWF_AUTOREFRESH;
-	cps->type = PWT_SOURCE;
-	cps->height = 200;
-	cps->width = 640;
-	cps->id = id;
-	IDEBUGPOPUP *popup = create_popup(model, cps);
-	free(cps);
-	return popup;
+  CREATEPOPUPSTRUCT *cps = malloc(sizeof *cps);
+  cps->caption = (char *)title;
+  cps->flags = PWF_VISIBLE | PWF_HIDEONANIMATE | PWF_SIZEABLE | PWF_AUTOREFRESH;
+  cps->type = PWT_SOURCE;
+  cps->height = 200;
+  cps->width = 640;
+  cps->id = id;
+  IDEBUGPOPUP *popup = create_popup(model, cps);
+  free(cps);
+  return popup;
 }
 
 /**
@@ -395,16 +395,16 @@ IDEBUGPOPUP *create_source_popup(IDSIMMODEL *model, const char *title, const int
 
 IDEBUGPOPUP *create_status_popup(IDSIMMODEL *model, const char *title, const int32_t id)
 {
-	CREATEPOPUPSTRUCT *cps = malloc(sizeof *cps);
-	cps->caption = (char *)title;
-	cps->flags = PWF_VISIBLE | PWF_HIDEONANIMATE | PWF_SIZEABLE | PWF_AUTOREFRESH;
-	cps->type = PWT_STATUS;
-	cps->height = 200;
-	cps->width = 200;
-	cps->id = id;
-	IDEBUGPOPUP *popup = create_popup(model, cps);
-	free(cps);
-	return popup;
+  CREATEPOPUPSTRUCT *cps = malloc(sizeof *cps);
+  cps->caption = (char *)title;
+  cps->flags = PWF_VISIBLE | PWF_HIDEONANIMATE | PWF_SIZEABLE | PWF_AUTOREFRESH;
+  cps->type = PWT_STATUS;
+  cps->height = 200;
+  cps->width = 200;
+  cps->id = id;
+  IDEBUGPOPUP *popup = create_popup(model, cps);
+  free(cps);
+  return popup;
 }
 
 /**
@@ -424,16 +424,16 @@ IDEBUGPOPUP *create_status_popup(IDSIMMODEL *model, const char *title, const int
 
 IDEBUGPOPUP *create_var_popup(IDSIMMODEL *model, const char *title, const int32_t id)
 {
-	CREATEPOPUPSTRUCT *cps = malloc(sizeof *cps);
-	cps->caption = (char *)title;
-	cps->flags = PWF_VISIBLE | PWF_HIDEONANIMATE | PWF_SIZEABLE | PWF_AUTOREFRESH;
-	cps->type = PWT_VAR;
-	cps->height = 200;
-	cps->width = 200;
-	cps->id = id;
-	IDEBUGPOPUP *popup = create_popup(model, cps);
-	free(cps);
-	return popup;
+  CREATEPOPUPSTRUCT *cps = malloc(sizeof *cps);
+  cps->caption = (char *)title;
+  cps->flags = PWF_VISIBLE | PWF_HIDEONANIMATE | PWF_SIZEABLE | PWF_AUTOREFRESH;
+  cps->type = PWT_VAR;
+  cps->height = 200;
+  cps->width = 200;
+  cps->id = id;
+  IDEBUGPOPUP *popup = create_popup(model, cps);
+  free(cps);
+  return popup;
 }
 
 /**
@@ -450,7 +450,7 @@ IDEBUGPOPUP *create_var_popup(IDSIMMODEL *model, const char *title, const int32_
 
 void delete_popup(IDSIMMODEL *model, POPUPID id)
 {
-	model->model_instance->vtable->deletepopup(model->model_instance, 0, id);
+  model->model_instance->vtable->deletepopup(model->model_instance, 0, id);
 }
 
 /**
@@ -469,7 +469,7 @@ void delete_popup(IDSIMMODEL *model, POPUPID id)
 
 void set_memory_popup(IMEMORYPOPUP *popup, uint32_t offset, void *buffer, size_t size)
 {
-	popup->vtable->setmemory(popup, 0, offset, buffer, size);
+  popup->vtable->setmemory(popup, 0, offset, buffer, size);
 }
 
 /**
@@ -489,9 +489,9 @@ void set_memory_popup(IMEMORYPOPUP *popup, uint32_t offset, void *buffer, size_t
 
 bool add_source_file(ISOURCEPOPUP *popup, char *filename, bool lowlevel)
 {
-	bool result = popup->vtable->addsrcfile(popup, 0, filename, lowlevel);
-	popup->vtable->setpcaddress(popup, 0, 0);
-	return result;
+  bool result = popup->vtable->addsrcfile(popup, 0, filename, lowlevel);
+  popup->vtable->setpcaddress(popup, 0, 0);
+  return result;
 }
 
 /**
@@ -509,7 +509,7 @@ bool add_source_file(ISOURCEPOPUP *popup, char *filename, bool lowlevel)
 
 bool set_vdm_handler(IDSIMMODEL *model)
 {
-	return model->model_instance->vtable->setvdmhlr(model->model_instance, 0, &ICPU_DEVICE);
+  return model->model_instance->vtable->setvdmhlr(model->model_instance, 0, &ICPU_DEVICE);
 }
 
 /**
@@ -526,7 +526,7 @@ bool set_vdm_handler(IDSIMMODEL *model)
 
 void set_pc_address(ISOURCEPOPUP *popup, uint32_t address)
 {
-	popup->vtable->setpcaddress(popup, 0, address);
+  popup->vtable->setpcaddress(popup, 0, address);
 }
 
 /**
@@ -542,7 +542,7 @@ void set_pc_address(ISOURCEPOPUP *popup, uint32_t address)
 
 void repaint_memory_popup(IMEMORYPOPUP *popup)
 {
-	popup->vtable->repaint(popup, 0);
+  popup->vtable->repaint(popup, 0);
 }
 
 /**
@@ -559,7 +559,7 @@ void repaint_memory_popup(IMEMORYPOPUP *popup)
 
 void print_to_debug_popup(IDEBUGPOPUP *popup, const char *message)
 {
-	popup->vtable->print(popup, (char *)message);
+  popup->vtable->print(popup, (char *)message);
 }
 
 /**
@@ -578,7 +578,7 @@ void print_to_debug_popup(IDEBUGPOPUP *popup, const char *message)
 
 void dump_to_debug_popup(IDEBUGPOPUP *popup, const uint8_t *buf, uint32_t offset, uint32_t size)
 {
-	popup->vtable->dump(popup, 0, buf + offset, size, 16);
+  popup->vtable->dump(popup, 0, buf + offset, size, 16);
 }
 
 /**
@@ -596,17 +596,17 @@ void dump_to_debug_popup(IDEBUGPOPUP *popup, const uint8_t *buf, uint32_t offset
 
 const char *logic_type_to_string(LOGIC_TYPE type)
 {
-	switch (type)
-	{
-	case TTL:
-		return "TTL";
-	case CMOS:
-		return "CMOS";
-	case I2L:
-		return "I2L";
-	default:
-		return "Unknown";
-	}
+  switch (type)
+  {
+  case TTL:
+    return "TTL";
+  case CMOS:
+    return "CMOS";
+  case I2L:
+    return "I2L";
+  default:
+    return "Unknown";
+  }
 }
 
 /**
@@ -623,28 +623,28 @@ const char *logic_type_to_string(LOGIC_TYPE type)
 
 void set_logic_type(IDSIMMODEL *model, LOGIC_TYPE type)
 {
-	model->ltype = type;
-	switch (type)
-	{
-	case TTL:
-		model->logic_high = SHI;
-		model->logic_low = SLO;
-		model->logic_flt = FLT;
-		break;
-	case CMOS:
-		model->logic_high = IHI;
-		model->logic_low = ILO;
-		model->logic_flt = FLT;
-		break;
-	case I2L:
-		model->logic_high = WHI;
-		model->logic_low = WLO;
-		model->logic_flt = FLT;
-		break;
-	default:
-		print_error(model, "Unknown logic type specified: %d", type);
-		break;
-	}
+  model->ltype = type;
+  switch (type)
+  {
+  case TTL:
+    model->logic_high = SHI;
+    model->logic_low = SLO;
+    model->logic_flt = FLT;
+    break;
+  case CMOS:
+    model->logic_high = IHI;
+    model->logic_low = ILO;
+    model->logic_flt = FLT;
+    break;
+  case I2L:
+    model->logic_high = WHI;
+    model->logic_low = WLO;
+    model->logic_flt = FLT;
+    break;
+  default:
+    print_error(model, "Unknown logic type specified: %d", type);
+    break;
+  }
 }
 
 /**
@@ -661,16 +661,16 @@ void set_logic_type(IDSIMMODEL *model, LOGIC_TYPE type)
 
 void toggle_pin_state(IDSIMMODEL *model, VSM_PIN pin)
 {
-	if (TRUE == is_pin_high(pin.pin))
-	{
-		set_pin_state(model, pin, LOGIC_LO);
-		return;
-	}
-	else if (TRUE == is_pin_low(pin.pin))
-	{
-		set_pin_state(model, pin, LOGIC_HI);
-		return;
-	}
+  if (TRUE == is_pin_high(pin.pin))
+  {
+    set_pin_state(model, pin, LOGIC_LO);
+    return;
+  }
+  else if (TRUE == is_pin_low(pin.pin))
+  {
+    set_pin_state(model, pin, LOGIC_HI);
+    return;
+  }
 }
 
 /**
@@ -688,7 +688,7 @@ void toggle_pin_state(IDSIMMODEL *model, VSM_PIN pin)
 
 STATE get_pin_state(IDSIMPIN *pin)
 {
-	return pin->vtable->getstate(pin, 0);
+  return pin->vtable->getstate(pin, 0);
 }
 
 /**
@@ -706,16 +706,16 @@ STATE get_pin_state(IDSIMPIN *pin)
 
 int get_pin_bool(VSM_PIN pin)
 {
-	if (TRUE == is_pin_high(pin.pin))
-	{
-		return 1;
-	}
-	else if (TRUE == is_pin_low(pin.pin))
-	{
-		return 0;
-	}
-	/* return -1 if floating */
-	return -1;
+  if (TRUE == is_pin_high(pin.pin))
+  {
+    return 1;
+  }
+  else if (TRUE == is_pin_low(pin.pin))
+  {
+    return 0;
+  }
+  /* return -1 if floating */
+  return -1;
 }
 
 /**
@@ -733,7 +733,7 @@ int get_pin_bool(VSM_PIN pin)
 
 bool is_pin_active(IDSIMPIN *pin)
 {
-	return pin->vtable->isactive(pin, 0);
+  return pin->vtable->isactive(pin, 0);
 }
 
 /**
@@ -751,7 +751,7 @@ bool is_pin_active(IDSIMPIN *pin)
 
 bool is_pin_inactive(IDSIMPIN *pin)
 {
-	return pin->vtable->isinactive(pin, 0);
+  return pin->vtable->isinactive(pin, 0);
 }
 
 /**
@@ -769,7 +769,7 @@ bool is_pin_inactive(IDSIMPIN *pin)
 
 bool is_pin_posedge(IDSIMPIN *pin)
 {
-	return pin->vtable->isposedge(pin, 0);
+  return pin->vtable->isposedge(pin, 0);
 }
 
 /**
@@ -787,7 +787,7 @@ bool is_pin_posedge(IDSIMPIN *pin)
 
 bool is_pin_negedge(IDSIMPIN *pin)
 {
-	return pin->vtable->isnegedge(pin, 0);
+  return pin->vtable->isnegedge(pin, 0);
 }
 
 /**
@@ -805,7 +805,7 @@ bool is_pin_negedge(IDSIMPIN *pin)
 
 bool is_pin_edge(IDSIMPIN *pin)
 {
-	return pin->vtable->isedge(pin, 0);
+  return pin->vtable->isedge(pin, 0);
 }
 
 /**
@@ -823,8 +823,8 @@ bool is_pin_edge(IDSIMPIN *pin)
 
 void set_callback(IDSIMMODEL *model, RELTIME picotime, EVENTID id)
 {
-	/* Add event to the model's hash table in order to keep count of registered events */
-	model->model_dsim->vtable->setcallback(model->model_dsim, 0, picotime, model, id);
+  /* Add event to the model's hash table in order to keep count of registered events */
+  model->model_dsim->vtable->setcallback(model->model_dsim, 0, picotime, model, id);
 }
 
 /**
@@ -842,14 +842,14 @@ void set_callback(IDSIMMODEL *model, RELTIME picotime, EVENTID id)
 
 void print_info(IDSIMMODEL *model, const char *format, ...)
 {
-	char *string;
-	va_list args;
-	va_start(args, format);
-	if (0 > vasprintf(&string, (char *)format, args))
-		string = NULL;
-	va_end(args);
-	model->model_instance->vtable->log(model->model_instance, string);
-	free(string);
+  char *string;
+  va_list args;
+  va_start(args, format);
+  if (0 > vasprintf(&string, (char *)format, args))
+    string = NULL;
+  va_end(args);
+  model->model_instance->vtable->log(model->model_instance, string);
+  free(string);
 }
 
 /**
@@ -867,14 +867,14 @@ void print_info(IDSIMMODEL *model, const char *format, ...)
 
 void print_message(IDSIMMODEL *model, const char *format, ...)
 {
-	char *string;
-	va_list args;
-	va_start(args, format);
-	if (0 > vasprintf(&string, (char *)format, args))
-		string = NULL;
-	va_end(args);
-	model->model_instance->vtable->message(model->model_instance, string);
-	free(string);
+  char *string;
+  va_list args;
+  va_start(args, format);
+  if (0 > vasprintf(&string, (char *)format, args))
+    string = NULL;
+  va_end(args);
+  model->model_instance->vtable->message(model->model_instance, string);
+  free(string);
 }
 
 /**
@@ -892,14 +892,14 @@ void print_message(IDSIMMODEL *model, const char *format, ...)
 
 void print_warning(IDSIMMODEL *model, const char *format, ...)
 {
-	char *string;
-	va_list args;
-	va_start(args, format);
-	if (0 > vasprintf(&string, (char *)format, args))
-		string = NULL;
-	va_end(args);
-	model->model_instance->vtable->warning(model->model_instance, string);
-	free(string);
+  char *string;
+  va_list args;
+  va_start(args, format);
+  if (0 > vasprintf(&string, (char *)format, args))
+    string = NULL;
+  va_end(args);
+  model->model_instance->vtable->warning(model->model_instance, string);
+  free(string);
 }
 
 /**
@@ -917,14 +917,14 @@ void print_warning(IDSIMMODEL *model, const char *format, ...)
 
 void print_error(IDSIMMODEL *model, const char *format, ...)
 {
-	char *string;
-	va_list args;
-	va_start(args, format);
-	if (0 > vasprintf(&string, (char *)format, args))
-		string = NULL;
-	va_end(args);
-	model->model_instance->vtable->error(model->model_instance, string);
-	free(string);
+  char *string;
+  va_list args;
+  va_start(args, format);
+  if (0 > vasprintf(&string, (char *)format, args))
+    string = NULL;
+  va_end(args);
+  model->model_instance->vtable->error(model->model_instance, string);
+  free(string);
 }
 
 /**
@@ -943,7 +943,7 @@ void print_error(IDSIMMODEL *model, const char *format, ...)
 
 IDSIMPIN *get_pin(IDSIMMODEL *model, char *pin_name)
 {
-	return model->model_instance->vtable->getdsimpin(model->model_instance, 0, pin_name, TRUE);
+  return model->model_instance->vtable->getdsimpin(model->model_instance, 0, pin_name, TRUE);
 }
 
 /**
@@ -961,7 +961,7 @@ IDSIMPIN *get_pin(IDSIMMODEL *model, char *pin_name)
 
 bool is_pin_low(IDSIMPIN *pin)
 {
-	return islow(pin->vtable->istate(pin, 0));
+  return islow(pin->vtable->istate(pin, 0));
 }
 
 /**
@@ -979,7 +979,7 @@ bool is_pin_low(IDSIMPIN *pin)
 
 bool is_pin_high(IDSIMPIN *pin)
 {
-	return ishigh(pin->vtable->istate(pin, 0));
+  return ishigh(pin->vtable->istate(pin, 0));
 }
 
 /**
@@ -997,7 +997,7 @@ bool is_pin_high(IDSIMPIN *pin)
 
 bool is_pin_floating(IDSIMPIN *pin)
 {
-	return isfloating(pin->vtable->istate(pin, 0));
+  return isfloating(pin->vtable->istate(pin, 0));
 }
 
 /**
@@ -1015,7 +1015,7 @@ bool is_pin_floating(IDSIMPIN *pin)
 
 bool is_pin_steady(IDSIMPIN *pin)
 {
-	return pin->vtable->issteady(pin, 0);
+  return pin->vtable->issteady(pin, 0);
 }
 
 /**
@@ -1033,7 +1033,7 @@ bool is_pin_steady(IDSIMPIN *pin)
 
 bool is_pin_inverted(IDSIMPIN *pin)
 {
-	return pin->vtable->invert(pin, 0);
+  return pin->vtable->invert(pin, 0);
 }
 
 /**
@@ -1051,7 +1051,7 @@ bool is_pin_inverted(IDSIMPIN *pin)
 
 __INLINE__ bool islow(STATE pinstate)
 {
-	return (pinstate & SP_MASK) == SP_LOW;
+  return (pinstate & SP_MASK) == SP_LOW;
 }
 
 /**
@@ -1070,7 +1070,7 @@ __INLINE__ bool islow(STATE pinstate)
 __INLINE__ bool
 ishigh(STATE pinstate)
 {
-	return (pinstate & SP_MASK) == SP_HIGH;
+  return (pinstate & SP_MASK) == SP_HIGH;
 }
 
 /**
@@ -1089,7 +1089,7 @@ ishigh(STATE pinstate)
 __INLINE__ bool
 isfloating(STATE pinstate)
 {
-	return (pinstate & SP_MASK) == SP_FLOAT;
+  return (pinstate & SP_MASK) == SP_FLOAT;
 }
 
 /**
@@ -1108,7 +1108,7 @@ isfloating(STATE pinstate)
 __INLINE__ bool
 iscontention(STATE pinstate)
 {
-	return pinstate & SF_CONTENTION;
+  return pinstate & SF_CONTENTION;
 }
 
 /**
@@ -1127,7 +1127,7 @@ iscontention(STATE pinstate)
 __INLINE__ bool
 isdefined(STATE pinstate)
 {
-	return pinstate != SP_UNDEFINED;
+  return pinstate != SP_UNDEFINED;
 }
 
 /**
@@ -1146,7 +1146,7 @@ isdefined(STATE pinstate)
 __INLINE__ bool
 ishighlow(STATE pinstate)
 {
-	return pinstate & 1;
+  return pinstate & 1;
 }
 
 /**
@@ -1165,7 +1165,7 @@ ishighlow(STATE pinstate)
 __INLINE__ INT
 polarity(STATE pinstate)
 {
-	return pinstate & SP_MASK;
+  return pinstate & SP_MASK;
 }
 
 /**
@@ -1184,5 +1184,5 @@ polarity(STATE pinstate)
 __INLINE__ INT
 strength(STATE pinstate)
 {
-	return pinstate & SS_MASK;
+  return pinstate & SS_MASK;
 }

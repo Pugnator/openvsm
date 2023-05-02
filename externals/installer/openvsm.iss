@@ -38,6 +38,9 @@ Name: "{group}\{cm:UninstallProgram,{#MyAppName}}"; Filename: "{uninstallexe}"
 
 [Registry]
 Root: "HKCU"; Subkey: "Environment"; ValueType: expandsz; ValueName: "LUAVSM"; ValueData: "{app}\LuaScripts"; Flags: deletevalue
+Root: "HKLM"; Subkey: "SYSTEM\CurrentControlSet\Control\Session Manager\Environment"; \
+    ValueType: expandsz; ValueName: "Path"; ValueData: "{olddata};{app}\LuaScripts"; \
+    Check: NeedsAddPath('{app}\LuaScripts')
 
 [Dirs]
 Name: "{app}\LuaScripts"; Flags: uninsneveruninstall
