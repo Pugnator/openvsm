@@ -1,19 +1,11 @@
 RELEASE=`../relgen.sh`
-ifdef SystemRoot
-	MAKE=make
-	CC:=gcc
-	AR:=ar
-	OBJCOPY:=objcopy
-	STRIP:=strip
-	WINRES:=windres
-else
-	MAKE=make
-	CC:=i686-w64-mingw32-gcc
-	AR:=i686-w64-mingw32-ar
-	OBJCOPY:=i686-w64-mingw32-objcopy
-	STRIP:=i686-w64-mingw32-strip
-	WINRES:=i686-w64-mingw32-windres
-endif
+
+MAKE=make
+CC:= i686-w64-mingw32-cc
+AR:= i686-w64-mingw32-ar
+OBJCOPY:= objcopy
+STRIP:= strip
+WINRES:= windres
 
 LIBDIR=../dll
 
@@ -22,7 +14,7 @@ DEV=device
 XXD=../tools/bin2source.exe
 LUAC=../tools/luac.exe
 OPENVSMLIB?=$(LIBDIR)/openvsm
-LIADIR=lua
+LUADIR=lua
 
 SRC:=vsmapi.c \
 lua_pin.c \
@@ -44,12 +36,12 @@ $(MOD)/module_pin.lua
 DEVICE=\
 $(DEV)/device.lua
 
-CFLAGS:=-O3 -gdwarf-2 -fgnu89-inline -std=gnu99 -g3 -Wno-unused-variable -static-libgcc -static-libstdc++ -I../include -Imodules \
--I../externals/$(LIADIR)/src -D__VERSION=\"$(shell ../relgen.sh)\"
+CFLAGS:=-O3 -m32 -gdwarf-2 -fgnu89-inline -std=gnu99 -g3 -Wno-unused-variable -static-libgcc -static-libstdc++ -I../include -Imodules \
+-I../externals/$(LUADIR)/src -D__VERSION=\"$(shell ../relgen.sh)\"
 
 SLIB_CFLAGS:=-Wl,--export-all-symbols,--enable-auto-import
 
-LDFLAGS:=../externals/$(LIADIR)/src/liblua.a -lm -static-libgcc -static-libstdc++
+LDFLAGS:=-m32 ../externals/$(LUADIR)/src/liblua.a -lm -static-libgcc -static-libstdc++
 
 OBJ=$(SRC:%.c=%.o) openvsm.res \
 $(MOD)/module_bus.c.o $(MOD)/module_custom.c.o \
@@ -67,7 +59,7 @@ all: modules $(OPENVSMLIB).dll
 	$(XXD) $@ > $@.c
 
 openvsm.res:
-	$(WINRES) openvsm.rc -O coff -o openvsm.res
+	$(WINRES) openvsm.rc --output-format=coff --target=pe-i386 -o openvsm.res
 
 $(DEV)/device.c.o:
 	$(CC) -c -o $@ $(DEV)/device.mod.c $(CFLAGS)
@@ -102,12 +94,13 @@ $(OPENVSMLIB).dll: $(OBJ)
 modules: $(LOBJ)
 	@echo "Lua modules compiled"
 
-SUBDIRS:= . modules device bindings
+SUBDIRS:= . modules device bindings ../externals/$(LUADIR)/src/
 
 clean:	
 	rm -f $(OPENVSMLIB).*
 	for dir in $(SUBDIRS); do \
 		rm -f $$dir/*.o; \
+		rm -f $$dir/*.res; \
 		rm -f $$dir/*.mod; \
 		rm -f $$dir/*.mod.c; \
 	done

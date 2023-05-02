@@ -2,9 +2,7 @@
 [![Build Status][travis-image]][travis] [![Release][release-image]][releases] [![Wiki][wiki-img]][wiki]
 
 
-[travis-image]: https://travis-ci.org/Pugnator/openvsm.svg?branch=master
-[travis]: https://travis-ci.org/Pugnator/openvsm
-[release-image]: https://img.shields.io/badge/release-0.3.1-blue.svg?style=flat
+[release-image]: https://img.shields.io/badge/release-0.6.213-blue.svg?style=flat
 [releases]: https://github.com/Pugnator/openvsm/releases
 [wiki-img]: https://img.shields.io/badge/docs-Wiki-blue.svg
 [wiki]: https://github.com/Pugnator/openvsm/wiki
