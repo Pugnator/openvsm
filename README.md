@@ -1,5 +1,5 @@
 # OpenVSM is Lua bindings for Proteus 7/8 CAD
-[![Build Status][travis-image]][travis] [![Release][release-image]][releases] [![Wiki][wiki-img]][wiki]
+[![Release][release-image]][releases] [![Wiki][wiki-img]][wiki]
 
 
 [release-image]: https://img.shields.io/badge/release-0.6.213-blue.svg?style=flat
