@@ -73,7 +73,7 @@ const char *state_to_string(STATE pinstate)
  * \return	true if it succeeds, false if it fails.
  **/
 
-bool vsm_register(ILICENCESERVER *ils)
+bool vsmRegister(ILICENCESERVER *ils)
 {
 
   if (FALSE == ils->vtable->authorize(ils, 0, model_key, VSM_API_VERSION))

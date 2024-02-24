@@ -1,0 +1,6 @@
+[submodule "externals/Lua"]
+	path = externals/Lua
+	url = https://github.com/walterschell/Lua.git
+[submodule "model/cpp/log"]
+	path = model/cpp/log
+	url = https://github.com/Pugnator/TinyLog.git

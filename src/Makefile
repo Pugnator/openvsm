@@ -1,8 +1,8 @@
 RELEASE=`../relgen.sh`
 
 MAKE=make
-CC:= i686-w64-mingw32-cc
-AR:= i686-w64-mingw32-ar
+CC:= gcc
+AR:= ar
 OBJCOPY:= objcopy
 STRIP:= strip
 WINRES:= windres
@@ -36,12 +36,12 @@ $(MOD)/module_pin.lua
 DEVICE=\
 $(DEV)/device.lua
 
-CFLAGS:=-O3 -m32 -gdwarf-2 -fgnu89-inline -std=gnu99 -g3 -Wno-unused-variable -static-libgcc -static-libstdc++ -I../include -Imodules \
+CFLAGS:=-O3 -gdwarf-2 -fgnu89-inline -std=gnu99 -g3 -Wno-unused-variable -I../include -Imodules \
 -I../externals/$(LUADIR)/src -D__VERSION=\"$(shell ../relgen.sh)\"
 
 SLIB_CFLAGS:=-Wl,--export-all-symbols,--enable-auto-import
 
-LDFLAGS:=-m32 ../externals/$(LUADIR)/src/liblua.a -lm -static-libgcc -static-libstdc++
+LDFLAGS:= ../externals/$(LUADIR)/src/liblua.a -lm
 
 OBJ=$(SRC:%.c=%.o) openvsm.res \
 $(MOD)/module_bus.c.o $(MOD)/module_custom.c.o \
@@ -59,7 +59,7 @@ all: modules $(OPENVSMLIB).dll
 	$(XXD) $@ > $@.c
 
 openvsm.res:
-	$(WINRES) openvsm.rc --output-format=coff --target=pe-i386 -o openvsm.res
+	$(WINRES) openvsm.rc --output-format=coff -o openvsm.res
 
 $(DEV)/device.c.o:
 	$(CC) -c -o $@ $(DEV)/device.mod.c $(CFLAGS)

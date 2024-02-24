@@ -66,7 +66,7 @@ __declspec(dllexport)
 {
   (void)device;
   srand(time(0));
-  if (0 == vsm_register(ils))
+  if (0 == vsmRegister(ils))
   {
     return NULL;
   }
