@@ -81,4 +81,5 @@ add_dependencies(VSM_DLL lua_static)
 
 target_link_libraries(VSM_DLL PRIVATE  
 lua_static
+tinyLog
 )
