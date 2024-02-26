@@ -1,10 +1,10 @@
 #include "lua_facade.hpp"
-
+#include "log/log.hpp"
 namespace LuaScripting
 {
   LuaTableFacade::LuaTableFacade(const std::string &module)
   {
-    //LOG_DEBUG("Loading module {}\n", module);    
+    LOG_DEBUG("Loading module {}\n", module);    
     L_ = LuaContextManager::getInstance().getLuaState();
     if(!lua_getglobal(L_, "require"))
     {
@@ -17,11 +17,11 @@ namespace LuaScripting
       lua_pop(L_, 1);
       throw LuaException("Error requiring module: " + error);
     }
-    //LOG_DEBUG("Module {} required successfully\n", module);
+    LOG_DEBUG("Module {} required successfully\n", module);
     tableRef_ = luaL_ref(L_, LUA_REGISTRYINDEX);
     if (!checkLuaTable(L_, tableRef_))
     {
-      //LOG_DEBUG("Module {} is not a table\n", module);
+      LOG_DEBUG("Module {} is not a table\n", module);
       throw LuaException("Error loading module: not a table");
     }
     //LOG_DEBUG("Module {} loaded successfully\n", module);
@@ -37,7 +37,7 @@ namespace LuaScripting
     if (!checkLuaTable(L_, self))
     {
       std::string err = "Failed to create new instance: not a table.";
-      //LOG_DEBUG("[LUA]: {}\n", err);
+      LOG_DEBUG("[LUA]: {}\n", err);
       throw LuaException(err);
     }
     luaL_unref(L_, LUA_REGISTRYINDEX, tableRef_);

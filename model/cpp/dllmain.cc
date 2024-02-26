@@ -1,53 +1,21 @@
 #include <windows.h>
 #include <stdint.h>
 #include <stdbool.h>
-#include <incbin.h>
 #include <vsm.hpp>
+#include <log/log.hpp>
 
-INCBIN(logo, "incbin.h");
+#include "model.hpp"
 
-class ModelImpl : public IDSIMMODEL
+namespace
 {
-public:
-  INT isdigital(CHAR *pinname)
+  bool vsmRegister(ILICENCESERVER *ils)
   {
-    (void)pinname;
-    return 1;
-  }
-
-  VOID setup(IINSTANCE *instance, IDSIMCKT *dsim)
-  {
-  }
-  
-  VOID runctrl(RUNMODES mode)
-  {
-  }
-
-  VOID actuate(REALTIME time, ACTIVESTATE newstate)
-  {
-  }
-
-  BOOL indicate(REALTIME time, ACTIVEDATA *newstate)
-  {
+    if (!ils->authorize(0, VSM_API_VERSION))
+    {
+      return false;
+    }
     return true;
   }
-
-  VOID simulate(ABSTIME time, DSIMMODES mode)
-  {
-  }
-
-  VOID callback(ABSTIME time, EVENTID eventid)
-  {
-  }
-};
-
-bool vsmRegister(ILICENCESERVER *ils)
-{
-  if (!ils->authorize(0, VSM_API_VERSION))
-  {
-    return false;
-  }
-  return true;
 }
 
 extern "C"
@@ -56,23 +24,34 @@ extern "C"
   {
     (void)device;
     vsmRegister(ils);
-    return new ModelImpl;
+    return new DeviceSimulator::VirtualDevice;
   }
 
   void __declspec(dllexport) deletedsimmodel(IDSIMMODEL *model)
   {
-  }
-
-  void vsm_simulate(IDSIMMODEL *instance, uint32_t edx, ABSTIME atime, DSIMMODES mode)
-  {
-    (void)edx;
-    (void)atime;
-    (void)mode;
+    delete model;
   }
 }
 
 bool APIENTRY DllMain(HINSTANCE hInstDLL, uint32_t fdwReason, LPVOID lpvReserved)
 {
+  switch (fdwReason)
+  {
+  case DLL_PROCESS_ATTACH:
+    Log::get().configure(TraceType::file);
+    Log::get().set_level(TraceSeverity::debug);
+    LOG_DEBUG("The model is being loaded\n");
+    break;
+  case DLL_PROCESS_DETACH:
+    LOG_DEBUG("The model is being unloaded\n");
+    break;
+  case DLL_THREAD_ATTACH:
+    LOG_DEBUG("A thread is being created\n");
+    break;
+  case DLL_THREAD_DETACH:
+    LOG_DEBUG("A thread is being destroyed\n");
+    break;
+  }
   (void)hInstDLL;
   (void)fdwReason;
   (void)lpvReserved;

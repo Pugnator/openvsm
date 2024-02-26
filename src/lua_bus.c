@@ -68,18 +68,19 @@ int lua_set_bus(lua_State *L)
   return 0;
 }
 
-/**********************************************************************************************/ /**
-                                                                                                  * \fn	int lua_get_bus ( lua_State* L )
-                                                                                                  *
-                                                                                                  * \brief	Lua get bus.
-                                                                                                  *
-                                                                                                  * \author	Pugnator
-                                                                                                  * \date	11/22/2015
-                                                                                                  *
-                                                                                                  * \param [in,out]	L	If non-null, the lua_State to process.
-                                                                                                  *
-                                                                                                  * \return	An int.
-                                                                                                  **/
+/**********************************************************************************************/
+/**
+ * \fn	int lua_get_bus ( lua_State* L )
+ *
+ * \brief	Lua get bus.
+ *
+ * \author	Pugnator
+ * \date	11/22/2015
+ *
+ * \param [in,out]	L	If non-null, the lua_State to process.
+ *
+ * \return	An int.
+ **/
 
 int lua_get_bus(lua_State *L)
 {

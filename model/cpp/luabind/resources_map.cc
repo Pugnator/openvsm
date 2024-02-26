@@ -54,27 +54,6 @@ const std::vector<std::string> modulesToPreload =
 };
 
 const std::map<std::string, Resource> resourceMap =
-    {
-        {"LuaUnit", {reinterpret_cast<const char *>(lua_LuaUnitData), lua_LuaUnitSize}},
-        {"UtfChars", {reinterpret_cast<const char *>(lua_UtfCharsData), lua_UtfCharsSize}},
-        {"DictManager", {reinterpret_cast<const char *>(lua_DictManagerData), lua_DictManagerSize}},
-        {"SearchRequest", {reinterpret_cast<const char *>(lua_SearchRequestData), lua_SearchRequestSize}},
-        {"Inflector", {reinterpret_cast<const char *>(lua_InflectorData), lua_InflectorSize}},
-        {"IchidanInflector", {reinterpret_cast<const char *>(lua_IchidanInflectorData), lua_IchidanInflectorSize}},
-        {"GodanInflector", {reinterpret_cast<const char *>(lua_GodanInflectorData), lua_GodanInflectorSize}},
-        {"IrregularInflector", {reinterpret_cast<const char *>(lua_IrregularInflectorData), lua_IrregularInflectorSize}},
-        {"IAdjectiveInflector", {reinterpret_cast<const char *>(lua_IAdjectiveInflectorData), lua_IAdjectiveInflectorSize}},
-        {"NaAdjectiveInflector", {reinterpret_cast<const char *>(lua_NaAdjectiveInflectorData), lua_NaAdjectiveInflectorSize}},
-        {"Vowels", {reinterpret_cast<const char *>(lua_VowelsData), lua_VowelsSize}},
-        {"JlptTraining", {reinterpret_cast<const char *>(lua_JlptTrainingData), lua_JlptTrainingSize}},
-        {"TableHelpers", {reinterpret_cast<const char *>(lua_TableHelpersData), lua_TableHelpersSize}},
-        {"TrainingTranslation", {reinterpret_cast<const char *>(lua_TrainingTranslationData), lua_TrainingTranslationSize}},
-        {"TrainingReading", {reinterpret_cast<const char *>(lua_TrainingReadingData), lua_TrainingReadingSize}},
-        {"TrainingKana", {reinterpret_cast<const char *>(lua_TrainingKanaData), lua_TrainingKanaSize}},
-        {"TrainingExamples", {reinterpret_cast<const char *>(lua_TrainingExamplesData), lua_TrainingExamplesSize}},
-        {"TrainingNumeral", {reinterpret_cast<const char *>(lua_TrainingNumeralData), lua_TrainingNumeralSize}},
-        {"Lexicon", {reinterpret_cast<const char *>(lua_LexiconData), lua_LexiconSize}},
-        {"LexiconPOS", {reinterpret_cast<const char *>(lua_LexiconPOSData), lua_LexiconPOSSize}},
-        {"LexiconNumerals", {reinterpret_cast<const char *>(lua_LexiconNumeralsData), lua_LexiconNumeralsSize}},
-
+{
+        //{"LuaUnit", {reinterpret_cast<const char *>(lua_LuaUnitData), lua_LuaUnitSize}},
 };

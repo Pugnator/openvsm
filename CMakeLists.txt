@@ -13,11 +13,11 @@ set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
 
 set(BasicSettingsFile ${CMAKE_CURRENT_SOURCE_DIR}/wakadll/cpp/settings/basic_settings.yml)
 
-#Build Lua modules
-#add_subdirectory(wakadll/lua)
 add_subdirectory(externals/Lua)
-add_subdirectory(model)
 add_subdirectory(model/cpp/log)
+add_subdirectory(model)
+add_subdirectory(model/lua)
+
 
 if(DLL_WITH_INSTALLER)  
   set(INNO_SETUP_SCRIPT_PATH "installer/waka.iss")

@@ -45,21 +45,16 @@ namespace LuaScripting
         switch (errorType)
         {
         case LUA_TSTRING:
-          // Error is a string
           message = lua_tostring(L_, -1);
           break;
         case LUA_TTABLE:
-          // Handle table error object
-          // [Your table extraction logic here]
           break;
-        // Add cases for other types as needed
         case LUA_TNUMBER:
           message = "Error object is a number: " + std::to_string(lua_tonumber(L_, -1));
           break;
         case LUA_TBOOLEAN:
           message = "Error object is a boolean: " + std::string(lua_toboolean(L_, -1) ? "true" : "false");
           break;
-        // Add more cases for other Lua types
         default:
           message = "Unknown error type: " + std::string(lua_typename(L_, errorType));
           break;

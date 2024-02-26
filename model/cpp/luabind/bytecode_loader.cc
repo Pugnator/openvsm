@@ -1,6 +1,6 @@
 #include <lua.hpp>
 #include "luabind/lua_bind.hpp"
-#include "logger/log.hpp"
+#include "log/log.hpp"
 #include "module_config.hpp"
 
 namespace LuaScripting

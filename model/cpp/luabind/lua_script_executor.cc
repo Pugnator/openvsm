@@ -1,5 +1,5 @@
 #include "lua_script_executor.hpp"
-//#include "logger/log.hpp"
+#include "log/log.hpp"
 #include "lua_context.hpp"
 #include "lua_bind.hpp"
 #include <memory>
@@ -17,7 +17,7 @@ namespace LuaScripting
     if (result != LUA_OK)
     {
       const char *errorMessage = lua_tostring(luactx, -1);
-      //LOG_DEBUG("Lua Load Error: {}\n", errorMessage);
+      LOG_DEBUG("Lua Load Error: {}\n", errorMessage);
       return false;
     }
     return true;
@@ -29,7 +29,7 @@ namespace LuaScripting
     if (result != LUA_OK)
     {
       const char *errorMessage = lua_tostring(luactx, -1);
-      //LOG_DEBUG("Lua Load Error: {}\n", errorMessage);
+      LOG_DEBUG("Lua Load Error: {}\n", errorMessage);
       return false;
     }
     return true;
@@ -78,7 +78,7 @@ namespace LuaScripting
     if (result != LUA_OK)
     {
       const char *errorMessage = lua_tostring(luactx, -1);
-      //LOG_DEBUG("Lua Error: {}\n", errorMessage);
+      LOG_DEBUG("Lua Error: {}\n", errorMessage);
     }
   }
 }
