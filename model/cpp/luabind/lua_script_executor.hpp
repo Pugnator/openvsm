@@ -6,7 +6,7 @@ namespace LuaScripting
   class ScriptExecutor
   {
   public:
-    ScriptExecutor();
+    ScriptExecutor(lua_State *ctx);
 
     bool loadScriptFromString(const char *script);
     bool loadScriptFromTextFile(const char *fileName);

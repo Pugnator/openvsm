@@ -3,7 +3,6 @@
 #include <stdbool.h>
 #include <vsm.hpp>
 #include <log/log.hpp>
-
 #include "model.hpp"
 
 namespace

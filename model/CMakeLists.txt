@@ -41,8 +41,8 @@ set(SRCDIR cpp)
 set(DLL_SRC
   ${SRCDIR}/dllmain.cc
   ${SRCDIR}/model.cc
+  ${SRCDIR}/luabind/device/pin.cc
   ${SRCDIR}/luabind/lua_facade.cc
-  ${SRCDIR}/luabind/lua_context.cc
   ${SRCDIR}/luabind/lua_script_executor.cc
   ${SRCDIR}/luabind/bytecode_loader.cc
   ${SRCDIR}/luabind/resources_map.cc

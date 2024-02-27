@@ -1,14 +1,14 @@
 #include "lua_script_executor.hpp"
 #include "log/log.hpp"
-#include "lua_context.hpp"
 #include "lua_bind.hpp"
 #include <memory>
+#include "lua.hpp"
 
 namespace LuaScripting
 {
-  ScriptExecutor::ScriptExecutor()
+  ScriptExecutor::ScriptExecutor(lua_State *ctx)
   {
-    luactx = LuaContextManager::getInstance().getLuaState();
+    luactx = ctx;
   }
 
   bool ScriptExecutor::loadScriptFromString(const char *script)
@@ -42,8 +42,7 @@ namespace LuaScripting
 
   void ScriptExecutor::loadScriptFromResource(const unsigned char *start, const unsigned char *end)
   {    
-    lua_State *L = LuaContextManager::getInstance().getLuaState();
-
+    lua_State *L = luactx;
     int bytecodeSize = end - start;
 
     if (luaL_loadbuffer(L, reinterpret_cast<const char *>(start), bytecodeSize, "embedded_lua") == 0)
@@ -83,9 +82,9 @@ namespace LuaScripting
   }
 }
 
-bool runScriptFromTextFile(const char *fileName)
+bool runScriptFromTextFile(lua_State *ctx, const char *fileName)
 {
-  auto scripter = std::make_unique<LuaScripting::ScriptExecutor>();
+  auto scripter = std::make_unique<LuaScripting::ScriptExecutor>(ctx);
   bool result = scripter->loadScriptFromTextFile(fileName);
   scripter->execute();
   return result;

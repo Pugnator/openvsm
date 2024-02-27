@@ -2,22 +2,28 @@
 #include <tuple>
 #include <optional>
 #include <memory>
+#include <string>
+#include <vector>
+#include <lua.hpp>
+#include <stdexcept>
 
-#include "lua_context.hpp"
 
 namespace LuaScripting
 {
+  class LuaException : public std::runtime_error
+  {
+  public:
+    LuaException(const std::string &message)
+        : std::runtime_error("LuaException: " + message) {}
+  };
+  
   using TableReference = int;
   class LuaTableFacade
   {
-  public:
-    using Ptr = std::unique_ptr<LuaTableFacade>;
+  public:   
 
-    LuaTableFacade(const std::string &module);
+    LuaTableFacade(lua_State *ctx, const std::string &module);       
     ~LuaTableFacade();
-
-    LuaTableFacade(const LuaTableFacade &) = delete;
-    LuaTableFacade &operator=(const LuaTableFacade &) = delete;
 
     template <typename Ret, typename... Args>
     Ret callMethod(const std::string &methodName, Args... args)
@@ -74,7 +80,7 @@ namespace LuaScripting
     void newSelfInstance(int newReference);
 
   private:
-    lua_State *L_ = nullptr;
+    lua_State *L_;
     int tableRef_ = LUA_NOREF;
 
     template <typename T>

@@ -1,11 +1,12 @@
 #include "lua_facade.hpp"
 #include "log/log.hpp"
+#include "lua.hpp"
 namespace LuaScripting
 {
-  LuaTableFacade::LuaTableFacade(const std::string &module)
+  LuaTableFacade::LuaTableFacade(lua_State *ctx, const std::string &module)
   {
     LOG_DEBUG("Loading module {}\n", module);    
-    L_ = LuaContextManager::getInstance().getLuaState();
+    L_ = ctx;
     if(!lua_getglobal(L_, "require"))
     {
       throw LuaException("Error requiring module: require not found");
