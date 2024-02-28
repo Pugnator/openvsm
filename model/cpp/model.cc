@@ -15,7 +15,6 @@ namespace DeviceSimulator
   VirtualDevice::VirtualDevice()
   {
     LOG_DEBUG("Creating the device\n");
-    LOG_DEBUG("Creating Lua context\n");
     luactx_ = luaL_newstate();
     if (!luactx_)
       throw std::runtime_error("Failed to create a new Lua state");
@@ -38,9 +37,11 @@ namespace DeviceSimulator
 
   void VirtualDevice::setup(IINSTANCE *instance, IDSIMCKT *dsim)
   {
-    auto& mgr = VirtualContextManager::getInstance();
-    mgr.registerDevice(instance->id(), *this);
-    deviceID_ = instance->id();
+    auto &mgr = VirtualContextManager::getInstance();
+    dsim_ = dsim;
+    instance_ = instance;
+    mgr.registerDevice(instance_->id(), *this);
+    deviceID_ = instance_->id();
     GUID guid;
     CoCreateGuid(&guid);
     deviceGUID_ = std::format("{{{0:08X}-{1:04X}-{2:04X}-{3:02X}{4:02X}-"
@@ -51,7 +52,6 @@ namespace DeviceSimulator
                               guid.Data4[6], guid.Data4[7]);
 
     LOG_DEBUG("Setting up the device {} {}\n", deviceID_, deviceGUID_);
-    instance_ = instance;
     auto scripter = std::make_unique<LuaScripting::ScriptExecutor>(luactx_);
     bool result = scripter->loadScriptFromTextFile("C:\\Dev\\proteus_lua_script\\nand.lua");
     if (!result)
@@ -90,15 +90,6 @@ namespace DeviceSimulator
     int pinsNum = luaL_len(luactx_, -1);
     LOG_DEBUG("Number of pins: {}\n", pinsNum);
 
-    struct model_pin
-    {
-      std::string name;
-      int number;
-      int on_time;
-      int off_time;      
-    };
-    std::vector<model_pin> pins;    
-
     for (int i = 1; i <= pinsNum; ++i)
     {
       lua_rawgeti(luactx_, -1, i);
@@ -123,17 +114,45 @@ namespace DeviceSimulator
       lua_pop(luactx_, 1);
 
       LOG_DEBUG("Pin {}: Name={}, On Time={}, Off Time={}\n", i, name, on_time, off_time);
-      pins.push_back({name, i, on_time, off_time});
+      pins_.push_back({name, i, on_time, off_time});
       lua_pop(luactx_, 1);
     }
 
     lua_pop(luactx_, 1);
 
-    for (auto &pin : pins)
+    for (auto &pin : pins_)
     {
-      LOG_DEBUG("Registering pin {}\n", pin.name);
       registerPin(pin.name.c_str(), pin.number);
     }
+
+    lua_pushinteger(luactx_, UNDEFINED);
+    lua_setglobal(luactx_, "UNDEFINED");
+    lua_pushinteger(luactx_, TSTATE);
+    lua_setglobal(luactx_, "TSTATE");
+    lua_pushinteger(luactx_, FSTATE);
+    lua_setglobal(luactx_, "FSTATE");
+    lua_pushinteger(luactx_, PLO);
+    lua_setglobal(luactx_, "PLO");
+    lua_pushinteger(luactx_, ILO);
+    lua_setglobal(luactx_, "ILO");
+    lua_pushinteger(luactx_, SLO);
+    lua_setglobal(luactx_, "SLO");
+    lua_pushinteger(luactx_, WLO);
+    lua_setglobal(luactx_, "WLO");
+    lua_pushinteger(luactx_, FLT);
+    lua_setglobal(luactx_, "FLT");
+    lua_pushinteger(luactx_, WHI);
+    lua_setglobal(luactx_, "WHI");
+    lua_pushinteger(luactx_, SHI);
+    lua_setglobal(luactx_, "SHI");
+    lua_pushinteger(luactx_, IHI);
+    lua_setglobal(luactx_, "IHI");
+    lua_pushinteger(luactx_, PHI);
+    lua_setglobal(luactx_, "PHI");
+    lua_pushinteger(luactx_, WUD);
+    lua_setglobal(luactx_, "WUD");
+    lua_pushinteger(luactx_, SUD);
+    lua_setglobal(luactx_, "SUD");
   }
 
   void VirtualDevice::runctrl(RUNMODES mode)
@@ -193,16 +212,19 @@ namespace DeviceSimulator
 
   void VirtualDevice::simulate(ABSTIME time, DSIMMODES mode)
   {
+    auto &vinstance = VirtualContextManager::getInstance();
+    vinstance.setCurrentDevice(deviceID_);
+
     lua_getglobal(luactx_, "device_simulate");
     if (lua_isfunction(luactx_, lua_gettop(luactx_)))
     {
       if (lua_pcall(luactx_, 0, 0, 0))
       {
         const char *err = lua_tostring(luactx_, -1);
-        LOG_DEBUG("Simulation failed with \"{}\"", err);
+        LOG_DEBUG("Simulation failed with \"{}\"\n", err);
       }
     }
-  }  
+  }
 
   void VirtualDevice::callback(ABSTIME time, EVENTID eventid)
   {
@@ -234,7 +256,6 @@ namespace DeviceSimulator
       return devices_[currentDevice_];
     }
     return nullptr;
-  
   }
 
   void VirtualContextManager::registerDevice(std::string id, VirtualDevice &device)

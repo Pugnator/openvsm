@@ -4,132 +4,272 @@
 
 namespace DeviceSimulator
 {
-#define TEXT_PIN_FIELD "pin"
-#define TEXT_HI_FIELD "hi"
-#define TEXT_LO_FIELD "lo"
-#define TEXT_FL_FIELD "fl"
-#define TEXT_SET_FIELD "set"
-#define TEXT_GET_FIELD "get"
-#define TEXT_TOGGLE_FIELD "toggle"
+  model_pin getPinSelf(lua_State *L)
+  {
+    if (!lua_istable(L, -lua_gettop(L)))
+    {
+      LOG_DEBUG("Error: not a table\n");
+      lua_pop(L, 1); // Pop the invalid value from the stack
+      return model_pin{};
+    }
 
-#define TEXT_IS_HI_FIELD "is_hi"
-#define TEXT_IS_LO_FIELD "is_lo"
-#define TEXT_IS_FL_FIELD "is_fl"
-#define TEXT_IS_EDGE_FIELD "is_edge"
-#define TEXT_IS_PEDGE_FIELD "is_pedge"
-#define TEXT_IS_NEDGE_FIELD "is_nedge"
-#define TEXT_IS_STEADY_FIELD "is_steady"
-#define TEXT_IS_ACTIVE_FIELD "is_active"
-#define TEXT_IS_INACTIVE_FIELD "is_inactive"
-#define TEXT_IS_INVERTED_FIELD "is_inverted"
-#define TEXT_SET_STATE_FIELD "set_state"
-#define TEXT_GET_STATE_FIELD "get_state"
+    lua_pushstring(L, "pinName");
+    lua_gettable(L, -lua_gettop(L));
+    std::string pinName = lua_tostring(L, -1);
+    lua_pop(L, 1);
+    lua_pushstring(L, "pinNumber");
+    lua_gettable(L, -lua_gettop(L));
+    int pinNumber = luaL_checkinteger(L, -1);
+    lua_pop(L, 1);
 
-  /*
-
-        virtual BOOL invert() = 0;
-        virtual STATE istate() = 0;
-        virtual BOOL issteady () = 0;         // Will false for return *any* change of activity.
-        virtual INT  activity () = 0;
-        virtual BOOL isactive () = 0;
-        virtual BOOL isinactive () = 0;
-        virtual BOOL isposedge () = 0;
-        virtual BOOL isnegedge () = 0;
-        virtual BOOL isedge () = 0;           // Will return true only for a full edge transition.
-        virtual EVENT *setstate (ABSTIME time, RELTIME tlh, RELTIME thl, RELTIME tgq, STATE state) = 0;
-        virtual EVENT *setstate (ABSTIME time, RELTIME tgq, STATE state) = 0;
-        virtual VOID setstate (STATE state) = 0;
-        virtual VOID sethandler (IDSIMMODEL *model, PINHANDLERFN phf) = 0;
-        virtual DSIMNODE getnode() = 0;
-        virtual STATE getstate() = 0;
-   */
+    model_pin pin;
+    pin.name = pinName;
+    pin.number = pinNumber;
+    pin.on_time = 0;
+    pin.off_time = 0;
+    return pin;
+  }
 
   static int l_pin_set(lua_State *L)
   {
-    auto device = VirtualContextManager::getInstance().getDevice();
+    auto pin = getPinSelf(L);
 
-    if (!lua_istable(L, -lua_gettop(L)))
-    {
-      LOG_DEBUG("No pin found\n");
-    }
-    lua_pushstring(L, TEXT_PIN_FIELD);
-    lua_gettable(L, -lua_gettop(L));
-    auto pinNumber = lua_tointeger(L, -1);
+    int level = luaL_checkinteger(L, -1);
     lua_pop(L, 1);
-    CHAR pinName[] = "Q";
-    auto pinInstance = device->getPin(pinName);
+    
+    auto device = VirtualContextManager::getInstance().getDevice();
+    auto pinInstance = device->getPin(const_cast<CHAR *>(pin.name.c_str()));
+
+    auto dsim = device->getDSIM();
+    DOUBLE at;
+    dsim->sysvar(&at, DSIMTIMENOW);
+    pinInstance->setstate(at, 10000, level == 1 ? TSTATE : FSTATE);
     return 0;
+  }
+
+  static int l_pin_set_state(lua_State *L)
+  {
+    auto pin = getPinSelf(L);
+
+    STATE state = (STATE)luaL_checkinteger(L, -1);
+    lua_pop(L, 1);
+    
+    auto device = VirtualContextManager::getInstance().getDevice();
+    auto pinInstance = device->getPin(const_cast<CHAR *>(pin.name.c_str()));
+
+    auto dsim = device->getDSIM();
+    DOUBLE at;
+    dsim->sysvar(&at, DSIMTIMENOW);
+    pinInstance->setstate(at, 10000, state);
+    return 0;
+  }
+
+  static int l_pin_get(lua_State *L)
+  {
+    auto pin = getPinSelf(L);
+    auto device = VirtualContextManager::getInstance().getDevice();
+    auto pinInstance = device->getPin(const_cast<CHAR *>(pin.name.c_str()));
+
+    auto state = pinInstance->istate();    
+    lua_pushinteger(L, ishigh(state) ? 1 : 0);
+    return 1;
+  }
+
+  static int l_pin_set_hi(lua_State *L)
+  {
+    auto pin = getPinSelf(L);
+    auto device = VirtualContextManager::getInstance().getDevice();
+    auto pinInstance = device->getPin(const_cast<CHAR *>(pin.name.c_str()));
+    pinInstance->setstate(TSTATE);
+    return 0;
+  }
+
+  static int l_pin_set_lo(lua_State *L)
+  {
+    auto pin = getPinSelf(L);
+    auto device = VirtualContextManager::getInstance().getDevice();
+    auto pinInstance = device->getPin(const_cast<CHAR *>(pin.name.c_str()));
+    pinInstance->setstate(FSTATE);
+    return 0;
+  }
+
+  static int l_pin_invert(lua_State *L)
+  {
+    auto pin = getPinSelf(L);
+    auto device = VirtualContextManager::getInstance().getDevice();
+    auto pinInstance = device->getPin(const_cast<CHAR *>(pin.name.c_str()));
+    pinInstance->invert();
+    return 0;
+  }
+
+  static int l_pint_issteady(lua_State *L)
+  {
+    auto pin = getPinSelf(L);
+    auto device = VirtualContextManager::getInstance().getDevice();
+    auto pinInstance = device->getPin(const_cast<CHAR *>(pin.name.c_str()));
+    lua_pushboolean(L, pinInstance->issteady());
+    return 1;
+  }
+
+  static int l_pin_activity(lua_State *L)
+  {
+    auto pin = getPinSelf(L);
+    auto device = VirtualContextManager::getInstance().getDevice();
+    auto pinInstance = device->getPin(const_cast<CHAR *>(pin.name.c_str()));
+    lua_pushinteger(L, pinInstance->activity());
+    return 1;
+  }
+
+  static int l_pin_isactive(lua_State *L)
+  {
+    auto pin = getPinSelf(L);
+    auto device = VirtualContextManager::getInstance().getDevice();
+    auto pinInstance = device->getPin(const_cast<CHAR *>(pin.name.c_str()));
+    lua_pushboolean(L, pinInstance->isactive());
+    return 1;
+  }
+
+  static int l_pin_isinactive(lua_State *L)
+  {
+    auto pin = getPinSelf(L);
+    auto device = VirtualContextManager::getInstance().getDevice();
+    auto pinInstance = device->getPin(const_cast<CHAR *>(pin.name.c_str()));
+    lua_pushboolean(L, pinInstance->isinactive());
+    return 1;
+  }
+
+  static int l_pin_isposedge(lua_State *L)
+  {
+    auto pin = getPinSelf(L);
+    auto device = VirtualContextManager::getInstance().getDevice();
+    auto pinInstance = device->getPin(const_cast<CHAR *>(pin.name.c_str()));
+    lua_pushboolean(L, pinInstance->isposedge());
+    return 1;
+  }
+
+  static int l_pin_isnegedge(lua_State *L)
+  {
+    auto pin = getPinSelf(L);
+    auto device = VirtualContextManager::getInstance().getDevice();
+    auto pinInstance = device->getPin(const_cast<CHAR *>(pin.name.c_str()));
+    lua_pushboolean(L, pinInstance->isnegedge());
+    return 1;
+  }
+
+  static int l_pin_isedge(lua_State *L)
+  {
+    auto pin = getPinSelf(L);
+    auto device = VirtualContextManager::getInstance().getDevice();
+    auto pinInstance = device->getPin(const_cast<CHAR *>(pin.name.c_str()));
+    lua_pushboolean(L, pinInstance->isedge());
+    return 1;
+  }
+
+  static int l_pin_islow(lua_State *L)
+  {
+    auto pin = getPinSelf(L);
+    auto device = VirtualContextManager::getInstance().getDevice();
+    auto pinInstance = device->getPin(const_cast<CHAR *>(pin.name.c_str()));
+    auto state = pinInstance->istate();
+    lua_pushboolean(L, islow(state));
+    return 1;
+  }
+
+  static int l_pin_ishigh(lua_State *L)
+  {
+    auto pin = getPinSelf(L);
+    auto device = VirtualContextManager::getInstance().getDevice();
+    auto pinInstance = device->getPin(const_cast<CHAR *>(pin.name.c_str()));
+    auto state = pinInstance->istate();
+    lua_pushboolean(L, ishigh(state));
+    return 1;
+  }
+
+  static int l_pin_isfloating(lua_State *L)
+  {
+    auto pin = getPinSelf(L);
+    auto device = VirtualContextManager::getInstance().getDevice();
+    auto pinInstance = device->getPin(const_cast<CHAR *>(pin.name.c_str()));
+    auto state = pinInstance->istate();
+    lua_pushboolean(L, isfloating(state));
+    return 1;
+  }
+
+  static int l_pin_iscontention(lua_State *L)
+  {
+    auto pin = getPinSelf(L);
+    auto device = VirtualContextManager::getInstance().getDevice();
+    auto pinInstance = device->getPin(const_cast<CHAR *>(pin.name.c_str()));
+    auto state = pinInstance->istate();
+    lua_pushboolean(L, iscontention(state));
+    return 1;
+  }
+
+  static int l_pin_isdefined(lua_State *L)
+  {
+    auto pin = getPinSelf(L);
+    auto device = VirtualContextManager::getInstance().getDevice();
+    auto pinInstance = device->getPin(const_cast<CHAR *>(pin.name.c_str()));
+    auto state = pinInstance->istate();
+    lua_pushboolean(L, isdefined(state));
+    return 1;
+  }
+
+  static int l_pin_ishighlow(lua_State *L)
+  {
+    auto pin = getPinSelf(L);
+    auto device = VirtualContextManager::getInstance().getDevice();
+    auto pinInstance = device->getPin(const_cast<CHAR *>(pin.name.c_str()));
+    auto state = pinInstance->istate();
+    lua_pushboolean(L, ishighlow(state));
+    return 1;
+  }
+
+  static int l_pin_polarity(lua_State *L)
+  {
+    auto pin = getPinSelf(L);
+    auto device = VirtualContextManager::getInstance().getDevice();
+    auto pinInstance = device->getPin(const_cast<CHAR *>(pin.name.c_str()));
+    auto state = pinInstance->istate();
+    lua_pushinteger(L, polarity(state));
+    return 1;
   }
 
   static const luaL_Reg VsmPinMethodsLib[] = {
       {"set", l_pin_set},
+      {"setstate", l_pin_set_state},
+      {"get", l_pin_get},
+      {"hi", l_pin_set_hi},
+      {"lo", l_pin_set_lo},
+      {"invert", l_pin_invert},
+      {"issteady", l_pint_issteady},
+      {"activity", l_pin_activity},
+      {"isactive", l_pin_isactive},
+      {"isinactive", l_pin_isinactive},
+      {"isposedge", l_pin_isposedge},
+      {"isnegedge", l_pin_isnegedge},
+      {"isedge", l_pin_isedge},
+      {"islow", l_pin_islow},
+      {"ishigh", l_pin_ishigh},
+      {"isfloating", l_pin_isfloating},
+      {"iscontention", l_pin_iscontention},
+      {"isdefined", l_pin_isdefined},
+      {"ishighlow", l_pin_ishighlow},
+      {"polarity", l_pin_polarity},
       {NULL, NULL}};
 
   void VirtualDevice::registerPin(const char *name, int num)
   {
-    luaL_newlib(luactx_, VsmPinMethodsLib);    
-    lua_pushstring(luactx_, "pin");
-    lua_pushinteger(luactx_, num);
-    lua_setglobal(luactx_, name);
-    lua_pop(luactx_, 1);
+    LOG_DEBUG("Registering pin {}{}\n", name, num);
+    luaL_newlib(luactx_, VsmPinMethodsLib);
 
-    /*
-    lua_pushstring(luactx_, TEXT_HI_FIELD);
-    lua_pushcfunction(luactx_, pin_set_hi);
-    lua_rawset(luactx_, -3);
-    lua_pushstring(luactx_, TEXT_LO_FIELD);
-    lua_pushcfunction(luactx_, pin_set_lo);
-    lua_rawset(luactx_, -3);
-    lua_pushstring(luactx_, TEXT_FL_FIELD);
-    lua_pushcfunction(luactx_, pin_set_fluactx_);
-    lua_rawset(luactx_, -3);
-    lua_pushstring(luactx_, TEXT_TOGGLE_FIELD);
-    lua_pushcfunction(luactx_, pin_toggle);
-    lua_rawset(luactx_, -3);
-    lua_pushstring(luactx_, TEXT_SET_FIELD);
-    lua_pushcfunction(luactx_, pin_set);
-    lua_rawset(luactx_, -3);
-    lua_pushstring(luactx_, TEXT_GET_FIELD);
-    lua_pushcfunction(luactx_, pin_get);
-    lua_rawset(luactx_, -3);
-    lua_pushstring(luactx_, TEXT_IS_HI_FIELD);
-    lua_pushcfunction(luactx_, pin_is_hi);
-    lua_rawset(luactx_, -3);
-    lua_pushstring(luactx_, TEXT_IS_LO_FIELD);
-    lua_pushcfunction(luactx_, pin_is_lo);
-    lua_rawset(luactx_, -3);
-    lua_pushstring(luactx_, TEXT_IS_FL_FIELD);
-    lua_pushcfunction(luactx_, pin_is_fluactx_);
-    lua_rawset(luactx_, -3);
-    lua_pushstring(luactx_, TEXT_IS_EDGE_FIELD);
-    lua_pushcfunction(luactx_, pin_is_edge);
-    lua_rawset(luactx_, -3);
-    lua_pushstring(luactx_, TEXT_IS_PEDGE_FIELD);
-    lua_pushcfunction(luactx_, pin_is_pedge);
-    lua_rawset(luactx_, -3);
-    lua_pushstring(luactx_, TEXT_IS_NEDGE_FIELD);
-    lua_pushcfunction(luactx_, pin_is_nedge);
-    lua_rawset(luactx_, -3);
-    lua_pushstring(luactx_, TEXT_IS_STEADY_FIELD);
-    lua_pushcfunction(luactx_, pin_is_steady);
-    lua_rawset(luactx_, -3);
-    lua_pushstring(luactx_, TEXT_IS_ACTIVE_FIELD);
-    lua_pushcfunction(luactx_, pin_is_active);
-    lua_rawset(luactx_, -3);
-    lua_pushstring(luactx_, TEXT_IS_INACTIVE_FIELD);
-    lua_pushcfunction(luactx_, pin_is_inactive);
-    lua_rawset(luactx_, -3);
-    lua_pushstring(luactx_, TEXT_IS_INVERTED_FIELD);
-    lua_pushcfunction(luactx_, pin_is_inverted);
-    lua_rawset(luactx_, -3);
-    lua_pushstring(luactx_, TEXT_SET_STATE_FIELD);
-    lua_pushcfunction(luactx_, pin_set_state);
-    lua_rawset(luactx_, -3);
-    lua_pushstring(luactx_, TEXT_GET_STATE_FIELD);
-    lua_pushcfunction(luactx_, pin_get_state);
-    lua_rawset(luactx_, -3);
-    */
+    // Set the pin number as a field in the library
+    lua_pushnumber(luactx_, num);
+    lua_setfield(luactx_, -2, "pinNumber");
 
+    lua_pushstring(luactx_, name);
+    lua_setfield(luactx_, -2, "pinName");
+    // Set the library as a global variable with the given name
     lua_setglobal(luactx_, name);
     lua_pop(luactx_, 1);
   }
