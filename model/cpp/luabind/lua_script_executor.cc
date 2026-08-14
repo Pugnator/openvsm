@@ -1,6 +1,5 @@
 #include "lua_script_executor.hpp"
 #include "log/log.hpp"
-#include "lua_bind.hpp"
 #include <cstddef>
 #include <memory>
 #include <stdexcept>

@@ -34,8 +34,6 @@ set(DLL_SRC
   ${SRCDIR}/luabind/lua_facade.cc
   ${SRCDIR}/luabind/lua_script_executor.cc
   ${SRCDIR}/luabind/vsm_lua_api.cc
-  ${SRCDIR}/luabind/bytecode_loader.cc
-  ${SRCDIR}/luabind/resources_map.cc
 )
 
 # Misc Block
@@ -72,13 +70,6 @@ set_target_properties(VSM_DLL PROPERTIES PREFIX "")
 set_target_properties(VSM_DLL PROPERTIES OUTPUT_NAME "openvsm")
 
 include_directories(${SRCDIR} include cpp/luabind)
-
-set(CPP_SOURCE_WITH_EMBEDDED_LUA "${SRCDIR}/luabind/resources_map.cc")
-set_source_files_properties(
-  ${CPP_SOURCE_WITH_EMBEDDED_LUA}
-  PROPERTIES
-  OBJECT_DEPENDS LuaBytecode
-)
 
 set(SOURCE_LIST_WITH_EMBEDDED_LUA "${CMAKE_CURRENT_SOURCE_DIR}/lua/lua_sources.lst")
 set_source_files_properties(
