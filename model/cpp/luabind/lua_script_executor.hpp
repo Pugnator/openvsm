@@ -3,8 +3,8 @@
 
 namespace LuaScripting
 {
-  class ScriptExecutor
-  {
+class ScriptExecutor
+{
   public:
     ScriptExecutor(lua_State *ctx);
 
@@ -17,5 +17,5 @@ namespace LuaScripting
   private:
     bool isFuncExists(const char *funcName);
     lua_State *luactx;
-  };
-}
+};
+} // namespace LuaScripting
