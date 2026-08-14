@@ -70,6 +70,7 @@ build/
 bld/
 [Bb]in/
 [Oo]bj/
+CMakeUserPresets.json
 
 # Visual Studio 2015 cache/options directory
 .vs/
