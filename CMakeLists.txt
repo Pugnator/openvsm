@@ -19,7 +19,20 @@ set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
 
 set(BasicSettingsFile ${CMAKE_CURRENT_SOURCE_DIR}/wakadll/cpp/settings/basic_settings.yml)
 
-add_subdirectory(externals/Lua)
+function(openvsm_add_bundled_lua)
+  # The pinned Lua project declares CMake 3.1 compatibility. CMake 4 rejects
+  # policy versions below 3.5 and deprecates versions below 3.10. Raise only
+  # the dependency's effective policy minimum and leave the submodule unmodified.
+  if(NOT DEFINED CMAKE_POLICY_VERSION_MINIMUM)
+    set(CMAKE_POLICY_VERSION_MINIMUM 3.10)
+  elseif(CMAKE_POLICY_VERSION_MINIMUM VERSION_LESS 3.10)
+    set(CMAKE_POLICY_VERSION_MINIMUM 3.10)
+  endif()
+
+  add_subdirectory(externals/Lua)
+endfunction()
+
+openvsm_add_bundled_lua()
 add_subdirectory(model/cpp/log)
 add_subdirectory(model)
 add_subdirectory(model/lua)
