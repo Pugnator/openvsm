@@ -9,6 +9,7 @@
 #include "luabind/device/pin_timing.hpp"
 #include "luabind/device/lua_event_dispatcher.hpp"
 #include "lua_script_executor.hpp"
+#include "vdm_lua_api.hpp"
 #include "vsm_lua_api.hpp"
 #include <windows.h>
 #include <combaseapi.h>
@@ -129,6 +130,7 @@ void VirtualDevice::setup(IINSTANCE *instance, IDSIMCKT *dsim)
     const auto scriptPathText = scriptPath.path.string();
     LOG_DEBUG("Loading model script {}\n", scriptPathText);
     registerVsmLuaApi(luactx_, instance_, dsim_, this);
+    registerVdmLuaApi(luactx_);
     auto scripter = std::make_unique<LuaScripting::ScriptExecutor>(luactx_);
     bool result = scripter->loadScriptFromTextFile(scriptPathText.c_str());
     if (!result)
@@ -139,6 +141,11 @@ void VirtualDevice::setup(IINSTANCE *instance, IDSIMCKT *dsim)
     }
     scripter->execute();
     lua_settop(luactx_, stackGuard.top());
+
+    if (hasLuaVdmHandler(luactx_) && !instance_->setvdmhlr(this))
+    {
+        LOG_DEBUG("Proteus rejected the Lua VDM handler\n");
+    }
 
     lua_getglobal(luactx_, "device_pins");
 
@@ -295,6 +302,28 @@ void VirtualDevice::callback(ABSTIME time, EVENTID eventid)
     {
         LOG_DEBUG("Timer callback failed with \"{}\"\n", callback.error);
     }
+}
+
+LRESULT VirtualDevice::vdmhlr(VDM_COMMAND *command, BYTE *data)
+{
+    return dispatchLuaVdmCommand(luactx_, command, data);
+}
+
+void VirtualDevice::loaddata(INT format, INT segment, ADDRESS address, BYTE *data, INT numbytes)
+{
+    dispatchLuaVdmLoad(luactx_, format, segment, address, data, numbytes);
+}
+
+void VirtualDevice::disassemble(ADDRESS address, INT numbytes)
+{
+    dispatchLuaVdmDisassemble(luactx_, address, numbytes);
+}
+
+BOOL VirtualDevice::getvardata(VARITEM *item, VARDATA *data)
+{
+    (void)item;
+    (void)data;
+    return FALSE;
 }
 
 const lua_State *VirtualContextManager::getDeviceLuaContext(const std::string &id)

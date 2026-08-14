@@ -34,6 +34,7 @@ set(DLL_SRC
   ${SRCDIR}/luabind/device/pin_timing.cc
   ${SRCDIR}/luabind/lua_facade.cc
   ${SRCDIR}/luabind/lua_script_executor.cc
+  ${SRCDIR}/luabind/vdm_lua_api.cc
   ${SRCDIR}/luabind/vsm_lua_api.cc
 )
 
@@ -221,4 +222,19 @@ if(BUILD_TESTS)
     NAME uart_module
     COMMAND uart_module_test "${CMAKE_CURRENT_SOURCE_DIR}/lua/modules/uart.lua"
   )
+
+  add_executable(vdm_lua_api_test
+    tests/vdm_lua_api_test.cc
+    ${SRCDIR}/luabind/vdm_lua_api.cc
+  )
+  target_include_directories(vdm_lua_api_test PRIVATE
+    ${SRCDIR}
+    ${CMAKE_SOURCE_DIR}/externals/sdk
+  )
+  target_link_libraries(vdm_lua_api_test PRIVATE lua_static)
+  if(MSVC)
+    target_compile_options(vdm_lua_api_test PRIVATE /EHsc)
+  endif()
+
+  add_test(NAME vdm_lua_api COMMAND vdm_lua_api_test)
 endif()
