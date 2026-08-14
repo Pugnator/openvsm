@@ -30,6 +30,7 @@ set(DLL_SRC
   ${SRCDIR}/model_script_path.cc
   ${SRCDIR}/luabind/device/pin.cc
   ${SRCDIR}/luabind/lua_callback.cc
+  ${SRCDIR}/luabind/device/pin_timing.cc
   ${SRCDIR}/luabind/lua_facade.cc
   ${SRCDIR}/luabind/lua_script_executor.cc
   ${SRCDIR}/luabind/bytecode_loader.cc
@@ -159,4 +160,19 @@ if(BUILD_TESTS)
   endif()
 
   add_test(NAME lua_lifecycle COMMAND lua_lifecycle_test)
+
+  add_executable(pin_timing_test
+    tests/pin_timing_test.cc
+    ${SRCDIR}/luabind/device/pin_timing.cc
+  )
+  target_include_directories(pin_timing_test PRIVATE
+    ${SRCDIR}
+    ${CMAKE_SOURCE_DIR}/externals/sdk
+  )
+  target_link_libraries(pin_timing_test PRIVATE lua_static)
+  if(MSVC)
+    target_compile_options(pin_timing_test PRIVATE /EHsc)
+  endif()
+
+  add_test(NAME pin_timing COMMAND pin_timing_test)
 endif()

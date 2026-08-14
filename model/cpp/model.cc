@@ -6,6 +6,7 @@
 #include "lua_stack_guard.hpp"
 #include "model_script_path.hpp"
 #include "lua_callback.hpp"
+#include "luabind/device/pin_timing.hpp"
 #include "lua_script_executor.hpp"
 #include <windows.h>
 #include <combaseapi.h>
@@ -157,21 +158,10 @@ void VirtualDevice::setup(IINSTANCE *instance, IDSIMCKT *dsim)
             continue;
         }
 
-        lua_getfield(luactx_, -1, "name");
-        const char *name = lua_tostring(luactx_, -1);
-        lua_pop(luactx_, 1);
-
-        lua_getfield(luactx_, -1, "on_time");
-        int on_time = lua_tointeger(luactx_, -1);
-        lua_pop(luactx_, 1);
-
-        lua_getfield(luactx_, -1, "off_time");
-        int off_time = lua_tointeger(luactx_, -1);
-        lua_pop(luactx_, 1);
-
-        LOG_DEBUG("Pin {}: Name={}, On Time={}, Off Time={}\n", i, name, on_time, off_time);
-        devicePins_.push_back({name, i, on_time, off_time});
-        registerPin(name, i);
+        auto pin = readPinDefinition(luactx_, -1, i);
+        LOG_DEBUG("Pin {}: Name={}, On Time={}, Off Time={}\n", i, pin.name, pin.on_time, pin.off_time);
+        devicePins_.push_back(pin);
+        registerPin(pin);
         lua_pop(luactx_, 1);
     }
 

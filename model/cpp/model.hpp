@@ -2,6 +2,8 @@
 #include <vsm.hpp>
 #include <lua.hpp>
 #include <map>
+#include <string>
+#include <vector>
 
 namespace DeviceSimulator
 {
@@ -9,8 +11,8 @@ struct model_pin
 {
     std::string name;
     int number;
-    int on_time;
-    int off_time;
+    RELTIME on_time;
+    RELTIME off_time;
 };
 
 class VirtualDevice : public IDSIMMODEL
@@ -48,7 +50,7 @@ class VirtualDevice : public IDSIMMODEL
     }
 
   private:
-    void registerPin(const char *name, int num);
+    void registerPin(const model_pin &pin);
     bool registerBuses();
 
     std::vector<model_pin> devicePins_;
