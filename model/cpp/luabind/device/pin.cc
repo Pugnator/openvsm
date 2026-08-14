@@ -1,6 +1,7 @@
 #include <log/log.hpp>
 #include "model.hpp"
 #include "pin_timing.hpp"
+#include "lua_event_dispatcher.hpp"
 #include "lua.hpp"
 #include "lua_stack_guard.hpp"
 #include "luabind/device/pin.hpp"
@@ -277,10 +278,16 @@ static const luaL_Reg VsmPinMethodsLib[] = {{"set", l_pin_set},
 
 namespace
 {
-void registerPinLibrary(lua_State *luaContext, const model_pin &pin)
+void registerPinLibrary(lua_State *luaContext, const model_pin &pin, IDSIMPIN *nativePin = nullptr,
+                        LuaEventDispatcher *dispatcher = nullptr)
 {
     LuaScripting::LuaStackGuard stackGuard(luaContext);
     luaL_newlib(luaContext, VsmPinMethodsLib);
+
+    if (nativePin != nullptr && dispatcher != nullptr)
+    {
+        attachPinCallbackApi(luaContext, -1, nativePin, dispatcher);
+    }
 
     lua_pushinteger(luaContext, pin.number);
     lua_setfield(luaContext, -2, "pinNumber");
@@ -306,6 +313,6 @@ void registerPinLibrary(lua_State *luaContext, const char *name, int number)
 void VirtualDevice::registerPin(const model_pin &pin)
 {
     LOG_DEBUG("Registering pin {}-{}\n", pin.name, pin.number);
-    registerPinLibrary(luactx_, pin);
+    registerPinLibrary(luactx_, pin, getPin(const_cast<CHAR *>(pin.name.c_str())), eventDispatcher_.get());
 }
 } // namespace DeviceSimulator

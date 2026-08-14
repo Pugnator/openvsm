@@ -2,11 +2,14 @@
 #include <vsm.hpp>
 #include <lua.hpp>
 #include <map>
+#include <memory>
 #include <string>
 #include <vector>
 
 namespace DeviceSimulator
 {
+class LuaEventDispatcher;
+
 struct model_pin
 {
     std::string name;
@@ -49,6 +52,11 @@ class VirtualDevice : public IDSIMMODEL
         return dsim_;
     }
 
+    LuaEventDispatcher &getEventDispatcher() const
+    {
+        return *eventDispatcher_;
+    }
+
   private:
     void registerPin(const model_pin &pin);
     bool registerBuses();
@@ -61,6 +69,7 @@ class VirtualDevice : public IDSIMMODEL
     std::string deviceGUID_;
     bool simulationCallbackEnabled_ = true;
     bool modelReady_ = false;
+    std::unique_ptr<LuaEventDispatcher> eventDispatcher_;
 };
 
 class VirtualContextManager

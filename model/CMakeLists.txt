@@ -28,6 +28,7 @@ set(DLL_SRC
   ${SRCDIR}/model.cc
   ${SRCDIR}/luabind/device/bus.cc
   ${SRCDIR}/model_script_path.cc
+  ${SRCDIR}/luabind/device/lua_event_dispatcher.cc
   ${SRCDIR}/luabind/device/pin.cc
   ${SRCDIR}/luabind/lua_callback.cc
   ${SRCDIR}/luabind/device/pin_timing.cc
@@ -89,6 +90,7 @@ if(BUILD_TESTS)
   add_executable(native_bus_test
     tests/native_bus_test.cc
     ${SRCDIR}/luabind/device/bus.cc
+    ${SRCDIR}/luabind/device/lua_event_dispatcher.cc
   )
   target_include_directories(native_bus_test PRIVATE
     ${SRCDIR}
@@ -193,4 +195,19 @@ if(BUILD_TESTS)
     NAME lua_test_ic
     COMMAND lua_test_ic_test "${CMAKE_CURRENT_SOURCE_DIR}/tests/fixtures/test_ic.lua"
   )
+
+  add_executable(object_callback_test
+    tests/object_callback_test.cc
+    ${SRCDIR}/luabind/device/lua_event_dispatcher.cc
+  )
+  target_include_directories(object_callback_test PRIVATE
+    ${SRCDIR}
+    ${CMAKE_SOURCE_DIR}/externals/sdk
+  )
+  target_link_libraries(object_callback_test PRIVATE lua_static tinyLog)
+  if(MSVC)
+    target_compile_options(object_callback_test PRIVATE /EHsc)
+  endif()
+
+  add_test(NAME object_callback COMMAND object_callback_test)
 endif()
