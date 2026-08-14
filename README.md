@@ -27,6 +27,9 @@ The v0.7 architecture and generated C++ reference are described in
 CPU-like models can implement the SDK's Virtual Debug Monitor protocol through
 the [`Lua VDM target bridge`](docs/VDM-LUA-API.md).
 
+Any model can expose bounded state to external tools with the
+[`VDM third-party control profile`](docs/THIRD-PARTY-CONTROL.md).
+
 Prebuilt DLL and symbols or installer are in [Release](https://github.com/Pugnator/openvsm/releases) section
 
 The v0.7 native model is written in C++20 and currently builds with 32-bit MSVC.

@@ -58,3 +58,7 @@ handle with `vdm_open`, initializes it with `vdm_init`, and then uses the
 documented play, pause, memory, register, breakpoint, and PC functions. The
 default SDK transport port is 8000. Distribution of Labcenter binaries and
 headers remains subject to the Proteus SDK licence and is outside OpenVSM.
+
+Models that need a generic external state/control surface can use the
+`vdm_control` module described in `THIRD-PARTY-CONTROL.md` instead of writing a
+command dispatcher from scratch.
