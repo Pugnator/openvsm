@@ -197,7 +197,11 @@ void VirtualDevice::setup(IINSTANCE *instance, IDSIMCKT *dsim)
     lua_pushinteger(luactx_, SUD);
     lua_setglobal(luactx_, "SUD");
 
-    instance_->getbuspin((CHAR *)"D[4..5]", 2, 2, true);
+    if (!registerBuses())
+    {
+        LOG_DEBUG("Failed to register model buses\n");
+        return;
+    }
 }
 
 void VirtualDevice::runctrl(RUNMODES mode)

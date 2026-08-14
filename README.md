@@ -37,6 +37,25 @@ There are plenty to do!
 
 Generally you need to compile DLL from the sources only if you want to include custom scripts.
 
+## Native buses
+
+Lua models declare native Proteus buses alongside `device_pins`:
+
+```lua
+device_buses = {
+    {name = "D", base = 0, width = 8, on_time = 100000,
+     off_time = 120000, tristate_time = 50000}
+}
+```
+
+Widths from 1 through 32 bits are supported. Each declaration creates a global
+object (for example `D`) with `set`/`drive`, `tristate`, `drivebit`, `get`,
+`getdrive`, `getbitstate`, `settiming`, and `setstates` methods. Bit indices are
+zero-based, and drive values must fit the declared width. The optional
+`on_state`, `off_state`, `tristate_state`, and `required` fields configure the
+corresponding SDK behavior. Call methods with Lua's object syntax, such as
+`D:drive(0x5a)` or `D:drivebit(0, SHI)`.
+
 # Installation
 --------------
 

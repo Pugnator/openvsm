@@ -33,6 +33,10 @@ function(openvsm_add_bundled_lua)
 endfunction()
 
 openvsm_add_bundled_lua()
+if(BUILD_TESTS)
+  enable_testing()
+endif()
+
 add_subdirectory(model/cpp/log)
 add_subdirectory(model)
 add_subdirectory(model/lua)
