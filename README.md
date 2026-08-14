@@ -30,6 +30,9 @@ the [`Lua VDM target bridge`](docs/VDM-LUA-API.md).
 Any model can expose bounded state to external tools with the
 [`VDM third-party control profile`](docs/THIRD-PARTY-CONTROL.md).
 
+Active displays and animated components can use the
+[`Lua graphics and animation API`](docs/GRAPHICS-LUA-API.md).
+
 Prebuilt DLL and symbols or installer are in [Release](https://github.com/Pugnator/openvsm/releases) section
 
 The v0.7 native model is written in C++20 and currently builds with 32-bit MSVC.
