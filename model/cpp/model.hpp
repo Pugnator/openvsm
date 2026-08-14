@@ -5,16 +5,16 @@
 
 namespace DeviceSimulator
 {
-  struct model_pin
-  {
+struct model_pin
+{
     std::string name;
     int number;
     int on_time;
     int off_time;
-  };
+};
 
-  class VirtualDevice : public IDSIMMODEL
-  {
+class VirtualDevice : public IDSIMMODEL
+{
   public:
     VirtualDevice();
     ~VirtualDevice();
@@ -29,22 +29,22 @@ namespace DeviceSimulator
 
     lua_State *getLuaContext() const
     {
-      return luactx_;
+        return luactx_;
     }
 
     IINSTANCE *getInstance() const
     {
-      return instance_;
+        return instance_;
     }
 
     IDSIMPIN *getPin(CHAR *name) const
     {
-      return instance_->getdsimpin(name, true);
+        return instance_->getdsimpin(name, true);
     }
 
     IDSIMCKT *getDSIM() const
     {
-      return dsim_;
+        return dsim_;
     }
 
   private:
@@ -56,15 +56,15 @@ namespace DeviceSimulator
     IDSIMCKT *dsim_;
     std::string deviceID_;
     std::string deviceGUID_;
-  };
+};
 
-  class VirtualContextManager
-  {
+class VirtualContextManager
+{
   public:
     static VirtualContextManager &getInstance()
     {
-      static VirtualContextManager instance;
-      return instance;
+        static VirtualContextManager instance;
+        return instance;
     }
 
     VirtualContextManager(VirtualContextManager const &) = delete;
@@ -76,14 +76,14 @@ namespace DeviceSimulator
     void registerDevice(std::string id, VirtualDevice &device);
     void setCurrentDevice(const std::string &id)
     {
-      currentDevice_ = id;
+        currentDevice_ = id;
     }
 
   private:
-    VirtualContextManager(){};
+    VirtualContextManager() {};
 
     std::string currentDevice_;
     std::map<std::string, VirtualDevice *> devices_;
     lua_State *luactx_;
-  };
-}
+};
+} // namespace DeviceSimulator

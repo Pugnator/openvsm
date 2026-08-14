@@ -28,32 +28,30 @@ INCBIN(Lexicon, "wakadll/lua/lexicon/main.luac");
 INCBIN(LexiconPOS, "wakadll/lua/lexicon/word_pos.luac");
 INCBIN(LexiconNumerals, "wakadll/lua/lexicon/numerals.luac");
 
-const std::vector<std::string> modulesToPreload =
-    {
-        "LuaUnit",
-        "DictManager",
-        "UtfChars",
-        "SearchRequest",
-        "Inflector",
-        "IchidanInflector",
-        "GodanInflector",
-        "IrregularInflector",
-        "IAdjectiveInflector",
-        "NaAdjectiveInflector",
-        "Vowels",
-        "JlptTraining",
-        "TrainingExamples",
-        "TrainingTranslation",
-        "TrainingReading",
-        "TrainingKana",
-        "TrainingNumeral",
-        "TableHelpers",
-        "Lexicon",
-        "LexiconPOS",
-        "LexiconNumerals",
+const std::vector<std::string> modulesToPreload = {
+    "LuaUnit",
+    "DictManager",
+    "UtfChars",
+    "SearchRequest",
+    "Inflector",
+    "IchidanInflector",
+    "GodanInflector",
+    "IrregularInflector",
+    "IAdjectiveInflector",
+    "NaAdjectiveInflector",
+    "Vowels",
+    "JlptTraining",
+    "TrainingExamples",
+    "TrainingTranslation",
+    "TrainingReading",
+    "TrainingKana",
+    "TrainingNumeral",
+    "TableHelpers",
+    "Lexicon",
+    "LexiconPOS",
+    "LexiconNumerals",
 };
 
-const std::map<std::string, Resource> resourceMap =
-{
-        //{"LuaUnit", {reinterpret_cast<const char *>(lua_LuaUnitData), lua_LuaUnitSize}},
+const std::map<std::string, Resource> resourceMap = {
+    //{"LuaUnit", {reinterpret_cast<const char *>(lua_LuaUnitData), lua_LuaUnitSize}},
 };

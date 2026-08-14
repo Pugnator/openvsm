@@ -4,8 +4,8 @@
 
 namespace LuaScripting
 {
-  class ScriptExecutor
-  {
+class ScriptExecutor
+{
   public:
     ScriptExecutor();
     explicit ScriptExecutor(lua_State *);
@@ -24,7 +24,7 @@ namespace LuaScripting
     void safeExecute(void *curfunc);
 
     lua_State *luactx;
-  };    
-}
+};
+} // namespace LuaScripting
 
 WAKA_API bool runScriptFromTextFile(const char *fileName);

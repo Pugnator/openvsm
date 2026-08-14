@@ -5,8 +5,8 @@
 
 struct Resource
 {
-  const char *data;
-  size_t size;
+    const char *data;
+    size_t size;
 };
 
 extern const std::vector<std::string> modulesToPreload;
