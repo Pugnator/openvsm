@@ -5,6 +5,31 @@
 #include <windows.h>
 #include <combaseapi.h>
 
+namespace
+{
+  int lua_print(lua_State *L)
+  {
+    int nargs = lua_gettop(L);
+    for (int i = 1; i <= nargs; i++)
+    {
+      if (lua_isstring(L, i))
+      {
+        auto str = lua_tostring(L, i);
+        if (str)
+        {
+          LOG_INFO("{}", str);
+        }
+      }
+
+      if (i < nargs)
+      {
+        LOG_INFO("\t");
+      }
+    }
+    return 0;
+  }
+}
+
 namespace DeviceSimulator
 {
 #define PIN_NAME "name"
@@ -20,6 +45,23 @@ namespace DeviceSimulator
       throw std::runtime_error("Failed to create a new Lua state");
 
     luaL_openlibs(luactx_);
+    lua_pushcfunction(luactx_, lua_print);
+    lua_setglobal(luactx_, "print");
+    lua_getglobal(luactx_, "os");
+    lua_getfield(luactx_, -1, "time");
+    if (lua_pcall(luactx_, 0, 1, 0) != LUA_OK)
+    {
+      LOG_DEBUG("Error calling os.time: {}\n", lua_tostring(luactx_, -1));
+    }
+
+    lua_getglobal(luactx_, "math");
+    lua_getfield(luactx_, -1, "randomseed");
+    lua_pushvalue(luactx_, -3);
+
+    if (lua_pcall(luactx_, 1, 0, 0) != LUA_OK)
+    {
+      LOG_DEBUG("Error calling math.randomseed: {}\n", lua_tostring(luactx_, -1));
+    }
     LOG_DEBUG("Lua context created\n");
   }
 
@@ -53,7 +95,7 @@ namespace DeviceSimulator
 
     LOG_DEBUG("Setting up the device {} {}\n", deviceID_, deviceGUID_);
     auto scripter = std::make_unique<LuaScripting::ScriptExecutor>(luactx_);
-    bool result = scripter->loadScriptFromTextFile("C:\\Dev\\proteus_lua_script\\nand.lua");
+    bool result = scripter->loadScriptFromTextFile("C:\\Dev\\proteus_lua_script\\mcu.lua");
     if (!result)
     {
       LOG_DEBUG("Failed to load the script\n");
@@ -65,6 +107,11 @@ namespace DeviceSimulator
     if (lua_isfunction(luactx_, lua_gettop(luactx_)))
     {
       LOG_DEBUG("Initialization function found\n");
+      if (lua_pcall(luactx_, 0, 0, 0))
+      {
+        const char *err = lua_tostring(luactx_, -1);
+        LOG_DEBUG("Simulation failed with \"{}\"\n", err);
+      }
     }
 
     lua_getglobal(luactx_, "timer_callback");
@@ -114,16 +161,12 @@ namespace DeviceSimulator
       lua_pop(luactx_, 1);
 
       LOG_DEBUG("Pin {}: Name={}, On Time={}, Off Time={}\n", i, name, on_time, off_time);
-      pins_.push_back({name, i, on_time, off_time});
+      devicePins_.push_back({name, i, on_time, off_time});
+      registerPin(name, i);
       lua_pop(luactx_, 1);
     }
 
     lua_pop(luactx_, 1);
-
-    for (auto &pin : pins_)
-    {
-      registerPin(pin.name.c_str(), pin.number);
-    }
 
     lua_pushinteger(luactx_, UNDEFINED);
     lua_setglobal(luactx_, "UNDEFINED");
@@ -152,7 +195,9 @@ namespace DeviceSimulator
     lua_pushinteger(luactx_, WUD);
     lua_setglobal(luactx_, "WUD");
     lua_pushinteger(luactx_, SUD);
-    lua_setglobal(luactx_, "SUD");
+    lua_setglobal(luactx_, "SUD");    
+
+    instance_->getbuspin((CHAR*)"D[4..5]", 2, 2, true);
   }
 
   void VirtualDevice::runctrl(RUNMODES mode)

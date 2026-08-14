@@ -36,7 +36,7 @@ namespace DeviceSimulator
 
     int level = luaL_checkinteger(L, -1);
     lua_pop(L, 1);
-    
+
     auto device = VirtualContextManager::getInstance().getDevice();
     auto pinInstance = device->getPin(const_cast<CHAR *>(pin.name.c_str()));
 
@@ -53,7 +53,7 @@ namespace DeviceSimulator
 
     STATE state = (STATE)luaL_checkinteger(L, -1);
     lua_pop(L, 1);
-    
+
     auto device = VirtualContextManager::getInstance().getDevice();
     auto pinInstance = device->getPin(const_cast<CHAR *>(pin.name.c_str()));
 
@@ -70,7 +70,7 @@ namespace DeviceSimulator
     auto device = VirtualContextManager::getInstance().getDevice();
     auto pinInstance = device->getPin(const_cast<CHAR *>(pin.name.c_str()));
 
-    auto state = pinInstance->istate();    
+    auto state = pinInstance->istate();
     lua_pushinteger(L, ishigh(state) ? 1 : 0);
     return 1;
   }
@@ -260,7 +260,7 @@ namespace DeviceSimulator
 
   void VirtualDevice::registerPin(const char *name, int num)
   {
-    LOG_DEBUG("Registering pin {}{}\n", name, num);
+    LOG_DEBUG("Registering pin {}-{}\n", name, num);
     luaL_newlib(luactx_, VsmPinMethodsLib);
 
     // Set the pin number as a field in the library
@@ -271,6 +271,5 @@ namespace DeviceSimulator
     lua_setfield(luactx_, -2, "pinName");
     // Set the library as a global variable with the given name
     lua_setglobal(luactx_, name);
-    lua_pop(luactx_, 1);
   }
 }

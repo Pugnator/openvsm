@@ -1,0 +1,39 @@
+{*DEVICE}
+NAME=LUA_MCU
+{PREFIX=U}
+{*PROPDEFS}
+{PACKAGE="PCB Package",PACKAGE,2,DIL08,SOT23-6}
+{PRIMITIVE=Primitive Type,HIDDEN STRING}
+{PRIMTYPE=Primitive Type,HIDDEN STRING}
+{MODDLL=VSM Model DLL,HIDDEN STRING}
+{*INDEX}
+{CAT=Microprocessor ICs}
+{SUBCAT=PIC10 Family}
+{MFR=Arizona Microchip}
+{DESC=PIC10 microcontroller, 256 ROM, 16 byte RAM, 4 I/O pins, 1 timer}
+{*COMPONENT}
+
+{PACKAGE=DIL08}
+
+{MODDLL=luamcu.DLL}
+{PRIMITIVE=DIGITAL,10200}
+*PINOUT DIL08
+{ELEMENTS=1}
+{PIN "P0" = 5}
+{PIN "P1" = 4}
+{PIN "P2" = 3}
+{PIN "P3" = 8}
+{PIN "VDD" = 2}
+{PIN "VSS" = 7}
+{NC=1,6}
+{COMMON=VDD,VSS}
+
+*PINOUT SOT23-6
+{ELEMENTS=1}
+{PIN "P0" = 1}
+{PIN "P1" = 3}
+{PIN "P2" = 4}
+{PIN "P" = 6}
+{PIN "VDD" = 5}
+{PIN "VSS" = 2}
+{COMMON=VDD,VSS}

@@ -1,0 +1,31 @@
+---
+Language: Cpp
+BasedOnStyle: LLVM
+
+IndentWidth: 4
+ContinuationIndentWidth: 4
+TabWidth: 4
+UseTab: Never
+
+ColumnLimit: 120
+
+# Allman - "Braces-Stand-Alone" in NASA SEL-94-003 7.1.2. See docs/CODE-STYLE.md.
+# Previously Allman for functions only, K&R for control statements.
+BreakBeforeBraces: Allman
+
+# Bodies are always braced (CODE-STYLE.md, deviation from SEL-94-003 7.2.1).
+#
+# InsertBraces is what actually *adds* a missing brace; the AllowShort* keys
+# below only stop clang-format collapsing an existing body back onto one line.
+# Both are needed: without InsertBraces a brace-less `if (x) return;` is left
+# exactly as written, which is the construct this project bans outright.
+InsertBraces: true
+AllowShortFunctionsOnASingleLine: None
+AllowShortIfStatementsOnASingleLine: Never
+AllowShortLoopsOnASingleLine: false
+AllowShortBlocksOnASingleLine: Never
+AllowShortCaseLabelsOnASingleLine: false
+
+IndentCaseLabels: false
+
+SortIncludes: Never

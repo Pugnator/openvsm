@@ -1,0 +1,27 @@
+[2024-02-28 00:23:44] Debug: The model is being loaded
+[2024-02-28 00:23:44] Debug: Creating the device
+[2024-02-28 00:23:44] Debug: Creating Lua context
+[2024-02-28 00:23:44] Debug: Lua context created
+[2024-02-28 00:23:44] Debug: Creating the device
+[2024-02-28 00:23:44] Debug: Creating Lua context
+[2024-02-28 00:23:44] Debug: Lua context created
+[2024-02-28 00:23:44] Debug: Setting up the device U1 {8FA0E660-D49D-4D48-B30A-1C3B6C5E7029}
+[2024-02-28 00:23:44] Debug: Simulation function found
+[2024-02-28 00:23:44] Debug: Number of pins: 3
+[2024-02-28 00:23:44] Debug: Pin 1: Name=A, On Time=100000, Off Time=100000
+[2024-02-28 00:23:44] Debug: Pin 2: Name=B, On Time=100000, Off Time=100000
+[2024-02-28 00:23:44] Debug: Pin 3: Name=Q, On Time=100000, Off Time=100000
+[2024-02-28 00:23:44] Debug: Registering pin A1
+[2024-02-28 00:23:44] Debug: Registering pin B2
+[2024-02-28 00:23:44] Debug: Registering pin Q3
+[2024-02-28 00:23:44] Debug: Setting up the device U2 {4F5EBC0E-D406-4CFC-ADAD-11A2C768E3CB}
+[2024-02-28 00:23:44] Debug: Simulation function found
+[2024-02-28 00:23:44] Debug: Number of pins: 3
+[2024-02-28 00:23:44] Debug: Pin 1: Name=A, On Time=100000, Off Time=100000
+[2024-02-28 00:23:44] Debug: Pin 2: Name=B, On Time=100000, Off Time=100000
+[2024-02-28 00:23:44] Debug: Pin 3: Name=Q, On Time=100000, Off Time=100000
+[2024-02-28 00:23:44] Debug: Registering pin A1
+[2024-02-28 00:23:44] Debug: Registering pin B2
+[2024-02-28 00:23:44] Debug: Registering pin Q3
+[2024-02-28 00:23:48] Debug: A thread is being destroyed
+[2024-02-28 00:23:48] Debug: The model is being unloaded

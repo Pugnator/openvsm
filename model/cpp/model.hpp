@@ -32,6 +32,11 @@ namespace DeviceSimulator
       return luactx_;
     }
 
+    IINSTANCE *getInstance() const
+    {
+      return instance_;
+    }
+
     IDSIMPIN *getPin(CHAR *name) const
     {
       return instance_->getdsimpin(name, true);
@@ -45,7 +50,7 @@ namespace DeviceSimulator
   private:
     void registerPin(const char *name, int num);
 
-    std::vector<model_pin> pins_;
+    std::vector<model_pin> devicePins_;
     lua_State *luactx_;
     IINSTANCE *instance_;
     IDSIMCKT *dsim_;

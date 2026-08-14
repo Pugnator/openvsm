@@ -2,6 +2,12 @@ cmake_minimum_required(VERSION 3.21)
 
 project(OpenVSM)
 
+if(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")  
+  message(INFO "MSVC found, continue...")
+else()
+  message(FATAL_ERROR "Unsupported compiler, only MSVC is supported.")
+endif()
+
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/bin)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/bin)
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/lib)
