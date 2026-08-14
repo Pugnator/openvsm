@@ -112,6 +112,12 @@ For a manual Visual Studio configuration, select the same target with
 
 Build outputs are written below `build/vs2022-win32/bin/<configuration>`.
 
+Each Proteus model selects its script with the component's `LUA` string property,
+for example `LUA=device.lua`. Relative values are resolved beneath `LUAVSM`;
+absolute paths are used directly. Paths may contain spaces and `LUAVSM` does not
+need a trailing slash. A missing property, script root, or readable script keeps
+that model out of simulation.
+
 # License
 ----
 

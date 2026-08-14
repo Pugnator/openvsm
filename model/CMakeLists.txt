@@ -27,6 +27,7 @@ set(DLL_SRC
   ${SRCDIR}/dllmain.cc
   ${SRCDIR}/model.cc
   ${SRCDIR}/luabind/device/bus.cc
+  ${SRCDIR}/model_script_path.cc
   ${SRCDIR}/luabind/device/pin.cc
   ${SRCDIR}/luabind/lua_facade.cc
   ${SRCDIR}/luabind/lua_script_executor.cc
@@ -133,4 +134,16 @@ if(BUILD_TESTS)
   target_include_directories(model_authorization_test PRIVATE ${SRCDIR})
   target_link_libraries(model_authorization_test PRIVATE VSM_DLL lua_static)
   add_test(NAME model_authorization COMMAND model_authorization_test)
+
+  add_executable(model_script_path_test
+    tests/model_script_path_test.cc
+    ${SRCDIR}/model_script_path.cc
+  )
+  target_include_directories(model_script_path_test PRIVATE ${SRCDIR})
+  target_link_libraries(model_script_path_test PRIVATE lua_static)
+  if(MSVC)
+    target_compile_options(model_script_path_test PRIVATE /EHsc)
+  endif()
+
+  add_test(NAME model_script_path COMMAND model_script_path_test)
 endif()
