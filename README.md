@@ -47,6 +47,8 @@ Generally you need to compile DLL from the sources only if you want to include c
 How to build
 --------------
 
+The CMake build requires CMake 3.21 or newer and supports CMake 4.x.
+
   - Install mingw32 and cygwin for you platform
   - Install Lua 5.3 or higher
   - Clone: https://github.com/Pugnator/openvsm.git openvsm
