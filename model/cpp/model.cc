@@ -8,6 +8,7 @@
 #include "lua_callback.hpp"
 #include "luabind/device/pin_timing.hpp"
 #include "lua_script_executor.hpp"
+#include "vsm_lua_api.hpp"
 #include <windows.h>
 #include <combaseapi.h>
 
@@ -124,6 +125,7 @@ void VirtualDevice::setup(IINSTANCE *instance, IDSIMCKT *dsim)
 
     const auto scriptPathText = scriptPath.path.string();
     LOG_DEBUG("Loading model script {}\n", scriptPathText);
+    registerVsmLuaApi(luactx_, instance_, dsim_, this);
     auto scripter = std::make_unique<LuaScripting::ScriptExecutor>(luactx_);
     bool result = scripter->loadScriptFromTextFile(scriptPathText.c_str());
     if (!result)
@@ -166,35 +168,6 @@ void VirtualDevice::setup(IINSTANCE *instance, IDSIMCKT *dsim)
     }
 
     lua_pop(luactx_, 1);
-
-    lua_pushinteger(luactx_, UNDEFINED);
-    lua_setglobal(luactx_, "UNDEFINED");
-    lua_pushinteger(luactx_, TSTATE);
-    lua_setglobal(luactx_, "TSTATE");
-    lua_pushinteger(luactx_, FSTATE);
-    lua_setglobal(luactx_, "FSTATE");
-    lua_pushinteger(luactx_, PLO);
-    lua_setglobal(luactx_, "PLO");
-    lua_pushinteger(luactx_, ILO);
-    lua_setglobal(luactx_, "ILO");
-    lua_pushinteger(luactx_, SLO);
-    lua_setglobal(luactx_, "SLO");
-    lua_pushinteger(luactx_, WLO);
-    lua_setglobal(luactx_, "WLO");
-    lua_pushinteger(luactx_, FLT);
-    lua_setglobal(luactx_, "FLT");
-    lua_pushinteger(luactx_, WHI);
-    lua_setglobal(luactx_, "WHI");
-    lua_pushinteger(luactx_, SHI);
-    lua_setglobal(luactx_, "SHI");
-    lua_pushinteger(luactx_, IHI);
-    lua_setglobal(luactx_, "IHI");
-    lua_pushinteger(luactx_, PHI);
-    lua_setglobal(luactx_, "PHI");
-    lua_pushinteger(luactx_, WUD);
-    lua_setglobal(luactx_, "WUD");
-    lua_pushinteger(luactx_, SUD);
-    lua_setglobal(luactx_, "SUD");
 
     if (!registerBuses())
     {

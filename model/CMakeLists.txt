@@ -33,6 +33,7 @@ set(DLL_SRC
   ${SRCDIR}/luabind/device/pin_timing.cc
   ${SRCDIR}/luabind/lua_facade.cc
   ${SRCDIR}/luabind/lua_script_executor.cc
+  ${SRCDIR}/luabind/vsm_lua_api.cc
   ${SRCDIR}/luabind/bytecode_loader.cc
   ${SRCDIR}/luabind/resources_map.cc
 )
@@ -175,4 +176,19 @@ if(BUILD_TESTS)
   endif()
 
   add_test(NAME pin_timing COMMAND pin_timing_test)
+
+  add_executable(vsm_lua_api_test
+    tests/vsm_lua_api_test.cc
+    ${SRCDIR}/luabind/vsm_lua_api.cc
+  )
+  target_include_directories(vsm_lua_api_test PRIVATE
+    ${SRCDIR}
+    ${CMAKE_SOURCE_DIR}/externals/sdk
+  )
+  target_link_libraries(vsm_lua_api_test PRIVATE lua_static)
+  if(MSVC)
+    target_compile_options(vsm_lua_api_test PRIVATE /EHsc)
+  endif()
+
+  add_test(NAME vsm_lua_api COMMAND vsm_lua_api_test)
 endif()
