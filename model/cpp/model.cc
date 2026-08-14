@@ -1,4 +1,5 @@
 #include <log/log.hpp>
+#include <cassert>
 #include <format>
 #include "model.hpp"
 #include "lua_stack_guard.hpp"
@@ -275,18 +276,34 @@ BOOL VirtualDevice::indicate(REALTIME time, ACTIVEDATA *newstate)
 
 void VirtualDevice::simulate(ABSTIME time, DSIMMODES mode)
 {
+    (void)time;
+    (void)mode;
+    const int originalStackTop = lua_gettop(luactx_);
+    if (!simulationCallbackEnabled_)
+    {
+        assert(lua_gettop(luactx_) == originalStackTop);
+        return;
+    }
+
     auto &vinstance = VirtualContextManager::getInstance();
     vinstance.setCurrentDevice(deviceID_);
 
     lua_getglobal(luactx_, "device_simulate");
-    if (lua_isfunction(luactx_, lua_gettop(luactx_)))
+    if (!lua_isfunction(luactx_, -1))
     {
-        if (lua_pcall(luactx_, 0, 0, 0))
-        {
-            const char *err = lua_tostring(luactx_, -1);
-            LOG_DEBUG("Simulation failed with \"{}\"\n", err);
-        }
+        lua_pop(luactx_, 1);
+        assert(lua_gettop(luactx_) == originalStackTop);
+        return;
     }
+
+    if (lua_pcall(luactx_, 0, 0, 0) != LUA_OK)
+    {
+        const char *err = lua_tostring(luactx_, -1);
+        LOG_DEBUG("Simulation failed with \"{}\"; disabling callback\n", err ? err : "Unknown Lua error");
+        lua_pop(luactx_, 1);
+        simulationCallbackEnabled_ = false;
+    }
+    assert(lua_gettop(luactx_) == originalStackTop);
 }
 
 void VirtualDevice::callback(ABSTIME time, EVENTID eventid)
