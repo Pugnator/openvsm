@@ -5,6 +5,7 @@
 #include "model.hpp"
 #include "lua_stack_guard.hpp"
 #include "model_script_path.hpp"
+#include "lua_callback.hpp"
 #include "lua_script_executor.hpp"
 #include <windows.h>
 #include <combaseapi.h>
@@ -133,36 +134,6 @@ void VirtualDevice::setup(IINSTANCE *instance, IDSIMCKT *dsim)
     scripter->execute();
     lua_settop(luactx_, stackGuard.top());
 
-    lua_getglobal(luactx_, "device_init");
-    if (lua_isfunction(luactx_, lua_gettop(luactx_)))
-    {
-        LOG_DEBUG("Initialization function found\n");
-        if (lua_pcall(luactx_, 0, 0, 0))
-        {
-            const char *err = lua_tostring(luactx_, -1);
-            LOG_DEBUG("Simulation failed with \"{}\"\n", err);
-            lua_pop(luactx_, 1);
-        }
-    }
-    else
-    {
-        lua_pop(luactx_, 1);
-    }
-
-    lua_getglobal(luactx_, "timer_callback");
-    if (lua_isfunction(luactx_, lua_gettop(luactx_)))
-    {
-        LOG_DEBUG("Timer callback function found\n");
-    }
-    lua_pop(luactx_, 1);
-
-    lua_getglobal(luactx_, "device_simulate");
-    if (lua_isfunction(luactx_, lua_gettop(luactx_)))
-    {
-        LOG_DEBUG("Simulation function found\n");
-    }
-    lua_pop(luactx_, 1);
-
     lua_getglobal(luactx_, "device_pins");
 
     if (!lua_istable(luactx_, lua_gettop(luactx_)))
@@ -239,6 +210,17 @@ void VirtualDevice::setup(IINSTANCE *instance, IDSIMCKT *dsim)
     {
         LOG_DEBUG("Failed to register model buses\n");
         return;
+    }
+
+    mgr.setCurrentDevice(deviceID_);
+    const auto initialization = LuaScripting::invokeCallback(luactx_, "device_init");
+    if (initialization.status == LuaScripting::CallbackStatus::succeeded)
+    {
+        LOG_DEBUG("Device initialization completed\n");
+    }
+    else if (initialization.status == LuaScripting::CallbackStatus::failed)
+    {
+        LOG_DEBUG("Device initialization failed with \"{}\"\n", initialization.error);
     }
     modelReady_ = true;
 }
@@ -332,6 +314,20 @@ void VirtualDevice::simulate(ABSTIME time, DSIMMODES mode)
 
 void VirtualDevice::callback(ABSTIME time, EVENTID eventid)
 {
+    if (!modelReady_)
+    {
+        return;
+    }
+
+    auto &vinstance = VirtualContextManager::getInstance();
+    vinstance.setCurrentDevice(deviceID_);
+
+    const auto callback = LuaScripting::invokeCallback(
+        luactx_, "timer_callback", {static_cast<lua_Integer>(time), static_cast<lua_Integer>(eventid)});
+    if (callback.status == LuaScripting::CallbackStatus::failed)
+    {
+        LOG_DEBUG("Timer callback failed with \"{}\"\n", callback.error);
+    }
 }
 
 const lua_State *VirtualContextManager::getDeviceLuaContext(const std::string &id)
