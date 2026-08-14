@@ -105,4 +105,9 @@ if(BUILD_TESTS)
   endif()
 
   add_test(NAME native_bus COMMAND native_bus_test)
+
+  add_executable(pin_registration_stack_test tests/pin_registration_stack_test.cc)
+  target_include_directories(pin_registration_stack_test PRIVATE ${SRCDIR})
+  target_link_libraries(pin_registration_stack_test PRIVATE VSM_DLL lua_static)
+  add_test(NAME pin_registration_stack COMMAND pin_registration_stack_test)
 endif()
