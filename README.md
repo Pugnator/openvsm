@@ -67,6 +67,8 @@ How to build
 --------------
 
 The CMake build requires CMake 3.21 or newer and supports CMake 4.x.
+Select the required 32-bit MSVC target with the Visual Studio generator option
+`-A Win32`; MSVC does not use the GCC `-m32` option.
 
   - Install mingw32 and cygwin for you platform
   - Install Lua 5.3 or higher

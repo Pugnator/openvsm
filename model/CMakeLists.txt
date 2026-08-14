@@ -9,32 +9,8 @@ if(NOT CMAKE_GENERATOR)
     set(CMAKE_GENERATOR "MinGW Makefiles" CACHE INTERNAL "" FORCE)
 endif()
 
-set(CMAKE_CXX_STANDARD 20)
-set(CMAKE_CXX_STANDARD_REQUIRED ON)
-
-include(CheckCXXCompilerFlag)
-CHECK_CXX_COMPILER_FLAG("/std:c++latest" _cpp_latest_flag_supported)
-if (_cpp_latest_flag_supported)
-  add_compile_options("/std:c++latest")
-  add_compile_options("/EHsc")
-endif()
-
 set(BUILD_SHARED_LIBS ON)
 option(BUILD_TESTS "Enable building tests" OFF)
-
-if(CMAKE_BUILD_TYPE STREQUAL "Debug")
-    add_definitions(-DOPENVSM_DEBUG)
-    set(CMAKE_CXX_FLAGS_DEBUG  "-ggdb -Og")
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g -Og")    
-else()
-    add_definitions(-DOPENVSM_RELEASE)
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Ofast")    
-endif()
-
-add_definitions(-DOPENVSM_VERSION="${OPENVSM_VERSION}")
-
-set(CFLAGS "${CFLAGS} ${OPTIM}")
-set(CXXFLAGS "${CXXFLAGS} ${OPTIM}")
 
 set(SRCDIR cpp)
 
@@ -62,11 +38,21 @@ set(CPPSRC
 
 
 add_library(VSM_DLL SHARED ${CPPSRC})
-set_property(TARGET VSM_DLL PROPERTY POSITION_INDEPENDENT_CODE 1)
-set_target_properties(VSM_DLL PROPERTIES LINKER_LANGUAGE C)
+set_target_properties(VSM_DLL PROPERTIES
+  CXX_STANDARD 20
+  CXX_STANDARD_REQUIRED ON
+  POSITION_INDEPENDENT_CODE ON
+)
 
-target_compile_options(VSM_DLL PRIVATE -m32)
-target_link_options(VSM_DLL PRIVATE -m32)
+target_compile_definitions(VSM_DLL PRIVATE
+  OPENVSM_VERSION="${OPENVSM_VERSION}"
+  $<$<CONFIG:Debug>:OPENVSM_DEBUG>
+  $<$<NOT:$<CONFIG:Debug>>:OPENVSM_RELEASE>
+)
+
+target_compile_options(VSM_DLL PRIVATE
+  $<$<AND:$<COMPILE_LANGUAGE:CXX>,$<CXX_COMPILER_ID:MSVC>>:/EHsc>
+)
 
 set_target_properties(VSM_DLL PROPERTIES PREFIX "")
 set_target_properties(VSM_DLL PROPERTIES OUTPUT_NAME "openvsm")
@@ -94,7 +80,6 @@ target_link_libraries(VSM_DLL PRIVATE
 lua_static
 tinyLog
 )
-
 if(BUILD_TESTS)
   add_executable(native_bus_test
     tests/native_bus_test.cc
