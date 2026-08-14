@@ -28,7 +28,18 @@ extern "C"
 
     void __declspec(dllexport) deletedsimmodel(IDSIMMODEL *model)
     {
-        delete model;
+        if (!model)
+        {
+            return;
+        }
+
+        auto *device = dynamic_cast<DeviceSimulator::VirtualDevice *>(model);
+        if (!device)
+        {
+            LOG_DEBUG("Refusing to delete an unknown IDSIMMODEL implementation\n");
+            return;
+        }
+        delete device;
     }
 }
 

@@ -63,11 +63,7 @@ class VirtualDevice : public IDSIMMODEL
 class VirtualContextManager
 {
   public:
-    static VirtualContextManager &getInstance()
-    {
-        static VirtualContextManager instance;
-        return instance;
-    }
+    static VirtualContextManager &getInstance();
 
     VirtualContextManager(VirtualContextManager const &) = delete;
     void operator=(VirtualContextManager const &) = delete;
@@ -76,6 +72,7 @@ class VirtualContextManager
     const VirtualDevice *getDevice();
     const lua_State *getDeviceLuaContext(const std::string &id);
     void registerDevice(std::string id, VirtualDevice &device);
+    void unregisterDevice(const VirtualDevice &device);
     void setCurrentDevice(const std::string &id)
     {
         currentDevice_ = id;
