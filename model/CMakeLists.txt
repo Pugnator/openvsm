@@ -28,6 +28,7 @@ set(SRCDIR cpp)
 
 set(DLL_SRC
   ${SRCDIR}/dllmain.cc
+  ${SRCDIR}/runtime_logging.cc
   ${SRCDIR}/active_model.cc
   ${SRCDIR}/model.cc
   ${SRCDIR}/luabind/device/bus.cc
@@ -101,6 +102,23 @@ lua_static
 tinyLog
 )
 if(BUILD_TESTS)
+  add_executable(runtime_logging_test
+    tests/runtime_logging_test.cc
+    ${SRCDIR}/runtime_logging.cc
+  )
+  target_include_directories(runtime_logging_test PRIVATE ${SRCDIR})
+  target_link_libraries(runtime_logging_test PRIVATE tinyLog)
+  if(MSVC)
+    target_compile_options(runtime_logging_test PRIVATE /EHsc)
+  endif()
+
+  set(RUNTIME_LOGGING_TEST_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/runtime_logging_test")
+  file(MAKE_DIRECTORY "${RUNTIME_LOGGING_TEST_DIRECTORY}")
+  add_test(NAME runtime_logging COMMAND runtime_logging_test)
+  set_tests_properties(runtime_logging PROPERTIES
+    WORKING_DIRECTORY "${RUNTIME_LOGGING_TEST_DIRECTORY}"
+  )
+
   add_executable(native_bus_test
     tests/native_bus_test.cc
     ${SRCDIR}/luabind/device/bus.cc
