@@ -49,6 +49,7 @@ class VirtualDevice : public IDSIMMODEL
 
   private:
     void registerPin(const char *name, int num);
+    bool registerBuses();
 
     std::vector<model_pin> devicePins_;
     lua_State *luactx_;

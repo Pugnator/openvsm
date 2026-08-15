@@ -41,6 +41,7 @@ set(SRCDIR cpp)
 set(DLL_SRC
   ${SRCDIR}/dllmain.cc
   ${SRCDIR}/model.cc
+  ${SRCDIR}/luabind/device/bus.cc
   ${SRCDIR}/luabind/device/pin.cc
   ${SRCDIR}/luabind/lua_facade.cc
   ${SRCDIR}/luabind/lua_script_executor.cc
@@ -93,3 +94,20 @@ target_link_libraries(VSM_DLL PRIVATE
 lua_static
 tinyLog
 )
+
+if(BUILD_TESTS)
+  add_executable(native_bus_test
+    tests/native_bus_test.cc
+    ${SRCDIR}/luabind/device/bus.cc
+  )
+  target_include_directories(native_bus_test PRIVATE
+    ${SRCDIR}
+    ${CMAKE_SOURCE_DIR}/externals/sdk
+  )
+  target_link_libraries(native_bus_test PRIVATE lua_static tinyLog)
+  if(MSVC)
+    target_compile_options(native_bus_test PRIVATE /EHsc)
+  endif()
+
+  add_test(NAME native_bus COMMAND native_bus_test)
+endif()
