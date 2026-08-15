@@ -29,6 +29,11 @@ function(openvsm_add_bundled_lua)
     set(CMAKE_POLICY_VERSION_MINIMUM 3.10)
   endif()
 
+  # Lua's subproject registers an interpreter test even though its interpreter
+  # target is disabled when embedded. OpenVSM tests the linked Lua library
+  # through its own native and script tests instead.
+  set(LUA_ENABLE_TESTING OFF CACHE BOOL "Build the bundled Lua tests" FORCE)
+
   add_subdirectory(externals/Lua)
 endfunction()
 
