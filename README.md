@@ -21,6 +21,9 @@ Documentation can be found at http://pugnator.github.io/openvsm
 The executable Lua compatibility surface and v0.7 migration notes are listed in
 [`docs/V0.7-LUA-COMPATIBILITY.md`](docs/V0.7-LUA-COMPATIBILITY.md).
 
+The v0.7 architecture and generated C++ reference are described in
+[`docs/DEVELOPER-GUIDE.md`](docs/DEVELOPER-GUIDE.md).
+
 Prebuilt DLL and symbols or installer are in [Release](https://github.com/Pugnator/openvsm/releases) section
 
 The v0.7 native model is written in C++20 and currently builds with 32-bit MSVC.

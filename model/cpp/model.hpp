@@ -10,6 +10,8 @@ namespace DeviceSimulator
 {
 class LuaEventDispatcher;
 
+/** Configuration for one Lua-declared digital pin. Timing values use Proteus
+ * absolute-time ticks. */
 struct model_pin
 {
     std::string name;
@@ -18,35 +20,53 @@ struct model_pin
     RELTIME off_time;
 };
 
+/** A single Proteus component backed by an independent Lua state.
+ *
+ * Proteus owns the host interface pointers passed to setup(). VirtualDevice
+ * owns luactx_ and closes it when the concrete model is destroyed.
+ */
 class VirtualDevice : public IDSIMMODEL
 {
   public:
+    /** Allocate and initialize the model's Lua state. */
     VirtualDevice();
+    /** Close the owned Lua state. */
     ~VirtualDevice();
 
+    /** Report that a component terminal uses the digital simulation engine. */
     INT isdigital(CHAR *pinname) override;
+    /** Attach host interfaces and load the Lua model for this component. */
     void setup(IINSTANCE *instance, IDSIMCKT *dsim) override;
+    /** Receive a change to the Proteus run or debugger mode. */
     void runctrl(RUNMODES mode) override;
+    /** Receive an interactive actuator state change. */
     void actuate(REALTIME time, ACTIVESTATE newstate) override;
+    /** Update interactive indicator state. */
     BOOL indicate(REALTIME time, ACTIVEDATA *newstate) override;
+    /** Execute the Lua simulation hook for one host simulation tick. */
     void simulate(ABSTIME time, DSIMMODES mode) override;
+    /** Deliver a scheduled host event to the Lua model. */
     void callback(ABSTIME time, EVENTID eventid) override;
 
+    /** Return the Lua state owned by this model. The pointer is non-owning. */
     lua_State *getLuaContext() const
     {
         return luactx_;
     }
 
+    /** Return the Proteus component instance supplied to setup(). */
     IINSTANCE *getInstance() const
     {
         return instance_;
     }
 
+    /** Resolve a required digital pin by its component terminal name. */
     IDSIMPIN *getPin(CHAR *name) const
     {
         return instance_->getdsimpin(name, true);
     }
 
+    /** Return the digital circuit interface supplied to setup(). */
     IDSIMCKT *getDSIM() const
     {
         return dsim_;
@@ -72,19 +92,31 @@ class VirtualDevice : public IDSIMMODEL
     std::unique_ptr<LuaEventDispatcher> eventDispatcher_;
 };
 
+/** Registry used by native Lua functions to locate the active model instance.
+ *
+ * Registered pointers are non-owning. Model lifetime remains with the exported
+ * factory/deleter contract.
+ */
 class VirtualContextManager
 {
   public:
+    /** Return the process-wide context registry. */
     static VirtualContextManager &getInstance();
 
     VirtualContextManager(VirtualContextManager const &) = delete;
     void operator=(VirtualContextManager const &) = delete;
 
+    /** Find a registered device by Proteus instance ID, or return nullptr. */
     const VirtualDevice *getDevice(const std::string &id);
+    /** Return the active device, or nullptr when no registered device is active. */
     const VirtualDevice *getDevice();
+    /** Return a registered device's non-owning Lua state, or nullptr. */
     const lua_State *getDeviceLuaContext(const std::string &id);
+    /** Register a non-owning device pointer under its Proteus instance ID. */
     void registerDevice(std::string id, VirtualDevice &device);
+    /** Remove every registry entry that points to the given device. */
     void unregisterDevice(const VirtualDevice &device);
+    /** Select the device whose native Lua calls are currently being dispatched. */
     void setCurrentDevice(const std::string &id)
     {
         currentDevice_ = id;

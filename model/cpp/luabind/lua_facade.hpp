@@ -9,6 +9,7 @@
 
 namespace LuaScripting
 {
+/** Exception raised when a Lua module or method violates the facade contract. */
 class LuaException : public std::runtime_error
 {
   public:
@@ -17,13 +18,29 @@ class LuaException : public std::runtime_error
     }
 };
 
+/** Lua registry reference containing a table. */
 using TableReference = int;
+
+/** RAII wrapper around a Lua module table stored in the registry.
+ *
+ * The Lua state is borrowed and must outlive this facade. The facade owns and
+ * releases only its registry reference.
+ */
 class LuaTableFacade
 {
   public:
+    /** Require a module and retain the returned table in the Lua registry. */
     LuaTableFacade(lua_State *ctx, const std::string &module);
+    /** Release the retained Lua registry reference. */
     ~LuaTableFacade();
 
+    /** Invoke a method on the retained table and convert its single result.
+     *
+     * @tparam Ret supported scalar, string, vector, or TableReference result.
+     * @param methodName table field containing the Lua function.
+     * @param args supported scalar or string arguments passed after `self`.
+     * @throws LuaException if lookup, execution, or conversion fails.
+     */
     template <typename Ret, typename... Args> Ret callMethod(const std::string &methodName, Args... args)
     {
         // Push the Lua table onto the stack using the stored reference
@@ -75,6 +92,7 @@ class LuaTableFacade
         return returnValue;
     }
 
+    /** Replace the owned registry reference with another table reference. */
     void newSelfInstance(int newReference);
 
   private:

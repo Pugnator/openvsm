@@ -4,6 +4,7 @@ project(OpenVSM)
 
 file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/model/VERSION.txt" OPENVSM_VERSION)
 option(DLL_WITH_INSTALLER "Enable the Inno Setup installer target" OFF)
+option(BUILD_DOCS "Build the Doxygen developer reference" OFF)
 
 if(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")  
   message(INFO "MSVC found, continue...")
@@ -39,6 +40,10 @@ endif()
 add_subdirectory(model/cpp/log)
 add_subdirectory(model)
 add_subdirectory(model/lua)
+
+if(BUILD_DOCS)
+  add_subdirectory(docs)
+endif()
 
 
 if(DLL_WITH_INSTALLER)
