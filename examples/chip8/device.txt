@@ -9,6 +9,8 @@ NAME=LUA_CHIP8
 
 {LUA="LUA",STRING}
 
+{ROM="CHIP-8 ROM image (blank uses built-in demo)",STRING}
+
 {PRIMITIVE="Primitive Type",HIDDEN STRING}
 
 {PACKAGE="PCB Package",PACKAGE,0}
@@ -30,5 +32,7 @@ NAME=LUA_CHIP8
 {MODDLL=openvsm.DLL}
 {
 LUA=chip8/device.lua}
+
+{ROM=}
 
 {PACKAGE=DIL8}

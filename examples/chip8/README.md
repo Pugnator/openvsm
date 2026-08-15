@@ -1,8 +1,9 @@
 # Portable CHIP-8 core
 
-This example starts with the emulator core rather than a Proteus-specific
-component. `core.lua` implements the classic 4 KiB, 64-by-32 CHIP-8 machine and
-depends only on Lua 5.4. ROMs are deliberately not included.
+This example keeps the emulator core independent from its Proteus-specific
+adapter. `core.lua` implements the classic 4 KiB, 64-by-32 CHIP-8 machine and
+depends only on Lua 5.4. `device.lua` supplies a small original demonstration
+program when no external ROM is configured.
 
 The core accepts a display object with two operations:
 
@@ -46,41 +47,45 @@ Execution is deterministic when `random_byte` is injected. Timers are separated
 from instruction execution so a Proteus callback, an ImGui event loop, or a
 headless test can drive the same core at an exact 60 Hz.
 
-## Proteus device stub
+## Proteus device
 
 `device.txt` follows the same Proteus library-description structure as the NAND
-example and loads `chip8/device.lua` through `openvsm.DLL`. The first version is
-a self-contained virtual console with no electrical pins. Its DIL8 package is a
-temporary metadata placeholder inherited from the NAND stub; the component is
-not yet intended for PCB placement.
+example and loads `chip8/device.lua` through `openvsm.DLL`. It is a
+self-contained virtual console with no electrical pins. Its DIL8 package is a
+temporary metadata placeholder inherited from the NAND example; the component
+is not intended for PCB placement.
+
+Leave the component's `ROM` property empty to run the built-in hexadecimal font
+demo. Set `ROM` to a binary CHIP-8 image to run another program. Relative paths
+are resolved by Proteus from the project directory, while absolute paths work
+unchanged. Because the property belongs to the component instance, multiple
+CHIP-8 devices can run different ROMs through the same `openvsm.dll`.
 
 The active schematic face is a compact horizontal console:
 
 ```text
 +--------------------------------------------------+
-| CHIP-8                                  HOST STUB |
+| CHIP-8                                       DEMO |
 | +----------------------------+   [1] [2] [3] [C] |
 | |                            |   [4] [5] [6] [D] |
-| |           NO ROM           |   [7] [8] [9] [E] |
+| |       framebuffer          |   [7] [8] [9] [E] |
 | |                            |   [A] [0] [B] [F] |
 | +----------------------------+                   |
-| STOP  PC:0200  60 Hz                             |
+| RUN  PC:0224  60 Hz  700 ips                     |
 +--------------------------------------------------+
 ```
 
 The 192-by-96 display area preserves the CHIP-8 2:1 aspect ratio and gives every
-64-by-32 framebuffer pixel an exact 3-by-3 drawing cell. Pixels will be lime on
-black. The status strip is reserved for run state, program counter, and timer
-rate. The canonical hexadecimal keypad is already drawn and responds visually
-to mouse clicks, but it is not connected to the VM until the host adapter is
-implemented. `NO ROM` and `HOST STUB` make that unfinished state explicit when
-the component is placed in Proteus.
+64-by-32 framebuffer pixel an exact 3-by-3 drawing cell. Pixels are lime on
+black. The adapter executes 700 instructions per second, updates CHIP-8 timers
+at exactly 60 Hz, and repaints only after framebuffer or keypad changes. Mouse
+clicks use the drawn hexadecimal keypad. Keyboard input uses the conventional
+`1234`, `QWER`, `ASDF`, `ZXCV` layout.
 
-## Planned host adapters
+## Host adapters
 
-- OpenVSM: map `device_graphics_plot` to the framebuffer, translate actuation
-  into the 16 CHIP-8 keys, call `graphics.repaint` only when dirty, and schedule
-  CPU/timer slices with simulation time.
+- OpenVSM: `device.lua` maps the framebuffer and keypad to the graphics API and
+  drives CPU/timer slices from Proteus absolute-time callbacks.
 - ImGui: render the same 64-by-32 snapshot as a scaled texture or draw list and
   map desktop keys to `set_key`.
 - Headless: use `framebuffer.lua`, as the native CTest harness does today.
