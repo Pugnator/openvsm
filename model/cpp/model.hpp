@@ -58,6 +58,7 @@ class VirtualDevice : public IDSIMMODEL
     std::string deviceID_;
     std::string deviceGUID_;
     bool simulationCallbackEnabled_ = true;
+    bool modelReady_ = false;
 };
 
 class VirtualContextManager

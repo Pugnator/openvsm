@@ -1,8 +1,10 @@
 #include <log/log.hpp>
 #include <cassert>
+#include <cstdlib>
 #include <format>
 #include "model.hpp"
 #include "lua_stack_guard.hpp"
+#include "model_script_path.hpp"
 #include "lua_script_executor.hpp"
 #include <windows.h>
 #include <combaseapi.h>
@@ -92,6 +94,7 @@ INT VirtualDevice::isdigital(CHAR *pinname)
 
 void VirtualDevice::setup(IINSTANCE *instance, IDSIMCKT *dsim)
 {
+    modelReady_ = false;
     LuaScripting::LuaStackGuard stackGuard(luactx_);
     auto &mgr = VirtualContextManager::getInstance();
     dsim_ = dsim;
@@ -106,8 +109,21 @@ void VirtualDevice::setup(IINSTANCE *instance, IDSIMCKT *dsim)
                               guid.Data4[3], guid.Data4[4], guid.Data4[5], guid.Data4[6], guid.Data4[7]);
 
     LOG_DEBUG("Setting up the device {} {}\n", deviceID_, deviceGUID_);
+    constexpr char scriptProperty[] = "LUA";
+    const char *configuredScript = instance_->getstrval(const_cast<char *>(scriptProperty));
+    const char *scriptRoot = std::getenv("LUAVSM");
+    const auto scriptPath = resolveModelScriptPath(configuredScript == nullptr ? "" : configuredScript,
+                                                   scriptRoot == nullptr ? "" : scriptRoot);
+    if (!scriptPath)
+    {
+        LOG_DEBUG("Failed to select the model script: {}\n", scriptPath.error);
+        return;
+    }
+
+    const auto scriptPathText = scriptPath.path.string();
+    LOG_DEBUG("Loading model script {}\n", scriptPathText);
     auto scripter = std::make_unique<LuaScripting::ScriptExecutor>(luactx_);
-    bool result = scripter->loadScriptFromTextFile("C:\\Dev\\proteus_lua_script\\mcu.lua");
+    bool result = scripter->loadScriptFromTextFile(scriptPathText.c_str());
     if (!result)
     {
         LOG_DEBUG("Failed to load the script\n");
@@ -224,6 +240,7 @@ void VirtualDevice::setup(IINSTANCE *instance, IDSIMCKT *dsim)
         LOG_DEBUG("Failed to register model buses\n");
         return;
     }
+    modelReady_ = true;
 }
 
 void VirtualDevice::runctrl(RUNMODES mode)
@@ -286,7 +303,7 @@ void VirtualDevice::simulate(ABSTIME time, DSIMMODES mode)
     (void)time;
     (void)mode;
     const int originalStackTop = lua_gettop(luactx_);
-    if (!simulationCallbackEnabled_)
+    if (!modelReady_ || !simulationCallbackEnabled_)
     {
         assert(lua_gettop(luactx_) == originalStackTop);
         return;
