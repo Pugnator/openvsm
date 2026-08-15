@@ -25,7 +25,7 @@ struct model_pin
  * Proteus owns the host interface pointers passed to setup(). VirtualDevice
  * owns luactx_ and closes it when the concrete model is destroyed.
  */
-class VirtualDevice : public IDSIMMODEL
+class VirtualDevice : public IDSIMMODEL, public ICPU
 {
   public:
     /** Allocate and initialize the model's Lua state. */
@@ -47,6 +47,11 @@ class VirtualDevice : public IDSIMMODEL
     void simulate(ABSTIME time, DSIMMODES mode) override;
     /** Deliver a scheduled host event to the Lua model. */
     void callback(ABSTIME time, EVENTID eventid) override;
+
+    LRESULT vdmhlr(VDM_COMMAND *command, BYTE *data) override;
+    void loaddata(INT format, INT segment, ADDRESS address, BYTE *data, INT numbytes) override;
+    void disassemble(ADDRESS address, INT numbytes) override;
+    BOOL getvardata(VARITEM *item, VARDATA *data) override;
 
     /** Return the Lua state owned by this model. The pointer is non-owning. */
     lua_State *getLuaContext() const
