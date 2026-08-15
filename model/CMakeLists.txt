@@ -130,7 +130,10 @@ if(BUILD_TESTS)
   add_executable(simulation_stack_test tests/simulation_stack_test.cc)
   target_include_directories(simulation_stack_test PRIVATE ${SRCDIR})
   target_link_libraries(simulation_stack_test PRIVATE VSM_DLL lua_static)
-  add_test(NAME simulation_stack COMMAND simulation_stack_test)
+  add_test(
+    NAME simulation_stack
+    COMMAND simulation_stack_test "${CMAKE_CURRENT_SOURCE_DIR}/tests/fixtures/empty_device.lua"
+  )
 
   add_executable(random_seed_test tests/random_seed_test.cc)
   target_include_directories(random_seed_test PRIVATE ${SRCDIR})
