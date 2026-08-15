@@ -39,6 +39,12 @@ namespace DeviceSimulator
 #define PIN_OFF_TIME "off_time"
 #define PIN_ON_TIME "on_time"
 
+VirtualContextManager &VirtualContextManager::getInstance()
+{
+    static VirtualContextManager instance;
+    return instance;
+}
+
 VirtualDevice::VirtualDevice()
 {
     LOG_DEBUG("Creating the device\n");
@@ -74,6 +80,7 @@ VirtualDevice::VirtualDevice()
 VirtualDevice::~VirtualDevice()
 {
     LOG_DEBUG("Destroying the device\n");
+    VirtualContextManager::getInstance().unregisterDevice(*this);
     lua_close(luactx_);
 }
 
@@ -341,5 +348,23 @@ const VirtualDevice *VirtualContextManager::getDevice()
 void VirtualContextManager::registerDevice(std::string id, VirtualDevice &device)
 {
     devices_[id] = &device;
+}
+void VirtualContextManager::unregisterDevice(const VirtualDevice &device)
+{
+    for (auto deviceIt = devices_.begin(); deviceIt != devices_.end();)
+    {
+        if (deviceIt->second == &device)
+        {
+            if (currentDevice_ == deviceIt->first)
+            {
+                currentDevice_.clear();
+            }
+            deviceIt = devices_.erase(deviceIt);
+        }
+        else
+        {
+            ++deviceIt;
+        }
+    }
 }
 } // namespace DeviceSimulator
