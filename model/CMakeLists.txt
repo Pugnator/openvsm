@@ -110,4 +110,12 @@ if(BUILD_TESTS)
   target_include_directories(pin_registration_stack_test PRIVATE ${SRCDIR})
   target_link_libraries(pin_registration_stack_test PRIVATE VSM_DLL lua_static)
   add_test(NAME pin_registration_stack COMMAND pin_registration_stack_test)
+
+  add_executable(script_executor_ownership_test
+    tests/script_executor_ownership_test.cc
+    ${SRCDIR}/luabind/lua_script_executor.cc
+  )
+  target_include_directories(script_executor_ownership_test PRIVATE ${SRCDIR}/luabind)
+  target_link_libraries(script_executor_ownership_test PRIVATE lua_static tinyLog)
+  add_test(NAME script_executor_ownership COMMAND script_executor_ownership_test)
 endif()
