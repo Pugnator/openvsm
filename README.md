@@ -20,7 +20,7 @@ Documentation can be found at http://pugnator.github.io/openvsm
 
 Prebuilt DLL and symbols or installer are in [Release](https://github.com/Pugnator/openvsm/releases) section
 
-Written in C99 and gcc-ready (mingw/cygwin) for Linux and Windows
+The v0.7 native model is written in C++20 and currently builds with 32-bit MSVC.
 
   - You don't need to recompile anything - one DLL for all models in Lua
   - You can create your model as a standalone DLL or use DLL and Lua script together while prototyping
@@ -63,25 +63,54 @@ corresponding SDK behavior. Call methods with Lua's object syntax, such as
   - Run installer and install it
   - Visit `exmples` for some example projects  
 
-How to build
---------------
+## How to build
 
-The CMake build requires CMake 3.21 or newer and supports CMake 4.x.
-Select the required 32-bit MSVC target with the Visual Studio generator option
+### Requirements
+
+- Visual Studio 2022 with the **Desktop development with C++** workload and
+  Win32 build tools;
+- CMake 3.21 or newer (CMake 4.x is supported);
+- the Proteus VSM SDK headers supplied with your Proteus installation.
+
+CMake is the only supported project build entry point. Makefiles inside
+`externals/Lua` belong to that upstream submodule and are not used by OpenVSM.
+
+### Checkout
+
+Clone with the Lua and TinyLog submodules:
+
+```powershell
+git clone --recurse-submodules https://github.com/Pugnator/openvsm.git
+cd openvsm
+```
+
+For an existing checkout, initialize them with:
+
+```powershell
+git submodule update --init --recursive
+```
+
+### Proteus SDK
+
+Create `externals/sdk` and copy the VSM SDK headers into it. At minimum, the
+directory must contain `vsm.hpp`; model-specific VDM headers can be placed next
+to it. The directory is ignored by Git because the SDK is distributed with
+Proteus rather than this project.
+
+### Configure and build
+
+The checked-in preset selects Visual Studio 2022 and its 32-bit platform:
+
+```powershell
+cmake --preset vs2022-win32
+cmake --build --preset debug
+cmake --build --preset release
+```
+
+For a manual Visual Studio configuration, select the same target with
 `-A Win32`; MSVC does not use the GCC `-m32` option.
 
-  - Install mingw32 and cygwin for you platform
-  - Install Lua 5.3 or higher
-  - Clone: https://github.com/Pugnator/openvsm.git openvsm
-  - Navigate to the openvsm directory
-  - Issue "make" command in Linux or "mingw32-make" under Windows
-  - Create environment variable containing path to the script directory,
-issuing the following command:
-
-```bat
-setx LUAVSM "C:\script"
-```
-  - In this case you should place your model script to c:\script directory
+Build outputs are written below `build/vs2022-win32/bin/<configuration>`.
 
 # License
 ----
