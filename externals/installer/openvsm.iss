@@ -41,16 +41,64 @@ Source: "{#OpenVsmDllPath}"; DestDir: "{code:GetProteusInstallDir}\Models"; Dest
 Name: "{group}\{cm:UninstallProgram,{#MyAppName}}"; Filename: "{uninstallexe}"
 
 [Registry]
-Root: HKLM; Subkey: "SYSTEM\CurrentControlSet\Control\Session Manager\Environment"; ValueType: expandsz; ValueName: "LUAVSM"; ValueData: "{app}\LuaScripts"; Flags: deletevalue
+Root: HKLM; Subkey: "SYSTEM\CurrentControlSet\Control\Session Manager\Environment"; ValueType: expandsz; ValueName: "LUAVSM"; ValueData: "{app}\LuaScripts"; Flags: preservestringtype; Check: ShouldManageLuaVsm
+Root: HKLM; Subkey: "SOFTWARE\432 Works\OpenVSM"; ValueType: expandsz; ValueName: "InstallerLuaVsm"; ValueData: "{app}\LuaScripts"; Flags: uninsdeletevalue uninsdeletekeyifempty; Check: ShouldManageLuaVsm
 
 [Dirs]
 Name: "{app}\LuaScripts"; Flags: uninsneveruninstall
 
 [Messages]
 BeveledLabel=OpenVSM
-FinishedLabel=The default folder for model scripts is LuaScripts inside the OpenVSM installation directory.%nChange the LUAVSM user environment variable to use another folder.
+FinishedLabel=The default folder for model scripts is LuaScripts inside the OpenVSM installation directory.%nAn existing LUAVSM environment variable is preserved.
 
 [Code]
+const
+  EnvironmentKey = 'SYSTEM\CurrentControlSet\Control\Session Manager\Environment';
+  InstallerKey = 'SOFTWARE\432 Works\OpenVSM';
+
+var
+  LuaVsmDecisionMade: Boolean;
+  ManageLuaVsm: Boolean;
+
+function SamePath(const Left, Right: string): Boolean;
+begin
+  Result := CompareText(RemoveBackslashUnlessRoot(Left), RemoveBackslashUnlessRoot(Right)) = 0;
+end;
+
+function ShouldManageLuaVsm(): Boolean;
+var
+  ExistingValue: string;
+  InstallerValue: string;
+begin
+  if not LuaVsmDecisionMade then
+  begin
+    LuaVsmDecisionMade := True;
+    ManageLuaVsm := not RegQueryStringValue(HKEY_LOCAL_MACHINE, EnvironmentKey, 'LUAVSM', ExistingValue);
+
+    if (not ManageLuaVsm) and
+       RegQueryStringValue(HKEY_LOCAL_MACHINE, InstallerKey, 'InstallerLuaVsm', InstallerValue) then
+    begin
+      ManageLuaVsm := SamePath(ExistingValue, InstallerValue);
+    end;
+  end;
+
+  Result := ManageLuaVsm;
+end;
+
+procedure CurUninstallStepChanged(CurUninstallStep: TUninstallStep);
+var
+  ExistingValue: string;
+  InstallerValue: string;
+begin
+  if (CurUninstallStep = usUninstall) and
+     RegQueryStringValue(HKEY_LOCAL_MACHINE, InstallerKey, 'InstallerLuaVsm', InstallerValue) and
+     RegQueryStringValue(HKEY_LOCAL_MACHINE, EnvironmentKey, 'LUAVSM', ExistingValue) and
+     SamePath(ExistingValue, InstallerValue) then
+  begin
+    RegDeleteValue(HKEY_LOCAL_MACHINE, EnvironmentKey, 'LUAVSM');
+  end;
+end;
+
 function GetProteusInstallDir(Value: string): string;
 var
   InstallPath: string;
