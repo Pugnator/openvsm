@@ -4,7 +4,6 @@ project(LuaBytecode)
 
 set(LUA_SRC_DIR "${CMAKE_CURRENT_BINARY_DIR}/../../externals/Lua/src")
 set(LUA_BIN_DIR ${CMAKE_BINARY_DIR}/model/lua)
-set(LUA_EXECUTABLE "${LUA_SRC_DIR}/luac")
 
 file(READ ${CMAKE_CURRENT_SOURCE_DIR}/lua_sources.lst LUA_FILES_LIST)
 string(REPLACE "\n" ";" LUA_FILES_LIST "${LUA_FILES_LIST}")
@@ -30,8 +29,8 @@ foreach(CurrentLuaFile IN LISTS LUA_SINGLE_FILES)
         OUTPUT ${OutputFile}
         COMMENT "Compiling Lua file: ${CurrentLuaFile}"
         COMMAND ${CMAKE_COMMAND} -E make_directory "${TargetDirectory}"
-        COMMAND ${LUA_EXECUTABLE} -o ${OutputFile} ${CurrentLuaFile}
-        DEPENDS ${CurrentLuaFile}
+        COMMAND $<TARGET_FILE:luac> -o ${OutputFile} ${CurrentLuaFile}
+        DEPENDS luac ${CurrentLuaFile}
         VERBATIM
     )    
 endforeach()
@@ -44,6 +43,6 @@ set_source_files_properties(
 )
 
 add_custom_target(LuaBytecode ALL DEPENDS ${ALL_LUA_BYTECODE_FILES} ${EMBEDDED_LUA_LIST})
-add_dependencies(LuaBytecode lua_static)
+add_dependencies(LuaBytecode luac)
 
 include_directories(${LUA_SRC_DIR})
