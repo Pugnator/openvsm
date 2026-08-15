@@ -1,5 +1,3 @@
-#include <string>
-#include <vector>
 #include "model.hpp"
 #include <lua.hpp>
 
@@ -31,14 +29,10 @@ int main()
 {
     deletedsimmodel(nullptr);
 
-    auto &manager = DeviceSimulator::VirtualContextManager::getInstance();
     constexpr int iterations = 64;
     for (int iteration = 0; iteration < iterations; ++iteration)
     {
         auto *device = new DeviceSimulator::VirtualDevice;
-        const std::string id = "deletion-test-" + std::to_string(iteration);
-        manager.registerDevice(id, *device);
-        manager.setCurrentDevice(id);
         installFinalizer(device->getLuaContext());
 
         IDSIMMODEL *baseModel = device;
@@ -48,15 +42,7 @@ int main()
         {
             return 1;
         }
-        if (manager.getDevice(id) != nullptr)
-        {
-            return 2;
-        }
-        if (manager.getDevice() != nullptr)
-        {
-            return 3;
-        }
     }
 
-    return finalizerCalls == iterations ? 0 : 4;
+    return finalizerCalls == iterations ? 0 : 2;
 }

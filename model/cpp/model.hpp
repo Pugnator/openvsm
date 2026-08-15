@@ -1,7 +1,6 @@
 #pragma once
 
 #include <cstddef>
-#include <map>
 #include <memory>
 #include <string>
 #include <vector>
@@ -100,41 +99,4 @@ class VirtualDevice : public IDSIMMODEL, public ICPU
     std::unique_ptr<LuaEventDispatcher> eventDispatcher_;
 };
 
-/** Registry used by native Lua functions to locate the active model instance.
- *
- * Registered pointers are non-owning. Model lifetime remains with the exported
- * factory/deleter contract.
- */
-class VirtualContextManager
-{
-  public:
-    /** Return the process-wide context registry. */
-    static VirtualContextManager &getInstance();
-
-    VirtualContextManager(VirtualContextManager const &) = delete;
-    void operator=(VirtualContextManager const &) = delete;
-
-    /** Find a registered device by Proteus instance ID, or return nullptr. */
-    const VirtualDevice *getDevice(const std::string &id);
-    /** Return the active device, or nullptr when no registered device is active. */
-    const VirtualDevice *getDevice();
-    /** Return a registered device's non-owning Lua state, or nullptr. */
-    const lua_State *getDeviceLuaContext(const std::string &id);
-    /** Register a non-owning device pointer under its Proteus instance ID. */
-    void registerDevice(std::string id, VirtualDevice &device);
-    /** Remove every registry entry that points to the given device. */
-    void unregisterDevice(const VirtualDevice &device);
-    /** Select the device whose native Lua calls are currently being dispatched. */
-    void setCurrentDevice(const std::string &id)
-    {
-        currentDevice_ = id;
-    }
-
-  private:
-    VirtualContextManager() {};
-
-    std::string currentDevice_;
-    std::map<std::string, VirtualDevice *> devices_;
-    lua_State *luactx_;
-};
 } // namespace DeviceSimulator
