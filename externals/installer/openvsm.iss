@@ -1,5 +1,5 @@
 #ifndef OpenVsmVersion
-  #define OpenVsmVersion "0.19"
+  #define OpenVsmVersion "0.7"
 #endif
 #ifndef OpenVsmDllPath
   #define OpenVsmDllPath "..\..\dll\openvsm.dll"
