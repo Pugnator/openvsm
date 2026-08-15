@@ -223,6 +223,21 @@ if(BUILD_TESTS)
     COMMAND lua_test_ic_test "${CMAKE_CURRENT_SOURCE_DIR}/tests/fixtures/test_ic.lua"
   )
 
+  add_executable(chip8_core_test tests/chip8_core_test.cc)
+  target_link_libraries(chip8_core_test PRIVATE lua_static)
+  if(MSVC)
+    target_compile_options(chip8_core_test PRIVATE /EHsc)
+  endif()
+
+  add_test(
+    NAME chip8_core
+    COMMAND chip8_core_test
+            "${CMAKE_SOURCE_DIR}/examples/chip8/core.lua"
+            "${CMAKE_SOURCE_DIR}/examples/chip8/framebuffer.lua"
+            "${CMAKE_SOURCE_DIR}/examples/chip8/device.lua"
+            "${CMAKE_CURRENT_SOURCE_DIR}/tests/fixtures/chip8_core_test.lua"
+  )
+
   add_executable(object_callback_test
     tests/object_callback_test.cc
     ${SRCDIR}/luabind/device/lua_event_dispatcher.cc

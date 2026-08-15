@@ -1,0 +1,34 @@
+{*DEVICE}
+NAME=LUA_CHIP8
+
+{PREFIX=U}
+
+{*PROPDEFS}
+
+{MODDLL="VSM Model DLL",HIDDEN STRING}
+
+{LUA="LUA",STRING}
+
+{PRIMITIVE="Primitive Type",HIDDEN STRING}
+
+{PACKAGE="PCB Package",PACKAGE,0}
+
+{*INDEX}
+
+{CAT=Microprocessor ICs}
+
+{DESC=CHIP-8 virtual machine with display and hexadecimal keypad}
+
+{MFR=OpenVSM}
+
+{SUBCAT=Virtual Machines}
+
+{*COMPONENT}
+
+{PRIMITIVE=DIGITAL}
+
+{MODDLL=openvsm.DLL}
+{
+LUA=chip8/device.lua}
+
+{PACKAGE=DIL8}

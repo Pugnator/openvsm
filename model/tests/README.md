@@ -3,7 +3,9 @@
 The test suite runs without Proteus by replacing SDK-facing pins with small
 in-process fakes. `fixtures/test_ic.lua` is a complete three-pin NAND model used
 to check the Lua model contract, lifecycle calls, timing declarations, truth
-table, and timer arguments.
+table, and timer arguments. The CHIP-8 test loads the portable example core into
+the bundled Lua runtime and exercises its instruction set, timers, input,
+framebuffer, compatibility profiles, and fault handling with deterministic ROMs.
 
 Configure and run the suite with Visual Studio's 32-bit generator:
 
