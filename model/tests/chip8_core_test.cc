@@ -13,9 +13,9 @@ void setPath(lua_State *lua, const char *name, const char *path)
 
 int main(int argumentCount, char **arguments)
 {
-    if (argumentCount != 4)
+    if (argumentCount != 5)
     {
-        std::cerr << "Expected CHIP-8 core, framebuffer, and test script paths\n";
+        std::cerr << "Expected CHIP-8 core, framebuffer, device, and test script paths\n";
         return 1;
     }
 
@@ -28,8 +28,9 @@ int main(int argumentCount, char **arguments)
 
     setPath(lua, "CHIP8_CORE_PATH", arguments[1]);
     setPath(lua, "CHIP8_FRAMEBUFFER_PATH", arguments[2]);
+    setPath(lua, "CHIP8_DEVICE_PATH", arguments[3]);
 
-    if (luaL_dofile(lua, arguments[3]) != LUA_OK)
+    if (luaL_dofile(lua, arguments[4]) != LUA_OK)
     {
         std::cerr << lua_tostring(lua, -1) << '\n';
         lua_close(lua);

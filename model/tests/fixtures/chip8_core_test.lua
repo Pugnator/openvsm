@@ -247,6 +247,55 @@ local function test_faults()
     end)
 end
 
+local function test_device_stub()
+    local draw_count = 0
+    local repaint_count = 0
+    graphics = {
+        BLACK = 0,
+        WHITE = 1,
+        GREY = 2,
+        BRIGHTWHITE = 3,
+        BRIGHTGREEN = 4,
+        TXJ_LEFT = 0x01,
+        TXJ_CENTRE = 0x02,
+        TXJ_RIGHT = 0x04,
+        TXJ_MIDDLE = 0x08,
+        ACF_LEFT = 0x01,
+        set_draw_scale = function() end,
+        set_pen_width = function() end,
+        set_text_size = function() end,
+        set_pen_colour = function() end,
+        set_brush_colour = function() end,
+        set_text_colour = function() end,
+        draw_box = function()
+            draw_count = draw_count + 1
+        end,
+        draw_text = function()
+            draw_count = draw_count + 1
+        end,
+        repaint = function()
+            repaint_count = repaint_count + 1
+        end
+    }
+
+    dofile(CHIP8_DEVICE_PATH)
+    check(type(device_pins) == "table" and #device_pins == 0,
+          "device stub unexpectedly declared electrical pins")
+    check(type(device_init) == "function" and type(device_simulate) == "function",
+          "device lifecycle callbacks were not defined")
+    check(type(device_graphics_init) == "function" and type(device_graphics_plot) == "function" and
+          type(device_graphics_actuate) == "function", "device graphics callbacks were not defined")
+
+    device_graphics_init()
+    device_graphics_plot(0)
+    check(draw_count >= 20, "device stub did not draw the console face")
+    check(device_graphics_actuate(0, 222, 32, graphics.ACF_LEFT),
+          "device stub did not accept a keypad click")
+    check(repaint_count == 1, "keypad click did not request a repaint")
+    check(not device_graphics_actuate(0, 4, 4, graphics.ACF_LEFT),
+          "device stub accepted a click outside the keypad")
+end
+
 test_reset_and_framebuffer()
 test_arithmetic_and_logic()
 test_flow_control()
@@ -255,5 +304,6 @@ test_input_and_timers()
 test_random_and_quirks()
 test_drawing()
 test_faults()
+test_device_stub()
 
 assert(checks >= 50, "CHIP-8 test coverage unexpectedly shrank")

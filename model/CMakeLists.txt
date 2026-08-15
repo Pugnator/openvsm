@@ -234,6 +234,7 @@ if(BUILD_TESTS)
     COMMAND chip8_core_test
             "${CMAKE_SOURCE_DIR}/examples/chip8/core.lua"
             "${CMAKE_SOURCE_DIR}/examples/chip8/framebuffer.lua"
+            "${CMAKE_SOURCE_DIR}/examples/chip8/device.lua"
             "${CMAKE_CURRENT_SOURCE_DIR}/tests/fixtures/chip8_core_test.lua"
   )
 

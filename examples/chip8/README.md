@@ -46,6 +46,36 @@ Execution is deterministic when `random_byte` is injected. Timers are separated
 from instruction execution so a Proteus callback, an ImGui event loop, or a
 headless test can drive the same core at an exact 60 Hz.
 
+## Proteus device stub
+
+`device.txt` follows the same Proteus library-description structure as the NAND
+example and loads `chip8/device.lua` through `openvsm.DLL`. The first version is
+a self-contained virtual console with no electrical pins. Its DIL8 package is a
+temporary metadata placeholder inherited from the NAND stub; the component is
+not yet intended for PCB placement.
+
+The active schematic face is a compact horizontal console:
+
+```text
++--------------------------------------------------+
+| CHIP-8                                  HOST STUB |
+| +----------------------------+   [1] [2] [3] [C] |
+| |                            |   [4] [5] [6] [D] |
+| |           NO ROM           |   [7] [8] [9] [E] |
+| |                            |   [A] [0] [B] [F] |
+| +----------------------------+                   |
+| STOP  PC:0200  60 Hz                             |
++--------------------------------------------------+
+```
+
+The 192-by-96 display area preserves the CHIP-8 2:1 aspect ratio and gives every
+64-by-32 framebuffer pixel an exact 3-by-3 drawing cell. Pixels will be lime on
+black. The status strip is reserved for run state, program counter, and timer
+rate. The canonical hexadecimal keypad is already drawn and responds visually
+to mouse clicks, but it is not connected to the VM until the host adapter is
+implemented. `NO ROM` and `HOST STUB` make that unfinished state explicit when
+the component is placed in Proteus.
+
 ## Planned host adapters
 
 - OpenVSM: map `device_graphics_plot` to the framebuffer, translate actuation
