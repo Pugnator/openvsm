@@ -6,6 +6,8 @@ to check the Lua model contract, lifecycle calls, timing declarations, truth
 table, and timer arguments. The CHIP-8 test loads the portable example core into
 the bundled Lua runtime and exercises its instruction set, timers, input,
 framebuffer, compatibility profiles, and fault handling with deterministic ROMs.
+The runtime-logging test verifies that the installed-build configuration writes
+its startup diagnostic instead of leaving an empty `log.txt`.
 
 Configure and run the suite with Visual Studio's 32-bit generator:
 
