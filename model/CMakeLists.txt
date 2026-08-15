@@ -5,6 +5,19 @@ message(STATUS "VERSION: ${OPENVSM_VERSION}")
 
 project(VSM_DLL VERSION ${OPENVSM_VERSION} LANGUAGES C CXX)
 
+if("${PROJECT_VERSION_PATCH}" STREQUAL "")
+  set(PROJECT_VERSION_PATCH 0)
+endif()
+if("${PROJECT_VERSION_TWEAK}" STREQUAL "")
+  set(PROJECT_VERSION_TWEAK 0)
+endif()
+
+configure_file(
+  include/resources.h.in
+  "${CMAKE_CURRENT_BINARY_DIR}/generated/resources.h"
+  @ONLY
+)
+
 set(BUILD_SHARED_LIBS ON)
 option(BUILD_TESTS "Enable building tests" OFF)
 
@@ -39,6 +52,7 @@ set_target_properties(VSM_DLL PROPERTIES
   CXX_STANDARD_REQUIRED ON
   POSITION_INDEPENDENT_CODE ON
 )
+target_include_directories(VSM_DLL PRIVATE "${CMAKE_CURRENT_BINARY_DIR}/generated")
 
 target_compile_definitions(VSM_DLL PRIVATE
   OPENVSM_VERSION="${OPENVSM_VERSION}"

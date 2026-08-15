@@ -2,6 +2,9 @@ cmake_minimum_required(VERSION 3.21)
 
 project(OpenVSM)
 
+file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/model/VERSION.txt" OPENVSM_VERSION)
+option(DLL_WITH_INSTALLER "Enable the Inno Setup installer target" OFF)
+
 if(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")  
   message(INFO "MSVC found, continue...")
 else()
@@ -14,8 +17,6 @@ set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/lib)
 
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
-
-set(BasicSettingsFile ${CMAKE_CURRENT_SOURCE_DIR}/wakadll/cpp/settings/basic_settings.yml)
 
 function(openvsm_add_bundled_lua)
   # The pinned Lua project declares CMake 3.1 compatibility. CMake 4 rejects
@@ -40,21 +41,23 @@ add_subdirectory(model)
 add_subdirectory(model/lua)
 
 
-if(DLL_WITH_INSTALLER)  
-  set(INNO_SETUP_SCRIPT_PATH "installer/waka.iss")
-  add_custom_target(BuildInstaller 
-                    COMMAND ISCC.exe ${INNO_SETUP_SCRIPT_PATH}
-                    COMMENT "Building the installer using Inno Setup..."
+if(DLL_WITH_INSTALLER)
+  find_program(INNO_SETUP_COMPILER NAMES ISCC.exe ISCC REQUIRED)
+  set(INNO_SETUP_SCRIPT_PATH "${CMAKE_CURRENT_SOURCE_DIR}/externals/installer/openvsm.iss")
+  set(INNO_SETUP_OUTPUT_DIR "${CMAKE_BINARY_DIR}/installer")
+  add_custom_target(BuildInstaller
+                    COMMAND ${CMAKE_COMMAND} -E make_directory "${INNO_SETUP_OUTPUT_DIR}"
+                    COMMAND "${INNO_SETUP_COMPILER}"
+                            "/DOpenVsmVersion=${OPENVSM_VERSION}"
+                            "/DOpenVsmDllPath=$<TARGET_FILE:VSM_DLL>"
+                            "/DOpenVsmLoggerPath=$<TARGET_FILE:tinyLog>"
+                            "/DOpenVsmOutputDir=${INNO_SETUP_OUTPUT_DIR}"
+                            "${INNO_SETUP_SCRIPT_PATH}"
+                    COMMENT "Building the OpenVSM installer"
+                    VERBATIM
   )
-  add_dependencies(BuildInstaller VSM_DLL)
+  add_dependencies(BuildInstaller VSM_DLL tinyLog)
 endif()
-
-#add_custom_target(BasicSettings ALL DEPENDS ${BasicSettingsFile})
-#get_filename_component(BasicSettingsFileName ${BasicSettingsFile} NAME_WE)
-#add_custom_command(TARGET BasicSettings        
-#        COMMENT "Copying settings file ${BasicSettingsFile}"
-#        COMMAND ${CMAKE_COMMAND} -E copy ${BasicSettingsFile} "${CMAKE_BINARY_DIR}/${BasicSettingsFileName}.yml"
-#)
 
 target_include_directories(VSM_DLL PUBLIC externals)
 target_include_directories(VSM_DLL PUBLIC model/cpp)
