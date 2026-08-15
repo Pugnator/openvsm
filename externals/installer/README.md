@@ -1,7 +1,7 @@
 # OpenVSM installer
 
 The Inno Setup script is built through CMake so it receives the selected
-configuration's `openvsm.dll` and `logger.dll` paths and the version from
+configuration's self-contained `openvsm.dll` path and the version from
 `model/VERSION.txt`.
 
 ```powershell
