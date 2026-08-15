@@ -1,6 +1,8 @@
 #include <log/log.hpp>
 #include "model.hpp"
 #include "lua.hpp"
+#include "lua_stack_guard.hpp"
+#include "luabind/device/pin.hpp"
 
 namespace DeviceSimulator
 {
@@ -257,18 +259,24 @@ static const luaL_Reg VsmPinMethodsLib[] = {{"set", l_pin_set},
                                             {"polarity", l_pin_polarity},
                                             {NULL, NULL}};
 
+void registerPinLibrary(lua_State *luaContext, const char *name, int number)
+{
+    LuaScripting::LuaStackGuard stackGuard(luaContext);
+    luaL_newlib(luaContext, VsmPinMethodsLib);
+
+    // Set the pin number as a field in the library
+    lua_pushnumber(luaContext, number);
+    lua_setfield(luaContext, -2, "pinNumber");
+
+    lua_pushstring(luaContext, name);
+    lua_setfield(luaContext, -2, "pinName");
+    // Set the library as a global variable with the given name
+    lua_setglobal(luaContext, name);
+}
+
 void VirtualDevice::registerPin(const char *name, int num)
 {
     LOG_DEBUG("Registering pin {}-{}\n", name, num);
-    luaL_newlib(luactx_, VsmPinMethodsLib);
-
-    // Set the pin number as a field in the library
-    lua_pushnumber(luactx_, num);
-    lua_setfield(luactx_, -2, "pinNumber");
-
-    lua_pushstring(luactx_, name);
-    lua_setfield(luactx_, -2, "pinName");
-    // Set the library as a global variable with the given name
-    lua_setglobal(luactx_, name);
+    registerPinLibrary(luactx_, name, num);
 }
 } // namespace DeviceSimulator

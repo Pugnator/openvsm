@@ -1,6 +1,7 @@
 #include <log/log.hpp>
 #include <format>
 #include "model.hpp"
+#include "lua_stack_guard.hpp"
 #include "lua_script_executor.hpp"
 #include <windows.h>
 #include <combaseapi.h>
@@ -46,6 +47,7 @@ VirtualDevice::VirtualDevice()
         throw std::runtime_error("Failed to create a new Lua state");
     }
 
+    LuaScripting::LuaStackGuard stackGuard(luactx_);
     luaL_openlibs(luactx_);
     lua_pushcfunction(luactx_, lua_print);
     lua_setglobal(luactx_, "print");
@@ -64,6 +66,7 @@ VirtualDevice::VirtualDevice()
     {
         LOG_DEBUG("Error calling math.randomseed: {}\n", lua_tostring(luactx_, -1));
     }
+    lua_settop(luactx_, stackGuard.top());
     LOG_DEBUG("Lua context created\n");
 }
 
@@ -81,6 +84,7 @@ INT VirtualDevice::isdigital(CHAR *pinname)
 
 void VirtualDevice::setup(IINSTANCE *instance, IDSIMCKT *dsim)
 {
+    LuaScripting::LuaStackGuard stackGuard(luactx_);
     auto &mgr = VirtualContextManager::getInstance();
     dsim_ = dsim;
     instance_ = instance;
@@ -99,9 +103,11 @@ void VirtualDevice::setup(IINSTANCE *instance, IDSIMCKT *dsim)
     if (!result)
     {
         LOG_DEBUG("Failed to load the script\n");
+        lua_settop(luactx_, stackGuard.top());
         return;
     }
     scripter->execute();
+    lua_settop(luactx_, stackGuard.top());
 
     lua_getglobal(luactx_, "device_init");
     if (lua_isfunction(luactx_, lua_gettop(luactx_)))
@@ -111,7 +117,12 @@ void VirtualDevice::setup(IINSTANCE *instance, IDSIMCKT *dsim)
         {
             const char *err = lua_tostring(luactx_, -1);
             LOG_DEBUG("Simulation failed with \"{}\"\n", err);
+            lua_pop(luactx_, 1);
         }
+    }
+    else
+    {
+        lua_pop(luactx_, 1);
     }
 
     lua_getglobal(luactx_, "timer_callback");
@@ -119,18 +130,21 @@ void VirtualDevice::setup(IINSTANCE *instance, IDSIMCKT *dsim)
     {
         LOG_DEBUG("Timer callback function found\n");
     }
+    lua_pop(luactx_, 1);
 
     lua_getglobal(luactx_, "device_simulate");
     if (lua_isfunction(luactx_, lua_gettop(luactx_)))
     {
         LOG_DEBUG("Simulation function found\n");
     }
+    lua_pop(luactx_, 1);
 
     lua_getglobal(luactx_, "device_pins");
 
     if (!lua_istable(luactx_, lua_gettop(luactx_)))
     {
         LOG_DEBUG("Fatal error, no pin assignments found in script\n");
+        lua_pop(luactx_, 1);
         return;
     }
 
