@@ -1,8 +1,22 @@
-# Lua modules
+# Optional Lua modules
 
-The source modules in this directory can be copied beneath `%LUAVSM%\modules`.
-Load the UART module from a model script and construct it after pin objects
-exist:
+These ordinary Lua 5.4 source modules can be copied beneath
+`%LUAVSM%\modules`. A model can load them directly or add the model root to
+Lua's module search path:
+
+```lua
+local root = assert(os.getenv("LUAVSM"), "LUAVSM is not set")
+package.path = root .. "/?.lua;" .. package.path
+local Control = require("modules.vdm_control")
+```
+
+- `uart.lua` sends 8-N-1 frames through a Lua pin object.
+- `vdm_control.lua` implements a generic, bounded third-party control profile
+  over the Proteus Virtual Debug Monitor transport.
+
+## UART example
+
+Construct the UART module after pin objects exist:
 
 ```lua
 local script_root = assert(os.getenv("LUAVSM"))
