@@ -247,9 +247,33 @@ local function test_faults()
     end)
 end
 
-local function test_device_stub()
+local function test_device_adapter()
     local draw_count = 0
     local repaint_count = 0
+    local drawn_text = {}
+    local callbacks = {}
+    local errors = {}
+    local messages = {}
+    local configured_rom_path = ""
+
+    SEC = 1000000000000
+    get_string_param = function(name)
+        check(name == "ROM", "device requested an unexpected model property")
+        return configured_rom_path
+    end
+    systime = function()
+        return 5000
+    end
+    set_callback = function(time, event_id)
+        callbacks[#callbacks + 1] = {time = time, event_id = event_id}
+    end
+    vsm_error = function(message)
+        errors[#errors + 1] = message
+    end
+    print = function(message)
+        messages[#messages + 1] = tostring(message)
+    end
+
     graphics = {
         BLACK = 0,
         WHITE = 1,
@@ -270,8 +294,9 @@ local function test_device_stub()
         draw_box = function()
             draw_count = draw_count + 1
         end,
-        draw_text = function()
+        draw_text = function(_, _, _, _, text)
             draw_count = draw_count + 1
+            drawn_text[#drawn_text + 1] = text
         end,
         repaint = function()
             repaint_count = repaint_count + 1
@@ -280,20 +305,63 @@ local function test_device_stub()
 
     dofile(CHIP8_DEVICE_PATH)
     check(type(device_pins) == "table" and #device_pins == 0,
-          "device stub unexpectedly declared electrical pins")
+          "device adapter unexpectedly declared electrical pins")
     check(type(device_init) == "function" and type(device_simulate) == "function",
           "device lifecycle callbacks were not defined")
-    check(type(device_graphics_init) == "function" and type(device_graphics_plot) == "function" and
-          type(device_graphics_actuate) == "function", "device graphics callbacks were not defined")
+    check(type(timer_callback) == "function" and type(device_graphics_init) == "function" and
+          type(device_graphics_plot) == "function" and type(device_graphics_actuate) == "function",
+          "device timer or graphics callbacks were not defined")
 
+    device_init()
     device_graphics_init()
+    check(#callbacks == 1 and callbacks[1].time > systime(), "device did not schedule its first timer tick")
+    check(#messages == 1 and messages[1]:find("DEMO", 1, true) ~= nil,
+          "device did not report the built-in demo")
+
+    draw_count = 0
     device_graphics_plot(0)
-    check(draw_count >= 20, "device stub did not draw the console face")
+    local empty_display_draw_count = draw_count
+    check(empty_display_draw_count >= 20, "device adapter did not draw the console face")
+
+    for index = 1, 60 do
+        local scheduled = callbacks[index]
+        check(scheduled ~= nil, "device stopped scheduling timer ticks")
+        timer_callback(scheduled.time, scheduled.event_id)
+    end
+    check(#callbacks == 61, "device did not maintain its 60 Hz timer chain")
+    check(callbacks[61].time - callbacks[1].time == SEC,
+          "device timer accumulated drift over one second")
+    check(repaint_count > 0, "framebuffer changes did not request a repaint")
+
+    draw_count = 0
+    drawn_text = {}
+    device_graphics_plot(0)
+    check(draw_count > empty_display_draw_count + 20, "built-in demo did not render framebuffer pixels")
+    local status_text = table.concat(drawn_text, " ")
+    check(status_text:find("DEMO", 1, true) ~= nil and status_text:find("RUN", 1, true) ~= nil,
+          "device did not render its ROM and run status")
+
+    local repaint_before_key = repaint_count
     check(device_graphics_actuate(0, 222, 32, graphics.ACF_LEFT),
-          "device stub did not accept a keypad click")
-    check(repaint_count == 1, "keypad click did not request a repaint")
+          "device adapter did not accept a keypad click")
+    check(repaint_count == repaint_before_key + 1, "keypad click did not request a repaint")
+    timer_callback(callbacks[61].time, callbacks[61].event_id)
+    check(repaint_count > repaint_before_key + 1, "keypad pulse was not released on the next timer tick")
+    check(device_graphics_actuate(string.byte("x"), 0, 0, 0),
+          "device adapter did not accept the conventional keyboard layout")
     check(not device_graphics_actuate(0, 4, 4, graphics.ACF_LEFT),
-          "device stub accepted a click outside the keypad")
+          "device adapter accepted a click outside the keypad")
+
+    configured_rom_path = "__openvsm_missing_chip8_rom__.ch8"
+    local callback_count = #callbacks
+    device_init()
+    check(#callbacks == callback_count, "device scheduled execution after a ROM load failure")
+    check(#errors == 1 and errors[1]:find(configured_rom_path, 1, true) ~= nil,
+          "device did not report the failing per-instance ROM path")
+    drawn_text = {}
+    device_graphics_plot(0)
+    check(table.concat(drawn_text, " "):find("ROM ERROR", 1, true) ~= nil,
+          "device did not display its ROM error state")
 end
 
 test_reset_and_framebuffer()
@@ -304,6 +372,6 @@ test_input_and_timers()
 test_random_and_quirks()
 test_drawing()
 test_faults()
-test_device_stub()
+test_device_adapter()
 
-assert(checks >= 50, "CHIP-8 test coverage unexpectedly shrank")
+assert(checks >= 120, "CHIP-8 test coverage unexpectedly shrank")
