@@ -55,6 +55,11 @@ self-contained virtual console with no electrical pins. Its DIL8 package is a
 temporary metadata placeholder inherited from the NAND example; the component
 is not intended for PCB placement.
 
+The device is a one-state active component with the symbol name stem
+`LUA_CHIP8` and DLL linking enabled. When recreating it with Make Device, set
+those values in Active Component Properties; otherwise Proteus creates only the
+digital model and never calls the graphics or input callbacks.
+
 Leave the component's `ROM` property empty to run the built-in hexadecimal font
 demo. Set `ROM` to a binary CHIP-8 image to run another program. Relative paths
 are resolved by Proteus from the project directory, while absolute paths work
