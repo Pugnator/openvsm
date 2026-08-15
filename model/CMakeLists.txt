@@ -182,4 +182,15 @@ if(BUILD_TESTS)
   endif()
 
   add_test(NAME vsm_lua_api COMMAND vsm_lua_api_test)
+
+  add_executable(lua_test_ic_test tests/lua_test_ic_test.cc)
+  target_link_libraries(lua_test_ic_test PRIVATE lua_static)
+  if(MSVC)
+    target_compile_options(lua_test_ic_test PRIVATE /EHsc)
+  endif()
+
+  add_test(
+    NAME lua_test_ic
+    COMMAND lua_test_ic_test "${CMAKE_CURRENT_SOURCE_DIR}/tests/fixtures/test_ic.lua"
+  )
 endif()
