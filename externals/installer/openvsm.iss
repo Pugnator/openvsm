@@ -139,6 +139,27 @@ begin
   end;
 end;
 
+function GetDetectedProteusModelsDir(): string;
+var
+  InstallDir: string;
+  SharedModelsDir: string;
+begin
+  SharedModelsDir := ExpandConstant(
+    '{commonappdata}\Labcenter Electronics\Proteus 8 Professional\MODELS');
+  if DirExists(SharedModelsDir) then
+  begin
+    Result := SharedModelsDir;
+    exit;
+  end;
+
+  Result := '';
+  InstallDir := GetDetectedProteusInstallDir();
+  if InstallDir <> '' then
+  begin
+    Result := AddBackslash(InstallDir) + 'Models';
+  end;
+end;
+
 function GetProteusModelsDir(Value: string): string;
 begin
   Result := ProteusModelsPage.Values[0];
@@ -154,7 +175,7 @@ end;
 
 procedure InitializeWizard();
 var
-  InstallDir: string;
+  ModelsDir: string;
 begin
   ProteusModelsPage := CreateInputDirPage(
     wpSelectDir,
@@ -165,10 +186,10 @@ begin
     '');
   ProteusModelsPage.Add('');
 
-  InstallDir := GetDetectedProteusInstallDir();
-  if InstallDir <> '' then
+  ModelsDir := GetDetectedProteusModelsDir();
+  if ModelsDir <> '' then
   begin
-    ProteusModelsPage.Values[0] := AddBackslash(InstallDir) + 'Models';
+    ProteusModelsPage.Values[0] := ModelsDir;
   end;
 end;
 
