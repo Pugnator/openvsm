@@ -30,9 +30,11 @@ Set `OPENVSM_SIGNTOOL` when `signtool.exe` is not on `PATH` or in the standard
 Windows SDK directory. `OPENVSM_SIGN_TIMESTAMP_URL` selects the RFC 3161
 timestamp service and defaults to DigiCert.
 
-Setup detects Proteus 7 or 8 Professional from the registry and displays the
-resulting Models directory for confirmation. If registry detection fails, the
-user must select an existing Proteus Models directory; Setup does not silently
+Setup first checks the shared Proteus 8 Models directory below
+`{commonappdata}\Labcenter Electronics\Proteus 8 Professional\MODELS`, then
+falls back to detecting Proteus 7 or 8 Professional from the registry. The
+resulting directory is displayed for confirmation. If detection fails, the user
+must select an existing Proteus Models directory; Setup does not silently
 install model DLLs into the OpenVSM application directory.
 
 Lua examples are copied below `{app}\LuaScripts` with their repository
