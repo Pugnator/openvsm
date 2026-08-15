@@ -7,6 +7,8 @@
 
 namespace DeviceSimulator
 {
+class LuaEventDispatcher;
+
 struct BusDefinition
 {
     std::string name;
@@ -22,5 +24,6 @@ struct BusDefinition
 };
 
 bool readBusDefinition(lua_State *lua, int tableIndex, BusDefinition &definition, std::string &error);
-void registerBusObject(lua_State *lua, const BusDefinition &definition, IBUSPIN *bus, IDSIMCKT *dsim);
+void registerBusObject(lua_State *lua, const BusDefinition &definition, IBUSPIN *bus, IDSIMCKT *dsim,
+                       LuaEventDispatcher *dispatcher = nullptr);
 } // namespace DeviceSimulator

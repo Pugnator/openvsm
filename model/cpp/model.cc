@@ -7,6 +7,7 @@
 #include "model_script_path.hpp"
 #include "lua_callback.hpp"
 #include "luabind/device/pin_timing.hpp"
+#include "luabind/device/lua_event_dispatcher.hpp"
 #include "lua_script_executor.hpp"
 #include "vsm_lua_api.hpp"
 #include <windows.h>
@@ -58,6 +59,7 @@ VirtualDevice::VirtualDevice()
     {
         throw std::runtime_error("Failed to create a new Lua state");
     }
+    eventDispatcher_ = std::make_unique<LuaEventDispatcher>(luactx_, this);
 
     LuaScripting::LuaStackGuard stackGuard(luactx_);
     luaL_openlibs(luactx_);
@@ -86,6 +88,7 @@ VirtualDevice::~VirtualDevice()
 {
     LOG_DEBUG("Destroying the device\n");
     VirtualContextManager::getInstance().unregisterDevice(*this);
+    eventDispatcher_.reset();
     lua_close(luactx_);
 }
 
@@ -256,6 +259,7 @@ void VirtualDevice::simulate(ABSTIME time, DSIMMODES mode)
 
     auto &vinstance = VirtualContextManager::getInstance();
     vinstance.setCurrentDevice(deviceID_);
+    eventDispatcher_->dispatch(time, mode);
 
     lua_getglobal(luactx_, "device_simulate");
     if (!lua_isfunction(luactx_, -1))

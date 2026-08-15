@@ -3,6 +3,7 @@
 #include <limits>
 #include "model.hpp"
 #include "bus.hpp"
+#include "lua_event_dispatcher.hpp"
 #include "lua.hpp"
 
 namespace DeviceSimulator
@@ -260,12 +261,17 @@ bool readBusDefinition(lua_State *lua, int tableIndex, BusDefinition &definition
     return true;
 }
 
-void registerBusObject(lua_State *lua, const BusDefinition &definition, IBUSPIN *bus, IDSIMCKT *dsim)
+void registerBusObject(lua_State *lua, const BusDefinition &definition, IBUSPIN *bus, IDSIMCKT *dsim,
+                       LuaEventDispatcher *dispatcher)
 {
     bus->settiming(definition.on_time, definition.off_time, definition.tristate_time);
     bus->setstates(definition.on_state, definition.off_state, definition.tristate_state);
 
     luaL_newlib(lua, busMethods);
+    if (dispatcher != nullptr)
+    {
+        attachBusCallbackApi(lua, -1, bus, dispatcher);
+    }
     lua_pushlightuserdata(lua, bus);
     lua_setfield(lua, -2, nativeBusField);
     lua_pushlightuserdata(lua, dsim);
@@ -316,7 +322,7 @@ bool VirtualDevice::registerBuses()
             return false;
         }
 
-        registerBusObject(luactx_, definition, bus, dsim_);
+        registerBusObject(luactx_, definition, bus, dsim_, eventDispatcher_.get());
         lua_pop(luactx_, 1);
     }
 

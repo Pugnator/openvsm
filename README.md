@@ -59,6 +59,21 @@ zero-based, and drive values must fit the declared width. The optional
 corresponding SDK behavior. Call methods with Lua's object syntax, such as
 `D:drive(0x5a)` or `D:drivebit(0, SHI)`.
 
+Pin objects support `pin:onchange(function)` and `pin:onstate(state, function)`.
+Bus objects similarly support `bus:onchange(function)` and
+`bus:onvalue(value, function)`. A callback receives simulation time, simulation
+mode, and the new pin state or bus value. It runs only after the registered
+object changes; a callback that raises an error is disabled without affecting
+the other callbacks.
+
+```lua
+function device_init()
+    A:onstate(SHI, function(time, mode, state)
+        print("A became high", time, mode, state)
+    end)
+end
+```
+
 # Installation
 --------------
 
