@@ -29,6 +29,7 @@ set(DLL_SRC
   ${SRCDIR}/luabind/device/bus.cc
   ${SRCDIR}/model_script_path.cc
   ${SRCDIR}/luabind/device/pin.cc
+  ${SRCDIR}/luabind/lua_callback.cc
   ${SRCDIR}/luabind/lua_facade.cc
   ${SRCDIR}/luabind/lua_script_executor.cc
   ${SRCDIR}/luabind/bytecode_loader.cc
@@ -146,4 +147,16 @@ if(BUILD_TESTS)
   endif()
 
   add_test(NAME model_script_path COMMAND model_script_path_test)
+
+  add_executable(lua_lifecycle_test
+    tests/lua_lifecycle_test.cc
+    ${SRCDIR}/luabind/lua_callback.cc
+  )
+  target_include_directories(lua_lifecycle_test PRIVATE ${SRCDIR})
+  target_link_libraries(lua_lifecycle_test PRIVATE lua_static)
+  if(MSVC)
+    target_compile_options(lua_lifecycle_test PRIVATE /EHsc)
+  endif()
+
+  add_test(NAME lua_lifecycle COMMAND lua_lifecycle_test)
 endif()
