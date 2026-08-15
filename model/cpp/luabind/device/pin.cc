@@ -1,5 +1,6 @@
 #include <log/log.hpp>
 #include "model.hpp"
+#include "pin_timing.hpp"
 #include "lua.hpp"
 #include "lua_stack_guard.hpp"
 #include "luabind/device/pin.hpp"
@@ -24,12 +25,31 @@ model_pin getPinSelf(lua_State *L)
     int pinNumber = luaL_checkinteger(L, -1);
     lua_pop(L, 1);
 
+    lua_pushstring(L, "onTime");
+    lua_gettable(L, -lua_gettop(L));
+    const auto onTime = static_cast<RELTIME>(luaL_checkinteger(L, -1));
+    lua_pop(L, 1);
+
+    lua_pushstring(L, "offTime");
+    lua_gettable(L, -lua_gettop(L));
+    const auto offTime = static_cast<RELTIME>(luaL_checkinteger(L, -1));
+    lua_pop(L, 1);
+
     model_pin pin;
     pin.name = pinName;
     pin.number = pinNumber;
-    pin.on_time = 0;
-    pin.off_time = 0;
+    pin.on_time = onTime;
+    pin.off_time = offTime;
     return pin;
+}
+
+static void setPinState(const model_pin &pin, STATE state)
+{
+    auto device = VirtualContextManager::getInstance().getDevice();
+    auto pinInstance = device->getPin(const_cast<CHAR *>(pin.name.c_str()));
+    ABSTIME time = 0;
+    device->getDSIM()->systime(&time);
+    pinInstance->setstate(time, transitionDelay(state, pin), state);
 }
 
 static int l_pin_set(lua_State *L)
@@ -39,13 +59,7 @@ static int l_pin_set(lua_State *L)
     int level = luaL_checkinteger(L, -1);
     lua_pop(L, 1);
 
-    auto device = VirtualContextManager::getInstance().getDevice();
-    auto pinInstance = device->getPin(const_cast<CHAR *>(pin.name.c_str()));
-
-    auto dsim = device->getDSIM();
-    DOUBLE at;
-    dsim->sysvar(&at, DSIMTIMENOW);
-    pinInstance->setstate(at, 10000, level == 1 ? TSTATE : FSTATE);
+    setPinState(pin, level == 1 ? TSTATE : FSTATE);
     return 0;
 }
 
@@ -56,13 +70,7 @@ static int l_pin_set_state(lua_State *L)
     STATE state = (STATE)luaL_checkinteger(L, -1);
     lua_pop(L, 1);
 
-    auto device = VirtualContextManager::getInstance().getDevice();
-    auto pinInstance = device->getPin(const_cast<CHAR *>(pin.name.c_str()));
-
-    auto dsim = device->getDSIM();
-    DOUBLE at;
-    dsim->sysvar(&at, DSIMTIMENOW);
-    pinInstance->setstate(at, 10000, state);
+    setPinState(pin, state);
     return 0;
 }
 
@@ -80,18 +88,14 @@ static int l_pin_get(lua_State *L)
 static int l_pin_set_hi(lua_State *L)
 {
     auto pin = getPinSelf(L);
-    auto device = VirtualContextManager::getInstance().getDevice();
-    auto pinInstance = device->getPin(const_cast<CHAR *>(pin.name.c_str()));
-    pinInstance->setstate(TSTATE);
+    setPinState(pin, TSTATE);
     return 0;
 }
 
 static int l_pin_set_lo(lua_State *L)
 {
     auto pin = getPinSelf(L);
-    auto device = VirtualContextManager::getInstance().getDevice();
-    auto pinInstance = device->getPin(const_cast<CHAR *>(pin.name.c_str()));
-    pinInstance->setstate(FSTATE);
+    setPinState(pin, FSTATE);
     return 0;
 }
 
@@ -100,7 +104,19 @@ static int l_pin_invert(lua_State *L)
     auto pin = getPinSelf(L);
     auto device = VirtualContextManager::getInstance().getDevice();
     auto pinInstance = device->getPin(const_cast<CHAR *>(pin.name.c_str()));
-    pinInstance->invert();
+    const auto state = pinInstance->istate();
+    if (ishigh(state))
+    {
+        setPinState(pin, FSTATE);
+    }
+    else if (islow(state))
+    {
+        setPinState(pin, TSTATE);
+    }
+    else
+    {
+        pinInstance->invert();
+    }
     return 0;
 }
 
@@ -259,24 +275,37 @@ static const luaL_Reg VsmPinMethodsLib[] = {{"set", l_pin_set},
                                             {"polarity", l_pin_polarity},
                                             {NULL, NULL}};
 
-void registerPinLibrary(lua_State *luaContext, const char *name, int number)
+namespace
+{
+void registerPinLibrary(lua_State *luaContext, const model_pin &pin)
 {
     LuaScripting::LuaStackGuard stackGuard(luaContext);
     luaL_newlib(luaContext, VsmPinMethodsLib);
 
-    // Set the pin number as a field in the library
-    lua_pushnumber(luaContext, number);
+    lua_pushinteger(luaContext, pin.number);
     lua_setfield(luaContext, -2, "pinNumber");
 
-    lua_pushstring(luaContext, name);
+    lua_pushstring(luaContext, pin.name.c_str());
     lua_setfield(luaContext, -2, "pinName");
-    // Set the library as a global variable with the given name
-    lua_setglobal(luaContext, name);
+
+    lua_pushinteger(luaContext, pin.on_time);
+    lua_setfield(luaContext, -2, "onTime");
+
+    lua_pushinteger(luaContext, pin.off_time);
+    lua_setfield(luaContext, -2, "offTime");
+
+    lua_setglobal(luaContext, pin.name.c_str());
+}
+} // namespace
+
+void registerPinLibrary(lua_State *luaContext, const char *name, int number)
+{
+    registerPinLibrary(luaContext, model_pin{name, number, 0, 0});
 }
 
-void VirtualDevice::registerPin(const char *name, int num)
+void VirtualDevice::registerPin(const model_pin &pin)
 {
-    LOG_DEBUG("Registering pin {}-{}\n", name, num);
-    registerPinLibrary(luactx_, name, num);
+    LOG_DEBUG("Registering pin {}-{}\n", pin.name, pin.number);
+    registerPinLibrary(luactx_, pin);
 }
 } // namespace DeviceSimulator
