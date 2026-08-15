@@ -210,4 +210,15 @@ if(BUILD_TESTS)
   endif()
 
   add_test(NAME object_callback COMMAND object_callback_test)
+
+  add_executable(uart_module_test tests/uart_module_test.cc)
+  target_link_libraries(uart_module_test PRIVATE lua_static)
+  if(MSVC)
+    target_compile_options(uart_module_test PRIVATE /EHsc)
+  endif()
+
+  add_test(
+    NAME uart_module
+    COMMAND uart_module_test "${CMAKE_CURRENT_SOURCE_DIR}/lua/modules/uart.lua"
+  )
 endif()
