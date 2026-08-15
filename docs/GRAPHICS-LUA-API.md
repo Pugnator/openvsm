@@ -2,9 +2,9 @@
 
 OpenVSM can export a Proteus active model and a digital model from the same C++
 object and Lua state. Set the component's `LUA` property as for an ordinary v0.7
-model; relative paths are resolved below `LUAVSM`. Proteus calls the active
-model for drawing and user input while its digital side continues to receive
-pin simulation events.
+model; relative paths are resolved beside the Proteus project first and below
+`LUAVSM` second. Proteus calls the active model for drawing and user input while
+its digital side continues to receive pin simulation events.
 
 An active model may define any of these callbacks:
 

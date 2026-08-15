@@ -17,5 +17,6 @@ struct ModelScriptPath
     }
 };
 
-ModelScriptPath resolveModelScriptPath(std::string_view configuredScript, std::string_view scriptRoot);
+ModelScriptPath resolveModelScriptPath(std::string_view configuredScript, const std::filesystem::path &projectRoot,
+                                       const std::filesystem::path &scriptRoot);
 } // namespace DeviceSimulator
