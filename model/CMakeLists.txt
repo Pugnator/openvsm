@@ -73,6 +73,14 @@ target_compile_options(VSM_DLL PRIVATE
   $<$<AND:$<COMPILE_LANGUAGE:CXX>,$<CXX_COMPILER_ID:MSVC>>:/EHsc>
 )
 
+if(OPENVSM_SIGN_CERTIFICATE_SHA1)
+  add_custom_command(TARGET VSM_DLL POST_BUILD
+    COMMAND "${OPENVSM_SIGNTOOL}" ${OPENVSM_SIGN_ARGS} "$<TARGET_FILE:VSM_DLL>"
+    COMMENT "Signing openvsm.dll"
+    VERBATIM
+  )
+endif()
+
 set_target_properties(VSM_DLL PROPERTIES PREFIX "")
 set_target_properties(VSM_DLL PROPERTIES OUTPUT_NAME "openvsm")
 
