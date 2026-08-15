@@ -25,6 +25,7 @@ set(SRCDIR cpp)
 
 set(DLL_SRC
   ${SRCDIR}/dllmain.cc
+  ${SRCDIR}/active_model.cc
   ${SRCDIR}/model.cc
   ${SRCDIR}/luabind/device/bus.cc
   ${SRCDIR}/model_script_path.cc
@@ -32,6 +33,7 @@ set(DLL_SRC
   ${SRCDIR}/luabind/device/pin.cc
   ${SRCDIR}/luabind/lua_callback.cc
   ${SRCDIR}/luabind/device/pin_timing.cc
+  ${SRCDIR}/luabind/graphics_lua_api.cc
   ${SRCDIR}/luabind/lua_facade.cc
   ${SRCDIR}/luabind/lua_script_executor.cc
   ${SRCDIR}/luabind/vdm_lua_api.cc
@@ -255,4 +257,19 @@ if(BUILD_TESTS)
     NAME vdm_control_module
     COMMAND vdm_control_module_test "${CMAKE_CURRENT_SOURCE_DIR}/lua/modules/vdm_control.lua"
   )
+
+  add_executable(graphics_lua_api_test
+    tests/graphics_lua_api_test.cc
+    ${SRCDIR}/luabind/graphics_lua_api.cc
+  )
+  target_include_directories(graphics_lua_api_test PRIVATE
+    ${SRCDIR}
+    ${CMAKE_SOURCE_DIR}/externals/sdk
+  )
+  target_link_libraries(graphics_lua_api_test PRIVATE lua_static)
+  if(MSVC)
+    target_compile_options(graphics_lua_api_test PRIVATE /EHsc)
+  endif()
+
+  add_test(NAME graphics_lua_api COMMAND graphics_lua_api_test)
 endif()

@@ -3,6 +3,7 @@
 #include <stdbool.h>
 #include <vsm.hpp>
 #include <log/log.hpp>
+#include "active_model.hpp"
 #include "model.hpp"
 
 namespace
@@ -15,6 +16,21 @@ bool vsmRegister(ILICENCESERVER *ils)
 
 extern "C"
 {
+    IACTIVEMODEL __declspec(dllexport) * createactivemodel(char *device, ILICENCESERVER *ils)
+    {
+        (void)device;
+        if (!ils || !vsmRegister(ils))
+        {
+            return nullptr;
+        }
+        return new DeviceSimulator::LuaActiveModel;
+    }
+
+    void __declspec(dllexport) deleteactivemodel(IACTIVEMODEL *model)
+    {
+        delete static_cast<DeviceSimulator::LuaActiveModel *>(model);
+    }
+
     IDSIMMODEL __declspec(dllexport) * createdsimmodel(char *device, ILICENCESERVER *ils)
     {
         (void)device;

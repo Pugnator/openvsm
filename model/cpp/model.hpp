@@ -1,10 +1,13 @@
 #pragma once
-#include <vsm.hpp>
-#include <lua.hpp>
+
+#include <cstddef>
 #include <map>
 #include <memory>
 #include <string>
 #include <vector>
+
+#include <vsm.hpp>
+#include <lua.hpp>
 
 namespace DeviceSimulator
 {
