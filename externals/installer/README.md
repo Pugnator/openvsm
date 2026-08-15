@@ -13,6 +13,10 @@ The installer is written below `.build/installer/installer`. A normal OpenVSM
 configure/build leaves `DLL_WITH_INSTALLER` disabled and does not require Inno
 Setup.
 
+Setup creates the machine-wide `LUAVSM` environment variable only when it is
+absent. A pre-existing value is left unchanged. On uninstall, Setup removes
+`LUAVSM` only when it created the value and the user has not changed it since.
+
 Release builds can sign both `openvsm.dll` and the generated installer with a
 certificate from the Windows certificate store:
 
