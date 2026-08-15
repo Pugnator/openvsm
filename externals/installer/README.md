@@ -12,3 +12,16 @@ cmake --build .build/installer --config Release --target BuildInstaller
 The installer is written below `.build/installer/installer`. A normal OpenVSM
 configure/build leaves `DLL_WITH_INSTALLER` disabled and does not require Inno
 Setup.
+
+Release builds can sign both `openvsm.dll` and the generated installer with a
+certificate from the Windows certificate store:
+
+```powershell
+cmake -S . -B .build/signed -A Win32 -DDLL_WITH_INSTALLER=ON `
+  -DOPENVSM_SIGN_CERTIFICATE_SHA1=<certificate-thumbprint>
+cmake --build .build/signed --config Release --target BuildInstaller
+```
+
+Set `OPENVSM_SIGNTOOL` when `signtool.exe` is not on `PATH` or in the standard
+Windows SDK directory. `OPENVSM_SIGN_TIMESTAMP_URL` selects the RFC 3161
+timestamp service and defaults to DigiCert.
