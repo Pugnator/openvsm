@@ -35,7 +35,7 @@ SolidCompression=yes
 Name: "english"; MessagesFile: "compiler:Default.isl"
 
 [Files]
-Source: "{#OpenVsmDllPath}"; DestDir: "{code:GetProteusInstallDir}\Models"; DestName: "openvsm.dll"; Flags: ignoreversion
+Source: "{#OpenVsmDllPath}"; DestDir: "{code:GetProteusModelsDir}"; DestName: "openvsm.dll"; Flags: ignoreversion
 
 [Icons]
 Name: "{group}\{cm:UninstallProgram,{#MyAppName}}"; Filename: "{uninstallexe}"
@@ -59,6 +59,7 @@ const
 var
   LuaVsmDecisionMade: Boolean;
   ManageLuaVsm: Boolean;
+  ProteusModelsPage: TInputDirWizardPage;
 
 function SamePath(const Left, Right: string): Boolean;
 begin
@@ -99,11 +100,11 @@ begin
   end;
 end;
 
-function GetProteusInstallDir(Value: string): string;
+function GetDetectedProteusInstallDir(): string;
 var
   InstallPath: string;
 begin
-  Result := ExpandConstant('{app}');
+  Result := '';
 
   if RegQueryStringValue(HKEY_LOCAL_MACHINE,
     'SOFTWARE\Wow6432Node\Labcenter Electronics\Proteus 8 Professional',
@@ -134,5 +135,57 @@ begin
     'Path', InstallPath) then
   begin
     Result := InstallPath;
+  end;
+end;
+
+function GetProteusModelsDir(Value: string): string;
+begin
+  Result := ProteusModelsPage.Values[0];
+end;
+
+function ValidateProteusModelsDir(): Boolean;
+var
+  ModelsDir: string;
+begin
+  ModelsDir := GetProteusModelsDir('');
+  Result := (ModelsDir <> '') and DirExists(ModelsDir);
+end;
+
+procedure InitializeWizard();
+var
+  InstallDir: string;
+begin
+  ProteusModelsPage := CreateInputDirPage(
+    wpSelectDir,
+    'Select the Proteus Models directory',
+    'Choose the Models directory used by Proteus.',
+    'Setup detected the directory below. If it is incorrect, select the Models directory for the Proteus installation that should load OpenVSM.',
+    False,
+    '');
+  ProteusModelsPage.Add('');
+
+  InstallDir := GetDetectedProteusInstallDir();
+  if InstallDir <> '' then
+  begin
+    ProteusModelsPage.Values[0] := AddBackslash(InstallDir) + 'Models';
+  end;
+end;
+
+function NextButtonClick(CurPageID: Integer): Boolean;
+begin
+  Result := True;
+  if (CurPageID = ProteusModelsPage.ID) and not ValidateProteusModelsDir() then
+  begin
+    MsgBox('Select an existing Proteus Models directory before continuing.', mbError, MB_OK);
+    Result := False;
+  end;
+end;
+
+function PrepareToInstall(var NeedsRestart: Boolean): String;
+begin
+  Result := '';
+  if not ValidateProteusModelsDir() then
+  begin
+    Result := 'A valid Proteus Models directory is required. Setup cannot continue.';
   end;
 end;

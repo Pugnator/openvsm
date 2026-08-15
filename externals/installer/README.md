@@ -29,3 +29,8 @@ cmake --build .build/signed --config Release --target BuildInstaller
 Set `OPENVSM_SIGNTOOL` when `signtool.exe` is not on `PATH` or in the standard
 Windows SDK directory. `OPENVSM_SIGN_TIMESTAMP_URL` selects the RFC 3161
 timestamp service and defaults to DigiCert.
+
+Setup detects Proteus 7 or 8 Professional from the registry and displays the
+resulting Models directory for confirmation. If registry detection fails, the
+user must select an existing Proteus Models directory; Setup does not silently
+install model DLLs into the OpenVSM application directory.
