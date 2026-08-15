@@ -36,6 +36,7 @@ Name: "english"; MessagesFile: "compiler:Default.isl"
 
 [Files]
 Source: "{#OpenVsmDllPath}"; DestDir: "{code:GetProteusModelsDir}"; DestName: "openvsm.dll"; Flags: ignoreversion
+Source: "..\..\examples\*.lua"; DestDir: "{app}\LuaScripts"; Flags: ignoreversion recursesubdirs createallsubdirs onlyifdoesntexist uninsneveruninstall
 
 [Icons]
 Name: "{group}\{cm:UninstallProgram,{#MyAppName}}"; Filename: "{uninstallexe}"

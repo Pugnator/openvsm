@@ -34,3 +34,7 @@ Setup detects Proteus 7 or 8 Professional from the registry and displays the
 resulting Models directory for confirmation. If registry detection fails, the
 user must select an existing Proteus Models directory; Setup does not silently
 install model DLLs into the OpenVSM application directory.
+
+Lua examples are copied below `{app}\LuaScripts` with their repository
+subdirectories preserved. Existing or user-modified example files are never
+overwritten or removed during uninstall.
