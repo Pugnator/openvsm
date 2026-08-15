@@ -46,12 +46,6 @@ namespace DeviceSimulator
 #define PIN_OFF_TIME "off_time"
 #define PIN_ON_TIME "on_time"
 
-VirtualContextManager &VirtualContextManager::getInstance()
-{
-    static VirtualContextManager instance;
-    return instance;
-}
-
 VirtualDevice::VirtualDevice()
 {
     LOG_DEBUG("Creating the device\n");
@@ -88,7 +82,6 @@ VirtualDevice::VirtualDevice()
 VirtualDevice::~VirtualDevice()
 {
     LOG_DEBUG("Destroying the device\n");
-    VirtualContextManager::getInstance().unregisterDevice(*this);
     eventDispatcher_.reset();
     lua_close(luactx_);
 }
@@ -103,10 +96,8 @@ void VirtualDevice::setup(IINSTANCE *instance, IDSIMCKT *dsim)
 {
     modelReady_ = false;
     LuaScripting::LuaStackGuard stackGuard(luactx_);
-    auto &mgr = VirtualContextManager::getInstance();
     dsim_ = dsim;
     instance_ = instance;
-    mgr.registerDevice(instance_->id(), *this);
     deviceID_ = instance_->id();
     GUID guid;
     CoCreateGuid(&guid);
@@ -185,7 +176,6 @@ void VirtualDevice::setup(IINSTANCE *instance, IDSIMCKT *dsim)
         return;
     }
 
-    mgr.setCurrentDevice(deviceID_);
     const auto initialization = LuaScripting::invokeCallback(luactx_, "device_init");
     if (initialization.status == LuaScripting::CallbackStatus::succeeded)
     {
@@ -264,8 +254,6 @@ void VirtualDevice::simulate(ABSTIME time, DSIMMODES mode)
         return;
     }
 
-    auto &vinstance = VirtualContextManager::getInstance();
-    vinstance.setCurrentDevice(deviceID_);
     eventDispatcher_->dispatch(time, mode);
 
     lua_getglobal(luactx_, "device_simulate");
@@ -292,9 +280,6 @@ void VirtualDevice::callback(ABSTIME time, EVENTID eventid)
     {
         return;
     }
-
-    auto &vinstance = VirtualContextManager::getInstance();
-    vinstance.setCurrentDevice(deviceID_);
 
     const auto callback = LuaScripting::invokeCallback(
         luactx_, "timer_callback", {static_cast<lua_Integer>(time), static_cast<lua_Integer>(eventid)});
@@ -326,54 +311,4 @@ BOOL VirtualDevice::getvardata(VARITEM *item, VARDATA *data)
     return FALSE;
 }
 
-const lua_State *VirtualContextManager::getDeviceLuaContext(const std::string &id)
-{
-    if (devices_.find(id) != devices_.end())
-    {
-        VirtualDevice *device = devices_[id];
-        return device->getLuaContext();
-    }
-    return nullptr;
-}
-
-const VirtualDevice *VirtualContextManager::getDevice(const std::string &id)
-{
-    if (devices_.find(id) != devices_.end())
-    {
-        return devices_[id];
-    }
-    return nullptr;
-}
-
-const VirtualDevice *VirtualContextManager::getDevice()
-{
-    if (devices_.find(currentDevice_) != devices_.end())
-    {
-        return devices_[currentDevice_];
-    }
-    return nullptr;
-}
-
-void VirtualContextManager::registerDevice(std::string id, VirtualDevice &device)
-{
-    devices_[id] = &device;
-}
-void VirtualContextManager::unregisterDevice(const VirtualDevice &device)
-{
-    for (auto deviceIt = devices_.begin(); deviceIt != devices_.end();)
-    {
-        if (deviceIt->second == &device)
-        {
-            if (currentDevice_ == deviceIt->first)
-            {
-                currentDevice_.clear();
-            }
-            deviceIt = devices_.erase(deviceIt);
-        }
-        else
-        {
-            ++deviceIt;
-        }
-    }
-}
 } // namespace DeviceSimulator

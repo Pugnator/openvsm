@@ -114,6 +114,11 @@ if(BUILD_TESTS)
   target_link_libraries(pin_registration_stack_test PRIVATE VSM_DLL lua_static)
   add_test(NAME pin_registration_stack COMMAND pin_registration_stack_test)
 
+  add_executable(pin_device_isolation_test tests/pin_device_isolation_test.cc)
+  target_include_directories(pin_device_isolation_test PRIVATE ${SRCDIR})
+  target_link_libraries(pin_device_isolation_test PRIVATE VSM_DLL lua_static)
+  add_test(NAME pin_device_isolation COMMAND pin_device_isolation_test)
+
   add_executable(script_executor_ownership_test
     tests/script_executor_ownership_test.cc
     ${SRCDIR}/luabind/lua_script_executor.cc
