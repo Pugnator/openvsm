@@ -9,11 +9,7 @@ namespace
 {
 bool vsmRegister(ILICENCESERVER *ils)
 {
-    if (!ils->authorize(0, VSM_API_VERSION))
-    {
-        return false;
-    }
-    return true;
+    return ils && ils->authorize(0, VSM_API_VERSION);
 }
 } // namespace
 
@@ -22,7 +18,11 @@ extern "C"
     IDSIMMODEL __declspec(dllexport) * createdsimmodel(char *device, ILICENCESERVER *ils)
     {
         (void)device;
-        vsmRegister(ils);
+        if (!vsmRegister(ils))
+        {
+            LOG_DEBUG("VSM authorization failed; model creation refused\n");
+            return nullptr;
+        }
         return new DeviceSimulator::VirtualDevice;
     }
 
