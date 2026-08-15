@@ -124,8 +124,18 @@ void VirtualDevice::setup(IINSTANCE *instance, IDSIMCKT *dsim)
     constexpr char scriptProperty[] = "LUA";
     const char *configuredScript = instance_->getstrval(const_cast<char *>(scriptProperty));
     const char *scriptRoot = std::getenv("LUAVSM");
-    const auto scriptPath = resolveModelScriptPath(configuredScript == nullptr ? "" : configuredScript,
-                                                   scriptRoot == nullptr ? "" : scriptRoot);
+
+    std::error_code projectDirectoryError;
+    auto projectDirectory = std::filesystem::current_path(projectDirectoryError);
+    if (projectDirectoryError)
+    {
+        LOG_DEBUG("Failed to determine the Proteus project directory: {}\n", projectDirectoryError.message());
+        projectDirectory.clear();
+    }
+
+    const auto scriptPath =
+        resolveModelScriptPath(configuredScript == nullptr ? "" : configuredScript, projectDirectory,
+                               scriptRoot == nullptr ? std::filesystem::path{} : scriptRoot);
     if (!scriptPath)
     {
         LOG_DEBUG("Failed to select the model script: {}\n", scriptPath.error);

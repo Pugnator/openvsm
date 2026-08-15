@@ -61,20 +61,35 @@ bool loadAndCheck(lua_State *lua, const std::filesystem::path &path, int expecte
 int main()
 {
     TemporaryDirectory scripts;
-    const auto firstScript = scripts.path() / "first model.lua";
-    const auto secondScript = scripts.path() / "second model.lua";
-    if (!writeScript(firstScript, 1) || !writeScript(secondScript, 2))
+    const auto projectRoot = scripts.path() / "project";
+    const auto installedRoot = scripts.path() / "installed";
+    std::filesystem::create_directories(projectRoot);
+    std::filesystem::create_directories(installedRoot);
+
+    const auto projectScript = projectRoot / "shared model.lua";
+    const auto shadowedInstalledScript = installedRoot / "shared model.lua";
+    const auto fallbackScript = installedRoot / "fallback model.lua";
+    const auto absoluteScript = scripts.path() / "absolute model.lua";
+    if (!writeScript(projectScript, 1) || !writeScript(shadowedInstalledScript, 2) || !writeScript(fallbackScript, 3) ||
+        !writeScript(absoluteScript, 4))
     {
         std::cerr << "Failed to create the test scripts\n";
         return 1;
     }
 
-    const auto first = DeviceSimulator::resolveModelScriptPath("first model.lua", scripts.path().string());
-    const auto second = DeviceSimulator::resolveModelScriptPath(secondScript.string(), "unused root");
-    if (!first || !second || first.path != firstScript.lexically_normal() ||
-        second.path != secondScript.lexically_normal())
+    const auto projectFirst = DeviceSimulator::resolveModelScriptPath("shared model.lua", projectRoot, installedRoot);
+    const auto installedFallback =
+        DeviceSimulator::resolveModelScriptPath("fallback model.lua", projectRoot, installedRoot);
+    const auto absolute =
+        DeviceSimulator::resolveModelScriptPath(absoluteScript.string(), "unused project", "unused root");
+    const auto projectOnly =
+        DeviceSimulator::resolveModelScriptPath("shared model.lua", projectRoot, std::filesystem::path{});
+    if (!projectFirst || !installedFallback || !absolute || !projectOnly ||
+        projectFirst.path != projectScript.lexically_normal() ||
+        installedFallback.path != fallbackScript.lexically_normal() ||
+        absolute.path != absoluteScript.lexically_normal() || projectOnly.path != projectScript.lexically_normal())
     {
-        std::cerr << "Failed to resolve distinct relative and absolute model scripts\n";
+        std::cerr << "Failed to apply project-first model script resolution\n";
         return 1;
     }
 
@@ -85,7 +100,8 @@ int main()
         return 1;
     }
 
-    const bool scriptsLoaded = loadAndCheck(lua, first.path, 1) && loadAndCheck(lua, second.path, 2);
+    const bool scriptsLoaded = loadAndCheck(lua, projectFirst.path, 1) &&
+                               loadAndCheck(lua, installedFallback.path, 3) && loadAndCheck(lua, absolute.path, 4);
     lua_close(lua);
     if (!scriptsLoaded)
     {
@@ -93,9 +109,28 @@ int main()
         return 1;
     }
 
-    const auto noRoot = DeviceSimulator::resolveModelScriptPath("relative.lua", {});
-    const auto missing = DeviceSimulator::resolveModelScriptPath("missing.lua", scripts.path().string());
-    if (noRoot || missing)
+    const auto missing = DeviceSimulator::resolveModelScriptPath("missing.lua", projectRoot, installedRoot);
+    const auto missingProjectPath = (projectRoot / "missing.lua").lexically_normal().string();
+    const auto missingInstalledPath = (installedRoot / "missing.lua").lexically_normal().string();
+    if (missing || missing.error.find(missingProjectPath) == std::string::npos ||
+        missing.error.find(missingInstalledPath) == std::string::npos)
+    {
+        std::cerr << "Missing-script diagnostics did not list every searched path\n";
+        return 1;
+    }
+
+    std::filesystem::create_directory(projectRoot / "blocked.lua");
+    if (!writeScript(installedRoot / "blocked.lua", 5))
+    {
+        std::cerr << "Failed to create the masked fallback script\n";
+        return 1;
+    }
+    const auto invalidProjectOverride =
+        DeviceSimulator::resolveModelScriptPath("blocked.lua", projectRoot, installedRoot);
+    const auto noRoot = DeviceSimulator::resolveModelScriptPath("relative.lua", {}, {});
+    const auto emptyProperty = DeviceSimulator::resolveModelScriptPath({}, projectRoot, installedRoot);
+    if (invalidProjectOverride || invalidProjectOverride.path != (projectRoot / "blocked.lua").lexically_normal() ||
+        noRoot || emptyProperty)
     {
         std::cerr << "Invalid script configuration was accepted\n";
         return 1;
