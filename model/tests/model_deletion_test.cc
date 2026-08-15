@@ -1,3 +1,5 @@
+#include <type_traits>
+#include "active_model.hpp"
 #include "model.hpp"
 #include <lua.hpp>
 
@@ -5,6 +7,8 @@ extern "C" void deletedsimmodel(IDSIMMODEL *model);
 
 namespace
 {
+static_assert(std::has_virtual_destructor_v<DeviceSimulator::VirtualDevice>);
+
 int finalizerCalls = 0;
 
 int countFinalizer(lua_State *luaContext)
@@ -44,5 +48,9 @@ int main()
         }
     }
 
-    return finalizerCalls == iterations ? 0 : 2;
+    auto *activeModel = new DeviceSimulator::LuaActiveModel;
+    installFinalizer(activeModel->getLuaContext());
+    deletedsimmodel(activeModel->getdsimmodel(nullptr));
+
+    return finalizerCalls == iterations + 1 ? 0 : 2;
 }

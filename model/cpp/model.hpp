@@ -32,8 +32,8 @@ class VirtualDevice : public IDSIMMODEL, public ICPU
   public:
     /** Allocate and initialize the model's Lua state. */
     VirtualDevice();
-    /** Close the owned Lua state. */
-    ~VirtualDevice();
+    /** Close the owned Lua state, including when deleted through this base class. */
+    virtual ~VirtualDevice();
 
     /** Report that a component terminal uses the digital simulation engine. */
     INT isdigital(CHAR *pinname) override;
