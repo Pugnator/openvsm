@@ -2,6 +2,10 @@ cmake_minimum_required(VERSION 3.21)
 
 project(OpenVSM)
 
+if(MSVC)
+  set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
+endif()
+
 file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/model/VERSION.txt" OPENVSM_VERSION)
 option(DLL_WITH_INSTALLER "Enable the Inno Setup installer target" OFF)
 option(BUILD_DOCS "Build the Doxygen developer reference" OFF)
@@ -60,13 +64,12 @@ if(DLL_WITH_INSTALLER)
                     COMMAND "${INNO_SETUP_COMPILER}"
                             "/DOpenVsmVersion=${OPENVSM_VERSION}"
                             "/DOpenVsmDllPath=$<TARGET_FILE:VSM_DLL>"
-                            "/DOpenVsmLoggerPath=$<TARGET_FILE:tinyLog>"
                             "/DOpenVsmOutputDir=${INNO_SETUP_OUTPUT_DIR}"
                             "${INNO_SETUP_SCRIPT_PATH}"
                     COMMENT "Building the OpenVSM installer"
                     VERBATIM
   )
-  add_dependencies(BuildInstaller VSM_DLL tinyLog)
+  add_dependencies(BuildInstaller VSM_DLL)
 endif()
 
 target_include_directories(VSM_DLL PUBLIC externals)

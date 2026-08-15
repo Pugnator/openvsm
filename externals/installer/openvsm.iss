@@ -4,9 +4,6 @@
 #ifndef OpenVsmDllPath
   #define OpenVsmDllPath "..\..\dll\openvsm.dll"
 #endif
-#ifndef OpenVsmLoggerPath
-  #define OpenVsmLoggerPath "..\..\dll\logger.dll"
-#endif
 #ifndef OpenVsmOutputDir
   #define OpenVsmOutputDir "."
 #endif
@@ -39,7 +36,6 @@ Name: "english"; MessagesFile: "compiler:Default.isl"
 
 [Files]
 Source: "{#OpenVsmDllPath}"; DestDir: "{code:GetProteusInstallDir}\Models"; DestName: "openvsm.dll"; Flags: ignoreversion
-Source: "{#OpenVsmLoggerPath}"; DestDir: "{code:GetProteusInstallDir}\Models"; DestName: "logger.dll"; Flags: ignoreversion
 
 [Icons]
 Name: "{group}\{cm:UninstallProgram,{#MyAppName}}"; Filename: "{uninstallexe}"
