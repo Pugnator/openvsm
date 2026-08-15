@@ -1,5 +1,8 @@
 #include <log/log.hpp>
+#include <atomic>
 #include <cassert>
+#include <chrono>
+#include <cstdint>
 #include <cstdlib>
 #include <format>
 #include "model.hpp"
@@ -16,6 +19,9 @@
 
 namespace
 {
+constexpr char randomSeedSequenceKey[] = "openvsm.random_seed.sequence";
+std::atomic<std::uint64_t> nextRandomSeedSequence{1};
+
 int lua_print(lua_State *L)
 {
     int nargs = lua_gettop(L);
@@ -36,6 +42,28 @@ int lua_print(lua_State *L)
         }
     }
     return 0;
+}
+
+void seedLuaRandomGenerator(lua_State *lua)
+{
+    const auto sequence = nextRandomSeedSequence.fetch_add(1, std::memory_order_relaxed);
+    const auto timestamp = static_cast<std::uint64_t>(std::chrono::steady_clock::now().time_since_epoch().count());
+    const auto address = static_cast<std::uint64_t>(reinterpret_cast<std::uintptr_t>(lua));
+    const auto firstSeed = static_cast<lua_Integer>(timestamp ^ (address + 0x9e3779b97f4a7c15ULL));
+    const auto secondSeed = static_cast<lua_Integer>(sequence);
+
+    lua_getglobal(lua, "math");
+    lua_getfield(lua, -1, "randomseed");
+    lua_pushinteger(lua, firstSeed);
+    lua_pushinteger(lua, secondSeed);
+    if (lua_pcall(lua, 2, 0, 0) != LUA_OK)
+    {
+        LOG_DEBUG("Error calling math.randomseed: {}\n", lua_tostring(lua, -1));
+        return;
+    }
+
+    lua_pushinteger(lua, secondSeed);
+    lua_setfield(lua, LUA_REGISTRYINDEX, randomSeedSequenceKey);
 }
 } // namespace
 
@@ -60,21 +88,7 @@ VirtualDevice::VirtualDevice()
     luaL_openlibs(luactx_);
     lua_pushcfunction(luactx_, lua_print);
     lua_setglobal(luactx_, "print");
-    lua_getglobal(luactx_, "os");
-    lua_getfield(luactx_, -1, "time");
-    if (lua_pcall(luactx_, 0, 1, 0) != LUA_OK)
-    {
-        LOG_DEBUG("Error calling os.time: {}\n", lua_tostring(luactx_, -1));
-    }
-
-    lua_getglobal(luactx_, "math");
-    lua_getfield(luactx_, -1, "randomseed");
-    lua_pushvalue(luactx_, -3);
-
-    if (lua_pcall(luactx_, 1, 0, 0) != LUA_OK)
-    {
-        LOG_DEBUG("Error calling math.randomseed: {}\n", lua_tostring(luactx_, -1));
-    }
+    seedLuaRandomGenerator(luactx_);
     lua_settop(luactx_, stackGuard.top());
     LOG_DEBUG("Lua context created\n");
 }

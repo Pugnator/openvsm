@@ -132,6 +132,11 @@ if(BUILD_TESTS)
   target_link_libraries(simulation_stack_test PRIVATE VSM_DLL lua_static)
   add_test(NAME simulation_stack COMMAND simulation_stack_test)
 
+  add_executable(random_seed_test tests/random_seed_test.cc)
+  target_include_directories(random_seed_test PRIVATE ${SRCDIR})
+  target_link_libraries(random_seed_test PRIVATE VSM_DLL lua_static)
+  add_test(NAME random_seed COMMAND random_seed_test)
+
   add_executable(model_deletion_test tests/model_deletion_test.cc)
   target_include_directories(model_deletion_test PRIVATE ${SRCDIR})
   target_link_libraries(model_deletion_test PRIVATE VSM_DLL lua_static)
