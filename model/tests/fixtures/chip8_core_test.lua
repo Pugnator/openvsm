@@ -250,7 +250,9 @@ end
 local function test_device_adapter()
     local draw_count = 0
     local repaint_count = 0
+    local drawn_boxes = {}
     local drawn_text = {}
+    local drawn_text_y = {}
     local callbacks = {}
     local errors = {}
     local messages = {}
@@ -291,12 +293,14 @@ local function test_device_adapter()
         set_pen_colour = function() end,
         set_brush_colour = function() end,
         set_text_colour = function() end,
-        draw_box = function()
+        draw_box = function(left, bottom, right, top)
             draw_count = draw_count + 1
+            drawn_boxes[#drawn_boxes + 1] = {left = left, bottom = bottom, right = right, top = top}
         end,
-        draw_text = function(_, _, _, _, text)
+        draw_text = function(_, y, _, _, text)
             draw_count = draw_count + 1
             drawn_text[#drawn_text + 1] = text
+            drawn_text_y[text] = y
         end,
         repaint = function()
             repaint_count = repaint_count + 1
@@ -320,9 +324,26 @@ local function test_device_adapter()
           "device did not report the built-in demo")
 
     draw_count = 0
+    drawn_boxes = {}
+    drawn_text_y = {}
     device_graphics_plot(0)
     local empty_display_draw_count = draw_count
     check(empty_display_draw_count >= 20, "device adapter did not draw the console face")
+    check(drawn_boxes[2].bottom == 40 and drawn_boxes[2].top == 136,
+          "device adapter did not convert the screen bounds to Proteus Y-up coordinates")
+    check(drawn_boxes[3].bottom == 112 and drawn_boxes[3].top == 136,
+          "device adapter did not place the first keypad row at the top")
+    check(drawn_boxes[18].bottom == 28 and drawn_boxes[18].top == 52,
+          "device adapter did not place the last keypad row at the bottom")
+    check(drawn_text_y["CHIP-8"] == 152 and drawn_text_y["DEMO"] == 152,
+          "device adapter did not place the title at the top")
+    local status_y
+    for _, text in ipairs(drawn_text) do
+        if text:match("^RUN%s") then
+            status_y = drawn_text_y[text]
+        end
+    end
+    check(status_y == 22, "device adapter did not place the run status at the bottom")
 
     for index = 1, 60 do
         local scheduled = callbacks[index]
@@ -343,7 +364,7 @@ local function test_device_adapter()
           "device did not render its ROM and run status")
 
     local repaint_before_key = repaint_count
-    check(device_graphics_actuate(0, 222, 32, graphics.ACF_LEFT),
+    check(device_graphics_actuate(0, 222, 124, graphics.ACF_LEFT),
           "device adapter did not accept a keypad click")
     check(repaint_count == repaint_before_key + 1, "keypad click did not request a repaint")
     timer_callback(callbacks[61].time, callbacks[61].event_id)
