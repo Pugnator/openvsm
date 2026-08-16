@@ -29,6 +29,6 @@ NAME=LUA_NAND
 
 {MODDLL=openvsm.DLL}
 {
-LUA=device.lua}
+LUA=NAND/nand.lua}
 
 {PACKAGE=DIL8}
