@@ -32,8 +32,8 @@ NAME=LUA_CHIP8
 {PRIMITIVE=DIGITAL}
 
 {MODDLL=openvsm.DLL}
-{
-LUA=chip8/device.lua}
+
+{LUA=chip8/device.lua}
 
 {ROM=}
 
