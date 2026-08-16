@@ -18,6 +18,7 @@ int main()
     }
 
     DeviceSimulator::initializeRuntimeLogging();
+    DeviceSimulator::logRuntimeDebug("Lua graphics callback diagnostic");
 
     std::ifstream logFile{logPath, std::ios::binary};
     if (!logFile.is_open())
@@ -30,6 +31,11 @@ int main()
     if (contents.find("The model is being loaded") == std::string::npos)
     {
         std::cerr << "Runtime logging created log.txt but filtered the startup diagnostic\n";
+        return 1;
+    }
+    if (contents.find("Lua graphics callback diagnostic") == std::string::npos)
+    {
+        std::cerr << "Runtime logging filtered the graphics callback diagnostic\n";
         return 1;
     }
 

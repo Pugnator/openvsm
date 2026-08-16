@@ -318,15 +318,21 @@ if(BUILD_TESTS)
   add_executable(graphics_lua_api_test
     tests/graphics_lua_api_test.cc
     ${SRCDIR}/luabind/graphics_lua_api.cc
+    ${SRCDIR}/runtime_logging.cc
   )
   target_include_directories(graphics_lua_api_test PRIVATE
     ${SRCDIR}
     ${CMAKE_SOURCE_DIR}/externals/sdk
   )
-  target_link_libraries(graphics_lua_api_test PRIVATE lua_static)
+  target_link_libraries(graphics_lua_api_test PRIVATE lua_static tinyLog)
   if(MSVC)
     target_compile_options(graphics_lua_api_test PRIVATE /EHsc)
   endif()
 
   add_test(NAME graphics_lua_api COMMAND graphics_lua_api_test)
+  set(GRAPHICS_LUA_API_TEST_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/graphics_lua_api_test")
+  file(MAKE_DIRECTORY "${GRAPHICS_LUA_API_TEST_DIRECTORY}")
+  set_tests_properties(graphics_lua_api PROPERTIES
+    WORKING_DIRECTORY "${GRAPHICS_LUA_API_TEST_DIRECTORY}"
+  )
 endif()

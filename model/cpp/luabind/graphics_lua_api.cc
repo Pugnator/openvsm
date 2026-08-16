@@ -1,6 +1,9 @@
 #include "graphics_lua_api.hpp"
 
 #include <cstdint>
+#include <string>
+
+#include "runtime_logging.hpp"
 
 namespace
 {
@@ -211,6 +214,39 @@ bool pushCallback(lua_State *lua, const char *name)
     return false;
 }
 
+bool claimCallbackDiagnostic(lua_State *lua, const char *name, const char *kind)
+{
+    const std::string key = std::string{"openvsm.graphics."} + name + '.' + kind;
+    lua_getfield(lua, LUA_REGISTRYINDEX, key.c_str());
+    const bool reported = lua_toboolean(lua, -1) != 0;
+    lua_pop(lua, 1);
+    if (!reported)
+    {
+        lua_pushboolean(lua, 1);
+        lua_setfield(lua, LUA_REGISTRYINDEX, key.c_str());
+    }
+    return !reported;
+}
+
+void reportMissingCallbackOnce(lua_State *lua, const char *name)
+{
+    if (claimCallbackDiagnostic(lua, name, "missing"))
+    {
+        DeviceSimulator::logRuntimeDebug(std::string{"Lua graphics callback "} + name + " is not defined");
+    }
+}
+
+void reportCallbackFailureOnce(lua_State *lua, const char *name)
+{
+    const char *rawMessage = lua_tostring(lua, -1);
+    const std::string message = rawMessage ? rawMessage : "unknown Lua error";
+    if (claimCallbackDiagnostic(lua, name, "failure"))
+    {
+        DeviceSimulator::logRuntimeDebug(std::string{"Lua graphics callback "} + name + " failed with \"" + message +
+                                         '"');
+    }
+}
+
 void setTableInteger(lua_State *lua, const char *name, lua_Integer value)
 {
     lua_pushinteger(lua, value);
@@ -397,9 +433,14 @@ bool dispatchLuaGraphicsInit(lua_State *lua)
     StackRestore restore(lua);
     if (!pushCallback(lua, "device_graphics_init"))
     {
+        reportMissingCallbackOnce(lua, "device_graphics_init");
         return false;
     }
-    lua_pcall(lua, 0, 0, 0);
+    if (lua_pcall(lua, 0, 0, 0) != LUA_OK)
+    {
+        reportCallbackFailureOnce(lua, "device_graphics_init");
+        return false;
+    }
     return true;
 }
 
@@ -413,10 +454,14 @@ void dispatchLuaGraphicsPlot(lua_State *lua, ACTIVESTATE state)
     StackRestore restore(lua);
     if (!pushCallback(lua, "device_graphics_plot"))
     {
+        reportMissingCallbackOnce(lua, "device_graphics_plot");
         return;
     }
     lua_pushinteger(lua, state);
-    lua_pcall(lua, 1, 0, 0);
+    if (lua_pcall(lua, 1, 0, 0) != LUA_OK)
+    {
+        reportCallbackFailureOnce(lua, "device_graphics_plot");
+    }
 }
 
 void dispatchLuaGraphicsAnimate(lua_State *lua, INT element, const ACTIVEDATA *data)
@@ -434,7 +479,10 @@ void dispatchLuaGraphicsAnimate(lua_State *lua, INT element, const ACTIVEDATA *d
     lua_pushinteger(lua, element);
     lua_pushinteger(lua, data ? data->type : ADT_VOID);
     pushActiveData(lua, data);
-    lua_pcall(lua, 3, 0, 0);
+    if (lua_pcall(lua, 3, 0, 0) != LUA_OK)
+    {
+        reportCallbackFailureOnce(lua, "device_graphics_animate");
+    }
 }
 
 bool dispatchLuaGraphicsActuate(lua_State *lua, WORD key, INT x, INT y, DWORD flags)
@@ -455,6 +503,7 @@ bool dispatchLuaGraphicsActuate(lua_State *lua, WORD key, INT x, INT y, DWORD fl
     lua_pushinteger(lua, flags);
     if (lua_pcall(lua, 4, 1, 0) != LUA_OK)
     {
+        reportCallbackFailureOnce(lua, "device_graphics_actuate");
         return false;
     }
     return lua_toboolean(lua, -1) != 0;
