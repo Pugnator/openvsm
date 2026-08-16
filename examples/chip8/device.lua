@@ -254,7 +254,7 @@ function device_init()
 
     rom_label = label_or_error
     running = true
-    print(string.format("CHIP-8 started: %s (%d bytes, %d instructions/s)", rom_label, #rom, CPU_HZ))
+    print(string.format("CHIP-8 started: %s (%d bytes, %d instructions/s)\n", rom_label, #rom, CPU_HZ))
     set_callback(systime() + next_timer_interval(), TIMER_EVENT)
 end
 
