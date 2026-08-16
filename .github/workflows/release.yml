@@ -1,0 +1,188 @@
+name: Release
+
+run-name: Release ${{ inputs.tag }} from ${{ github.ref_name }}
+
+on:
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: Release tag matching model/VERSION.txt (for example, 0.7)
+        required: true
+        type: string
+
+permissions:
+  contents: write
+
+concurrency:
+  group: openvsm-release
+  cancel-in-progress: false
+
+jobs:
+  release:
+    name: Validate, test, package, and publish
+    runs-on: windows-2022
+    timeout-minutes: 45
+    defaults:
+      run:
+        shell: pwsh
+    env:
+      BUILD_DIR: build/release
+
+    steps:
+      - name: Check out the selected commit
+        uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+
+      - name: Validate release request
+        env:
+          RELEASE_TAG: ${{ inputs.tag }}
+          DEFAULT_BRANCH: ${{ github.event.repository.default_branch }}
+        run: |
+          $ErrorActionPreference = "Stop"
+
+          $expectedRef = "refs/heads/$env:DEFAULT_BRANCH"
+          if ($env:GITHUB_REF -cne $expectedRef) {
+              throw "Releases must run from the default branch ($expectedRef), not $env:GITHUB_REF."
+          }
+
+          $version = (Get-Content "model/VERSION.txt" -Raw).Trim()
+          $expectedTag = $version
+          if ($env:RELEASE_TAG -cne $expectedTag) {
+              throw "Tag '$env:RELEASE_TAG' does not match model/VERSION.txt; expected '$expectedTag'."
+          }
+
+          $remoteTag = git ls-remote --tags origin "refs/tags/$env:RELEASE_TAG"
+          if ($LASTEXITCODE -ne 0) {
+              throw "Failed to inspect existing tags."
+          }
+          if ($remoteTag) {
+              throw "Tag '$env:RELEASE_TAG' already exists."
+          }
+
+          "OPENVSM_VERSION=$version" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+
+      - name: Install clang-format 21
+        run: |
+          $ErrorActionPreference = "Stop"
+          python -m pip install --disable-pip-version-check clang-format==21.1.0
+          if ($LASTEXITCODE -ne 0) {
+              throw "Failed to install clang-format 21.1.0."
+          }
+
+          $scriptsDirectory = python -c "import sysconfig; print(sysconfig.get_path('scripts'))"
+          $scriptsDirectory | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
+
+      - name: Check source formatting
+        run: |
+          $ErrorActionPreference = "Stop"
+          $formatterVersion = clang-format --version
+          if ($formatterVersion -notmatch "version 21\.1\.0") {
+              throw "Expected clang-format 21.1.0, got: $formatterVersion"
+          }
+          ./tools/format.ps1 -Check
+
+      - name: Locate Inno Setup
+        run: |
+          $ErrorActionPreference = "Stop"
+          $compiler = Get-Command ISCC.exe -ErrorAction SilentlyContinue
+          if ($null -ne $compiler) {
+              $compilerPath = $compiler.Source
+          }
+          else {
+              $compilerPath = "${env:ProgramFiles(x86)}\Inno Setup 6\ISCC.exe"
+          }
+
+          if (-not (Test-Path -LiteralPath $compilerPath -PathType Leaf)) {
+              throw "Inno Setup compiler was not found."
+          }
+
+          "INNO_SETUP_COMPILER=$compilerPath" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+
+      - name: Configure Win32 Release build
+        run: |
+          cmake -S . -B $env:BUILD_DIR -A Win32 `
+              -DBUILD_TESTS=ON `
+              -DDLL_WITH_INSTALLER=ON `
+              "-DINNO_SETUP_COMPILER=$env:INNO_SETUP_COMPILER"
+
+      - name: Build Release and tests
+        run: cmake --build $env:BUILD_DIR --config Release --parallel
+
+      - name: Run all tests
+        run: ctest --test-dir $env:BUILD_DIR -C Release --output-on-failure
+
+      - name: Build installer
+        run: cmake --build $env:BUILD_DIR --config Release --target BuildInstaller --parallel
+
+      - name: Verify release artifacts
+        env:
+          RELEASE_TAG: ${{ inputs.tag }}
+        run: |
+          $ErrorActionPreference = "Stop"
+          $installerPath = Join-Path $env:GITHUB_WORKSPACE `
+              "$env:BUILD_DIR\installer\openvsm-$env:OPENVSM_VERSION-setup.exe"
+          $dllPath = Join-Path $env:GITHUB_WORKSPACE "$env:BUILD_DIR\bin\Release\openvsm.dll"
+
+          foreach ($artifact in @($installerPath, $dllPath)) {
+              if (-not (Test-Path -LiteralPath $artifact -PathType Leaf)) {
+                  throw "Expected release artifact was not created: $artifact"
+              }
+          }
+
+          $installerVersion = (Get-Item -LiteralPath $installerPath).VersionInfo.ProductVersion.Trim()
+          if ($installerVersion -cne $env:OPENVSM_VERSION) {
+              throw "Installer version '$installerVersion' does not match '$env:OPENVSM_VERSION'."
+          }
+
+          $versionParts = @($env:OPENVSM_VERSION.Split('.'))
+          if ($versionParts.Count -gt 4) {
+              throw "model/VERSION.txt has more than four numeric components."
+          }
+          while ($versionParts.Count -lt 4) {
+              $versionParts += "0"
+          }
+          $expectedDllVersion = $versionParts -join "."
+          $dllVersion = (Get-Item -LiteralPath $dllPath).VersionInfo.ProductVersion.Trim()
+          if ($dllVersion -cne $expectedDllVersion) {
+              throw "DLL version '$dllVersion' does not match '$expectedDllVersion'."
+          }
+
+          $installerHash = (Get-FileHash -LiteralPath $installerPath -Algorithm SHA256).Hash
+          "INSTALLER_PATH=$installerPath" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+          "INSTALLER_SHA256=$installerHash" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+
+          @(
+              "### OpenVSM $env:OPENVSM_VERSION release candidate",
+              "",
+              "- Tag: $env:RELEASE_TAG",
+              "- Commit: $env:GITHUB_SHA",
+              "- Installer SHA-256: ``$installerHash``"
+          ) | Out-File -FilePath $env:GITHUB_STEP_SUMMARY -Encoding utf8 -Append
+
+      - name: Create tag and GitHub release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RELEASE_TAG: ${{ inputs.tag }}
+        run: |
+          $ErrorActionPreference = "Stop"
+          $releaseNotes = @"
+          Automated Win32 release built and tested from commit $env:GITHUB_SHA.
+
+          - clang-format 21 check passed
+          - Win32 Release build passed
+          - all CTest tests passed
+          - installer SHA-256: $env:INSTALLER_SHA256
+          "@
+
+          gh release create $env:RELEASE_TAG `
+              "$env:INSTALLER_PATH#OpenVSM $env:OPENVSM_VERSION installer" `
+              --target $env:GITHUB_SHA `
+              --title "OpenVSM $env:OPENVSM_VERSION" `
+              --notes $releaseNotes `
+              --generate-notes `
+              --fail-on-no-commits `
+              --latest
+          if ($LASTEXITCODE -ne 0) {
+              throw "GitHub release creation failed."
+          }
