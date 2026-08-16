@@ -40,3 +40,23 @@ install model DLLs into the OpenVSM application directory.
 Lua examples are copied below `{app}\LuaScripts` with their repository
 subdirectories preserved. Existing or user-modified example files are never
 overwritten or removed during uninstall.
+
+## Automated GitHub release
+
+The `Release` workflow publishes a tested installer from the default branch:
+
+1. Update `model/VERSION.txt` and merge the release commit into the default
+   branch.
+2. Open **Actions**, select **Release**, and choose **Run workflow**.
+3. Leave the branch set to the default branch and enter the exact version as
+   the tag, for example `0.7`.
+
+The workflow rejects tags that already exist or do not match
+`model/VERSION.txt`. It checks clang-format 21, builds the Win32 Release
+configuration, runs the complete CTest suite, builds the installer, and
+verifies the installer and DLL versions. Only after every check succeeds does
+it create the tag and published GitHub release, attach the installer, and
+generate release notes from merged pull requests.
+
+The automated workflow produces unsigned binaries. Local signed builds remain
+available through `OPENVSM_SIGN_CERTIFICATE_SHA1` as described above.
