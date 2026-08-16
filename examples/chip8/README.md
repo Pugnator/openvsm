@@ -87,6 +87,10 @@ at exactly 60 Hz, and repaints only after framebuffer or keypad changes. Mouse
 clicks use the drawn hexadecimal keypad. Keyboard input uses the conventional
 `1234`, `QWER`, `ASDF`, `ZXCV` layout.
 
+The layout remains in portable top-left-origin coordinates. The Proteus adapter
+converts drawing and mouse-input Y coordinates at its boundary because the VSM
+component surface uses a bottom-left origin.
+
 ## Host adapters
 
 - OpenVSM: `device.lua` maps the framebuffer and keypad to the graphics API and

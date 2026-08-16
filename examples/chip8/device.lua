@@ -82,6 +82,21 @@ local timer_remainder = 0
 local timer_base = math.floor(SEC / TIMER_HZ)
 local timer_fraction = SEC % TIMER_HZ
 
+-- The portable layout uses the usual top-left origin. Proteus drawing and
+-- actuation coordinates use a bottom-left origin, so conversion stays at this
+-- adapter boundary.
+local function proteus_y(layout_y)
+    return BODY_HEIGHT - layout_y
+end
+
+local function draw_layout_box(left, top, right, bottom)
+    graphics.draw_box(left, proteus_y(bottom), right, proteus_y(top))
+end
+
+local function draw_layout_text(x, y, rotation, justification, text)
+    graphics.draw_text(x, proteus_y(y), rotation, justification, text)
+end
+
 local function next_timer_interval()
     timer_remainder = timer_remainder + timer_fraction
     local correction = 0
@@ -181,10 +196,10 @@ local function draw_key(index, key)
 
     graphics.set_pen_colour(selected and graphics.BRIGHTGREEN or graphics.WHITE)
     graphics.set_brush_colour(selected and graphics.BRIGHTGREEN or graphics.BLACK)
-    graphics.draw_box(left, top, right, bottom)
+    draw_layout_box(left, top, right, bottom)
     graphics.set_text_colour(selected and graphics.BLACK or graphics.BRIGHTWHITE)
-    graphics.draw_text(math.floor((left + right) / 2), math.floor((top + bottom) / 2), 0,
-                       graphics.TXJ_CENTRE | graphics.TXJ_MIDDLE, key.label)
+    draw_layout_text(math.floor((left + right) / 2), math.floor((top + bottom) / 2), 0,
+                     graphics.TXJ_CENTRE | graphics.TXJ_MIDDLE, key.label)
 end
 
 local function draw_framebuffer()
@@ -202,7 +217,7 @@ local function draw_framebuffer()
             local y = math.floor(zero_based / snapshot.width)
             local left = SCREEN_LEFT + x * SCREEN_SCALE
             local top = SCREEN_TOP + y * SCREEN_SCALE
-            graphics.draw_box(left, top, left + SCREEN_SCALE, top + SCREEN_SCALE)
+            draw_layout_box(left, top, left + SCREEN_SCALE, top + SCREEN_SCALE)
         end
     end
 end
@@ -277,32 +292,32 @@ end
 function device_graphics_plot(_)
     graphics.set_pen_colour(graphics.BRIGHTWHITE)
     graphics.set_brush_colour(graphics.GREY)
-    graphics.draw_box(0, 0, BODY_WIDTH, BODY_HEIGHT)
+    draw_layout_box(0, 0, BODY_WIDTH, BODY_HEIGHT)
 
     graphics.set_text_colour(graphics.BRIGHTWHITE)
-    graphics.draw_text(12, 14, 0, graphics.TXJ_LEFT | graphics.TXJ_MIDDLE, "CHIP-8")
-    graphics.draw_text(BODY_WIDTH - 12, 14, 0, graphics.TXJ_RIGHT | graphics.TXJ_MIDDLE, rom_label)
+    draw_layout_text(12, 14, 0, graphics.TXJ_LEFT | graphics.TXJ_MIDDLE, "CHIP-8")
+    draw_layout_text(BODY_WIDTH - 12, 14, 0, graphics.TXJ_RIGHT | graphics.TXJ_MIDDLE, rom_label)
 
     graphics.set_pen_colour(graphics.BRIGHTGREEN)
     graphics.set_brush_colour(graphics.BLACK)
-    graphics.draw_box(SCREEN_LEFT, SCREEN_TOP, SCREEN_RIGHT, SCREEN_BOTTOM)
+    draw_layout_box(SCREEN_LEFT, SCREEN_TOP, SCREEN_RIGHT, SCREEN_BOTTOM)
     draw_framebuffer()
 
     if not running then
         graphics.set_text_colour(graphics.BRIGHTGREEN)
         graphics.set_text_size(14)
-        graphics.draw_text(math.floor((SCREEN_LEFT + SCREEN_RIGHT) / 2),
-                           math.floor((SCREEN_TOP + SCREEN_BOTTOM) / 2), 0,
-                           graphics.TXJ_CENTRE | graphics.TXJ_MIDDLE,
-                           fault_message == nil and "STOPPED" or "ROM ERROR")
+        draw_layout_text(math.floor((SCREEN_LEFT + SCREEN_RIGHT) / 2),
+                         math.floor((SCREEN_TOP + SCREEN_BOTTOM) / 2), 0,
+                         graphics.TXJ_CENTRE | graphics.TXJ_MIDDLE,
+                         fault_message == nil and "STOPPED" or "ROM ERROR")
     end
 
     graphics.set_text_size(10)
     graphics.set_text_colour(graphics.BRIGHTWHITE)
     local state = running and "RUN" or (fault_message == nil and "STOP" or "ERROR")
     local pc = vm == nil and Chip8.PROGRAM_ADDRESS or vm.pc
-    graphics.draw_text(SCREEN_LEFT, 144, 0, graphics.TXJ_LEFT | graphics.TXJ_MIDDLE,
-                       string.format("%s  PC:%04X  %d Hz  %d ips", state, pc, TIMER_HZ, CPU_HZ))
+    draw_layout_text(SCREEN_LEFT, 144, 0, graphics.TXJ_LEFT | graphics.TXJ_MIDDLE,
+                     string.format("%s  PC:%04X  %d Hz  %d ips", state, pc, TIMER_HZ, CPU_HZ))
 
     for index, key in ipairs(keys) do
         draw_key(index, key)
@@ -322,9 +337,10 @@ function device_graphics_actuate(key, x, y, flags)
         return false
     end
 
+    local layout_y = proteus_y(y)
     for index, keypad_key in ipairs(keys) do
         local left, top, right, bottom = key_bounds(index)
-        if x >= left and x <= right and y >= top and y <= bottom then
+        if x >= left and x <= right and layout_y >= top and layout_y <= bottom then
             return press_key(keypad_key.value)
         end
     end
