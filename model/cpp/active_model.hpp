@@ -20,6 +20,10 @@ class LuaActiveModel final : public VirtualDevice, public IACTIVEMODEL
     void ensureGraphicsInitialized();
 
     ICOMPONENT *component_ = nullptr;
+    bool simulationReadyForGraphics_ = false;
     bool graphicsInitialized_ = false;
+    bool firstPlotLogged_ = false;
+    bool firstAnimationLogged_ = false;
+    bool firstActuationLogged_ = false;
 };
 } // namespace DeviceSimulator

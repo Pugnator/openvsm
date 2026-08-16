@@ -2,8 +2,13 @@
 
 #include <cstdarg>
 #include <cstring>
+#include <filesystem>
+#include <fstream>
 #include <iostream>
+#include <iterator>
 #include <string>
+
+#include "runtime_logging.hpp"
 
 namespace
 {
@@ -225,10 +230,26 @@ lua_Integer globalInteger(lua_State *lua, const char *name)
     lua_pop(lua, 1);
     return result;
 }
+
+std::size_t countOccurrences(const std::string &text, const std::string &needle)
+{
+    std::size_t count = 0;
+    for (std::size_t position = 0; (position = text.find(needle, position)) != std::string::npos;
+         position += needle.size())
+    {
+        ++count;
+    }
+    return count;
+}
 } // namespace
 
 int main()
 {
+    const std::filesystem::path logPath{"log.txt"};
+    std::error_code fileError;
+    std::filesystem::remove(logPath, fileError);
+    DeviceSimulator::initializeRuntimeLogging();
+
     lua_State *lua = luaL_newstate();
     if (!expect(lua != nullptr, "Lua state creation failed"))
     {
@@ -319,7 +340,19 @@ int main()
     ok = run(lua, "function device_graphics_actuate() error('boom') end") && ok;
     ok = expect(!DeviceSimulator::dispatchLuaGraphicsActuate(lua, 0, 0, 0, 0),
                 "throwing actuate callback was accepted") &&
+         expect(!DeviceSimulator::dispatchLuaGraphicsActuate(lua, 0, 0, 0, 0),
+                "repeated throwing actuate callback was accepted") &&
          expect(lua_gettop(lua) == initialTop, "throwing callback changed the Lua stack") && ok;
+
+    std::ifstream diagnosticFile{logPath, std::ios::binary};
+    const std::string diagnosticContents{std::istreambuf_iterator<char>{diagnosticFile},
+                                         std::istreambuf_iterator<char>{}};
+    ok = expect(diagnosticContents.find("device_graphics_actuate failed") != std::string::npos,
+                "throwing callback name was not logged") &&
+         expect(diagnosticContents.find("boom") != std::string::npos, "throwing callback error was not logged") &&
+         expect(countOccurrences(diagnosticContents, "device_graphics_actuate failed") == 1,
+                "throwing callback diagnostic was logged more than once") &&
+         ok;
 
     lua_close(lua);
     return ok ? 0 : 1;

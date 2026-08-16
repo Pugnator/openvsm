@@ -38,4 +38,15 @@ void initializeRuntimeLogging() noexcept
     }();
     (void)initialized;
 }
+
+void logRuntimeDebug(std::string_view message) noexcept
+{
+    try
+    {
+        LOG_DEBUG("{}\n", message);
+    }
+    catch (...)
+    {
+    }
+}
 } // namespace DeviceSimulator
