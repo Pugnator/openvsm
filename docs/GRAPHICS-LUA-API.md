@@ -6,6 +6,12 @@ model; relative paths are resolved beside the Proteus project first and below
 `LUAVSM` second. Proteus calls the active model for drawing and user input while
 its digital side continues to receive pin simulation events.
 
+For devices that share the installed `openvsm.dll`, configure Active Component
+Properties with the `OPENVSM` name stem, one state, and DLL linking enabled.
+Proteus derives the graphical DLL name from this stem rather than from the
+`MODDLL` property, so each such device uses the reusable `OPENVSM_0` active
+sprite. The library part name and its `LUA` property remain device-specific.
+
 An active model may define any of these callbacks:
 
 ```lua

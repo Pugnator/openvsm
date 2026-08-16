@@ -55,10 +55,14 @@ self-contained virtual console with no electrical pins. Its DIL8 package is a
 temporary metadata placeholder inherited from the NAND example; the component
 is not intended for PCB placement.
 
-The device is a one-state active component with the symbol name stem
-`LUA_CHIP8` and DLL linking enabled. When recreating it with Make Device, set
-those values in Active Component Properties; otherwise Proteus creates only the
-digital model and never calls the graphics or input callbacks.
+The device is a one-state active component with the shared symbol name stem
+`OPENVSM` and DLL linking enabled. Proteus uses that stem both for the active
+sprite (`OPENVSM_0`) and for the active-model DLL (`openvsm.dll`). When
+recreating it with Make Device, create or reuse the `OPENVSM_0` sprite and set
+those values in Active Component Properties. A device-specific stem such as
+`LUA_CHIP8` would make Proteus look for `LUA_CHIP8.dll`, bypassing the active
+entry point in the installed `openvsm.dll` even though its digital model still
+starts normally.
 
 Leave the component's `ROM` property empty to run the built-in hexadecimal font
 demo. Set `ROM` to a binary CHIP-8 image to run another program. Relative paths
