@@ -1,156 +1,53 @@
-# OpenVSM is Lua bindings for Proteus 7/8 CAD
-[![Release][release-image]][releases] [![Wiki][wiki-img]][wiki]
+# OpenVSM
 
+OpenVSM lets [Proteus VSM](https://www.labcenter.com/) components implement
+their simulation behavior and optional schematic graphics in Lua. One 32-bit
+`openvsm.dll` can serve many device types and instances; every component loads
+its configured script into an isolated Lua state.
 
-[release-image]: https://img.shields.io/badge/release-0.6.213-blue.svg?style=flat
-[releases]: https://github.com/Pugnator/openvsm/releases
-[wiki-img]: https://img.shields.io/badge/docs-Wiki-blue.svg
-[wiki]: https://github.com/Pugnator/openvsm/wiki
+[Download a release](https://github.com/Pugnator/openvsm/releases) ·
+[Read the user guide](docs/USER-GUIDE.md) ·
+[Browse the documentation](docs/README.md) ·
+[Report an issue](https://github.com/Pugnator/openvsm/issues)
 
+## A minimal model
 
-Tested on Proteus 8.9
-
-Please report all issues you face in order to make this tool better
-
-![Lua logo](http://www.lua.org/images/powered-by-lua.gif)
-
-Powered by Lua http://www.lua.org/
-
-Documentation can be found at http://pugnator.github.io/openvsm
-
-The executable Lua compatibility surface and v0.7 migration notes are listed in
-[`docs/V0.7-LUA-COMPATIBILITY.md`](docs/V0.7-LUA-COMPATIBILITY.md).
-
-The v0.7 architecture and generated C++ reference are described in
-[`docs/DEVELOPER-GUIDE.md`](docs/DEVELOPER-GUIDE.md).
-
-CPU-like models can implement the SDK's Virtual Debug Monitor protocol through
-the [`Lua VDM target bridge`](docs/VDM-LUA-API.md).
-
-Any model can expose bounded state to external tools with the
-[`VDM third-party control profile`](docs/THIRD-PARTY-CONTROL.md).
-
-Active displays and animated components can use the
-[`Lua graphics and animation API`](docs/GRAPHICS-LUA-API.md).
-
-Prebuilt DLL and symbols or installer are in [Release](https://github.com/Pugnator/openvsm/releases) section
-
-The v0.7 native model is written in C++20 and currently builds with 32-bit MSVC.
-
-  - You don't need to recompile anything - one DLL for all models in Lua
-  - You can create your model as a standalone DLL or use DLL and Lua script together while prototyping
-  - You can write your own Lua scripts that will be precompiled and built-in into DLL
-  - Function prototypes have similar syntax in C and Lua API
-  - Designed with hope to make simulation as simple as possible for electronics enthusiasts
-
-
-Visit 'examples' directory for sample project files. There is no tutorial yet but I'm working on it
-
-Please kindly send all your remarks and ideas to my mail [o o kami (at) ma il.ru] or submit a bug or feature request
-
-There are plenty to do!
-
-Generally you need to compile DLL from the sources only if you want to include custom scripts.
-
-## Native buses
-
-Lua models declare native Proteus buses alongside `device_pins`:
+This script implements a two-input NAND gate. The names in `device_pins` match
+the terminal names on the Proteus component.
 
 ```lua
-device_buses = {
-    {name = "D", base = 0, width = 8, on_time = 100000,
-     off_time = 120000, tristate_time = 50000}
+device_pins = {
+    {name = "A", on_time = 100000, off_time = 100000},
+    {name = "B", on_time = 100000, off_time = 100000},
+    {name = "Q", on_time = 100000, off_time = 100000}
 }
-```
 
-Widths from 1 through 32 bits are supported. Each declaration creates a global
-object (for example `D`) with `set`/`drive`, `tristate`, `drivebit`, `get`,
-`getdrive`, `getbitstate`, `settiming`, and `setstates` methods. Bit indices are
-zero-based, and drive values must fit the declared width. The optional
-`on_state`, `off_state`, `tristate_state`, and `required` fields configure the
-corresponding SDK behavior. Call methods with Lua's object syntax, such as
-`D:drive(0x5a)` or `D:drivebit(0, SHI)`.
-
-Pin objects support `pin:onchange(function)` and `pin:onstate(state, function)`.
-Bus objects similarly support `bus:onchange(function)` and
-`bus:onvalue(value, function)`. A callback receives simulation time, simulation
-mode, and the new pin state or bus value. It runs only after the registered
-object changes; a callback that raises an error is disabled without affecting
-the other callbacks.
-
-```lua
-function device_init()
-    A:onstate(SHI, function(time, mode, state)
-        print("A became high", time, mode, state)
-    end)
+function device_simulate()
+    Q:set(1 - (A:get() * B:get()))
 end
 ```
 
-# Installation
---------------
+Install OpenVSM, configure the component with `MODDLL=openvsm.DLL` and
+`LUA=device.lua`, then place the script beside the Proteus project. The
+[user guide](docs/USER-GUIDE.md) covers device properties, script lookup,
+pins, buses, callbacks, graphics, and troubleshooting.
 
-  - Download OPenVSM MSI installer from `release` section
-  - Run installer and install it
-  - Visit `exmples` for some example projects  
+## Examples
 
-## How to build
+| Example | What it demonstrates |
+| --- | --- |
+| [NAND](examples/NAND) | The smallest useful digital model |
+| [Active display](examples/graphics) | Lua drawing and mouse input on the schematic |
+| [CHIP-8](examples/chip8) | A complete VM with a display, keypad, timers, and per-instance ROM selection |
+| [Optional modules](model/lua/modules) | UART and third-party control helpers |
 
-### Requirements
+## Documentation
 
-- Visual Studio 2022 with the **Desktop development with C++** workload and
-  Win32 build tools;
-- CMake 3.21 or newer (CMake 4.x is supported);
-- the Proteus VSM SDK headers supplied with your Proteus installation.
+- [Using OpenVSM](docs/USER-GUIDE.md)
+- [Building from source](docs/BUILDING.md)
+- [Lua graphics API](docs/GRAPHICS-LUA-API.md)
+- [Lua v0.7 compatibility](docs/V0.7-LUA-COMPATIBILITY.md)
+- [Developer guide](docs/DEVELOPER-GUIDE.md)
 
-CMake is the only supported project build entry point. Makefiles inside
-`externals/Lua` belong to that upstream submodule and are not used by OpenVSM.
-
-### Checkout
-
-Clone with the Lua and TinyLog submodules:
-
-```powershell
-git clone --recurse-submodules https://github.com/Pugnator/openvsm.git
-cd openvsm
-```
-
-For an existing checkout, initialize them with:
-
-```powershell
-git submodule update --init --recursive
-```
-
-### Proteus SDK
-
-Create `externals/sdk` and copy the VSM SDK headers into it. At minimum, the
-directory must contain `vsm.hpp`; model-specific VDM headers can be placed next
-to it. The directory is ignored by Git because the SDK is distributed with
-Proteus rather than this project.
-
-### Configure and build
-
-The checked-in preset selects Visual Studio 2022 and its 32-bit platform:
-
-```powershell
-cmake --preset vs2022-win32
-cmake --build --preset debug
-cmake --build --preset release
-```
-
-For a manual Visual Studio configuration, select the same target with
-`-A Win32`; MSVC does not use the GCC `-m32` option.
-
-Build outputs are written below `build/vs2022-win32/bin/<configuration>`.
-
-Each Proteus model selects its script with the component's `LUA` string property,
-for example `LUA=device.lua`. Relative values are resolved beside the Proteus
-project first, then beneath `LUAVSM`; this lets a project-local script override
-the installed default for that model. Absolute paths are used directly. Paths
-may contain spaces and `LUAVSM` does not need a trailing slash. A missing
-property or readable script keeps that model out of simulation, with every
-searched path recorded in `log.txt`.
-
-# License
-----
-
-GPL 2
+OpenVSM v0.7 uses Lua 5.4 and builds as a 32-bit Windows DLL with C++20 and
+MSVC. It is licensed under [GPL-2.0-or-later](LICENSE).

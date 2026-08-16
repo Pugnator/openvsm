@@ -24,8 +24,8 @@ The runtime path has four layers:
 instance currently being simulated. It does not own the registered devices.
 
 The proprietary Labcenter SDK is deliberately not copied into the repository.
-The build expects its headers under `externals/sdk`; see the root README for the
-checkout and build procedure.
+The build expects its headers under `externals/sdk`; see
+[`BUILDING.md`](BUILDING.md) for the checkout and build procedure.
 
 ## Model lifecycle
 
