@@ -314,6 +314,7 @@ local function test_device_adapter()
 
     device_init()
     device_graphics_init()
+    check(repaint_count == 1, "graphics initialization did not request the first repaint")
     check(#callbacks == 1 and callbacks[1].time > systime(), "device did not schedule its first timer tick")
     check(#messages == 1 and messages[1]:find("DEMO", 1, true) ~= nil,
           "device did not report the built-in demo")

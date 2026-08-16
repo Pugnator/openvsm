@@ -272,6 +272,7 @@ function device_graphics_init()
     graphics.set_draw_scale(96)
     graphics.set_pen_width(1)
     graphics.set_text_size(12)
+    graphics.repaint()
 end
 
 function device_graphics_plot(_)
