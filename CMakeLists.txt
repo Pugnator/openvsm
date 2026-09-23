@@ -44,10 +44,20 @@ if(OPENVSM_SIGN_CERTIFICATE_SHA1)
   )
 endif()
 
-if(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")  
+if(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
   message(INFO "MSVC found, continue...")
 else()
   message(FATAL_ERROR "Unsupported compiler, only MSVC is supported.")
+endif()
+
+# openvsm is a 32-bit DLL: Proteus is a 32-bit process, and the VSM SDK's
+# portable Windows typedefs (vsm.hpp's "typedef long LRESULT") only agree with
+# <windows.h> when pointers are 32 bits wide. An x64 configure compiles and
+# then dies at link with a mangled-name mismatch that names none of this, so
+# stop it here instead.
+if(NOT CMAKE_SIZEOF_VOID_P EQUAL 4)
+  message(FATAL_ERROR "openvsm is a 32-bit DLL for Proteus. Configure with -A Win32, "
+                      "or use the vs2022-win32 preset.")
 endif()
 
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/bin)

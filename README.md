@@ -39,6 +39,7 @@ pins, buses, callbacks, graphics, and troubleshooting.
 | [NAND](examples/NAND) | The smallest useful digital model |
 | [Active display](examples/graphics) | Lua drawing and mouse input on the schematic |
 | [CHIP-8](examples/chip8) | A complete VM with a display, keypad, timers, and per-instance ROM selection |
+| [Z80](examples/z80) | A Z80 computer on real EPROM, RAM and glue logic, with a 6850 ACIA, running NASCOM BASIC |
 | [Optional modules](model/lua/modules) | UART and third-party control helpers |
 
 ## Documentation

@@ -1,1 +1,0 @@
-Simple NAND demonstration board. Press the button to change LEDs' state

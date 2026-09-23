@@ -1,0 +1,32 @@
+{*DEVICE}
+NAME=LUA-ACIA
+
+{PREFIX=U}
+
+{*PROPDEFS}
+
+{MODDLL="VSM Model DLL",HIDDEN STRING}
+
+{LUA="LUA",STRING}
+
+{PRIMITIVE="Primitive Type",HIDDEN STRING}
+
+{PACKAGE="PCB Package",PACKAGE,0}
+
+{*INDEX}
+
+{CAT=Microprocessor ICs}
+
+{SUBCAT=Peripherals}
+
+{DESC=6850-compatible ACIA, Lua model}
+
+{MFR=OpenVSM}
+
+{*COMPONENT}
+
+{PRIMITIVE=DIGITAL}
+
+{MODDLL=openvsm.DLL}
+
+{LUA=z80/acia.lua}
