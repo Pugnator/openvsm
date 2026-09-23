@@ -10,6 +10,12 @@ its configured script into an isolated Lua state.
 [Browse the documentation](docs/README.md) ·
 [Report an issue](https://github.com/Pugnator/openvsm/issues)
 
+![A Z80 computer simulated in Proteus, running NASCOM BASIC and plotting a sine wave in the virtual terminal](z80.png)
+
+A Z80 computer on a Proteus schematic: a real EPROM, RAM and glue logic, with
+the CPU and the serial chip modelled in Lua, running Microsoft BASIC. See the
+[Z80 example](examples/z80).
+
 ## A minimal model
 
 This script implements a two-input NAND gate. The names in `device_pins` match
