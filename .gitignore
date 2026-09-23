@@ -138,3 +138,11 @@ FakesAssemblies/
 # Visual Studio 6 workspace options file
 *.opt
 /externals/sdk
+
+# Proteus per-user state, automatic backups and simulation logs
+*.workspace
+Project Backups/
+examples/**/log.txt
+
+# Third-party ROM for the Z80 example, obtained separately; see examples/z80/README.md
+examples/z80/sbc_NascomBasic32k/

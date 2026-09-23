@@ -1,0 +1,36 @@
+{*DEVICE}
+NAME=Z80-CORE
+
+{PREFIX=U}
+
+{*PROPDEFS}
+
+{MODDLL="VSM Model DLL",HIDDEN STRING}
+
+{LUA="LUA",STRING}
+
+{TRACE="Log bus cycles at startup",YESNO}
+
+{PRIMITIVE="Primitive Type",HIDDEN STRING}
+
+{PACKAGE="PCB Package",PACKAGE,0}
+
+{*INDEX}
+
+{CAT=Microprocessor ICs}
+
+{SUBCAT=Z80 Family}
+
+{DESC=Z80 8-bit Microprocessor}
+
+{MFR=Zilog}
+
+{*COMPONENT}
+
+{PRIMITIVE=DIGITAL}
+
+{MODDLL=openvsm.DLL}
+
+{LUA=z80/z80_device.lua}
+
+{TRACE=0}
