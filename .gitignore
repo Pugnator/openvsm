@@ -146,3 +146,7 @@ examples/**/log.txt
 
 # Third-party ROM for the Z80 example, obtained separately; see examples/z80/README.md
 examples/z80/sbc_NascomBasic32k/
+/.specify
+/.claude
+/specs
+/docs/*.pdf
