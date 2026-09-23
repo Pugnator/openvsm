@@ -1,7 +1,7 @@
 #pragma once
 
 #include <lua.hpp>
-#include <vsm.hpp>
+#include <openvsm.hpp>
 
 namespace DeviceSimulator
 {

@@ -24,7 +24,10 @@ The runtime path has four layers:
 instance currently being simulated. It does not own the registered devices.
 
 The proprietary Labcenter SDK is deliberately not copied into the repository.
-The build expects its headers under `externals/sdk`; see
+OpenVSM declares the VSM interface itself in `model/sdk`: `openvsm.hpp`,
+`openvsm_types.hpp` and `openvdm.hpp`. These headers are a binary contract with
+Proteus. Never reorder their virtual methods or change their constants, and
+run the `vsm_abi` check after any edit. See
 [`BUILDING.md`](BUILDING.md) for the checkout and build procedure.
 
 ## Model lifecycle

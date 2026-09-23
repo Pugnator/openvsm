@@ -10,13 +10,12 @@ installer.
 - Visual Studio 2022 with the **Desktop development with C++** workload and
   Win32 build tools
 - CMake 3.21 or newer
-- the Proteus VSM SDK headers supplied with Proteus
 
 The v0.7 runtime is C++20 and supports MSVC Win32 builds. CMake is the supported
 build entry point; makefiles inside the Lua submodule belong to upstream Lua
 and are not used by OpenVSM.
 
-## Checkout and SDK
+## Checkout
 
 Clone the repository with its submodules:
 
@@ -31,10 +30,28 @@ For an existing checkout:
 git submodule update --init --recursive
 ```
 
-Create `externals/sdk` and copy the VSM SDK headers into it. At minimum it must
-contain `vsm.hpp`; model-specific VDM headers may be placed beside it. The SDK
-directory is ignored because those headers are distributed with Proteus, not
-with OpenVSM.
+The Proteus VSM SDK is not needed. OpenVSM builds against its own description
+of the VSM interface in `model/sdk`, written for interoperability. It declares
+only what OpenVSM uses.
+
+### Checking `model/sdk` against the vendor headers
+
+`model/sdk` must stay binary compatible with Labcenter's SDK headers. If you
+have the SDK, copy its headers to `externals/sdk`. Git ignores that folder, and
+the headers must never be committed. A test build then adds the `vsm_abi` test.
+It compiles the same probes against both headers and compares struct layouts,
+constants, type sizes and the method in every vtable slot:
+
+```powershell
+cmake --preset vs2022-win32 -DBUILD_TESTS=ON
+cmake --build --preset debug --target vsm_abi_test
+ctest --test-dir build/vs2022-win32 -C Debug -R vsm_abi --output-on-failure
+```
+
+Run it after every change to `model/sdk`. CI cannot run it, because it has no
+vendor headers. `vsm_abi_test --dump` prints every measured fact. To build
+OpenVSM itself against the vendor headers, for comparison, configure with
+`-DOPENVSM_USE_VENDOR_SDK=ON`.
 
 ## Configure, build, and test
 

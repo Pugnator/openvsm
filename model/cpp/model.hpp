@@ -5,7 +5,7 @@
 #include <string>
 #include <vector>
 
-#include <vsm.hpp>
+#include <openvsm.hpp>
 #include <lua.hpp>
 
 namespace DeviceSimulator
