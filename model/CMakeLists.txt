@@ -126,7 +126,7 @@ if(BUILD_TESTS)
   )
   target_include_directories(native_bus_test PRIVATE
     ${SRCDIR}
-    ${CMAKE_SOURCE_DIR}/externals/sdk
+    ${OPENVSM_VSM_INCLUDE_DIR}
   )
   target_link_libraries(native_bus_test PRIVATE lua_static tinyLog)
   if(MSVC)
@@ -206,7 +206,7 @@ if(BUILD_TESTS)
   )
   target_include_directories(pin_timing_test PRIVATE
     ${SRCDIR}
-    ${CMAKE_SOURCE_DIR}/externals/sdk
+    ${OPENVSM_VSM_INCLUDE_DIR}
   )
   target_link_libraries(pin_timing_test PRIVATE lua_static)
   if(MSVC)
@@ -221,7 +221,7 @@ if(BUILD_TESTS)
   )
   target_include_directories(vsm_lua_api_test PRIVATE
     ${SRCDIR}
-    ${CMAKE_SOURCE_DIR}/externals/sdk
+    ${OPENVSM_VSM_INCLUDE_DIR}
   )
   target_link_libraries(vsm_lua_api_test PRIVATE lua_static)
   if(MSVC)
@@ -262,7 +262,7 @@ if(BUILD_TESTS)
   )
   target_include_directories(object_callback_test PRIVATE
     ${SRCDIR}
-    ${CMAKE_SOURCE_DIR}/externals/sdk
+    ${OPENVSM_VSM_INCLUDE_DIR}
   )
   target_link_libraries(object_callback_test PRIVATE lua_static tinyLog)
   if(MSVC)
@@ -288,7 +288,7 @@ if(BUILD_TESTS)
   )
   target_include_directories(vdm_lua_api_test PRIVATE
     ${SRCDIR}
-    ${CMAKE_SOURCE_DIR}/externals/sdk
+    ${OPENVSM_VSM_INCLUDE_DIR}
   )
   target_link_libraries(vdm_lua_api_test PRIVATE lua_static)
   if(MSVC)
@@ -303,7 +303,7 @@ if(BUILD_TESTS)
   )
   target_include_directories(vdm_control_module_test PRIVATE
     ${SRCDIR}
-    ${CMAKE_SOURCE_DIR}/externals/sdk
+    ${OPENVSM_VSM_INCLUDE_DIR}
   )
   target_link_libraries(vdm_control_module_test PRIVATE lua_static)
   if(MSVC)
@@ -322,7 +322,7 @@ if(BUILD_TESTS)
   )
   target_include_directories(graphics_lua_api_test PRIVATE
     ${SRCDIR}
-    ${CMAKE_SOURCE_DIR}/externals/sdk
+    ${OPENVSM_VSM_INCLUDE_DIR}
   )
   target_link_libraries(graphics_lua_api_test PRIVATE lua_static tinyLog)
   if(MSVC)
@@ -335,4 +335,34 @@ if(BUILD_TESTS)
   set_tests_properties(graphics_lua_api PROPERTIES
     WORKING_DIRECTORY "${GRAPHICS_LUA_API_TEST_DIRECTORY}"
   )
+
+  # Binary-compatibility check of model/sdk against Labcenter's SDK headers.
+  # The vendor headers are not redistributable, so this runs only where a
+  # developer has copied them to externals/sdk; CI builds without it.
+  if(EXISTS "${OPENVSM_VENDOR_SDK_DIR}/vsm.hpp")
+    add_library(vsm_abi_openvsm OBJECT
+      tests/abi/abi_side_openvsm.cc
+      tests/abi/abi_side_openvsm_windows.cc
+    )
+    target_include_directories(vsm_abi_openvsm PRIVATE
+      ${CMAKE_SOURCE_DIR}/model/sdk
+      ${CMAKE_CURRENT_SOURCE_DIR}/tests/abi
+    )
+    add_library(vsm_abi_vendor OBJECT
+      tests/abi/abi_side_vendor.cc
+      tests/abi/abi_side_vendor_windows.cc
+    )
+    target_include_directories(vsm_abi_vendor PRIVATE
+      ${OPENVSM_VENDOR_SDK_DIR}
+      ${CMAKE_CURRENT_SOURCE_DIR}/tests/abi
+    )
+    add_executable(vsm_abi_test
+      tests/abi/vsm_abi_test.cc
+      $<TARGET_OBJECTS:vsm_abi_openvsm>
+      $<TARGET_OBJECTS:vsm_abi_vendor>
+    )
+    add_test(NAME vsm_abi COMMAND vsm_abi_test)
+  else()
+    message(STATUS "externals/sdk/vsm.hpp not found; the VSM ABI check (vsm_abi) is not built")
+  endif()
 endif()

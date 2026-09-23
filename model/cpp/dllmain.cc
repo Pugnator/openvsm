@@ -1,5 +1,5 @@
 #include <windows.h>
-#include <vsm.hpp>
+#include <openvsm.hpp>
 #include <log/log.hpp>
 #include "active_model.hpp"
 #include "model.hpp"

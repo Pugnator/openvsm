@@ -9,6 +9,24 @@ endif()
 file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/model/VERSION.txt" OPENVSM_VERSION)
 option(DLL_WITH_INSTALLER "Enable the Inno Setup installer target" OFF)
 option(BUILD_DOCS "Build the Doxygen developer reference" OFF)
+option(OPENVSM_USE_VENDOR_SDK "Build against Labcenter's VSM SDK headers in externals/sdk instead of model/sdk" OFF)
+
+# The VSM interface headers. OpenVSM ships its own description of the interface
+# in model/sdk; the vendor headers are only needed for the local ABI check.
+set(OPENVSM_VENDOR_SDK_DIR "${CMAKE_CURRENT_SOURCE_DIR}/externals/sdk")
+if(OPENVSM_USE_VENDOR_SDK)
+  if(NOT EXISTS "${OPENVSM_VENDOR_SDK_DIR}/vsm.hpp")
+    message(FATAL_ERROR "OPENVSM_USE_VENDOR_SDK is ON, but ${OPENVSM_VENDOR_SDK_DIR}/vsm.hpp does not exist.")
+  endif()
+  # The sources include <openvsm.hpp> and <openvdm.hpp>; forward those names
+  # to the vendor headers.
+  set(OPENVSM_VENDOR_SHIM_DIR "${CMAKE_CURRENT_BINARY_DIR}/vendor-sdk-shim")
+  file(WRITE "${OPENVSM_VENDOR_SHIM_DIR}/openvsm.hpp" "#pragma once\n#include <vsm.hpp>\n")
+  file(WRITE "${OPENVSM_VENDOR_SHIM_DIR}/openvdm.hpp" "#pragma once\n#include <vdm.hpp>\n")
+  set(OPENVSM_VSM_INCLUDE_DIR "${OPENVSM_VENDOR_SHIM_DIR}" "${OPENVSM_VENDOR_SDK_DIR}")
+else()
+  set(OPENVSM_VSM_INCLUDE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/model/sdk")
+endif()
 set(OPENVSM_SIGN_CERTIFICATE_SHA1 "" CACHE STRING "SHA-1 thumbprint of the release-signing certificate")
 set(OPENVSM_SIGN_TIMESTAMP_URL "https://timestamp.digicert.com" CACHE STRING "RFC 3161 timestamp service")
 set(OPENVSM_SIGNTOOL "" CACHE FILEPATH "Path to signtool.exe")
@@ -126,6 +144,6 @@ endif()
 
 target_include_directories(VSM_DLL PUBLIC externals)
 target_include_directories(VSM_DLL PUBLIC model/cpp)
-target_include_directories(VSM_DLL PUBLIC externals/sdk)
+target_include_directories(VSM_DLL PUBLIC ${OPENVSM_VSM_INCLUDE_DIR})
 
 

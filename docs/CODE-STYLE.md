@@ -9,7 +9,10 @@ Formatting applies to C and C++ files under `model/cpp` and `model/include`,
 except for code maintained outside this project:
 
 - Git submodules, including `model/cpp/log` and `externals/Lua`;
-- the locally supplied Proteus SDK under `externals/sdk`;
+- the vendor Proteus SDK headers, if a developer supplies them under
+  `externals/sdk` for the ABI check. OpenVSM's own `model/sdk` headers are in
+  scope. Formatting does not change their binary layout, but declaration order
+  must never change;
 - the third-party single-header library `model/include/incbin.h`.
 
 Lua, CMake, PowerShell, project data, and generated files are outside the

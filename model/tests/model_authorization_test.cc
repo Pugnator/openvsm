@@ -1,7 +1,7 @@
 #include <string>
 #include <vector>
 #include "model.hpp"
-#include <vsm.hpp>
+#include <openvsm.hpp>
 
 extern "C" IDSIMMODEL *createdsimmodel(char *device, ILICENCESERVER *licenceServer);
 
