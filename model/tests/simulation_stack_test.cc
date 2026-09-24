@@ -191,12 +191,14 @@ void setupDevice(DeviceSimulator::VirtualDevice &device, FakeInstance &instance,
 
 int main(int argumentCount, char **arguments)
 {
-    if (argumentCount != 2)
+    if (argumentCount != 4)
     {
-        std::cerr << "Expected the empty device fixture path\n";
+        std::cerr << "Expected the empty, optional-bus and required-bus device fixture paths\n";
         return 1;
     }
     const std::string scriptPath = arguments[1];
+    const std::string optionalBusScriptPath = arguments[2];
+    const std::string requiredBusScriptPath = arguments[3];
 
     {
         DeviceSimulator::VirtualDevice device;
@@ -258,6 +260,32 @@ int main(int argumentCount, char **arguments)
         if (!disabledAfterFailure)
         {
             return 7;
+        }
+    }
+
+    {
+        // FakeInstance provides no buses. An optional one is skipped, setup
+        // completes, and its global stays nil.
+        DeviceSimulator::VirtualDevice device;
+        FakeInstance instance{"optional-bus", optionalBusScriptPath};
+        FakeDsim dsim;
+        setupDevice(device, instance, dsim);
+        if (!runLua(device.getLuaContext(), "assert(init_ran == true and bus_was_nil == true)"))
+        {
+            return 8;
+        }
+    }
+
+    {
+        // A required bus that Proteus does not provide still stops setup
+        // before device_init.
+        DeviceSimulator::VirtualDevice device;
+        FakeInstance instance{"required-bus", requiredBusScriptPath};
+        FakeDsim dsim;
+        setupDevice(device, instance, dsim);
+        if (!runLua(device.getLuaContext(), "assert(init_ran == nil)"))
+        {
+            return 9;
         }
     }
 

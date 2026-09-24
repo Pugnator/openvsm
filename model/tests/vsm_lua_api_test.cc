@@ -301,9 +301,12 @@ int main()
         message("100% message")
         warning("100% warning")
         vsm_error("100% error")
+        set_callback(0, 0x7fffffff) -- the largest model event ID is accepted
         set_callback(0x23456789a, 73)
         assert(not pcall(function() set_callback(-1, 1) end))
         assert(not pcall(function() set_callback(0, 0x100000000) end))
+        assert(not pcall(function() set_callback(0, -1) end))
+        assert(not pcall(function() set_callback(0, -0x80000000) end))
 
         -- The standard Lua error function is deliberately not shadowed.
         assert(not pcall(function() error("ordinary Lua error") end))
