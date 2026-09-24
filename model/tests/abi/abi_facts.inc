@@ -1,9 +1,10 @@
 // Shared body of the VSM ABI comparison.
 //
 // Included once per side, after the VSM and VDM headers under test
-// (<openvsm.hpp>/<openvdm.hpp>, or the vendor's <vsm.hpp>/<vdm.hpp>). The including file defines ABI_SIDE_FUNCTION, the name of the function
-// that returns this side's table. The same source is compiled against both
-// headers, so every difference in the tables is a difference in the headers.
+// (<openvsm.hpp>/<openvdm.hpp>, or the vendor's <vsm.hpp>/<vdm.hpp>). The
+// including file defines ABI_SIDE_FUNCTION, the name of the function that
+// returns this side's table. The same source is compiled against both headers,
+// so every difference in the tables is a difference in the headers.
 
 #include <cstddef>
 
