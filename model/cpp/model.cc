@@ -1,3 +1,5 @@
+#include <windows.h>
+#include <combaseapi.h>
 #include <log/log.hpp>
 #include <atomic>
 #include <cassert>
@@ -14,8 +16,6 @@
 #include "lua_script_executor.hpp"
 #include "vdm_lua_api.hpp"
 #include "vsm_lua_api.hpp"
-#include <windows.h>
-#include <combaseapi.h>
 
 namespace
 {
