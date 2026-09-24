@@ -171,10 +171,12 @@ int setCallback(lua_State *lua)
         return luaL_argerror(lua, 1, "callback time cannot be negative");
     }
 
+    // Proteus reserves event IDs with the most significant bit set for itself,
+    // so only 0 through the largest positive EVENTID belong to models.
     const auto event = luaL_checkinteger(lua, 2);
-    if (event < (std::numeric_limits<EVENTID>::min)() || event > (std::numeric_limits<EVENTID>::max)())
+    if (event < 0 || event > (std::numeric_limits<EVENTID>::max)())
     {
-        return luaL_argerror(lua, 2, "event ID is outside the SDK integer range");
+        return luaL_argerror(lua, 2, "event ID must be between 0 and 2147483647");
     }
 
     dsim(lua)->setcallback(time, model(lua), static_cast<EVENTID>(event));

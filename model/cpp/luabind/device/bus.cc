@@ -316,6 +316,15 @@ bool VirtualDevice::registerBuses()
             instance_->getbuspin(definition.name.data(), definition.base, definition.width, definition.required);
         if (bus == nullptr)
         {
+            if (!definition.required)
+            {
+                // An optional bus that is not wired is simply absent: its
+                // global stays nil so the script can test for it.
+                LOG_DEBUG("Optional bus {} (base {}, width {}) is not connected; skipped\n", definition.name,
+                          definition.base, definition.width);
+                lua_pop(luactx_, 1);
+                continue;
+            }
             LOG_DEBUG("Proteus did not provide bus {} (base {}, width {})\n", definition.name, definition.base,
                       definition.width);
             lua_settop(luactx_, stackTop);

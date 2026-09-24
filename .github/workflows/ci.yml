@@ -1,0 +1,82 @@
+name: CI
+
+# Builds and tests every pull request and every push to master or develop, so a
+# change is checked before it is merged rather than at the next release.
+
+on:
+  pull_request:
+  push:
+    branches:
+      - master
+      - develop
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  format:
+    name: Check formatting
+    runs-on: windows-2022
+    timeout-minutes: 10
+    defaults:
+      run:
+        shell: pwsh
+
+    steps:
+      - name: Check out
+        uses: actions/checkout@v7
+
+      - name: Install clang-format 21
+        run: |
+          $ErrorActionPreference = "Stop"
+          python -m pip install --disable-pip-version-check clang-format==21.1.0
+          if ($LASTEXITCODE -ne 0) {
+              throw "Failed to install clang-format 21.1.0."
+          }
+
+          $scriptsDirectory = python -c "import sysconfig; print(sysconfig.get_path('scripts'))"
+          $scriptsDirectory | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
+
+      - name: Check source formatting
+        run: |
+          $ErrorActionPreference = "Stop"
+          $formatterVersion = clang-format --version
+          if ($formatterVersion -notmatch "version 21\.1\.0") {
+              throw "Expected clang-format 21.1.0, got: $formatterVersion"
+          }
+          ./tools/format.ps1 -Check
+
+  build:
+    name: Build and test (${{ matrix.configuration }})
+    runs-on: windows-2022
+    timeout-minutes: 45
+    strategy:
+      fail-fast: false
+      matrix:
+        configuration: [Debug, Release]
+    defaults:
+      run:
+        shell: pwsh
+    env:
+      BUILD_DIR: build/ci
+
+    steps:
+      - name: Check out
+        uses: actions/checkout@v7
+        with:
+          submodules: recursive
+
+      - name: Configure Win32 build
+        run: cmake -S . -B $env:BUILD_DIR -A Win32 -DBUILD_TESTS=ON
+
+      - name: Build
+        run: cmake --build $env:BUILD_DIR --config ${{ matrix.configuration }} --parallel
+
+      # The timeout turns a test that hangs, for example on a debug CRT
+      # assertion dialog, into a failure instead of a stuck job.
+      - name: Run all tests
+        run: ctest --test-dir $env:BUILD_DIR -C ${{ matrix.configuration }} --output-on-failure --timeout 120

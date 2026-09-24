@@ -99,6 +99,9 @@ function timer_callback(time, event_id)
 end
 ```
 
+Event IDs are integers from 0 to 2147483647. Proteus reserves negative IDs for
+itself, so `set_callback` rejects them.
+
 ## Pins
 
 Every model must declare `device_pins`, even when it is an empty table. Each
@@ -166,6 +169,10 @@ Bus objects provide `set`/`drive`, `tristate`, `drivebit`, `get`, `getdrive`,
 `getbitstate`, `settiming`, and `setstates`. Use `onchange(function)` for every
 value change or `onvalue(value, function)` for one value. Optional declaration
 fields include `on_state`, `off_state`, `tristate_state`, and `required`.
+
+A bus is required by default, and the model does not start if the component
+lacks it. With `required = false`, a missing bus is skipped and its global
+stays `nil`, so the script can check `if D then ... end`.
 
 ## Component parameters and logging
 

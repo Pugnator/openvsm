@@ -158,7 +158,10 @@ if(BUILD_TESTS)
   target_link_libraries(simulation_stack_test PRIVATE VSM_DLL lua_static)
   add_test(
     NAME simulation_stack
-    COMMAND simulation_stack_test "${CMAKE_CURRENT_SOURCE_DIR}/tests/fixtures/empty_device.lua"
+    COMMAND simulation_stack_test
+            "${CMAKE_CURRENT_SOURCE_DIR}/tests/fixtures/empty_device.lua"
+            "${CMAKE_CURRENT_SOURCE_DIR}/tests/fixtures/optional_bus_device.lua"
+            "${CMAKE_CURRENT_SOURCE_DIR}/tests/fixtures/required_bus_device.lua"
   )
 
   add_executable(random_seed_test tests/random_seed_test.cc)
